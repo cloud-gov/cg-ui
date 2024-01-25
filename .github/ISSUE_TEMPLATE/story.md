@@ -10,13 +10,8 @@ assignees: ''
 As a \<user in a specific situation\>, I want to \<a goal\> so that \<benefit\>. 
 
 ## Acceptance Criteria
-* [ ] GIVEN [a precondition] \
-  AND [another precondition] \
-  WHEN [test step] \
-  AND [test step] \
-  THEN [verification step] \
-  AND [verification step] \
-
+* [Requirement 1]
+* [Requirement 2]
 --- 
 
 ## Security considerations
