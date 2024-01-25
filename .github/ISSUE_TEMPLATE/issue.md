@@ -1,18 +1,14 @@
 ---
-name: Issue
+name: Issue for Dashboard team
 about: Suggest a new issue for this project
-title: "[short phrase distinguishing this from other Issues]"
-labels: ''
+title: "[Briefly describe the issue/bug]"
+labels: 'squad-dashboard'
 assignees: ''
 
 ---
-Short description explaining the high-level reason for the new issue.
+## Expected Behavior
 
-## Notes
+## Actual Behavior
 
-- Additional details, technical information, resource links, and implementation notes
-- Excerpt and link to any relevant slack discussions
+## Steps to reproduce the behavior
 
-## Acceptance Criteria
-
-- [ ] Determine next steps and acceptance criteria
