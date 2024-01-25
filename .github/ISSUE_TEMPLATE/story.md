@@ -1,13 +1,13 @@
 ---
 name: Story
 about: Suggest a new story for this project
-title: "[short phrase distinguishing this from other Stories]"
-labels: ''
+title: "[Briefly summarize user story]"
+labels: 'squad-dashboard'
 assignees: ''
 
 ---
 
-In order to [reason/outcome/goal], [someone or "we"] want [a specific change in product implementation/behavior]
+As a \<user in a specific situation\>, I want to \<a goal\> so that \<benefit\>. 
 
 ## Acceptance Criteria
 * [ ] GIVEN [a precondition] \
@@ -22,7 +22,8 @@ In order to [reason/outcome/goal], [someone or "we"] want [a specific change in 
 ## Security considerations
 [note any potential changes to security boundaries, practices, documentation, risk that arise directly from this story]
 
-## Implementation sketch
+## Research resources
 [links to background notes, sketches, and/or relevant documentation
 * [ ] [first thing to do]
 * [ ] [another thing to do]
+
