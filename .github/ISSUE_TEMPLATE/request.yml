@@ -1,0 +1,50 @@
+name: Request for dashboard team
+description: Submit a new request for the project
+title: "[Briefly describe the request]"
+labels: ["squad-dashboard"]
+projects: ["cloud-gov/27"]
+assignees: ''
+body:
+  - type: input
+    id: contact
+    attributes:
+      label: Contact Details
+      description: How can we get in touch with you if we need more info?
+      placeholder: ''
+    validations:
+      required: false
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem
+      description: Describe the problem
+      placeholder: Tell us here
+      value: "I'm noticing:"
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Request
+      description: What would you like to see?
+      placeholder: Tell us what you want
+      value: "I would like instead:"
+    validations:
+      required: true
+  - type: textarea
+    id: acceptance
+    attributes:
+      label: Acceptance Criteria
+      description: How will we know when we're done?
+      placeholder: Tell us here
+      value: "We will know we are done when:"
+    validations:
+      required: true
+  - type: textarea
+    id: notes
+    attributes:
+      label: Notes
+      description: Anything else we should know?
+      placeholder: provide any additional context here
+      value: "More context:"
+
