@@ -3,14 +3,15 @@ description: Report a new bug
 title: "[Briefly describe the bug]"
 labels: ["squad-dashboard"]
 projects: ["cloud-gov/27"]
-assignees: ''
+assignees:
+  - octocat
 body:
   - type: input
     id: contact
     attributes:
       label: Contact Details
       description: How can we get in touch with you if we need more info?
-      placeholder: ''
+      placeholder: email
     validations:
       required: false
   - type: textarea
