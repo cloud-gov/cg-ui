@@ -1,0 +1,47 @@
+name: Story for dashboard team
+description: Suggest a new story for this project
+title: "[Briefly summarize user story]"
+labels: ["squad-dashboard"]
+projects: ["cloud-gov/27"]
+assignees: ''
+body:
+  - type: input
+    id: contact
+    attributes:
+      label: Contact Details
+      description: How can we get in touch with you if we need more info?
+      placeholder: ''
+    validations:
+      required: false
+  - type: textarea
+    id: story
+    attributes:
+      label: Story
+      description: Describe the story
+      placeholder: Tell us here in AAU terms
+      value: "As a \<user in a specific situation\>, I want to \<a goal\> so that \<benefit\>."
+    validations:
+      required: true
+  - type: textarea
+    id: acceptance
+    attributes:
+      label: Acceptance Criteria
+      description: How will we know when we're done?
+      placeholder: Tell us here
+      value: "We will know we are done when:"
+    validations:
+      required: true
+  - type: textarea
+    id: security
+    attributes:
+      label: Security considerations
+      description: note any potential changes to security boundaries, practices, documentation, risk that arise directly from this story
+      placeholder: ''
+      value: ''
+  - type: textarea
+    id: resources
+    attributes:
+      label: Additional resources
+      description: Add any links to background notes, sketches, and/or relevant documentation
+      placeholder: ''
+      value: ''

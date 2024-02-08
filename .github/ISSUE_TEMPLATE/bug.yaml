@@ -1,0 +1,56 @@
+name: Bug for dashboard team
+description: Report a new bug
+title: "[Briefly describe the bug]"
+labels: ["squad-dashboard"]
+projects: ["cloud-gov/27"]
+assignees: ''
+body:
+  - type: input
+    id: contact
+    attributes:
+      label: Contact Details
+      description: How can we get in touch with you if we need more info?
+      placeholder: ''
+    validations:
+      required: false
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected behavior
+      description: What did you expect to happen?
+      placeholder: Tell us what you expected
+      value: "I was expecting:"
+    validations:
+      required: true
+  - type: textarea
+    id: actual
+    attributes:
+      label: Actual behavior
+      description: What happened instead?
+      placeholder: Tell us what you saw
+      value: "This happened instead:"
+    validations:
+      required: true
+  - type: dropdown
+    id: browsers
+    attributes:
+      label: What browsers are you seeing the problem on?
+      multiple: true
+      options:
+        - Firefox
+        - Chrome
+        - Safari
+        - Microsoft Edge
+  - type: textarea
+    id: logs
+    attributes:
+      label: Relevant log output
+      description: Please copy and paste any relevant log output. This will be automatically formatted into code, so no need for backticks.
+      render: shell
+  - type: textarea
+    id: notes
+    attributes:
+      label: Notes
+      description: Anything else we should know?
+      placeholder: provide any additional context here
+      value: "More context:"
