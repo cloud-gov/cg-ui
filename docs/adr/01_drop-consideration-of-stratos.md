@@ -1,6 +1,6 @@
 # Drop consideration of Stratos as foundation for UI rebuild
 
-Status: Proposed
+Status: Accepted
 
 ## Context and problem statement
 
