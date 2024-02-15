@@ -43,7 +43,7 @@ Neutral
 Cons
 
 - Users find it difficult to accomplish tasks like user management in Stratos. The UI is not user-centered, and requires knowledge of Cloud Foundry concepts to navigate.
-- Stratos is built with a Go backend and an Angular frontend, both technologies which are not widely used at Cloud.gov. Few developers at Cloud.gov are familiar with the Stratos codebase nor are comfortable making changes to it. Cloud.gov would need to invest resources to find or train people in Go and Angular to enable further development.
+- Stratos is built with a Go backend and an Angular frontend. While Cloud has developers with experience in Go, there are none with experience in Angular. Few developers at Cloud.gov are familiar with the Stratos codebase nor are comfortable making changes to it.
 - Stratos is built around Cloud Foundry's v2 API, although there is a v3 API now available. We would need to take on the work to re-architect Stratos around the v3 API.
 - Cloud.gov currently uses a subset of Stratos’ capabilities, and it’s unknown which exact features of Stratos are more valuable to current users than others.
 
@@ -62,6 +62,7 @@ Pros
 Cons
 
 - The application was not fully built-out. It has limited functionality and offers a small subset of the features that Stratos offers to users.
+- Paas-admin relies on multiple custom APIs which are not applicable to cloud.gov.
 - Much of paas-admin is built in Typescript. Typescript is not a language in use at Cloud.gov.
 
 ### Option 3: build from scratch
@@ -70,7 +71,7 @@ A final option available to us is to begin afresh in whatever technologies we fi
 
 Pros
 
-- We could create layouts / templates that make sense with the USWDS and design choices. We have the most freedom with this option to meet our end user needs.
+- We could create layouts / templates that make sense with the USWDS and design choices. These layouts could then be leveraged by Pages, authentication, and future products. We have the most freedom with this option to meet our end user needs.
 - This option gives us an opportunity to choose a stack that will be most approachable for existing Cloud.gov staff and future hires.
 - We can learn from existing codebase's architecture decisions without actually having to work with their code
 
