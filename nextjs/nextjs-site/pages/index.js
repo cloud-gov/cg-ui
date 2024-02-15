@@ -6,17 +6,17 @@ import { getUsers } from '../api/users';
 
 function Users() {
     const [users, setUsers] = useState([]);
-    const [isLoading, setIsLoading] = useState(false);
+    const [dataLoaded, setDataLoaded] = useState(false);
 
     useEffect(() => {
         const fetchUsers = async () => {
             try {
                 const fetchedResult = await getUsers();
-                if (!isLoading) setUsers(fetchedResult);
+                if (!dataLoaded) setUsers(fetchedResult);
             } catch (error) {
                 console.log(error)
             }
-            setIsLoading(true);
+            setDataLoaded(true);
         }
         fetchUsers();
     })
