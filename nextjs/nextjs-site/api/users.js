@@ -7,6 +7,5 @@ export const allUserRoute = 'https://jsonplaceholder.typicode.com/users';
 
 export async function getUsers() {
     const body = await getData(allUserRoute);
-    console.log("getUsers", body);
     return body;
 };

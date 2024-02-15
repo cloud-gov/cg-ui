@@ -8,6 +8,5 @@ export async function getData(url) {
         throw new Error(`HTTP error! status: ${res.status}`);
     }
     const data = await res.json();
-    console.log("getData", data);
     return data;
 };
