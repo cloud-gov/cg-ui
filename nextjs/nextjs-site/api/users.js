@@ -3,9 +3,10 @@
 /***/
 import { getData } from './api';
 
-export const allUserRoute = 'https://jsonplaceholder.typicode.com/users';
+export const userDomain = 'https://jsonplaceholder.typicode.com';
+export const allUserRoute = '/users';
 
 export async function getUsers() {
-    const body = await getData(allUserRoute);
+    const body = await getData(userDomain + allUserRoute);
     return body;
 };
