@@ -6,7 +6,7 @@ export const getServerSideProps = async () => {
         return {
             props: { users }
         }
-    } catch(error) {
+    } catch (error) {
         return {
             props: { error }
         }

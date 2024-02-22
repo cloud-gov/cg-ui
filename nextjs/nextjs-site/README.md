@@ -18,3 +18,16 @@ npm run dev
 to run the dev server.
 
 See results at `http://localhost:3000`.
+
+## Testing
+
+to run the entire test suite:
+
+```
+npm test
+```
+
+to run test files matching certain text (one example):
+```
+npm test -- serverside
+```
