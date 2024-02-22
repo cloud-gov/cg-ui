@@ -23,7 +23,7 @@ describe('Clientside Users', () => {
         const loadingIndicator = screen.getByText('loading...');
         expect(loadingIndicator).toBeInTheDocument();
         // assert eventual load
-        // TODO: shouldn't have to run this in order to bypass warnings?
+        // TODO: feels weird to run this extra test just to bypass act warnings
         expect(
             await screen.findByText('Foo')
         ).toBeInTheDocument();
