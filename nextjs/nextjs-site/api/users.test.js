@@ -8,14 +8,10 @@ import mockUsers    from './mocks/users';
 
 describe('users api tests', () => {
 
-    beforeAll(() => {
-        nock.disableNetConnect();
-    });
-
     beforeEach(() => {
-      if (!nock.isActive()) {
-        nock.activate();
-      }
+        if (!nock.isActive()) {
+            nock.activate();
+        }
     });
 
     afterEach(() => {
