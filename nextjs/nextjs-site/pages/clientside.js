@@ -1,9 +1,10 @@
 import { useEffect, useState } from 'react';
 import { getUsers } from '../api/users';
 
-function Users() {
+export function Users() {
     const [users, setUsers] = useState([]);
     const [dataLoaded, setDataLoaded] = useState(false);
+    const [dataLoadError, setDataLoadError] = useState(null);
 
     useEffect(() => {
         const fetchUsers = async () => {
@@ -11,18 +12,30 @@ function Users() {
                 const fetchedResult = await getUsers();
                 if (!dataLoaded) setUsers(fetchedResult);
             } catch (error) {
-                console.log(error)
+                setDataLoadError(error.message);
             }
             setDataLoaded(true);
         }
         fetchUsers();
     })
 
+    if (!dataLoaded) {
+        return(
+            <div role='alert'>loading...</div>
+        );
+    }
+
+    if (dataLoadError) {
+        return(
+            <div role='alert'>{ dataLoadError }</div>
+        );
+    }
+
     return (
-        <ul>{users.map(user => (
-            <li key={user.id}>{user.name}</li>
+        <ul role='list'>{users.map(user => (
+            <li role='listitem' key={user.id}>{user.name}</li>
         ))}</ul>
-    )
+    );
 }
 
 export default function Clientside() {

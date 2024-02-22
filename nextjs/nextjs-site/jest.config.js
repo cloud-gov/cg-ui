@@ -9,6 +9,7 @@ const createJestConfig = nextJest({
 // Add any custom config to be passed to Jest
 const config = {
   coverageProvider: 'v8',
+  // testEnvironment: node works for api testing, but to test anything needing a browser, like React components, set @jest-environment to jsdom in the file: https://jestjs.io/docs/configuration#testenvironment-string
   testEnvironment: 'node',
   // Add more setup options before each test is run
   setupFilesAfterEnv: ['<rootDir>/jest.setup.js']
