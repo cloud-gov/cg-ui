@@ -2,12 +2,8 @@
  * @jest-environment jsdom
  */
 import                      '@testing-library/jest-dom';
-import React                from 'react';
-import {
-    act, render, screen,
-}                           from '@testing-library/react';
+import { render, screen }   from '@testing-library/react';
 import { Users }            from './clientside';
-import userMocks            from '../api/mocks/users';
 // initial mock setup; must be done before importing the real thing
 jest.mock('../api/users', () => ({
     getUsers: jest.fn()

@@ -1,6 +1,6 @@
 import nock         from 'nock';
 import { getData }  from './api';
-import userMocks    from './mocks/users';
+import mockUsers    from './mocks/users';
 
 describe('api tests', () => {
 
@@ -35,10 +35,10 @@ describe('api tests', () => {
     test('returns json if response is ok', async () => {
         const scope = nock('http://example.com')
             .get('/success')
-            .reply(200, userMocks);
+            .reply(200, mockUsers);
 
         expect(
             await getData('http://example.com/success')
-        ).toEqual(userMocks);
+        ).toEqual(mockUsers);
     });
 });

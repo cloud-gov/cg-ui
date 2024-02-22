@@ -4,7 +4,7 @@ import {
     userDomain,
     allUserRoute,
 }                   from './users';
-import userMocks    from './mocks/users';
+import mockUsers    from './mocks/users';
 
 describe('users api tests', () => {
 
@@ -39,10 +39,10 @@ describe('users api tests', () => {
     test('returns list of users if response is ok', async () => {
         const scope = nock(userDomain)
             .get(allUserRoute)
-            .reply(200, userMocks);
+            .reply(200, mockUsers);
 
         expect(
             await getUsers()
-        ).toEqual(userMocks);
+        ).toEqual(mockUsers);
     });
 });
