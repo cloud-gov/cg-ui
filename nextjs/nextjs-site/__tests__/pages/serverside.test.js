@@ -4,7 +4,7 @@
 import {
     describe, expect, it
 }                           from '@jest/globals';
-import Serverside           from './serverside';
+import Serverside           from '../../pages/serverside';
 import { render, screen }   from '@testing-library/react';
 
 describe('Serverside users', () => {

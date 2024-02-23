@@ -6,8 +6,8 @@ import {
 }                           from '@jest/globals';
 import                      '@testing-library/jest-dom';
 import { render, screen }   from '@testing-library/react';
-import { Users }            from './clientside';
-import { getUsers }         from '../api/users';
+import { Users }            from '../../pages/clientside';
+import { getUsers }         from '../../api/users';
 
 // Initial mock setup:
 // All mocks are hoisted to the top of the code block.
@@ -15,7 +15,7 @@ import { getUsers }         from '../api/users';
 // because defining the jest global import breaks the mock.
 /* global jest */
 /* eslint no-undef: "off" */
-jest.mock('../api/users', () => ({
+jest.mock('../../api/users', () => ({
     getUsers: jest.fn()
 }));
 /* eslint no-undef: "error" */
