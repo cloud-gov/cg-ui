@@ -1,3 +1,6 @@
+import {
+    describe, beforeEach, afterEach, it, expect
+}                   from '@jest/globals';
 import nock         from 'nock';
 import {
     getUsers,
@@ -20,8 +23,8 @@ describe('users api tests', () => {
         nock.restore();
     });
 
-    test('throws error if response is 500', async () => {
-        const scope = nock(userDomain)
+    it('throws error if response is 500', async () => {
+        nock(userDomain)
             .get(allUserRoute)
             .reply(500);
 
@@ -32,8 +35,8 @@ describe('users api tests', () => {
         }
     });
 
-    test('returns list of users if response is ok', async () => {
-        const scope = nock(userDomain)
+    it('returns list of users if response is ok', async () => {
+        nock(userDomain)
             .get(allUserRoute)
             .reply(200, mockUsers);
 

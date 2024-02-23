@@ -1,14 +1,24 @@
 /**
  * @jest-environment jsdom
  */
+import {
+    describe, expect, it
+}                           from '@jest/globals';
 import                      '@testing-library/jest-dom';
 import { render, screen }   from '@testing-library/react';
 import { Users }            from './clientside';
-// initial mock setup; must be done before importing the real thing
+import { getUsers }         from '../api/users';
+
+// Initial mock setup:
+// All mocks are hoisted to the top of the code block.
+// Turning off eslint no-undef rule here,
+// because defining the jest global import breaks the mock.
+/* global jest */
+/* eslint no-undef: "off" */
 jest.mock('../api/users', () => ({
     getUsers: jest.fn()
 }));
-import { getUsers }         from '../api/users';
+/* eslint no-undef: "error" */
 
 describe('Clientside Users', () => {
 
@@ -35,7 +45,7 @@ describe('Clientside Users', () => {
             return [{ name: 'Foo', id: 1 }];
         });
         // render
-        const component = render(<Users />);
+        render(<Users />);
         // assert
         expect(
             await screen.findByText('Foo')
@@ -48,7 +58,7 @@ describe('Clientside Users', () => {
             throw new Error('an err occurred');
         });
         // render
-        const component = render(<Users />);
+        render(<Users />);
         // assert
         expect(
             await screen.findByText('an err occurred')
