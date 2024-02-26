@@ -1,0 +1,37 @@
+volumes:
+  db-data:
+
+services:
+  # Commenting out for now since I'm not attempting to run an application
+  # with docker this time around
+  # app:
+  #   depends_on:
+  #     - uaa
+
+  db:
+    build:
+      dockerfile: Dockerfile-db
+      context: .
+    volumes:
+      - db-data:/var/lib/postgresql/data
+    ports:
+      - "5433:5432" # expose db on host at port 5433
+    environment:
+      POSTGRES_DB: uaadb
+      POSTGRES_TEST_DB: uaadb-test
+      POSTGRES_PASSWORD: password
+  uaa:
+    build:
+      dockerfile: Dockerfile-uaa
+      context: .
+    ports:
+      - 9000:8080
+    environment:
+      POSTGRES_DB: uaadb
+      POSTGRES_PORT: 5432
+      POSTGRES_HOST: db
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+    depends_on:
+      - db
+    command: ["/tomcat/bin/catalina.sh", "run"]
