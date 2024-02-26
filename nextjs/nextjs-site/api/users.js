@@ -10,3 +10,8 @@ export async function getUsers() {
     const body = await getData(userDomain + allUserRoute);
     return body;
 };
+
+export async function getUser(id) {
+    const body = await getData(userDomain + allUserRoute + `/${id}`);
+    return body;
+}

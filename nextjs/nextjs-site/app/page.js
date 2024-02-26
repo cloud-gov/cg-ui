@@ -7,6 +7,7 @@ export default function Home() {
         <ul>
             <li><Link href="/clientside">Example of clientside rendering</Link></li>
             <li><Link href="/serverside">Example of serverside rendering</Link></li>
+            <li><Link href="/users">Example of dynamic rendering (server-side)</Link></li>
         </ul>
         </div>
     );
