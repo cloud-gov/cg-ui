@@ -1,0 +1,11 @@
+<h1>Your applications</h1>
+
+<p>/v3/apps</p>
+
+<p>Resource count: <%= resources.length %></p>
+
+<ul>
+  <% resources.forEach(function(resource) { %>
+    <li><%= resource.name %> : <%= resource.state %></li>
+  <% }); %>
+</ul>
