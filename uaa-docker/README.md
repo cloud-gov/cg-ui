@@ -2,11 +2,11 @@
 
 ## What is UAA?
 
-UAA, or the User Account and Authentication Server, is the identity management provider for Cloud Foundry. It can be used directly to store user accounts and related information. It can also be used to connect SSO (single-sign on) third party authentication. You've experienced UAA before if you have signed into cloud.gov, as you are prompted to select an agency / method for signing in.
+UAA, or the User Account and Authentication Server, is the identity management provider for Cloud Foundry. It can be used directly to store user accounts and related information. It can also be used to connect SSO (single-sign on) third party authentication. You've experienced UAA before if you have signed into cloud.gov when you are prompted to select an agency / method for signing in.
 
 Behind the scenes, there are a couple extra things going on, but at the end of the day once a user is authenticated, UAA will provide the requesting application a user token. If you decode this token, you can read the information within it. For example, when the token expires and the user's "origin" (yours is probably gsa.gov).
 
-Once an application has this token, they can now send requests to a matching Cloud Foundry Controller API (CAPI) to view and manage resources the user has access to. This API works together with the UAA API to ensure users are authenticated.
+Once an application has this token, it can now send requests to a matching Cloud Foundry Controller API (CAPI) to view and manage resources the user has access to. This API works together with the UAA API to ensure users are authenticated.
 
 When running UAA locally, there is no matching CF API to connect to that will allow you to manage resources. However, running it locally gives you the ability to make sure that the authentication portion of your app is functioning similarly to how you would expect to connect to a "real" UAA server.
 
@@ -28,6 +28,10 @@ NOTE: this is a proof-of-concept and will likely need more attention before beco
 
 Disable zscaler. It will only need to be off for a few minutes.
 
+```bash
+sudo launchctl unload /Library/LaunchDaemons/com.zscaler.service.plist /Library/LaunchDaemons/com.zscaler.tunnel.plist
+```
+
 Navigate to the `uaa-docker` subdirectory and build the images. Zscaler to be disabled while `Dockerfile-uaa` runs `wget` commands to obtain Tomcat and UAA.
 
 ```bash
@@ -35,6 +39,10 @@ docker-compose build
 ```
 
 You may now reenable Zscaler.
+
+```bash
+sudo launchctl load /Library/LaunchDaemons/com.zscaler.service.plist /Library/LaunchDaemons/com.zscaler.tunnel.plist
+```
 
 ### Use UAA with an application
 
