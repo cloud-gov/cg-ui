@@ -1,5 +1,7 @@
 module.exports = {
   eslint: {
-    dirs: ['api', 'app', 'pages', '__tests__'] // directories that eslint will run on
+    // directories that eslint will run on
+    // you can also list files (must give the file extension)
+    dirs: ['api', 'app', 'pages', '__tests__', 'middleware.js']
   }
 }
