@@ -3,14 +3,14 @@
   "version": "1.0.0",
   "description": "Example client for fake-cloud.gov / cloud.gov.",
   "scripts": {
-    "start": "node id-example.js",
+    "push": "cf push jvd-id-example --vars-file vars.yml",
+    "start": "node app.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
   "license": "CC0-1.0",
   "dependencies": {
     "express": "^4.14.0",
-    "jsonwebtoken": "^7.0.1",
-    "request": "^2.73.0"
+    "jsonwebtoken": "^7.0.1"
   }
 }

@@ -1,88 +1,66 @@
-# Demonstrating the cloud.gov identity provider
+# Example using the Cloud.gov identity provider service broker
 
 You can leverage [cloud.gov’s identity hub](https://cloud.gov/docs/services/cloud-gov-identity-provider/) to reduce the burden of authenticating users from government agencies and partners in your app.
 
-This demo has two parts: 
-  1. [running an application in cloud.gov that uses the identiy provider](#1-run-an-application-in-cloudgov-that-uses-the-identity-provider)
-  2. [running a local UAA server for local development](#2-run-a-local-uaa-server-for-local-development)
+This example was adapted from the [cg-demos](https://github.com/cloud-gov/cg-demos/tree/master/cg-identity) repository.
 
-## 1. Run an application in cloud.gov that uses the identity provider
+## Deploy the application to Cloud.gov
 
-In this example you run the DO-NOT-USE-IN-PRODUCTION `id-example.js` node application 
-to authenticate real users. You'll need a [cloud.gov account](https://account.fr.cloud.gov/signup), 
-and you should already be logged-in (`cf login --sso`).
+__NOTE: DO NOT USE THIS APP IN PRODUCTION__
 
-### Running the demonstration
+Run the `app.js` node application to authenticate real users. You'll need a [cloud.gov account](https://account.fr.cloud.gov/signup).
 
-First we'll `push` the id-example with a random route, and get that route name
-for later use:
+Log into Cloud.gov via command line. Change the path after `-a` if you wish to connect to a different cloud foundry instance.
 
 ```bash
-cf push -m 128M --no-start --random-route id-example
-app_route=$(cf apps | grep '^id-example' | awk '{print $NF}')
-echo $app_route
+cf cf login -a api.fr.cloud.gov --sso
 ```
 
-Then, create an identity provider service, and bind that service to our app with the correct callback URL:
+If this is your first time setting up the app, create a service broker. Skip this step if you already have a service broker named `uaa-id-example`.
 
 ```bash
 cf create-service cloud-gov-identity-provider oauth-client uaa-id-example
-sleep 15 # it takes a moment to provision the oauth-client
-cf bind-service id-example uaa-id-example \
-  -c '{"redirect_uri": ["https://'$app_route'/auth/callback"]}'
 ```
 
-Pass the environment variables for the UAA URLs to the application, and start the app:
+Now, look at the `vars.yml` file and change it as needed. For example, you may wish to change the application route.
+
+Once you're happy with your vars, go ahead and push your app. You should choose a different name than `jvd-id-example` or we will have collisions with the URL. You may also specify a different `vars.yml` file entirely if desired.
+
 
 ```bash
-cf set-env id-example UAA_AUTH_URL https://login.fr.cloud.gov/oauth/authorize
-cf set-env id-example UAA_LOGOUT_URL https://login.fr.cloud.gov/logout.do
-cf set-env id-example UAA_TOKEN_URL https://uaa.fr.cloud.gov/oauth/token
-cf start id-example
+cf push jvd-id-example --vars-file vars.yml
 ```
 
-At this point you can visit `https://$app_route` and you'll be prompted to log in. 
-If you complete that, you'll get a welcome page similar to:
+At this point you may visit your site with the URL listed in the output of `cf push`. Log in with your GSA credentials. That's pretty much all it does!
+
+### A note about the service broker scope
+
+The service broker only grants the "openid" scope to your user, which means that you can authenticate with UAA using this broker, but you may not use the token to manage resources in the Cloud Foundry API.
+
+### Tearing down after you're done
+
+This application should not remain in Cloud.gov after you are done experimenting. Make sure to remove the application and the service broker:
 
 ```
-Hello fname.lname@agency.gov!
-
-Your access token lasts for another 598 seconds, but will be renewed automatically.
-
-You can also logout.
-```
-
-The `logout` link will clear the session in your app, and also redirect you to the cloud.gov `/logout.do` to clear your sessions in UAA.
-
-### Cleaning Up the Example Client
-
-```
-cf delete -f id-example
+cf delete -f jvd-id-example
 cf delete-service -f uaa-id-example
 ```
 
-## 2. Run a local UAA server for local development
+## Running the app against local UAA
 
-During application development, you may want to authenticate against a local UAA server
-so you can test as multiple users, skip 2-factor authentication, and view UAA logs. 
+You may use this application locally if you have Cloud Foundry's UAA (User Accounts and Authentication) server running on your machine.
 
-The most consistent way to run UAA locally is with a Docker container, such as the one from [HortonWorks](https://github.com/hortonworks/docker-cloudbreak-uaa), which one can start up the following command:
+If you are using the UAA docker example provided in this repository, you should not need to configure anything in this application to successfully connect.
 
+```bash
+npm start
 ```
-docker run -d --name uaa-uaa -p 8080:8080 \
-  -e UAA_CONFIG_URL=https://raw.githubusercontent.com/18F/cg-demos/master/cg-identity/uaa.yml \
- hortonworks/cloudbreak-uaa:3.6.3
- ```
 
-> You can use your own `uaa.yml` by copying it to, say, `/tmp/uaa/uaa.yml` and running instead: `docker run -d --name uaa-uaa -p 8080:8080 -v /tmp/uaa:/uaa:rw hortonworks/cloudbreak-uaa:3.6.3`
+### Troubleshooting problems with the UAA connection
 
-To view the logs, you can use `docker exec uaa-uaa /usr/bin/tail -f /tomcat/logs/uaa.log`
+If you are experiencing difficulty, check the following:
 
-You can then test the local UAA with the included `id-example.js` by running:
-
- ```
- npm install
- npm start
- ```
-
- And in a browser going to, http://localhost:8000, clicking on the login link, then using the username `paul`, password `wombat`.
+- Ensure that UAA is running locally on port 9000.
+- Confirm in the `uaa.yml` file that the client redirect URI matches the port this application is using.
+- Confirm that the client id and secret in `uaa.yml` are the same as the defaults in this application's `app.js` file.
+- Make sure you are using the email and password for users specified in the `uaa.yml` file.

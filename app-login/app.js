@@ -4,7 +4,6 @@ const querystring = require("querystring");
 const crypto = require("crypto");
 
 const express = require("express");
-const request = require("request");
 const jwt = require("jsonwebtoken");
 
 const PORT = process.env.PORT || 8000;
@@ -25,12 +24,12 @@ if (vcap_application) {
 
 const CLIENT_ID = process.env.CLIENT_ID || client_id;
 const CLIENT_SECRET = process.env.CLIENT_SECRET || client_secret;
-const UAA_AUTH_URL = process.env.UAA_AUTH_URL || 
-                     'http://localhost:8080/oauth/authorize';
-const UAA_LOGOUT_URL = process.env.UAA_LOGOUT_URL || 
-                     'http://localhost:8080/logout.do';
+const UAA_AUTH_URL = process.env.UAA_AUTH_URL ||
+                     'http://localhost:9000/oauth/authorize';
+const UAA_LOGOUT_URL = process.env.UAA_LOGOUT_URL ||
+                     'http://localhost:9000/logout.do';
 const UAA_TOKEN_URL = process.env.UAA_TOKEN_URL ||
-                      'http://localhost:8080/oauth/token';
+                      'http://localhost:9000/oauth/token';
 
 // A "real" implementation would create a cryptographically secure
 // random string per session, but we're just a demo app so we'll use
@@ -53,27 +52,34 @@ let session = {};
 //
 // It then sets the session data accordingly: if the token request failed,
 // the user (if any) is logged out. Otherwise, the user is logged in.
-function postToTokenUrlAndSetSession(payload, callback) {
-  request.post(UAA_TOKEN_URL, {
-    form: payload,
-  }, function(err, response, body) {
-    if (!err && response && response.statusCode !== 200) {
-      err = new Error(`got HTTP ${response.statusCode}`);
-    }
-    if (err) {
-      session = {};
-    } else {
-      const responseBody = JSON.parse(body);
-      const decodedToken = jwt.decode(responseBody.access_token);
+//
+// See: https://docs.cloudfoundry.org/api/uaa/version/77.1.0/index.html#token
+async function postToTokenUrlAndSetSession(payload, callback) {
+  const body = new URLSearchParams(payload).toString()
+  const response = await fetch(UAA_TOKEN_URL, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded',
+    },
+    body: body
+  })
 
-      Object.assign(session, {
-        email: decodedToken.email,
-        refreshToken: responseBody.refresh_token,
-        expiry: Date.now() + responseBody.expires_in * 1000
-      });
-    }
-    callback(err);
-  });
+  if (response.ok) {
+    const data = await response.json();
+    const decodedToken = jwt.decode(data.access_token);
+    Object.assign(session, {
+      access_token: data.access_token,
+      email: decodedToken.email,
+      refreshToken: data.refresh_token,
+      expiry: Date.now() + data.expires_in * 1000
+    });
+    callback();
+  } else {
+    session = {};
+    // NOTE: if you need a more in depth error message,
+    // you will need to inspect the response body with response.json()
+    callback(`an error occurred with response code ${response.status}`);
+  }
 }
 
 // This middleware detects if the user's access token has expired; if
@@ -106,6 +112,7 @@ app.use(function tokenRefreshMiddleware(req, res, next) {
 function getLoggedInHtml() {
   const expiresIn = Math.floor((session.expiry - Date.now()) / 1000);
   return `
+    <h1>Welcome home</h1>
     <p>Hello ${session.email}!</p>
     <p>Your access token lasts for another ${expiresIn} seconds,
     but will be renewed automatically.</p>
