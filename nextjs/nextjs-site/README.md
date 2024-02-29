@@ -4,20 +4,32 @@ This is a starter template for [Learn Next.js](https://nextjs.org/learn).
 
 This demo requires Node version 18 or higher.
 
-In this directory, run:
+### A note on zscaler
+
+If zscaler is active in your environment, you must make Node aware of your zscaler certificate by setting the `NODE_EXTRA_CA_CERTS` variable. This only needs to be done once.
+
+First output the zscaler certificate in pem format:
+
+```
+security find-certificate -a -c zscaler -p > zscaler_root_ca.pem
+```
+
+After exporting that .pem, add `export NODE_EXTRA_CA_CERTS=path/to/zscaler_root_ca.pem` to your .zshrc / .bashrc / whatever. That will fix SSL issues during npm install.
+
+### Development
+
+In this directory, run this to install dependencies:
 ```
 npm install
 ```
 
-To install dependencies, then:
+Then run the dev server:
 
 ```
 npm run dev
 ```
 
-To run the dev server.
-
-See results at `http://localhost:3000`.
+See results at `http://localhost:3000`
 
 ## Testing
 
