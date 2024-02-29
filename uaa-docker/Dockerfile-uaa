@@ -1,0 +1,27 @@
+FROM openjdk:11.0.13-jre
+
+ENV UAA_CONFIG_PATH /uaa
+ENV CATALINA_HOME /tomcat
+
+COPY uaa.yml /uaa/uaa.yml
+
+RUN wget -q https://archive.apache.org/dist/tomcat/tomcat-9/v9.0.45/bin/apache-tomcat-9.0.45.tar.gz
+RUN wget -qO- https://archive.apache.org/dist/tomcat/tomcat-9/v9.0.45/bin/apache-tomcat-9.0.45.tar.gz.sha512 | sha512sum -c -
+
+RUN tar zxf apache-tomcat-9.0.45.tar.gz
+RUN rm apache-tomcat-9.0.45.tar.gz
+
+RUN mkdir /tomcat
+RUN mv apache-tomcat-9.0.45/* /tomcat
+RUN rm -rf /tomcat/webapps/*
+
+RUN wget https://github.com/qarik-group/uaa-war-releases/releases/download/v76.5.0/cloudfoundry-identity-uaa-76.5.0.war
+RUN echo "99e3d5c166abc3400553d82022aca2caa921f4776d53d0402528f223fb02d521f7407789479b23489429fff4c6bd9382c8b31f324ebdc8c83dc55688d8668987 cloudfoundry-identity-uaa-76.5.0.war" | sha512sum -c
+RUN mv cloudfoundry-identity-uaa-76.5.0.war /tomcat/webapps/ROOT.war
+RUN sed -i s/INFO/WARNING/g /tomcat/conf/logging.properties
+RUN sed -i s/FINE/WARNING/g /tomcat/conf/logging.properties
+RUN touch /tomcat/lib/log4j2.properties
+
+EXPOSE 8080
+
+CMD ["/tomcat/bin/catalina.sh", "run"]
