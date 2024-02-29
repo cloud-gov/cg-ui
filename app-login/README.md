@@ -13,7 +13,7 @@ Run the `app.js` node application to authenticate real users. You'll need a [clo
 Log into Cloud.gov via command line. Change the path after `-a` if you wish to connect to a different cloud foundry instance.
 
 ```bash
-cf cf login -a api.fr.cloud.gov --sso
+cf login -a api.fr.cloud.gov --sso
 ```
 
 If this is your first time setting up the app, create a service broker. Skip this step if you already have a service broker named `uaa-id-example`.
