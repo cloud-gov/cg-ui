@@ -1,0 +1,35 @@
+name: pull request
+
+on: [pull_request]
+
+jobs:
+  lint-next:
+    name: Lint Nextjs app
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Use node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18
+      - name: Install node dependencies
+        working-directory: nextjs/nextjs-site
+        run: npm install
+      - name: Run linter
+        working-directory: nextjs/nextjs-site
+        run: npm run lint
+  test-next:
+    name: Run Nextjs app tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Use node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18
+      - name: Install node dependencies
+        working-directory: nextjs/nextjs-site
+        run: npm install
+      - name: Run tests
+        working-directory: nextjs/nextjs-site
+        run: npm test
