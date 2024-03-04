@@ -16,7 +16,7 @@ security find-certificate -a -c zscaler -p > zscaler_root_ca.pem
 
 After exporting that .pem, add `export NODE_EXTRA_CA_CERTS=path/to/zscaler_root_ca.pem` to your .zshrc / .bashrc / whatever. That will fix SSL issues during npm install.
 
-### Development
+## Development
 
 In this directory, run this to install dependencies:
 ```

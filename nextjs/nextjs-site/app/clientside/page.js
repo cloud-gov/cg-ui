@@ -1,5 +1,6 @@
+'use client';
 import { useEffect, useState } from 'react';
-import { getUsers } from '../api/users';
+import { getUsers } from '../../api/users';
 
 export function Users() {
     const [users, setUsers] = useState([]);
@@ -41,3 +42,4 @@ export function Users() {
 export default function Clientside() {
     return (<Users />)
 };
+

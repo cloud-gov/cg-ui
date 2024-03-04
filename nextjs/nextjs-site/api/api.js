@@ -1,7 +1,6 @@
 /***/
 // API library for basic error handling and serialization
 /***/
-
 export async function getData(url) {
     try {
         const res = await fetch(url);
