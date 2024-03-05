@@ -5,7 +5,7 @@ module.exports = {
     dirs: ['api', 'app', 'pages', '__tests__', 'middleware.js']
   },
   generateBuildId: async () => {
-    // placeholder during development
+    // placeholder build id for development
     return "0.0.1";
   }
 }

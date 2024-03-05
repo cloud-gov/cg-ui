@@ -4,8 +4,8 @@ on:
   push:
     # using current branch to test
     branches: [ jvd/next-deploy ]
-    paths:
-      - 'nextjs/nextjs-site/**'
+    # paths:
+    #   - 'nextjs/nextjs-site/**'
 
 jobs:
   build:
@@ -37,7 +37,7 @@ jobs:
         uses: 18F/cg-deploy-action@main
         with:
           app_directory: './nextjs/nextjs-site'
-          cf_org: ${{ env.CF_ORG }}
-          cf_space: ${{ env.CF_SPACE }}
+          cf_org: ${{ vars.CF_ORG }}
+          cf_space: ${{ vars.CF_SPACE }}
           cf_username: ${{ secrets.CF_USERNAME }}
           cf_password: ${{ secrets.CF_PASSWORD }}
