@@ -32,12 +32,12 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Deploy app
-        uses: cloud-gov/cg-cli-tools@main
-        working-directory: nextjs/nextjs-site
+        # using 18F action instead of cloud-cli-tools
+        # because we need support for working-directory
+        uses: 18F/cg-deploy-action@main
         with:
+          app_directory: './nextjs/nextjs-site'
           cf_org: ${{ env.CF_ORG }}
           cf_space: ${{ env.CF_SPACE }}
           cf_username: ${{ secrets.CF_USERNAME }}
           cf_password: ${{ secrets.CF_PASSWORD }}
-          # override default action which includes a manifest file
-          cf_command: cf push
