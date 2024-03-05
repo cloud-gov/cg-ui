@@ -7,11 +7,19 @@ export const userDomain = 'https://jsonplaceholder.typicode.com';
 export const allUserRoute = '/users';
 
 export async function getUsers() {
-    const body = await getData(userDomain + allUserRoute);
-    return body;
+    try {
+        const body = await getData(userDomain + allUserRoute);
+        return body;
+    } catch (error) {
+        throw new Error(error.message);
+    }
 };
 
 export async function getUser(id) {
-    const body = await getData(userDomain + allUserRoute + `/${id}`);
-    return body;
+    try {
+        const body = await getData(userDomain + allUserRoute + `/${id}`);
+        return body;
+    } catch (error) {
+        throw new Error(error.message);
+    }
 }
