@@ -120,7 +120,7 @@ It's nice that Next handles routing for us (while exposing routing internals sho
 - `-` This means that middleware functions should be idempotent at minimum, but this is hard to catch.
 
 ### Summary
-Middleware is easy to add in NextJS, but it's a little more finnecky that I'd prefer. We'll need to ensure middleware functions are idempotent and that we're being really specific with our route matchers.
+Middleware is easy to add in NextJS, but it's a little more finicky than I'd prefer. We'll need to ensure middleware functions are idempotent and that we're being really specific with our route matchers.
 
 ## Testing
 
