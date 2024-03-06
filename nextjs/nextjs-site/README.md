@@ -31,7 +31,7 @@ npm run dev
 
 See results at `http://localhost:3000`
 
-## Testing
+### Testing
 
 To run the entire test suite:
 
@@ -44,7 +44,7 @@ To run test files matching certain text (one example):
 npm test -- serverside
 ```
 
-## Linting
+### Linting
 
 To run eslint and prettier:
 ```
@@ -56,3 +56,7 @@ Eslint configurations are found in [.eslintrc.json](./.eslintrc.json).
 Prettier configurations are found in [.prettierrc.json](./.prettierrc.json).
 
 By default, NextJS [runs linting](https://nextjs.org/docs/app/building-your-application/configuring/eslint#linting-custom-directories-and-files) on the `pages/`, `app/`, `components/`, `lib/`, and `src/` directories. To change which directories are included in linting, go to [next.config.js](./next.config.js).
+
+## Assessment
+
+Our assessment of this prototype can be found in [./docs/assessment.md](./docs/assessment.md).
