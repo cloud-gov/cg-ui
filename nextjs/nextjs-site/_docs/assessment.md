@@ -231,12 +231,26 @@ I don't see issues in NextJS that would prevent us from complying with section 5
 ## Deployment
 
 ### Prototyped
-- Deployed the app via `cf push`
+
+- Deployed the app via `cf push` from local machine
 
 ### Observations
 
+- `next build` requires a [build id](https://nextjs.org/docs/app/api-reference/next-config-js/generateBuildId)
+- `cf push app_name` will successfully deploy the current application without additional environment variables, manifests, etc.
+
 ### Resources
+
+- [NextJS docs: Deploying](https://nextjs.org/docs/pages/building-your-application/deploying)
+- [NextJS docs: Production checklist](https://nextjs.org/docs/pages/building-your-application/deploying/production-checklist)
+- [NextJS docs: generateBuildId](https://nextjs.org/docs/app/api-reference/next-config-js/generateBuildId)
 
 ### Assessment
 
+- `+` The current state of the application does not require any fancy business to deploy successfully
+- `+` `next build` compiles and optimizes assets (CSS, JS), there's optional ability to include image tasks and more
+- `-` The build id may require additional configuration if we would like to use something like git tags to set it, as Cloud does not have access to that information automatically.
+
 ### Summary
+
+I do not foresee any production-specific deployment requirements unique to NextJS that exceed the normal expectations for any framework.
