@@ -160,9 +160,9 @@ Prototype uses the following tools for testing:
 
 ### Assessment
 - `+` RTL is straightforward to use when the user initiates the action that updates React component state, like a "click" or a "submit."
+- `+` The upside to RTL being really lightweight is that testing server-rendered components (or any component that just uses props) is very simple. Just pass the props you want to the component, and test away.
 - `-` I like RTL's guiding principle in theory, but it makes testing React components a bit awkward in practice, especially when React hooks are involved (that client-rendered components would use).
 - `-` For components that update state on page load (a very common pattern in React apps), there is no explicit user action, and so tests end up looking a little magical.
-- `-` The upside to RTL being really lightweight is that testing server-rendered components (or any component that just uses props) is very simple. Just pass the props you want to the component, and test away.
 
 ### Summary
 Testing in NextJS is no more or less complex than in any Javascript environment. You use the same tools that you would for any node/react app.
