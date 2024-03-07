@@ -21,7 +21,7 @@ jobs:
       - name: Install node dependencies
         working-directory: nextjs/nextjs-site
         run: npm install
-      - name: Run tests
+      - name: Run build
         working-directory: nextjs/nextjs-site
         run: npm run build
 
