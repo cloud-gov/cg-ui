@@ -36,13 +36,25 @@ oauth:
     autoapprove:
       - my_client_id
   clients:
-    my_client_id:
-      id: my_client_id
-      secret: my_client_secret
+    # for applications using 8000
+    app_login_test:
+      id: app_login_test
+      secret: app_login_test_secret
       authorized-grant-types: authorization_code,refresh_token
       scope: openid
       authorities: uaa.none
       redirect-uri: http://localhost:8000/auth/callback
+    # for applications using 3000
+    nextjs_client:
+      id: nextjs_client
+      secret: nextjs_client_secret
+      authorized-grant-types: authorization_code,refresh_token
+      scope: openid
+      authorities: uaa.none
+      # URL structure from https://next-auth.js.org/configuration/providers/oauth#how-to
+      # redirect-uri: http://localhost:3000/api/auth/callback/uaa
+      redirect-uri: http://localhost:3000/auth/callback/uaa
+
   # the following is from the Cloud.gov Pages local UAA information
   # clients:
   #   cg:
