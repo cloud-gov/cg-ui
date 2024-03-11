@@ -7,20 +7,9 @@ const express = require("express");
 const jwt = require("jsonwebtoken");
 
 const PORT = process.env.PORT || 8000;
-var client_id = 'my_client_id';
-var client_secret = 'my_client_secret';
+var client_id = 'app_login_test';
+var client_secret = 'app_login_test_secret';
 var root_url = 'http://localhost:' + PORT + '/'
-var vcap_services = JSON.parse(process.env.VCAP_SERVICES || null);
-var vcap_application = JSON.parse(process.env.VCAP_APPLICATION || null);
-
-if ( vcap_services ) {
-  client_id = vcap_services["cloud-gov-identity-provider"][0].credentials.client_id ;
-  client_secret = vcap_services["cloud-gov-identity-provider"][0].credentials.client_secret ;
-}
-
-if (vcap_application) {
-  root_url =  'https://' + vcap_application["application_uris"][0] + '/'
-}
 
 const CLIENT_ID = process.env.CLIENT_ID || client_id;
 const CLIENT_SECRET = process.env.CLIENT_SECRET || client_secret;
