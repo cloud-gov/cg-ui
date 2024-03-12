@@ -1,6 +1,6 @@
 # About ADRs
 
-An ADR is an Architectural Decision Log. This log lists the architectural decisions for the cloud.gov dashboard rebuild.
+An ADR is an Architectural Decision Record. This log lists the architectural decisions for the cloud.gov dashboard rebuild.
 
 ## Creating a new ADR
 
