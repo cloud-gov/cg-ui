@@ -1,6 +1,6 @@
 # Drop consideration of paas-admin as foundation for UI rebuild
 
-Status: Draft
+Status: Accepted
 
 ## Context and problem statement
 
