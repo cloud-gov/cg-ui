@@ -8,7 +8,7 @@ The Cloud.gov dashboard team needs to determine the tech stack with which the fu
 
 ## Decision drivers / forces
 
-After the team decided to [drop consideration for Stratos](https://github.com/cloud-gov/cg-ui/blob/main/docs/adr/01_drop-consideration-of-stratos.md), we chose to investigate [paas-admin](https://github.com/alphagov/paas-admin) as an alternative foundation to build the cloud.gov dashboard on. GDS previously provided a PaaS service based on Cloud Foundry, the same underlying technology used by cloud.gov. Given the ongoing communication between the GDS and cloud.gov teams, many of the cloud.gov team members were already aware of `paas-admin` and the general consensus was that it was well received by those that had seen it in use. For those reasons the team felt it was worthy of additional research and investigation.
+After the team decided to [drop consideration for Stratos](https://github.com/cloud-gov/cg-ui/blob/main/docs/adr/001_drop-consideration-of-stratos.md), we chose to investigate [paas-admin](https://github.com/alphagov/paas-admin) as an alternative foundation to build the cloud.gov dashboard on. GDS previously provided a PaaS service based on Cloud Foundry, the same underlying technology used by cloud.gov. Given the ongoing communication between the GDS and cloud.gov teams, many of the cloud.gov team members were already aware of `paas-admin` and the general consensus was that it was well received by those that had seen it in use. For those reasons the team felt it was worthy of additional research and investigation.
 
 ## Considered options
 * Fork `paas-admin` and adapt it to be used as the foundation of the cloud.gov dashboard
