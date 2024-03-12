@@ -56,18 +56,7 @@ Our [assessment](../../nextjs/nextjs-site/_docs/assessment.md) is that NextJS is
 - We can move quickly while keeping our code maintainable
 - Framework does not pose unusual barriers to compliance
 
-## Pros and cons of the options <!-- optional -->
-
-### Option 2: Build on a fork of UK Gov paas-admin
-
-- `+` May already have lower-level components (like CF authentication) that we would need to build.
-- `+` This was a previous solution used by real customers and shaped by substantial user research by the UK Government.
-- `-` Current maintainer recommended looking at the project for inspiration, but did not recommend using the code itself, as it was deemed out of date.
-- `-` Previous 18F project teams who have made similar decisions to fork open source projects for their own greenfield uses ultimately recommend [not doing this](https://docs.google.com/document/d/1EIhM9OaZ53554QPqMTQmEK0ERoKJoCZ9n-bQJexw6EQ/). Instead, they prefer the flexibility that comes from building from scratch, while using previous projects as learning resources.
-- `-` We’d have to contend with previous architecture decisions that may not exactly fit our needs.
-  - For example, we’d need to change all styling from the UK’s to USWDS.
-
-In short, we can still benefit from their work without having to use their same codebase.
+## Pros and cons of the remaining options <!-- optional -->
 
 ### Option 3: Build on CG Pages
 
