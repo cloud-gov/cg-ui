@@ -30,7 +30,7 @@ These reasons led us to explore modern Javascript/Node web app frameworks and Re
 
 ## Considered options
 
-1. Build on the current Stratos architecture (decided in [ADR 001](./01_drop-consideration-of-stratos.md))
+1. Build on the current Stratos architecture (decided in [ADR 001](./001_drop-consideration-of-stratos.md))
 1. Build on a fork of UK Gov paas-admin (decided in [ADR 002](./002_drop-consideration-of-paas-admin.md))
 1. Build on CG Pages
 1. Build new server-side app and use HTMX for frontend interactivity
