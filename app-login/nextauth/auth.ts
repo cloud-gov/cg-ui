@@ -15,6 +15,7 @@ export const config = {
       clientId: 'nextjs_client',
       clientSecret: 'nextjs_client_secret',
       wellKnown: 'http://localhost:9000/.well-known/openid-configuration',
+      issuer: 'http://localhost:8080/uaa/oauth/token',
       authorization: {
         params: {
           scope: 'openid'
@@ -22,7 +23,11 @@ export const config = {
         url: 'http://localhost:9000/oauth/authorize'
       },
       token: 'http://localhost:9000/oauth/token',
-      userinfo: 'http://localhost:9000/userinfo'
+      userinfo: 'http://localhost:9000/userinfo',
+      client: {
+        authorization_signed_response_alg: 'HS256',
+        id_token_signed_response_alg: 'HS256'
+      }
     }
   ],
   jwt: {
@@ -31,17 +36,13 @@ export const config = {
   basePath: "/auth",
   callbacks: {
     authorized({ request, auth }) {
-      console.log("made it into the authorized callback");
       const { pathname } = request.nextUrl
       if (pathname === "/middleware-example") {
-        console.log("in middleware-example");
         return !!auth
       }
-      console.log("authorized is about to return true");
       return true
     },
     jwt({ token, trigger, session }) {
-      console.log("made it into the jwt callback");
       if (trigger === "update") token.name = session.user.name
       return token
     },

@@ -3,7 +3,7 @@
 The subdirectories here contain applications that are supposed to authenticate with a local UAA instance. Unfortunately, I have not entirely been successful.
 
 - :white_check_mark: express-manual
-- :x: nextauth
+- :white_check_mark: nextauth
 - :white_check_mark: passportjs
 
 ## express-manual
@@ -42,7 +42,7 @@ Open `localhost:3000`
 
 ### Status
 
-Not currently functional.
+Functional but not well understood.
 
 ### Complications
 
@@ -50,13 +50,7 @@ I was unable to use the callback URL specified in both this repo's readme and th
 
 I was also surprised that the nextauth custom provider configuration was unable to discover the endpoints using the `.well-known/openid-configuration` URL. I can visit the UAA server at that path and see all of the URLs such as the token and user info paths, but I didn't attempt to debug it, I just manually provided them to the configuration as well.
 
-### The current blocker
-
-UAA is receiving a request from the application, correctly logs in the user, then passes the authorization code back to the nextauth application. Unfortunately, at this point the application has trouble reading something about the response:
-
-```
-[auth][cause]: OperationProcessingError: unexpected JWT "alg" header parameter
-```
+I believe due to the inability to discover information via `.well-known`, I had to add a bunch of information manually about the issuer and JWT alg used by UAA.
 
 ## Passportjs
 
