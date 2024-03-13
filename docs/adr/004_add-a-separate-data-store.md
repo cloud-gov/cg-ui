@@ -10,6 +10,8 @@ It's likely that our web app will need a data store in addition to what Cloud Fo
 
 - session management
 - user metrics like used platforms, browsers, etc.
+- allowing users to set preferences that can persist
+- tailoring the experience based on user roles/attributes
 
 ## Decision drivers / forces
 
