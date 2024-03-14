@@ -1,0 +1,44 @@
+import { NextRequest } from "next/server";
+import { cookies } from "next/headers";
+import { getIronSession } from "iron-session";
+import { defaultSession, sessionOptions } from "../lib";
+import { sleep, SessionData } from "../lib";
+
+// login
+export async function POST(request) {
+  const session = await getIronSession(cookies(), sessionOptions);
+
+  const { username = "No username" } = (await request.json());
+
+  session.isLoggedIn = true;
+  session.username = username;
+  await session.save();
+
+  // simulate looking up the user in db
+  await sleep(250);
+
+  return Response.json(session);
+}
+
+// read session
+export async function GET() {
+  const session = await getIronSession(cookies(), sessionOptions);
+
+  // simulate looking up the user in db
+  await sleep(250);
+
+  if (session.isLoggedIn !== true) {
+    return Response.json(defaultSession);
+  }
+
+  return Response.json(session);
+}
+
+// logout
+export async function DELETE() {
+  const session = await getIronSession(cookies(), sessionOptions);
+
+  session.destroy();
+
+  return Response.json(defaultSession);
+}

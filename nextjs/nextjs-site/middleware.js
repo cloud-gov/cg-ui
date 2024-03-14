@@ -4,14 +4,36 @@
 
 // latest info on why middleware may run multiple times: https://github.com/vercel/next.js/issues/39917
 
-export function middleware(/* request */) {
-    // Uncomment these to see them in action in the server console
-    // console.log('this is a users route and this message comes from middleware');
-    // console.log(request.nextUrl.pathname);
+import { NextResponse } from "next/server";
+import { NextRequest } from "next/server";
+
+import { sessionOptions as protectedPageOptions } from "./app/protected-pages/lib";
+import { cookies } from "next/headers";
+import { SessionOptions, getIronSession } from "iron-session";
+
+// Only here for the multi examples demo, in your app this would be imported from elsewhere
+const sessionOptions = {
+  "/protected-pages/protected-middleware":
+    protectedPageOptions
+};
+
+// This function can be marked `async` if using `await` inside
+export async function middleware(request) {
+  const session = await getIronSession(
+    cookies(),
+    sessionOptions[request.nextUrl.pathname],
+  );
+
+  if (!session.isLoggedIn) {
+    const redirectTo = request.nextUrl.pathname.split(
+      "/protected-middleware",
+    )[0];
+
+    return Response.redirect(`${request.nextUrl.origin}${redirectTo}`, 302);
+  }
 }
 
-// regex can be used here using path-to-regexp:
-// https://github.com/pillarjs/path-to-regexp#path-to-regexp-1
-// export const config = {
-//     matcher: '/users/(.*)',
-// }
+// See "Matching Paths" below to learn more
+export const config = {
+  matcher: "/:path+/protected-middleware",
+};
