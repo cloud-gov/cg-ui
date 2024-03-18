@@ -1,6 +1,6 @@
 # Use NextJS for our web app framework
 
-Status: Proposed
+Status: Accepted
 
 ## Context and problem statement
 
