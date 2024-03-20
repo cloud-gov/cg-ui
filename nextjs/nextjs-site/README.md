@@ -64,6 +64,8 @@ docker-compose build
 docker-compose up
 ```
 
+Copy `.env.example.local` to `.env.local`. You should not need to adjust it.
+
 Then run the dev server:
 
 ```bash

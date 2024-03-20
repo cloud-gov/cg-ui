@@ -16,10 +16,13 @@ export async function GET() {
 
 export async function POST(request) {
   try {
-    const res = await request.json()
-    if (res && res.username) {
-      await addSession(res.username);
-      return Response.json({ "status" : "added username: " + res.username })
+    const req = await request.json()
+    if (req && req.username) {
+      const res = await addSession(req.username);
+      return Response.json({
+        "count" : 1,
+        "rows" : [res]
+      })
     } else {
       return Response.json({ "error" : "no username supplied" })
     }

@@ -17,11 +17,12 @@ export async function deleteSessionTable() {
 
 export async function addSession(username) {
   const insert = {
-    text: "INSERT INTO session(username) VALUES($1)",
+    text: "INSERT INTO session(username) VALUES($1) RETURNING id, username",
     values: [username]
   }
-  const res = await pool.query(insert)
-  return await pool.query("COMMIT");
+  const res = await pool.query(insert);
+  const item = res["rows"][0];
+  return { id: item["id"], username: item["username"] };
 }
 
 export async function viewSessions() {

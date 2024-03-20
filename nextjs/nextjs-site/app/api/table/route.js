@@ -1,8 +1,8 @@
-import { seed } from "../../../db/session.js";
+import { createSessionTable, deleteSessionTable } from "../../../db/session.js";
 
 export async function GET() {
   try {
-    const res = await createTable();
+    const res = await createSessionTable();
     return Response.json({
       "status" : "success",
       "message" : res,
@@ -16,7 +16,7 @@ export async function GET() {
 
 export async function DELETE() {
   try {
-    const res = await deleteTable();
+    const res = await deleteSessionTable();
     return Response.json({
       "status" : "success",
       "message" : res,
