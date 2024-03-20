@@ -3,8 +3,7 @@
 /***/
 export async function getData(url, options = {}) {
     try {
-        let res;
-        res = await fetch(url, {
+        const res = await fetch(url, {
             method: "GET",
             ...options
         });
