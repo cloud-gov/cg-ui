@@ -1,1 +1,4 @@
 node_modules
+
+# NextJS env files
+.env.local

@@ -1,9 +1,12 @@
 /***/
 // API library for basic error handling and serialization
 /***/
-export async function getData(url) {
+export async function getData(url, options = {}) {
     try {
-        const res = await fetch(url);
+        const res = await fetch(url, {
+            method: "GET",
+            ...options
+        });
         if (res.ok) {
             const data = await res.json();
             return data;
