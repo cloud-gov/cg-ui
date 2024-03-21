@@ -1,0 +1,9 @@
+// 1. Load your project's USWDS settings configuration
+@forward "uswds-settings.scss";
+
+// 2. Load USWDS source code
+@forward "uswds-core"; // core must come first
+@forward "usa-banner";
+
+// 3. Load any custom SASS
+// none yet

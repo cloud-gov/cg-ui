@@ -9,6 +9,7 @@ export default function Home() {
             <li><Link href="/serverside">Example of serverside rendering</Link></li>
             <li><Link href="/users">Example of dynamic rendering (server-side)</Link></li>
             <li><Link href="/cloudfoundry">Cloudfoundry home</Link></li>
+            <li><Link href="/design-guide">Design guide</Link></li>
         </ul>
         </div>
     );

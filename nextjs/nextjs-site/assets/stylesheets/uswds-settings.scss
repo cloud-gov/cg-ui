@@ -1,0 +1,5 @@
+// https://designsystem.digital.gov/documentation/settings/
+@use "uswds-core" with (
+  $theme-font-path: "../../../../../../dist/fonts",
+  $theme-image-path: "../../../../../../dist/img",
+);
