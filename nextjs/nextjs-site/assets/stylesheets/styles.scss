@@ -3,6 +3,9 @@
 
 // 2. Load USWDS source code
 @forward "uswds-core"; // core must come first
+@forward "uswds-global";
+
+// USWDS components
 @forward "usa-banner";
 
 // 3. Load any custom SASS

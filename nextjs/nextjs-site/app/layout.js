@@ -1,5 +1,4 @@
 import Script from 'next/script';
-import '../assets/stylesheets/normalize.css';
 import '../assets/stylesheets/styles.scss';
 
 export const metadata = {
