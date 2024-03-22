@@ -90,6 +90,52 @@ Prettier configurations are found in [.prettierrc.json](./.prettierrc.json).
 
 By default, NextJS [runs linting](https://nextjs.org/docs/app/building-your-application/configuring/eslint#linting-custom-directories-and-files) on the `pages/`, `app/`, `components/`, `lib/`, and `src/` directories. To change which directories are included in linting, go to [next.config.js](./next.config.js).
 
-## Assessment
+## Working with USWDS
 
-Our assessment of this prototype can be found in [./docs/assessment.md](./docs/assessment.md).
+In order to control when we upgrade USWDS, the `@uswds/uswds` npm package has been installed using the `--save-exact` flag.
+
+### SASS
+
+By default, NextJS has a way of compiling SASS, as well as Autoprefixer. This eliminates the need to use tools like uswds-compile or Gulp.
+
+SASS compilation configs can be found in [next.config.js](./next.config.js)
+
+USWDS theme settings can be configured in [assets/stylesheets/uswds-settings.scss](./assets/stylesheets/uswds-settings.scss).
+
+The global SASS entrypoint is [assets/stylesheets/styles.scss](./assets/stylesheets/styles.scss)
+
+Our aim is to import only what we need from USWDS. Individual USWDS packages will be listed in `styles.scss` after the `uswds-core` import.
+
+### Javascript and Images
+
+Nextjs has a top-level [public folder](https://nextjs.org/docs/app/building-your-application/optimizing/static-assets) where static assets can be stored. Assets stored here can be used as `src` urls by removing the `/public` prefix.
+
+#### Examples:
+```
+// Folder: /public/img/uswds/icon.png
+
+<img src="/img/uswds/icon.png" />
+
+// Folder: /public/js/uswds/uswds.min.js
+
+<Script src="/js/uswds/uswds.min.js" />
+```
+
+After a USWDS npm package update, copy the following files from `node_modules/@uswds/uswds/dist/` to `/public`:
+
+```
+/public
+  /js
+    /uswds
+      - uswds-init.js
+      - uswds-init.min.js
+      - uswds-init.min.js.map
+      - uswds.js
+      - uswds.min.js
+      - uswds.min.js.map
+  /img
+    /uswds
+      - [any images from uswds that you need]
+```
+
+For ease of updating, use the same file names. (This process could be converted to a script down the road.)
