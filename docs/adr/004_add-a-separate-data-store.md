@@ -21,11 +21,11 @@ It's likely that our web app will need a data store in addition to what Cloud Fo
 
 ## Decision drivers / forces
 
-The app is a web UI for Cloud Foundry data, and so the app's primary data source will be from an API.
+The dashboard app is a web UI for Cloud Foundry data, and the app's primary data source will be from an API.
 
 Eventually, the app might need to talk to multiple external data sources, especially while other products are consolidated into it.
 
-While we don't see an immediate need, it's possible that this new data store will need to communicate with other clients besides our app.
+While we don't see an immediate need for a datastore to communicate with other clients besides our application, it is a future possibility.
 
 These factors lead us towards an API-first approach.
 
@@ -50,17 +50,17 @@ These factors lead us towards an API-first approach.
 
 ### 1. Tightly coupled API
 
-* `+` *[argument 1 pro]*
-* `+` *[argument 2 pro]*
-* `-` *[argument 1 con]*
-* *[...]* <!-- numbers of pros and cons can vary -->
+* `+` Managing the API alongside the same application / repository means less overhead for development and deployment
+* `+` Builds for our current needs rather than theoretical futures
+* We will be build database models, migrations, and the API in the same tech stack as our app, which means we are beholden to its abilities
+* `-` In the future, we risk storing and managing data that would be better off pulled into our app rather than being owned by it
+* `-` Using out of the box software for an "admin" view would likely be distinct from the rest of the application
 
 ### 2. Separately managed API
 
-* `+` *[argument 1 pro]*
-* `+` *[argument 2 pro]*
-* `-` *[argument 1 con]*
-* *[...]* <!-- numbers of pros and cons can vary -->
+* `+` Plans for a potential future where our application pulls in data from multiple APIs / sources, and where the datastore serves multiple applications
+* `+` Allows for selection of technology / framework specifically for API with database backend
+* `-` More overhead for our current team to support: two applications, separate authentication flow, deployment, maintenance, security scanning, etc.
 
 ### 3. MVC architecture
 * `+` *[argument 1 pro]*
