@@ -1,7 +1,23 @@
-const { Pool } = require("pg");
+import { Pool } from "pg";
 
+// TODO look into putting this into a function that we can more easily
+// mock for testing purposes
 const connectionString = process.env.DATABASE_URL + (process.env.DATABASE_SSL ? "?ssl=true" : "");
 const pool = new Pool({ connectionString })
+
+export async function addSession(username) {
+  try {
+    const insert = {
+      text: "INSERT INTO session(username) VALUES($1) RETURNING id, username",
+      values: [username]
+    }
+    const res = await pool.query(insert);
+    const item = res["rows"][0];
+    return { id: item["id"], username: item["username"] };
+  } catch (error) {
+    throw new Error("Something went wrong inserting a session " + error.message);
+  }
+}
 
 export async function createSessionTable() {
   try {
@@ -13,16 +29,6 @@ export async function createSessionTable() {
 
 export async function deleteSessionTable() {
   return await pool.query("DROP TABLE IF EXISTS session");
-}
-
-export async function addSession(username) {
-  const insert = {
-    text: "INSERT INTO session(username) VALUES($1) RETURNING id, username",
-    values: [username]
-  }
-  const res = await pool.query(insert);
-  const item = res["rows"][0];
-  return { id: item["id"], username: item["username"] };
 }
 
 export async function viewSessions() {
