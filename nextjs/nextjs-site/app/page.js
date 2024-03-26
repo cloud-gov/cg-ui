@@ -23,7 +23,7 @@ export default function Home() {
 
         <ul>
             <li>View sessions: curl http://localhost:3000/api/session</li>
-            <li>Add session: curl -X POST -d '{"{"}"username": "Your name"{"}"}' http://localhost:3000/api/session</li>
+            <li>Add session: curl -X POST -d &apos;&#123;&quot;username&quot;: &quot;Your name&quot; &#125;&apos; http://localhost:3000/api/session</li>
             <li>Create session table: curl http://localhost:3000/api/table</li>
             <li>Delete session table: curl -X DELETE http://localhost:3000/api/table</li>
         </ul>
