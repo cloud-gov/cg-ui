@@ -20,11 +20,7 @@ describe("With a valid database connection", () => {
     // QUESTION: should we actually use createSessionTable for this to make sure
     // that the rest of the tests are using the same table that would normally be created
     // with that function?
-    // PROBLEM: when the tests are run with -t db, this hook executes as
-    // expected and does not need "IF NOT EXISTS" since the database was
-    // dropped the line before. However, if you run the full test suite
-    // it requires IF NOT EXISTS because for some reason the db is NOT being dropped
-    await pool.query("CREATE TABLE IF NOT EXISTS session ( id SERIAL PRIMARY KEY, username VARCHAR (50) NOT NULL )");
+    await pool.query("CREATE TABLE session ( id SERIAL PRIMARY KEY, username VARCHAR (50) NOT NULL )");
   });
 
   afterEach( async () => {
@@ -97,7 +93,7 @@ describe("With a valid database connection", () => {
         { id: 1, username: "Test1" },
         { id: 2, username: "Test2" },
         { id: 3, username: "Test3" }
-      ])
+      ]);
     });
   });
 });
