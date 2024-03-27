@@ -1,7 +1,6 @@
 /***/
 // API library for auth requests
 /***/
-// import { cookies } from 'next/headers';
 
 // TODO: error handling
 export async function postToAuthTokenUrl(payload) {

@@ -8,6 +8,18 @@ import { NextResponse } from 'next/server';
 import jwt from 'jsonwebtoken';
 import { postToAuthTokenUrl } from './api/auth';
 
+export function login(request) {
+    const state = request.nextUrl.searchParams.get('state');
+    const loginUrl = new URL(process.env.UAA_ROOT_URL + process.env.UAA_AUTH_PATH);
+    const params = new URLSearchParams(loginUrl.search);
+    params.set("client_id", process.env.OAUTH_CLIENT_ID);
+    params.set("state", state);
+    params.set("response_type", "code");
+    const response = NextResponse.redirect(loginUrl + "?" + params.toString());
+    response.cookies.set('state', state);
+    return response;
+}
+
 export function logout() {
     const logoutUrl = new URL(process.env.UAA_ROOT_URL + process.env.UAA_LOGOUT_PATH);
     const params = new URLSearchParams(logoutUrl.search);
@@ -20,8 +32,10 @@ export function logout() {
 }
 
 export async function setAuthToken(request) {
-    if (!request.nextUrl.searchParams.get('state')) { // TODO: compare this state against client state
-        return NextResponse.json({ error: 'No state param present' }, { status: 400 })
+    const stateCookie = request.cookies.get('state');
+    if (!stateCookie ||
+        request.nextUrl.searchParams.get('state') != stateCookie['value']) {
+        return NextResponse.json({ error: 'state param does not match' }, { status: 400 })
     }
     const data = await postToAuthTokenUrl({
         code: request.nextUrl.searchParams.get('code'),
@@ -38,10 +52,14 @@ export async function setAuthToken(request) {
         refreshToken: data.refresh_token,
         expiry: Date.now() + data.expires_in * 1000
     }));
+    response.cookies.delete('state');
     return response;
 }
 
 export function middleware(request) {
+    if (request.nextUrl.pathname.startsWith('/login')) {
+        return login(request);
+    }
     if (request.nextUrl.pathname.startsWith('/logout')) {
         return logout();
     }
@@ -54,5 +72,5 @@ export function middleware(request) {
 // https://github.com/pillarjs/path-to-regexp#path-to-regexp-1
 // TODO: not sure why I'd need both route matching and conditionals above
 export const config = {
-    matcher: ['/auth/callback', '/logout'],
+    matcher: ['/auth/callback', '/logout', '/login'],
 }

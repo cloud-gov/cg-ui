@@ -23,22 +23,57 @@ jest.mock('../api/auth', () => ({
 /* eslint no-undef: "error" */
 
 describe('login', () => {
-    it('does not set auth session when state url param is not present', async () => {
-        // setup
-        const request = new NextRequest(new URL('/auth/callback', process.env.ROOT_URL));
+    // setup
+    const request = new NextRequest(new URL('/login?state=baz', process.env.ROOT_URL));
+    let response;
+    beforeAll(async () => {
         // run
-        const response = await middleware(request);
-        // assert
-        expect(response.cookies.get('authsession')).toBeUndefined();
+        response = await middleware(request);
     });
 
-    it('sets the auth session when state url param is present', async () => {
-        // setup
-        const request = new NextRequest(new URL('/auth/callback?state=foo', process.env.ROOT_URL));
-        // run
-        const response = await middleware(request);
-        // assert
-        expect(response.cookies.get('authsession')).toBeDefined();
+    it('sets the state cookie', () => {
+        expect(response.cookies.get('state')['value']).toBe('baz');
+    });
+
+    it('redirects to uaa auth path with proper query params', () => {
+        const location = response.headers.get('location');
+        expect(location).toMatch(process.env.UAA_ROOT_URL + process.env.UAA_AUTH_PATH);
+        expect(location).toMatch('client_id=');
+        expect(location).toMatch('state=baz');
+        expect(location).toMatch('response_type=code');
+    });
+});
+
+describe('setAuthToken', () => {
+    describe('when states do not match', () => {
+        it('does not set auth session when states do not match', async () => {
+            // setup
+            const request = new NextRequest(new URL('/auth/callback?state=bar', process.env.ROOT_URL));
+            request.cookies.set('state', 'foo');
+            // run
+            const response = await middleware(request);
+            // assert
+            expect(response.cookies.get('authsession')).toBeUndefined();
+        });
+    });
+
+    describe('when states match', () => {
+        let request;
+        let response;
+        beforeAll(async () => {
+            // setup
+            request = new NextRequest(new URL('/auth/callback?state=foo', process.env.ROOT_URL));
+            request.cookies.set('state', 'foo');
+            // run
+            response = await middleware(request);
+        });
+
+        it('sets the auth session', async () => {
+            expect(response.cookies.get('authsession')).toBeDefined();
+        });
+        it('unsets the state cookie', async () => {
+            expect(response.cookies.get('state')['value']).toBe('');
+        });
     });
 });
 
