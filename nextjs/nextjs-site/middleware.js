@@ -6,10 +6,10 @@
 
 import { NextResponse } from 'next/server';
 import jwt from 'jsonwebtoken';
-import { postToTokenUrlAndSetSession } from './api/auth';
+import { postToAuthTokenUrl } from './api/auth';
 
 export function logout() {
-    const logoutUrl = new URL(process.env.UAA_LOGOUT_URL);
+    const logoutUrl = new URL(process.env.UAA_ROOT_URL + process.env.UAA_LOGOUT_PATH);
     const params = new URLSearchParams(logoutUrl.search);
     params.set("client_id", process.env.OAUTH_CLIENT_ID);
     params.set("redirect", process.env.ROOT_URL);
@@ -23,7 +23,7 @@ export async function setAuthToken(request) {
     if (!request.nextUrl.searchParams.get('state')) { // TODO: compare this state against client state
         return NextResponse.json({ error: 'No state param present' }, { status: 400 })
     }
-    const data = await postToTokenUrlAndSetSession({
+    const data = await postToAuthTokenUrl({
         code: request.nextUrl.searchParams.get('code'),
         grant_type: 'authorization_code',
         response_type: 'token',
@@ -41,7 +41,7 @@ export async function setAuthToken(request) {
     return response;
 }
 
-export async function middleware(request) {
+export function middleware(request) {
     if (request.nextUrl.pathname.startsWith('/logout')) {
         return logout();
     }

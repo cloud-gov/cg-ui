@@ -10,7 +10,7 @@ import {
 }                   from './users';
 import mockUsers    from './mocks/users';
 
-describe('users api tests', () => {
+describe('users api', () => {
 
     beforeEach(() => {
         if (!nock.isActive()) {
