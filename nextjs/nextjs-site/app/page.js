@@ -13,6 +13,7 @@ export default function Home() {
         {!authSession && <LoginButton />}
         {authSession && <LogoutButton />}
         <ul>
+            <li><Link href="/authenticated/example">Example of an authenticated page (you can&apos;t get to it unless you&apos;re logged in).</Link></li>
             <li><Link href="/clientside">Example of clientside rendering</Link></li>
             <li><Link href="/serverside">Example of serverside rendering</Link></li>
             <li><Link href="/users">Example of dynamic rendering (server-side)</Link></li>

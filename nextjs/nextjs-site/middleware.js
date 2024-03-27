@@ -31,7 +31,18 @@ export function logout() {
     return response;
 }
 
-export async function setAuthToken(request) {
+export function setAuthCookie(data, response) {
+    const decodedToken = jwt.decode(data.access_token);
+    response.cookies.set('authsession', JSON.stringify({
+        access_token: data.access_token,
+        email: decodedToken.email,
+        refreshToken: data.refresh_token,
+        expiry: Date.now() + data.expires_in * 1000
+    }));
+    return response;
+}
+
+export async function requestAndSetAuthToken(request) {
     const stateCookie = request.cookies.get('state');
     if (!stateCookie ||
         request.nextUrl.searchParams.get('state') != stateCookie['value']) {
@@ -44,19 +55,44 @@ export async function setAuthToken(request) {
         client_id: process.env.OAUTH_CLIENT_ID,
         client_secret: process.env.OAUTH_CLIENT_SECRET,
     });
-    const decodedToken = jwt.decode(data.access_token);
-    const response = NextResponse.redirect(new URL('/', request.url));
-    response.cookies.set('authsession', JSON.stringify({
-        access_token: data.access_token,
-        email: decodedToken.email,
-        refreshToken: data.refresh_token,
-        expiry: Date.now() + data.expires_in * 1000
-    }));
+    let response = NextResponse.redirect(new URL('/', request.url));
+    response = setAuthCookie(data, response);
     response.cookies.delete('state');
     return response;
 }
 
+export async function refreshAuthToken(refreshToken) {
+    const data = await postToAuthTokenUrl({
+        grant_type: 'refresh_token',
+        refresh_token: refreshToken,
+        client_id: process.env.OAUTH_CLIENT_ID,
+        client_secret: process.env.OAUTH_CLIENT_SECRET,
+    });
+    return data;
+}
+
+export async function authenticateRoute(request) {
+    // get auth session cookie
+    const authCookie = request.cookies.get('authsession');
+    // if no cookie, redirect to login page
+    if (!authCookie) return NextResponse.redirect(new URL('/', request.url));
+    const authObj = JSON.parse(authCookie['value']);
+    if (!authObj.expiry) return NextResponse.redirect(new URL('/', request.url));
+    // if cookie expired, run refresh routine
+    if (Date.now() > authObj.expiry) {
+        const newAuthResponse = await refreshAuthToken(authObj.refreshToken);
+        let nextRes = NextResponse.next();
+        nextRes = setAuthCookie(newAuthResponse, nextRes);
+        return nextRes;
+    }
+    // cookie is not expired, go to page
+    return NextResponse.next();
+}
+
 export function middleware(request) {
+    if (request.nextUrl.pathname.startsWith('/authenticated')) {
+        return authenticateRoute(request);
+    }
     if (request.nextUrl.pathname.startsWith('/login')) {
         return login(request);
     }
@@ -64,7 +100,7 @@ export function middleware(request) {
         return logout();
     }
     if (request.nextUrl.pathname.startsWith('/auth/callback')) {
-        return setAuthToken(request);
+        return requestAndSetAuthToken(request);
     }
 }
 
@@ -72,5 +108,5 @@ export function middleware(request) {
 // https://github.com/pillarjs/path-to-regexp#path-to-regexp-1
 // TODO: not sure why I'd need both route matching and conditionals above
 export const config = {
-    matcher: ['/auth/callback', '/logout', '/login'],
+    matcher: ['/auth/callback', '/logout', '/login', '/authenticated/:path*'],
 }
