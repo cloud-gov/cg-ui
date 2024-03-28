@@ -34,7 +34,7 @@ export function logout() {
 export function setAuthCookie(data, response) {
     const decodedToken = jwt.decode(data.access_token);
     response.cookies.set('authsession', JSON.stringify({
-        access_token: data.access_token,
+        accessToken: data.access_token,
         email: decodedToken.email,
         refreshToken: data.refresh_token,
         expiry: Date.now() + data.expires_in * 1000
