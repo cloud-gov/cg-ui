@@ -1,8 +1,4 @@
-// For demo purposes only
-
 // docs: https://nextjs.org/docs/app/building-your-application/routing/middleware
-
-// latest info on why middleware may run multiple times: https://github.com/vercel/next.js/issues/39917
 
 import { NextResponse } from 'next/server';
 import jwt from 'jsonwebtoken';
