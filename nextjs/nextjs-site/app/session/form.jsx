@@ -5,17 +5,12 @@ export function SessionForm({ sessions, setSessionData }) {
   const addSession = async(formData) => {
     const username = formData.get("username")
     try {
-      if (username) {
-        const res = await addData("/api/session", { "username" : username })
-        if (res) {
-          const item = res["rows"][0];
-          setSessionData([...sessions, item]);
-        } else {
-          console.log("oh no it didn't work");
-        }
-      } else {
-        console.log("no username");
-      }
+      // TODO implement error handling
+      if (!username) { return; }
+      const res = await addData("/api/session", { "username" : username })
+      if (!res) { return; }
+      const item = res["rows"][0];
+      setSessionData([...sessions, item]);
     } catch (error) {
       console.log("error with request: " + error.message);
     }

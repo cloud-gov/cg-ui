@@ -34,7 +34,9 @@ describe("With valid DB connection", () => {
     it("adds a new session to the db and returns it with an id", async () => {
       // imitate an http Request object for our purposes
       const request = {
+        /* es-lint no-undef: "off" */
         json() { return Promise.resolve({ username: "Test2" }); }
+        /* es-lint no-undef: "error" */
       }
 
       addSession.mockImplementation(() => {

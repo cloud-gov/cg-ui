@@ -18,7 +18,6 @@ export default function Page() {
         // placeholder so the page still displays until we
         // implement better error handling logic
         setSessionData([]);
-        console.log("error with request " + error.message);
       }
     }
     fetchSessions();
