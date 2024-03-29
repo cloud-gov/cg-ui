@@ -1,0 +1,8 @@
+---
+applications:
+- name: ((app_name))
+  command: npm run build; npm start
+  env:
+    DATABASE_SSL: ((db_ssl))
+  services:
+  - name: ((db_name))

@@ -52,13 +52,23 @@ For storing local environment variables, create a `.env.local` file in the proje
 ### Running locally
 
 In this directory, run this to install dependencies:
-```
+```bash
 npm install
 ```
 
+Start the database Docker container:
+
+```bash
+cd cgui-db-docker
+docker-compose build
+docker-compose up
+```
+
+Copy `.env.example.local` to `.env.local`. You should not need to adjust it.
+
 Then run the dev server:
 
-```
+```bash
 npm run dev
 ```
 
@@ -139,3 +149,54 @@ After a USWDS npm package update, copy the following files from `node_modules/@u
 ```
 
 For ease of updating, use the same file names. (This process could be converted to a script down the road.)
+
+## Deployment
+
+Log into the cloud.gov environment of your choice. Follow the prompts after the below command to authenticate and select an appropriate environment (likely your sandbox account).
+
+```bash
+# production
+cf login -a api.fr.cloud.gov --sso
+```
+
+### Create a database
+
+If you have already deployed to this space before, you probably already have a database and can skip this step!
+
+```bash
+cf create-service aws-rds micro-psql cgui-datastore
+```
+
+Wait several minutes for your database to be created. You will know it is ready when the following shows `cgui-datastore` with a last operation of "create succeeded".
+
+```bash
+cf services
+```
+
+Now you will need to make sure that your Cloud.gov space's application security group (ASG) is set up so that your RDS service will be able to talk to your application. Print out all your security groups and look for the ones assigned to your current org and space.
+
+```bash
+cf security-groups
+```
+
+You will need both the `public_networks_egress` (for your application to talk to the internet) and `trusted_local_networks_egress` (for your database to talk to your application).
+P
+If you do not see these security groups active for your space, add them by subbing in your org (probably `sandbox-gsa`) and your space (likely the first part of your email).
+
+```bash
+cf bind-security-group trusted_local_networks_egress [org] --space [space]
+```
+
+You do not need to manually bind the database. This is being done in the `manifest.yml` file.
+
+### Configure
+
+Copy `.env.cloud.example.yml` to `.env.cloud.yml`. This file contains information that will be passed to the `manifest.yml` file. Change the name of the application to something unique, and confirm that the name you selected for the database is correct.
+
+### Push
+
+Now you're ready to deploy your application! From the base of the nextjs application directory:
+
+```bash
+cf push --vars-file=.env.cloud.yml
+```

@@ -1,0 +1,17 @@
+volumes:
+  db-data:
+
+services:
+  db:
+    build:
+      dockerfile: Dockerfile-db
+      context: .
+    volumes:
+      - db-data:/var/lib/postgresql/data
+    ports:
+      - "5434:5432" # expose db on host at port 5434
+    environment:
+      POSTGRES_DB: cgui
+      POSTGRES_TEST_DB: cgui-test
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password

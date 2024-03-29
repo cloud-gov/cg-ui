@@ -2,11 +2,12 @@ import {
     describe, beforeEach, afterEach, it, expect
 }                   from '@jest/globals';
 import nock         from 'nock';
-import { getData }  from './api';
+import {
+    addData, getData
+}                   from './api';
 import mockUsers    from './mocks/users';
 
 describe('api tests', () => {
-
     beforeEach(() => {
         if (!nock.isActive()) {
             nock.activate();
@@ -19,25 +20,57 @@ describe('api tests', () => {
         nock.restore();
     });
 
-    it('throws error if response is 500', async () => {
-        nock('http://example.com')
-            .get('/error')
-            .reply(500);
+    describe('addData', () => {
 
-        try {
-            await getData('http://example.com/error');
-        } catch (error) {
-            expect(error.message).toEqual('an error occurred with response code 500');
-        }
+        it('throws error if response is 500', async () => {
+            const reqData = { username: 'Test' }
+            nock('http://example.com')
+                .post('/error', reqData)
+                .reply(500);
+
+            expect(async () => {
+                await addData('http://example.com/error', reqData);
+            })
+            .rejects
+            .toThrow(new Error('an error occurred with response code 500'));
+        });
+
+        it('returns json if response is ok', async () => {
+            const reqData = { username: 'Test' }
+            const resData = { id: 1, username: 'Test' };
+            nock('http://example.com')
+                .post('/success', reqData)
+                .reply(200, resData);
+
+            expect(
+                await addData('http://example.com/success', reqData)
+            ).toEqual(resData);
+        });
     });
 
-    it('returns json if response is ok', async () => {
-        nock('http://example.com')
-            .get('/success')
-            .reply(200, mockUsers);
+    describe('getData', () => {
 
-        expect(
-            await getData('http://example.com/success')
-        ).toEqual(mockUsers);
+        it('throws error if response is 500', async () => {
+            nock('http://example.com')
+                .get('/error')
+                .reply(500);
+
+            expect(async () => {
+                await getData('http://example.com/error');
+            })
+            .rejects
+            .toThrow(new Error('an error occurred with response code 500'));
+        });
+
+        it('returns json if response is ok', async () => {
+            nock('http://example.com')
+                .get('/success')
+                .reply(200, mockUsers);
+
+            expect(
+                await getData('http://example.com/success')
+            ).toEqual(mockUsers);
+        });
     });
+
 });
