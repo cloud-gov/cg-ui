@@ -2,7 +2,6 @@
 // API library for auth requests
 /***/
 
-// TODO: error handling
 export async function postToAuthTokenUrl(payload) {
     try {
         const body = new URLSearchParams(payload).toString();

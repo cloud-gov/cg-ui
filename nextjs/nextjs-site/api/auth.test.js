@@ -33,13 +33,10 @@ describe('auth api', () => {
                 nock(process.env.UAA_ROOT_URL)
                     .post(process.env.UAA_TOKEN_PATH)
                     .replyWithError('something bad happened');
-                try {
-                    // run
-                    await postToAuthTokenUrl(payload);
-                } catch (error) {
-                    // assert
-                    expect(error.message).toEqual('something bad happened');
-                }
+                // assert
+                await expect(postToAuthTokenUrl(payload))
+                    .rejects
+                    .toThrow('something bad happened');
             });
         });
 
@@ -49,13 +46,10 @@ describe('auth api', () => {
                 nock(process.env.UAA_ROOT_URL)
                     .post(process.env.UAA_TOKEN_PATH)
                     .reply(500);
-                try {
-                    // run
-                    await postToAuthTokenUrl(payload);
-                } catch (error) {
-                    // assert
-                    expect(error.message).toEqual('an error occurred with response code 500');
-                }
+                // assert
+                await expect(postToAuthTokenUrl(payload))
+                    .rejects
+                    .toThrow('an error occurred with response code 500');
             });
         });
         describe('on request success', () => {
