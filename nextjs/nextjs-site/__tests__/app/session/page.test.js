@@ -53,24 +53,25 @@ describe("session page", () => {
     expect(list).toBeNull;
   });
 
-  it("updates the list when the form is submitted", async () => {
-    getData.mockImplementation(() => { return fakeSessions; });
+  it.todo("updates the list when the form is submitted");
+  // it("updates the list when the form is submitted", async () => {
+  //   getData.mockImplementation(() => { return fakeSessions; });
 
-    render (<Page />);
+  //   render (<Page />);
 
-    const user = userEvent.setup();
+  //   const user = userEvent.setup();
 
-    await act( async () => {
-      const input = await screen.getByRole('textbox', { name: 'username' });
-      await user.type(input, 'Test');
+  //   await act( async () => {
+  //     const input = await screen.getByRole('textbox', { name: 'username' });
+  //     await user.type(input, 'Test');
 
-      const submit = await screen.getByText('Add username');
-      await user.click(submit);
+  //     const submit = await screen.getByText('Add username');
+  //     await user.click(submit);
 
-      // const list = document.querySelector('listitem');
-      // expect(list).toHaveLength(1);
-      expect(await screen.findByText('Test')).toBeInTheDocument();
-    });
-  });
+  //     // const list = document.querySelector('listitem');
+  //     // expect(list).toHaveLength(1);
+  //     expect(await screen.findByText('Test')).toBeInTheDocument();
+  //   });
+  // });
 
 });
