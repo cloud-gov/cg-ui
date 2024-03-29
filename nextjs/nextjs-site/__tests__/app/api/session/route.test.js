@@ -7,10 +7,13 @@ import {
 }                           from '../../../../db/session';
 import { GET, POST }        from '../../../../app/api/session/route';
 
+/* global jest */
+/* eslint no-undef: "off" */
 jest.mock('../../../../db/session', () => ({
   addSession: jest.fn(),
   viewSessions: jest.fn()
 }));
+/* eslint no-undef: "error" */
 
 describe("With valid DB connection", () => {
 

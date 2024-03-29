@@ -6,12 +6,14 @@ import {
   deleteSessionTable
 }                           from '../../../../db/session';
 import { GET, DELETE }      from '../../../../app/api/table/route';
-import { Pool }             from 'pg';
 
+/* global jest */
+/* eslint no-undef: "off" */
 jest.mock('../../../../db/session', () => ({
   createSessionTable: jest.fn(),
   deleteSessionTable: jest.fn()
 }));
+/* eslint no-undef: "error" */
 
 describe("With valid DB connection", () => {
 
