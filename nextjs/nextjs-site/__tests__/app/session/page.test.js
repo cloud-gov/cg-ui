@@ -5,9 +5,8 @@ import {
   describe, expect, it
 }                           from '@jest/globals';
 import {
-  act, render, screen
+  render, screen
 }                           from '@testing-library/react';
-import userEvent            from '@testing-library/user-event'
 import Page                 from '../../../app/session/page';
 import { getData }          from '../../../api/api';
 
@@ -54,24 +53,5 @@ describe("session page", () => {
   });
 
   it.todo("updates the list when the form is submitted");
-  // it("updates the list when the form is submitted", async () => {
-  //   getData.mockImplementation(() => { return fakeSessions; });
-
-  //   render (<Page />);
-
-  //   const user = userEvent.setup();
-
-  //   await act( async () => {
-  //     const input = await screen.getByRole('textbox', { name: 'username' });
-  //     await user.type(input, 'Test');
-
-  //     const submit = await screen.getByText('Add username');
-  //     await user.click(submit);
-
-  //     // const list = document.querySelector('listitem');
-  //     // expect(list).toHaveLength(1);
-  //     expect(await screen.findByText('Test')).toBeInTheDocument();
-  //   });
-  // });
 
 });

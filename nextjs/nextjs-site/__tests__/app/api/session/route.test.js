@@ -8,6 +8,9 @@ import {
 import { GET, POST }        from '../../../../app/api/session/route';
 
 /* global jest */
+/* global Promise */
+
+
 /* eslint no-undef: "off" */
 jest.mock('../../../../db/session', () => ({
   addSession: jest.fn(),
@@ -57,7 +60,9 @@ describe("With valid DB connection", () => {
       // TODO this is technically different than the database behavior
       // which does not care if the username is blank, do we care?
       const request = {
+        /* es-lint no-undef: "off" */
         json() { return Promise.resolve({ username: null }); }
+        /* es-lint no-undef: "error" */
       }
       // Note: do not need to mock database as we expect POST
       // to catch the error before we get there
