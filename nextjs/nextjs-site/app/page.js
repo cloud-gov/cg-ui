@@ -1,10 +1,19 @@
 import Link from 'next/link';
+import { cookies } from 'next/headers';
+import { LoginButton } from '../components/auth/LoginButton';
+import { LogoutButton } from '../components/auth/LogoutButton';
 
 export default function Home() {
+    const cookieStore = cookies();
+    const authSession = cookieStore.get("authsession");
+
     return (
         <div>
         <h1>Hello world!</h1>
+        {!authSession && <LoginButton />}
+        {authSession && <LogoutButton />}
         <ul>
+            <li><Link href="/authenticated/example">Example of an authenticated page (you can&apos;t get to it unless you&apos;re logged in).</Link></li>
             <li><Link href="/clientside">Example of clientside rendering</Link></li>
             <li><Link href="/serverside">Example of serverside rendering</Link></li>
             <li><Link href="/users">Example of dynamic rendering (server-side)</Link></li>

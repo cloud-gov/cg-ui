@@ -1,8 +1,0 @@
-app_route: jvd-id-example.app.cloud.gov
-app_name: jvd-id-example
-
-memory: 128M
-
-uaa_auth_url: https://login.fr.cloud.gov/oauth/authorize
-uaa_logout_url: https://login.fr.cloud.gov/logout.do
-uaa_token_url: https://uaa.fr.cloud.gov/oauth/token

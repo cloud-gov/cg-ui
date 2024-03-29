@@ -42,7 +42,7 @@ oauth:
       authorized-grant-types: authorization_code,refresh_token
       scope: openid
       authorities: uaa.none
-      redirect-uri: http://localhost:8000/auth/callback
+      redirect-uri: http://localhost:3000/auth/callback
   # the following is from the Cloud.gov Pages local UAA information
   # clients:
   #   cg:

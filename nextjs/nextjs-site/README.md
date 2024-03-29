@@ -100,6 +100,14 @@ Prettier configurations are found in [.prettierrc.json](./.prettierrc.json).
 
 By default, NextJS [runs linting](https://nextjs.org/docs/app/building-your-application/configuring/eslint#linting-custom-directories-and-files) on the `pages/`, `app/`, `components/`, `lib/`, and `src/` directories. To change which directories are included in linting, go to [next.config.js](./next.config.js).
 
+### Authentication (development)
+
+Authentication functionality relies on the app talking to a UAA server. See the [README](../../uaa-docker/README.md) in the `uaa-docker` directory for instructions on how to run this server locally with Docker.
+
+Authentication also relies on certain environment variables. Locally, these will be set in your `.env.local` file. Examples can be found in [.env.test](./.env.test), or talk to a team member to obtain them.
+
+Authentication business logic is found in NextJS [middleware](./middleware.js).
+
 ## Working with USWDS
 
 In order to control when we upgrade USWDS, the `@uswds/uswds` npm package has been installed using the `--save-exact` flag.
