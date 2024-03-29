@@ -15,6 +15,9 @@ export default function Page() {
         const res = await getData("/api/session");
         setSessionData(res["rows"]);
       } catch (error) {
+        // placeholder so the page still displays until we
+        // implement better error handling logic
+        setSessionData([]);
         console.log("error with request " + error.message);
       }
     }

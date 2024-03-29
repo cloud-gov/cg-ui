@@ -28,10 +28,10 @@ export function SessionForm({ sessions, setSessionData }) {
     <form action={addSession}>
       <label>
         <span>Username</span>
-        <input type="text" name="username" required />
+        <input type="text" name="username" required aria-label="username"/>
       </label>
       <div>
-        <input type="submit" value="Add" />
+        <button role="button" type="submit">Add username</button>
       </div>
     </form>
     </>
