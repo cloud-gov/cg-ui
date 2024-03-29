@@ -8,41 +8,46 @@ import { NextResponse } from 'next/server';
 import jwt from 'jsonwebtoken';
 import { postToTokenUrlAndSetSession } from './api/auth';
 
-// TODO: break these out into helper functions
+export function logout() {
+    const logoutUrl = new URL(process.env.UAA_LOGOUT_URL);
+    const params = new URLSearchParams(logoutUrl.search);
+    params.set("client_id", process.env.OAUTH_CLIENT_ID);
+    params.set("redirect", process.env.ROOT_URL);
+    // TODO: not sure why our local uaa server isn't redirecting us back to our site
+    const response = NextResponse.redirect(logoutUrl + "?" + params.toString());
+    response.cookies.delete('authsession');
+    return response;
+}
+
+export async function setAuthToken(request) {
+    if (!request.nextUrl.searchParams.get('state')) { // TODO: compare this state against client state
+        return NextResponse.json({ error: 'No state param present' }, { status: 400 })
+    }
+    const data = await postToTokenUrlAndSetSession({
+        code: request.nextUrl.searchParams.get('code'),
+        grant_type: 'authorization_code',
+        response_type: 'token',
+        client_id: process.env.OAUTH_CLIENT_ID,
+        client_secret: process.env.OAUTH_CLIENT_SECRET,
+    });
+    const decodedToken = jwt.decode(data.access_token);
+    const response = NextResponse.redirect(new URL('/', request.url));
+    response.cookies.set('authsession', JSON.stringify({
+        access_token: data.access_token,
+        email: decodedToken.email,
+        refreshToken: data.refresh_token,
+        expiry: Date.now() + data.expires_in * 1000
+    }));
+    return response;
+}
+
 export async function middleware(request) {
     if (request.nextUrl.pathname.startsWith('/logout')) {
-        const logoutUrl = new URL(process.env.UAA_LOGOUT_URL);
-        const params = new URLSearchParams(logoutUrl.search);
-        params.set("client_id", process.env.OAUTH_CLIENT_ID);
-        params.set("redirect", process.env.ROOT_URL);
-        // TODO: not sure why our local uaa server isn't redirecting us back to our site
-        const response = NextResponse.redirect(logoutUrl + "?" + params.toString());
-        response.cookies.delete('authsession');
-        return response;
+        return logout();
     }
-
     if (request.nextUrl.pathname.startsWith('/auth/callback')) {
-        if (!request.nextUrl.searchParams.get('state')) { // TODO: compare this state against client state
-            return NextResponse.json({ error: 'No state param present' }, { status: 400 })
-        }
-        const data = await postToTokenUrlAndSetSession({
-            code: request.nextUrl.searchParams.get('code'),
-            grant_type: 'authorization_code',
-            response_type: 'token',
-            client_id: process.env.OAUTH_CLIENT_ID,
-            client_secret: process.env.OAUTH_CLIENT_SECRET,
-        });
-        const decodedToken = jwt.decode(data.access_token);
-        const response = NextResponse.redirect(new URL('/', request.url));
-        response.cookies.set('authsession', JSON.stringify({
-            access_token: data.access_token,
-            email: decodedToken.email,
-            refreshToken: data.refresh_token,
-            expiry: Date.now() + data.expires_in * 1000
-        }));
-        return response;
+        return setAuthToken(request);
     }
-
 }
 
 // regex can be used here using path-to-regexp:
