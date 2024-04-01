@@ -49,7 +49,7 @@ Of the Javascript frameworks that exist, we selected [NextJS](https://nextjs.org
 
 It’s no secret that the frontend space has changed a lot in the last decade. There’s a risk that we’re choosing _yet another_ shiny new frontend framework.
 
-Our [assessment](../../nextjs/nextjs-site/_docs/assessment.md) is that NextJS is a good culmination of what the Javascript world has learned during this period of rapid change, and models the best practices that have emerged. We don’t have to be so afraid of Javascript frameworks anymore.
+Our [assessment](../../docs/assessment.md) is that NextJS is a good culmination of what the Javascript world has learned during this period of rapid change, and models the best practices that have emerged. We don’t have to be so afraid of Javascript frameworks anymore.
 
 ### Success criteria <!-- optional -->
 

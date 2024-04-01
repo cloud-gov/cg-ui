@@ -2,8 +2,8 @@ name: pull request
 
 on:
   pull_request:
-    paths:
-      - 'nextjs/nextjs-site/**'
+    paths-ignore:
+      - 'docs/**'
 
 env:
   NODE_VERSION: 18
@@ -19,10 +19,8 @@ jobs:
         with:
           node-version: ${{ env.NODE_VERSION }}
       - name: Install node dependencies
-        working-directory: nextjs/nextjs-site
         run: npm install
       - name: Run build
-        working-directory: nextjs/nextjs-site
         run: npm run build
 
   lint-next:
@@ -35,10 +33,8 @@ jobs:
         with:
           node-version: ${{ env.NODE_VERSION }}
       - name: Install node dependencies
-        working-directory: nextjs/nextjs-site
         run: npm install
       - name: Run linter
-        working-directory: nextjs/nextjs-site
         run: npm run lint
 
   test-next:
@@ -71,10 +67,8 @@ jobs:
         with:
           node-version: ${{ env.NODE_VERSION }}
       - name: Install node dependencies
-        working-directory: nextjs/nextjs-site
         run: npm install
       - name: Run tests
-        working-directory: nextjs/nextjs-site
         run: npm test
         env:
           DATABASE_URL: postgres://postgres:postgres@localhost:5432/cgui
