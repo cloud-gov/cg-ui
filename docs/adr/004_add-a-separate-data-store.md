@@ -39,27 +39,27 @@ These factors lead us towards an API-first approach.
 * *[justification. e.g., only option, which meets KO criterion decision driver | which resolves force force | ... | comes out best (see below)]*
 * *[consequences. e.g., negative impact on quality attribute, follow-up decisions required, ...]* <!-- optional -->
 
-### Success criteria <!-- optional -->
+### Success criteria
 
 - We can collect and store the data we need with ease
 - We can add more data sources with ease
 - The app has secure and compliant ways to communicate with its data sources
 
 
-## Pros and cons of the options <!-- optional -->
+## Pros and cons of the options
 
 ### 1. Tightly coupled API
 
 * `+` Managing the API alongside the same application / repository means less overhead for development and deployment
 * `+` Builds for our current needs rather than theoretical futures
-* We will be build database models, migrations, and the API in the same tech stack as our app, which means we are beholden to its abilities
-* `-` In the future, we risk storing and managing data that would be better off pulled into our app rather than being owned by it
-* `-` Using out of the box software for an "admin" view would likely be distinct from the rest of the application
+* `-` The API would be in the same stack as our app, NextJS, which does not come out of the box with support for models, migrations, database-related tests, nor object relationship mapping (ORM). We would need to invest in additional work to implement these
+* `-` We risk storing and managing data that would be better off pulled into our app rather than being owned by it
+* `-` Out of the box software for an "admin" view would likely be distinct from the rest of the application and lead to two separate applications in the same repo
 
 ### 2. Separately managed API
 
-* `+` Plans for a potential future where our application pulls in data from multiple APIs / sources, and where the datastore serves multiple applications
-* `+` Allows for selection of technology / framework specifically for API with database backend
+* `+` Anticipates a potential future where our application pulls in data from multiple APIs / sources, and where the datastore serves multiple applications
+* `+` Allows for selection of technology / framework specifically for an API with database backend
 * `-` More overhead for our current team to support: two applications, separate authentication flow, deployment, maintenance, security scanning, etc.
 
 ### 3. MVC architecture
