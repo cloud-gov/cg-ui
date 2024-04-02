@@ -4,7 +4,6 @@ import { Pool } from 'pg';
 // mock for testing purposes
 const connectionString =
   process.env.DATABASE_URL + (process.env.DATABASE_SSL ? '?ssl=true' : '');
-const pool = new Pool({ connectionString });
 
 export async function addSession(username) {
   try {
@@ -12,7 +11,9 @@ export async function addSession(username) {
       text: 'INSERT INTO session(username) VALUES($1) RETURNING id, username',
       values: [username],
     };
+    const pool = new Pool({ connectionString });
     const res = await pool.query(insert);
+    await pool.end();
     const item = res['rows'][0];
     return { id: item['id'], username: item['username'] };
   } catch (error) {
@@ -24,9 +25,12 @@ export async function addSession(username) {
 
 export async function createSessionTable() {
   try {
-    return await pool.query(
+    const pool = new Pool({ connectionString });
+    const res = await pool.query(
       'CREATE TABLE IF NOT EXISTS session ( id SERIAL PRIMARY KEY, username VARCHAR (50) NOT NULL );'
     );
+    await pool.end();
+    return res;
   } catch (error) {
     throw new Error(
       'Something went wrong creating the session table: ' + error.message
@@ -35,12 +39,17 @@ export async function createSessionTable() {
 }
 
 export async function deleteSessionTable() {
-  return await pool.query('DROP TABLE IF EXISTS session');
+  const pool = new Pool({ connectionString });
+  const res = await pool.query('DROP TABLE IF EXISTS session');
+  await pool.end();
+  return res;
 }
 
 export async function viewSessions() {
   try {
+    const pool = new Pool({ connectionString });
     const res = await pool.query('SELECT * FROM session');
+    await pool.end();
     return res.rows;
   } catch (error) {
     throw new Error('Unable to view sessions: ' + error.message);
