@@ -6,7 +6,9 @@
     "start": "next start",
     "test": "jest",
     "lint": "next lint",
-    "prepare": "husky"
+    "prepare": "husky",
+    "format": "prettier --check --ignore-path .gitignore '**/*.{js,jsx,ts,tsx}'",
+    "format:fix": "prettier --write --ignore-path .gitignore '**/*.{js,jsx,ts,tsx}'"
   },
   "dependencies": {
     "@uswds/uswds": "3.8.0",

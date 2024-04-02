@@ -4,6 +4,6 @@
   "rules": {
     "no-unused-vars": 2,
     "prefer-const": 2,
-    "prettier/prettier": "warn"
+    "prettier/prettier": "error"
   }
 }
