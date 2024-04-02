@@ -1,8 +1,10 @@
-# NextJS demo site
+# Cloud.gov UI prototype
 
-This is a starter template for [Learn Next.js](https://nextjs.org/learn).
+This is a prototype for a future Cloud.gov user interface.
 
-This demo requires Node version 18 or higher.
+The repository is based on a starter template for [Learn Next.js](https://nextjs.org/learn).
+
+It requires Node version 18 or higher.
 
 ## Development
 
@@ -75,6 +77,12 @@ npm run dev
 See results at `http://localhost:3000`
 
 ### Testing
+
+Start your docker database container. You will need this running for tests which manipulate the database:
+
+```
+docker-compose up
+```
 
 To run the entire test suite:
 
