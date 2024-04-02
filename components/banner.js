@@ -1,3 +1,5 @@
+import Image from 'next/image';
+
 export function Banner() {
   return (
     <>
@@ -9,11 +11,13 @@ export function Banner() {
           <header className="usa-banner__header">
             <div className="usa-banner__inner">
               <div className="grid-col-auto">
-                <img
+                <Image
                   aria-hidden="true"
                   className="usa-banner__header-flag"
                   src="/img/uswds/us_flag_small.png"
                   alt=""
+                  width={16}
+                  height={11}
                 />
               </div>
               <div
@@ -43,12 +47,14 @@ export function Banner() {
           >
             <div className="grid-row grid-gap-lg">
               <div className="usa-banner__guidance tablet:grid-col-6">
-                <img
+                <Image
                   className="usa-banner__icon usa-media-block__img"
                   src="/img/uswds/icon-dot-gov.svg"
                   role="img"
                   alt=""
                   aria-hidden="true"
+                  width={40}
+                  height={40}
                 />
                 <div className="usa-media-block__body">
                   <p>
@@ -59,12 +65,14 @@ export function Banner() {
                 </div>
               </div>
               <div className="usa-banner__guidance tablet:grid-col-6">
-                <img
+                <Image
                   className="usa-banner__icon usa-media-block__img"
                   src="/img/uswds/icon-https.svg"
                   role="img"
                   alt=""
                   aria-hidden="true"
+                  width={40}
+                  height={40}
                 />
                 <div className="usa-media-block__body">
                   <p>
