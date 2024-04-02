@@ -23,7 +23,7 @@ export function SessionForm({ sessions, setSessionData }) {
     <>
       <p>Add a new user session</p>
 
-      <form action={addSession}>
+      <form onSubmit={addSession}>
         <label>
           <span>Username</span>
           <input type="text" name="username" required aria-label="username" />
