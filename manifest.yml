@@ -4,5 +4,12 @@ applications:
   command: npm run build; npm start
   env:
     DATABASE_SSL: ((db_ssl))
+    OAUTH_CLIENT_ID: ((OAUTH_CLIENT_ID))
+    OAUTH_CLIENT_SECRET: ((OAUTH_CLIENT_SECRET))
+    ROOT_URL: ((ROOT_URL))
+    UAA_ROOT_URL: ((UAA_ROOT_URL))
+    UAA_AUTH_PATH: ((UAA_AUTH_PATH))
+    UAA_TOKEN_PATH: ((UAA_TOKEN_PATH))
+    UAA_LOGOUT_PATH: ((UAA_LOGOUT_PATH))
   services:
   - name: ((db_name))

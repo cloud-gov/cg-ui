@@ -106,7 +106,7 @@ export function middleware(request) {
   if (request.nextUrl.pathname.startsWith('/logout')) {
     return logout();
   }
-  if (request.nextUrl.pathname.startsWith('/auth/callback')) {
+  if (request.nextUrl.pathname.startsWith('/auth/login/callback')) {
     return requestAndSetAuthToken(request);
   }
 }
@@ -115,5 +115,10 @@ export function middleware(request) {
 // https://github.com/pillarjs/path-to-regexp#path-to-regexp-1
 // TODO: not sure why I'd need both route matching and conditionals above
 export const config = {
-  matcher: ['/auth/callback', '/logout', '/login', '/authenticated/:path*'],
+  matcher: [
+    '/auth/login/callback',
+    '/logout',
+    '/login',
+    '/authenticated/:path*',
+  ],
 };
