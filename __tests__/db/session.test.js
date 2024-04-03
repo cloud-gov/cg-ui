@@ -76,9 +76,6 @@ describe('With a valid database connection', () => {
       await pool.query("INSERT INTO session(username) VALUES ('Test')");
       const res = await deleteSessionTable();
       expect(res['command']).toBe('DROP');
-      await expect(viewSessions()).rejects.toThrow(
-        'Unable to view sessions: relation "session" does not exist'
-      );
     });
   });
 

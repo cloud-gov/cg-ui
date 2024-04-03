@@ -106,7 +106,7 @@ Eslint configurations are found in [.eslintrc.json](./.eslintrc.json).
 
 Prettier configurations are found in [.prettierrc.json](./.prettierrc.json).
 
-By default, NextJS [runs linting](https://nextjs.org/docs/app/building-your-application/configuring/eslint#linting-custom-directories-and-files) on the `pages/`, `app/`, `components/`, `lib/`, and `src/` directories. To change which directories are included in linting, go to [next.config.js](./next.config.js).
+We are using [husky](https://typicode.github.io/husky/) to manage the linting pre-commit hook, as well as to manage which files are run through the linter. To change which directories are included in linting, go to [.lintstagedrc.js](./.lintstagedrc.js).
 
 ### Authentication (development)
 

@@ -1,8 +1,9 @@
 import { addData } from '../../api/api';
 
 export function SessionForm({ sessions, setSessionData }) {
-  const addSession = async (formData) => {
-    const username = formData.get('username');
+  const addSession = async (event) => {
+    event.preventDefault();
+    const username = event.currentTarget.elements.username.value;
     try {
       // TODO implement error handling
       if (!username) {
@@ -23,7 +24,7 @@ export function SessionForm({ sessions, setSessionData }) {
     <>
       <p>Add a new user session</p>
 
-      <form action={addSession}>
+      <form onSubmit={addSession} action="#">
         <label>
           <span>Username</span>
           <input type="text" name="username" required aria-label="username" />
