@@ -1,7 +1,6 @@
 // docs: https://nextjs.org/docs/app/building-your-application/routing/middleware
-
 import { NextResponse } from 'next/server';
-import jwt from 'jsonwebtoken';
+import { decodeJwt } from 'jose';
 import { postToAuthTokenUrl } from './api/auth';
 
 export function login(request) {
@@ -32,7 +31,7 @@ export function logout() {
 }
 
 export function setAuthCookie(data, response) {
-  const decodedToken = jwt.decode(data.access_token);
+  const decodedToken = decodeJwt(data.access_token);
   response.cookies.set(
     'authsession',
     JSON.stringify({
