@@ -89,3 +89,19 @@ docker rmi fd839271
 ```
 
 Once the images are removed, use `docker-compose build` and `docker-compose up` to restart the UAA server.
+
+## Debugging
+
+### Inspecting requests
+
+Limited logging is available. You can output it with the following command, swapping in the current date. It may take several seconds for it to display updates to the log file.
+
+```bash
+docker exec -it uaa-docker-uaa-1 tail -f /tomcat/logs/localhost_access_log.2024-03-11.txt
+```
+
+### Interact with container shell
+
+```bash
+docker exec -it uaa-docker-uaa-1 sh
+```
