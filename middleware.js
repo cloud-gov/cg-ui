@@ -57,8 +57,7 @@ export async function requestAndSetAuthToken(request) {
   }
   const data = await postToAuthTokenUrl({
     code: request.nextUrl.searchParams.get('code'),
-    // grant_type: 'authorization_code',
-    grant_type: 'client_credentials',
+    grant_type: 'authorization_code',
     response_type: 'token',
     client_id: process.env.OAUTH_CLIENT_ID,
     client_secret: process.env.OAUTH_CLIENT_SECRET,
