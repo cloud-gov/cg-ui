@@ -12,7 +12,6 @@ export function login(request) {
   params.set('client_id', process.env.OAUTH_CLIENT_ID);
   params.set('state', state);
   params.set('response_type', 'code');
-  params.set('redirect_uri', process.env.ROOT_URL + 'auth/login/callback');
   const response = NextResponse.redirect(loginUrl + '?' + params.toString());
   response.cookies.set('state', state);
   return response;
@@ -58,7 +57,8 @@ export async function requestAndSetAuthToken(request) {
   }
   const data = await postToAuthTokenUrl({
     code: request.nextUrl.searchParams.get('code'),
-    grant_type: 'authorization_code',
+    // grant_type: 'authorization_code',
+    grant_type: 'client_credentials',
     response_type: 'token',
     client_id: process.env.OAUTH_CLIENT_ID,
     client_secret: process.env.OAUTH_CLIENT_SECRET,
