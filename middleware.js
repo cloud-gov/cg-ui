@@ -12,6 +12,7 @@ export function login(request) {
   params.set('client_id', process.env.OAUTH_CLIENT_ID);
   params.set('state', state);
   params.set('response_type', 'code');
+  params.set('redirect_uri', process.env.ROOT_URL + 'auth/login/callback');
   const response = NextResponse.redirect(loginUrl + '?' + params.toString());
   response.cookies.set('state', state);
   return response;
@@ -61,7 +62,6 @@ export async function requestAndSetAuthToken(request) {
     response_type: 'token',
     client_id: process.env.OAUTH_CLIENT_ID,
     client_secret: process.env.OAUTH_CLIENT_SECRET,
-    redirect_uri: process.env.ROOT_URL + 'auth/login/callback',
   });
   let response = NextResponse.redirect(new URL('/', request.url));
   response = setAuthCookie(data, response);
@@ -75,7 +75,6 @@ export async function refreshAuthToken(refreshToken) {
     refresh_token: refreshToken,
     client_id: process.env.OAUTH_CLIENT_ID,
     client_secret: process.env.OAUTH_CLIENT_SECRET,
-    redirect_uri: process.env.ROOT_URL + 'auth/login/callback',
   });
   return data;
 }
