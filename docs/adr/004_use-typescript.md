@@ -1,6 +1,6 @@
 # Use TypeScript
 
-Status: Draft
+Status: Accepted
 
 ## Context and problem statement
 
