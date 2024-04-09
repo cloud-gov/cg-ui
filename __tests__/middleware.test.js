@@ -50,7 +50,7 @@ describe('/login', () => {
   });
 });
 
-describe('auth/callback', () => {
+describe('auth/login/callback', () => {
   describe('when states do not match', () => {
     it('does not set auth session when states do not match', async () => {
       // setup
