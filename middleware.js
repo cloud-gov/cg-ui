@@ -12,7 +12,6 @@ export function login(request) {
   params.set('client_id', process.env.OAUTH_CLIENT_ID);
   params.set('state', state);
   params.set('response_type', 'code');
-  params.set('scope', 'openid');
   const response = NextResponse.redirect(loginUrl + '?' + params.toString());
   response.cookies.set('state', state);
   return response;
