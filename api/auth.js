@@ -17,8 +17,9 @@ export async function postToAuthTokenUrl(payload) {
       const data = await response.json();
       return data;
     } else {
+      const data = await response.json();
       throw new Error(
-        `an error occurred with response code ${response.status}`
+        `an error occurred with response code ${response.status}, error: ${data.error}, error_description: ${data.error_description}, original body: ${body}`
       );
     }
   } catch (error) {

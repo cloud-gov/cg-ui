@@ -50,12 +50,12 @@ describe('/login', () => {
   });
 });
 
-describe('auth/callback', () => {
+describe('auth/login/callback', () => {
   describe('when states do not match', () => {
     it('does not set auth session when states do not match', async () => {
       // setup
       const request = new NextRequest(
-        new URL('/auth/callback?state=bar', process.env.ROOT_URL)
+        new URL('/auth/login/callback?state=bar', process.env.ROOT_URL)
       );
       request.cookies.set('state', 'foo');
       // run
@@ -71,7 +71,7 @@ describe('auth/callback', () => {
     beforeAll(async () => {
       // setup
       request = new NextRequest(
-        new URL('/auth/callback?state=foo', process.env.ROOT_URL)
+        new URL('/auth/login/callback?state=foo', process.env.ROOT_URL)
       );
       request.cookies.set('state', 'foo');
       // run

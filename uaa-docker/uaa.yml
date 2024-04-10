@@ -39,10 +39,11 @@ oauth:
     my_client_id:
       id: my_client_id
       secret: my_client_secret
-      authorized-grant-types: authorization_code,refresh_token
-      scope: openid
-      authorities: uaa.none
-      redirect-uri: http://localhost:3000/auth/callback
+      redirect-uri: http://localhost:3000/auth/login/callback
+      # below are the same configs from cg-deploy-cf dev: https://github.com/cloud-gov/cg-deploy-cf/blob/6257d28690ced89dc59c240a3a7e389b4e2e574b/bosh/opsfiles/clients.yml
+      authorized-grant-types: authorization_code,client_credentials,refresh_token
+      scope: scim.me,openid,profile,uaa.user,cloud_controller.admin
+      authorities: scim.userids,scim.invite,scim.read
   # the following is from the Cloud.gov Pages local UAA information
   # clients:
   #   cg:

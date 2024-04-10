@@ -42,7 +42,10 @@ describe('auth api', () => {
         // setup
         nock(process.env.UAA_ROOT_URL)
           .post(process.env.UAA_TOKEN_PATH)
-          .reply(500);
+          .reply(500, {
+            error: 'foo_code',
+            error_description: 'foo description',
+          });
         // assert
         await expect(postToAuthTokenUrl(payload)).rejects.toThrow(
           'an error occurred with response code 500'
