@@ -2,22 +2,13 @@
 
 ## What is UAA?
 
-UAA, or the User Account and Authentication Server, is the identity management provider for Cloud Foundry. It can be used directly to store user accounts and related information. It can also be used to connect SSO (single-sign on) third party authentication. You've experienced UAA before if you have signed into cloud.gov when you are prompted to select an agency / method for signing in.
-
-Behind the scenes, there are a couple extra things going on, but at the end of the day once a user is authenticated, UAA will provide the requesting application a user token. If you decode this token, you can read the information within it. For example, when the token expires and the user's "origin" (yours is probably gsa.gov).
-
-Once an application has this token, it can now send requests to a matching Cloud Foundry Controller API (CAPI) to view and manage resources the user has access to. This API works together with the UAA API to ensure users are authenticated.
-
-When running UAA locally, there is no matching CF API to connect to that will allow you to manage resources. However, running it locally gives you the ability to make sure that the authentication portion of your app is functioning similarly to how you would expect to connect to a "real" UAA server.
-
-### Documentation
-
-- [Overview in Cloud Foundry documentation](https://docs.cloudfoundry.org/concepts/architecture/uaa.html)
-- [UAA API documentation](https://docs.cloudfoundry.org/api/uaa/version/77.1.0/index.html#overview)
+UAA is the identity management provider for Cloud Foundry. See the [UAA explainer for more information](../docs/explainers/uaa-cloud-foundry-user-accounts).
 
 ## Running UAA locally
 
 NOTE: this is a proof-of-concept and will likely need more attention before becoming useful for local development.
+
+Though you can run UAA locally, it will not generate tokens which are valid for cloud foundry instances, and has limited utility for local development.
 
 ### Prerequisites
 
