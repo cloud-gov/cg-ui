@@ -3,6 +3,8 @@ name: Security Considerations Workflow
 on:
   pull_request:
     types: [opened, edited, reopened]
+    branches-ignore:
+      - 'dependabot/**'
 
 jobs:
   security-considerations:
