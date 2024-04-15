@@ -4,7 +4,7 @@
 
 UAA, or the User Account and Authentication Server, is the identity management provider for Cloud Foundry. It store user accounts and related information and is an intermediary for agency specific SSO (single-sign on).
 
-Cloud.gov users either have a "cloud.gov" account, through [Shibboleth](https://www.shibboleth.net/about-us/the-shibboleth-project/), or they authenticate via their agency's identity provider. Regardless, they will also have a user account in UAA.
+Cloud.gov users either have a "cloud.gov" identity provider (IDP), through [Shibboleth](https://www.shibboleth.net/about-us/the-shibboleth-project/), or they authenticate via their agency's identity provider. Regardless, they will also have a user account in UAA, which will show the user's IDP in the "origin" field. 
 
 When a user authenticates, UAA provides the requesting application with a [JWT](https://jwt.io/) token. This token includes information like the token's expiration and the user's "origin" (for example, gsa.gov). This token can now be used with the Cloud Foundry Controller API (CAPI) to view and manage Cloud Foundry resources.
 
