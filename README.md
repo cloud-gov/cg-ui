@@ -31,6 +31,21 @@ CF_API_TOKEN=[your Cloud Foundry oauth token, including the "bearer" prefix]
 
 For CAPI requests to work, the url and token must be compatible. For example, you cannot use a development url and a production token together.
 
+Also note that depending on your user's permissions, you may not be able to access all Cloud Foundry endpoints.
+
+For storing local environment variables, create a `.env.local` file in the project root. Do not check this file into source control. For more info, see [NextJS docs: Environment Variables](https://nextjs.org/docs/app/building-your-application/configuring/environment-variables).
+
+### Running locally
+
+In this directory, run this to install dependencies:
+```bash
+npm install
+```
+
+#### Configure your CF API access
+
+Copy `.env.example.local` to `.env.local`. Adjust or fill in values as needed.
+
 To obtain your token, first log into the correct environment in your CLI:
 
 ```
@@ -43,20 +58,9 @@ Then run:
 cf oauth-token
 ```
 
-Copy this token and set it as your `CF_API_TOKEN` variable.
+Copy this token and set it as your `CF_API_TOKEN` in `env.local`. The token will have "bearer" at the beginning.
 
 Note that oauth tokens expire frequently. To obtain a new token, just run `cf oauth-token` again and replace your previous variable value with the new one.
-
-Also note that depending on your role, you may not be able to access all Cloud Foundry endpoints.
-
-For storing local environment variables, create a `.env.local` file in the project root. Do not check this file into source control. For more info, see [NextJS docs: Environment Variables](https://nextjs.org/docs/app/building-your-application/configuring/environment-variables).
-
-### Running locally
-
-In this directory, run this to install dependencies:
-```bash
-npm install
-```
 
 Start the database Docker container:
 
@@ -66,7 +70,13 @@ docker-compose build
 docker-compose up
 ```
 
-Copy `.env.example.local` to `.env.local`. Adjust or fill in values as needed.
+Start the user accounts and authentication (UAA) container. Follow the README in `uaa-docker` if this is the first time you're starting it.
+
+```bash
+cd uaa-docker
+# follow instructions to build before running up
+docker-compose up
+```
 
 Then run the dev server:
 
@@ -81,6 +91,7 @@ See results at `http://localhost:3000`
 Start your docker database container. You will need this running for tests which manipulate the database:
 
 ```
+cd cgui-db-docker
 docker-compose up
 ```
 
