@@ -1,9 +1,5 @@
 import { describe, it, expect, beforeEach, afterEach } from '@jest/globals';
 import { getToken } from './cloudfoundry';
-
-// Need to disable eslint for this import because
-// you need to import the module you're going to mock with Jest
-// eslint-disable-next-line no-unused-vars
 import { cookies } from 'next/headers';
 
 /* global jest */
@@ -14,7 +10,7 @@ jest.mock('next/headers', () => ({
 /* eslint no-undef: "error" */
 
 describe('cloudfoundry tests', () => {
-  describe('token', () => {
+  describe('getToken', () => {
     describe('when token environment variable is set', () => {
       beforeEach(() => {
         process.env.CF_API_TOKEN = 'manual-token';
