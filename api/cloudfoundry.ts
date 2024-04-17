@@ -5,13 +5,12 @@ import { cookies } from 'next/headers';
 import { getData } from './api';
 
 const CF_API_URL = process.env.CF_API_URL;
-const token = getToken();
 
 export async function getCFApps() {
   try {
     const body = await getData(CF_API_URL + '/apps', {
       headers: {
-        Authorization: token,
+        Authorization: getToken(),
       },
     });
     if (body.resources) {
@@ -26,11 +25,11 @@ export async function getCFApps() {
 
 // if developing locally, uses the token you manually set
 // otherwise, uses a token returned from UAA
-export function getToken() {
+export function getToken(): string {
   return getLocalToken() || getCFToken();
 }
 
-export function getCFToken() {
+export function getCFToken(): string {
   const authSession = cookies().get('authsession');
   try {
     return JSON.parse(authSession.value).accessToken;
@@ -39,6 +38,6 @@ export function getCFToken() {
   }
 }
 
-export function getLocalToken() {
+export function getLocalToken(): string | null {
   return process.env.CF_API_TOKEN;
 }

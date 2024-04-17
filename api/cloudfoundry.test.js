@@ -8,19 +8,9 @@ import { cookies } from 'next/headers';
 
 /* global jest */
 /* eslint no-undef: "off" */
-jest.mock('next/headers', () => {
-  return {
-    cookies: () => {
-      return {
-        get: () => {
-          return {
-            value: '{"accessToken":"cookie-token"}'
-          };
-        },
-      };
-    },
-  };
-});
+jest.mock('next/headers', () => ({
+  cookies: jest.fn(),
+}));
 /* eslint no-undef: "error" */
 
 describe('cloudfoundry tests', () => {
@@ -38,10 +28,28 @@ describe('cloudfoundry tests', () => {
     });
 
     describe('when token environment variable is not set', () => {
-      it('returns a token from a cookie', () => {
-        expect(getToken()).toBe('cookie-token');
+      describe('when auth cookie is set', () => {
+        beforeEach(() => {
+          cookies.mockImplementation(() => ({
+            get: () => ({ value: '{"accessToken":"cookie-token"}' }),
+          }));
+        });
+        it('returns a token from a cookie', () => {
+          expect(getToken()).toBe('cookie-token');
+        });
       });
-      it.todo('throws an error when no cookie is set');
-    })
+      describe('when auth cookie is not set', () => {
+        beforeEach(() => {
+          cookies.mockImplementation(() => ({
+            get: () => null,
+          }));
+        });
+        it('throws an error when no cookie is set', () => {
+          expect(() => getToken()).toThrow(
+            'accessToken not found, please confirm you are logged in'
+          );
+        });
+      });
+    });
   });
 });
