@@ -1,9 +1,11 @@
 ---
 applications:
-- name: ((app_name))
+- name: ((APP_NAME))
   command: npm run build; npm start
   env:
-    DATABASE_SSL: ((db_ssl))
+    AUTH_CALLBACK_PATH: ((AUTH_CALLBACK_PATH))
+    CF_API_URL: ((CF_API_URL))
+    DATABASE_SSL: ((DB_SSL))
     OAUTH_CLIENT_ID: ((OAUTH_CLIENT_ID))
     OAUTH_CLIENT_SECRET: ((OAUTH_CLIENT_SECRET))
     ROOT_URL: ((ROOT_URL))
@@ -12,4 +14,4 @@ applications:
     UAA_TOKEN_PATH: ((UAA_TOKEN_PATH))
     UAA_LOGOUT_PATH: ((UAA_LOGOUT_PATH))
   services:
-  - name: ((db_name))
+  - name: ((DB_NAME))

@@ -26,7 +26,7 @@ To access Cloud Foundry data, you must set the following environment variables:
 
 ```
 CF_API_URL=[your Cloud foundry api url, including https:// and /v version]
-CF_API_TOKEN=[your Cloud Foundry oauth token, including the "bearer" prefix]
+CF_API_TOKEN=[your Cloud Foundry oauth token, excluding the "bearer" prefix]
 ```
 
 For CAPI requests to work, the url and token must be compatible. For example, you cannot use a development url and a production token together.
@@ -58,7 +58,7 @@ Then run:
 cf oauth-token
 ```
 
-Copy this token and set it as your `CF_API_TOKEN` in `env.local`. The token will have "bearer" at the beginning.
+Copy this token and set it as your `CF_API_TOKEN` in `env.local`. Do not copy "bearer" at the beginning of the token.
 
 Note that oauth tokens expire frequently. To obtain a new token, just run `cf oauth-token` again and replace your previous variable value with the new one.
 

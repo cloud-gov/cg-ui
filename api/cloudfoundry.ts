@@ -10,7 +10,7 @@ export async function getCFApps() {
   try {
     const body = await getData(CF_API_URL + '/apps', {
       headers: {
-        Authorization: getToken(),
+        Authorization: `bearer ${getToken()}`,
       },
     });
     if (body.resources) {
