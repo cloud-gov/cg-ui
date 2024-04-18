@@ -8,6 +8,9 @@ export default function CloudFoundryPage() {
         <li>
           <Link href="/cloudfoundry/apps">apps list</Link>
         </li>
+        <li>
+          <Link href="/cloudfoundry/orgs">organizations list</Link>
+        </li>
       </ul>
     </>
   );

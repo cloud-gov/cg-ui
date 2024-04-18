@@ -6,9 +6,9 @@ import { getData } from './api';
 
 const CF_API_URL = process.env.CF_API_URL;
 
-export async function getCFApps() {
+export async function getCFResources(resourcePath: string) {
   try {
-    const body = await getData(CF_API_URL + '/apps', {
+    const body = await getData(CF_API_URL + resourcePath, {
       headers: {
         Authorization: `bearer ${getToken()}`,
       },
@@ -18,9 +18,37 @@ export async function getCFApps() {
     } else {
       throw new Error('resources not found');
     }
-  } catch (error: any) {
+  } catch (error) {
     throw new Error(error.message);
   }
+}
+export async function getCFApps() {
+  return getCFResources('/apps');
+}
+
+export async function getCFOrg(guid: string) {
+  try {
+    const body = await getData(CF_API_URL + '/organizations/' + guid, {
+      headers: {
+        Authorization: `bearer ${getToken()}`,
+      },
+    });
+    if (body) {
+      return body;
+    } else {
+      throw new Error('resources not found');
+    }
+  } catch (error) {
+    throw new Error(error.message);
+  }
+}
+
+export async function getCFOrgUsers(guid: string) {
+  return getCFResources('/organizations/' + guid + '/users');
+}
+
+export async function getCFOrgs() {
+  return getCFResources('/organizations');
 }
 
 // if developing locally, uses the token you manually set

@@ -1,3 +1,4 @@
+import Link from 'next/link';
 import { getCFApps } from '../../../api/cloudfoundry';
 
 export default async function CloudFoundryAppsPage() {
@@ -6,6 +7,7 @@ export default async function CloudFoundryAppsPage() {
     return (
       <>
         <h1>Your CF Apps</h1>
+        <Link href="/cloudfoundry">Back to Cloud Foundry home</Link>
         <ul>
           {apps.map((app) => (
             <li key={app.guid}>{app.name}</li>
