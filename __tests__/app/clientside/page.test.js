@@ -4,7 +4,7 @@
 import { describe, expect, it } from '@jest/globals';
 import '@testing-library/jest-dom';
 import { render, screen } from '@testing-library/react';
-import { Users } from '../../../app/clientside/page';
+import Clientside from '../../../app/clientside/page';
 import { getUsers } from '../../../api/users';
 
 // Initial mock setup:
@@ -18,14 +18,14 @@ jest.mock('../../../api/users', () => ({
 }));
 /* eslint no-undef: "error" */
 
-describe('Clientside Users', () => {
+describe('Clientside', () => {
   it('shows a loading indicator by default', async () => {
     // mock
     getUsers.mockImplementation(() => {
       return [{ name: 'Foo', id: 1 }];
     });
     // render
-    render(<Users />);
+    render(<Clientside />);
     // assert initial state
     const loadingIndicator = screen.getByText('loading...');
     expect(loadingIndicator).toBeInTheDocument();
@@ -40,7 +40,7 @@ describe('Clientside Users', () => {
       return [{ name: 'Foo', id: 1 }];
     });
     // render
-    render(<Users />);
+    render(<Clientside />);
     // assert
     expect(await screen.findByText('Foo')).toBeInTheDocument();
   });
@@ -51,7 +51,7 @@ describe('Clientside Users', () => {
       throw new Error('an err occurred');
     });
     // render
-    render(<Users />);
+    render(<Clientside />);
     // assert
     expect(await screen.findByText('an err occurred')).toBeInTheDocument();
   });
