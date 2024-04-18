@@ -2,7 +2,7 @@
 import { useEffect, useState } from 'react';
 import { getUsers } from '../../api/users';
 
-export function Users() {
+function Users() {
   const [users, setUsers] = useState([]);
   const [dataLoaded, setDataLoaded] = useState(false);
   const [dataLoadError, setDataLoadError] = useState(null);
