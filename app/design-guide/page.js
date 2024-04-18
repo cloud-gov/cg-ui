@@ -4,7 +4,9 @@ export default function DesignGuidePage() {
   return (
     <>
       <Banner />
-      <div> hello world</div>
+      <div className="grid-container">
+        <div> hello world</div>
+      </div>
     </>
   );
 }
