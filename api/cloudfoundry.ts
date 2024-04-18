@@ -18,7 +18,7 @@ export async function getCFApps() {
     } else {
       throw new Error('resources not found');
     }
-  } catch (error) {
+  } catch (error: any) {
     throw new Error(error.message);
   }
 }
@@ -31,6 +31,7 @@ export function getToken(): string {
 
 export function getCFToken(): string {
   const authSession = cookies().get('authsession');
+  if (authSession === undefined) throw new Error();
   try {
     return JSON.parse(authSession.value).accessToken;
   } catch (error) {
@@ -38,6 +39,6 @@ export function getCFToken(): string {
   }
 }
 
-export function getLocalToken(): string | null {
+export function getLocalToken(): string | undefined {
   return process.env.CF_API_TOKEN;
 }
