@@ -1,11 +1,11 @@
 'use client';
 
-import { Banner } from '../../components/banner';
+import { USABanner } from '../../components/USABanner';
 
 export default function DesignGuidePage() {
   return (
     <>
-      <Banner />
+      <USABanner />
       <div className="grid-container">
         <div> hello world</div>
       </div>

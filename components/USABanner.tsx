@@ -73,7 +73,7 @@ function BannerContent() {
   );
 }
 
-export function Banner() {
+export function USABanner() {
   const [isOpen, setIsOpen] = useState(false);
 
   const toggleBanner = () => setIsOpen(!isOpen);

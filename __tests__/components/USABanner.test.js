@@ -3,13 +3,13 @@
  */
 import { describe, expect, it } from '@jest/globals';
 import { render, screen, fireEvent } from '@testing-library/react';
-import { Banner } from '../../components/banner';
+import { USABanner } from '../../components/USABanner';
 
-describe('<Banner />', () => {
+describe('<USABanner />', () => {
   describe('on initial load', () => {
     it('content is collapsed', () => {
       // act
-      render(<Banner />);
+      render(<USABanner />);
       // assert
       const content = screen.queryByText('Official websites use .gov');
       expect(content).not.toBeInTheDocument();
@@ -19,7 +19,7 @@ describe('<Banner />', () => {
   describe('when button is clicked', () => {
     it('content expands', async () => {
       // setup
-      render(<Banner />);
+      render(<USABanner />);
       // act
       // There are two elements with this text, but only one is visible (the other is for screen readers). So we get the second of the two, which is the button we want.
       const button = screen.getAllByText('Here’s how you know')[1];
