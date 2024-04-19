@@ -32,6 +32,17 @@ export const mockOrg = {
   },
 };
 
+// /v3/organizations/[bad-guid]
+export const mockOrgNotFound = {
+  errors: [
+    {
+      detail: 'Organization not found',
+      title: 'CF-ResourceNotFound',
+      code: 10010,
+    },
+  ],
+};
+
 // /v3/organizations/[guid]/users
 export const mockOrgUsers = {
   pagination: {

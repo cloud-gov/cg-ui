@@ -20,7 +20,6 @@ export default async function OrgPage({
           <li>Suspended: {org.suspended}</li>
           <li>Created: {org.created_at}</li>
         </ul>
-        {/* <div>{JSON.stringify(org)}</div> */}
 
         <h2>Org members</h2>
         <ul>
@@ -32,7 +31,7 @@ export default async function OrgPage({
         </ul>
       </>
     );
-  } catch (error) {
+  } catch (error: any) {
     return <div>{error.message}</div>;
   }
 }

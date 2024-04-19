@@ -17,7 +17,7 @@ export default async function CloudFoundryOrgsPage() {
         </ul>
       </>
     );
-  } catch (error) {
+  } catch (error: any) {
     return <div role="alert">{error.message}</div>;
   }
 }

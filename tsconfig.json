@@ -22,8 +22,7 @@
       {
         "name": "next"
       }
-    ],
-    "useUnknownInCatchVariables": false
+    ]
   },
   "include": [
     "next-env.d.ts",

@@ -18,7 +18,7 @@ export async function getCFResources(resourcePath: string) {
     } else {
       throw new Error('resources not found');
     }
-  } catch (error) {
+  } catch (error: any) {
     throw new Error(error.message);
   }
 }
@@ -26,7 +26,20 @@ export async function getCFApps() {
   return getCFResources('/apps');
 }
 
-export async function getCFOrg(guid: string) {
+interface CfOrg {
+  guid: string;
+  created_at: string;
+  updated_at: string;
+  name: string;
+  suspended: boolean;
+  // relationships, metadata, and links are all objects, but as we
+  // do not rely on them existing yet, they are not defined in the interface
+  relationships: any;
+  metadata: any;
+  links: any;
+}
+
+export async function getCFOrg(guid: string): Promise<CfOrg> {
   try {
     const body = await getData(CF_API_URL + '/organizations/' + guid, {
       headers: {
@@ -36,9 +49,9 @@ export async function getCFOrg(guid: string) {
     if (body) {
       return body;
     } else {
-      throw new Error('resources not found');
+      throw new Error('resource not found');
     }
-  } catch (error) {
+  } catch (error: any) {
     throw new Error(error.message);
   }
 }
@@ -62,7 +75,7 @@ export function getCFToken(): string {
   if (authSession === undefined) throw new Error();
   try {
     return JSON.parse(authSession.value).accessToken;
-  } catch (error) {
+  } catch (error: any) {
     throw new Error('accessToken not found, please confirm you are logged in');
   }
 }
