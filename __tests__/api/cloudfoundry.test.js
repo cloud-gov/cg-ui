@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach, afterEach } from '@jest/globals';
-import { getToken } from './cloudfoundry';
+import { getToken } from '../../api/cloudfoundry';
 import { cookies } from 'next/headers';
 
 /* global jest */
