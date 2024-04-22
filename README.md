@@ -4,7 +4,7 @@ This is a prototype for a future Cloud.gov user interface.
 
 The repository is based on a starter template for [Learn Next.js](https://nextjs.org/learn).
 
-It requires Node version 18 or higher.
+It requires Node version 20 or higher.
 
 ## Development
 
