@@ -2,7 +2,7 @@
 // API library for cloud foundry requests
 /***/
 import { cookies } from 'next/headers';
-import { addData, getData } from './api';
+import { addData, deleteData, getData } from './api';
 
 const CF_API_URL = process.env.CF_API_URL;
 
@@ -45,6 +45,14 @@ export async function addCFOrgRole({ orgGuid, roleType, username }: NewRole) {
     return await addData(CF_API_URL + '/roles', data);
   } catch (error: any) {
     throw new Error(`failed to add user to org: ${error.message}`);
+  }
+}
+
+export async function deleteCFOrgRole(roleGuid: string) {
+  try {
+    return await deleteData(CF_API_URL + '/roles/' + roleGuid);
+  } catch (error: any) {
+    throw new Error(`failed to remove user from org: ${error.message}`);
   }
 }
 

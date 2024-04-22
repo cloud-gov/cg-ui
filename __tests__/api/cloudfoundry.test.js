@@ -3,6 +3,7 @@ import { cookies } from 'next/headers';
 import { describe, it, expect, beforeEach, afterEach } from '@jest/globals';
 import {
   addCFOrgRole,
+  deleteCFOrgRole,
   getToken,
   getCFOrg,
   getCFOrgUsers,
@@ -19,6 +20,7 @@ import {
   mockRoleCreateBadRole,
   mockRoleCreateExisting,
   mockRoleCreateInvalid,
+  mockRoleDeleteInvalid,
 } from './mocks/roles';
 
 /* global jest */
@@ -28,24 +30,36 @@ jest.mock('next/headers', () => ({
 }));
 /* eslint no-undef: "error" */
 
-describe('cloudfoundry tests', () => {
-  const reqDataBuilder = function (orgGUID, roleType, username) {
-    return {
-      type: roleType,
-      relationships: {
-        user: {
-          data: {
-            username: username,
-          },
-        },
-        organization: {
-          data: {
-            guid: orgGUID,
-          },
+const reqDataBuilder = function (orgGUID, roleType, username) {
+  return {
+    type: roleType,
+    relationships: {
+      user: {
+        data: {
+          username: username,
         },
       },
-    };
+      organization: {
+        data: {
+          guid: orgGUID,
+        },
+      },
+    },
   };
+};
+
+describe('cloudfoundry tests', () => {
+  beforeEach(() => {
+    if (!nock.isActive()) {
+      nock.activate();
+    }
+  });
+
+  afterEach(() => {
+    nock.cleanAll();
+    // https://github.com/nock/nock#memory-issues-with-jest
+    nock.restore();
+  });
 
   describe('addCFOrgRole', () => {
     it('when given a valid data, returns create message', async () => {
@@ -123,6 +137,28 @@ describe('cloudfoundry tests', () => {
       }).rejects.toThrow(
         new Error(
           'failed to add user to org: an error occurred with response code 422'
+        )
+      );
+    });
+  });
+
+  describe('deleteCFOrgRole', () => {
+    it('when given a valid role, returns true', async () => {
+      nock(process.env.CF_API_URL).delete('/roles/validGUID').reply(202);
+      const res = await deleteCFOrgRole('validGUID');
+      expect(res).toBeTruthy();
+    });
+
+    it('when given an invalid role guid, throws an error', async () => {
+      nock(process.env.CF_API_URL)
+        .delete('/roles/invalidGUID')
+        .reply(404, mockRoleDeleteInvalid);
+
+      expect(async () => {
+        await deleteCFOrgRole('invalidGUID');
+      }).rejects.toThrow(
+        new Error(
+          'failed to remove user from org: an error occurred with response code 404'
         )
       );
     });

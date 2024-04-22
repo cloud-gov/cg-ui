@@ -75,8 +75,8 @@ export const mockRoleCreateInvalid = {
 };
 
 // Request /v3/roles/[guid] -X DELETE
-// Response 202 (no body)
-export const mockRoleDelete = undefined;
+// Response 202
+// (no body)
 
 // Request /v3/roles/[invalid-guid] -X DELETE
 // Response 404
