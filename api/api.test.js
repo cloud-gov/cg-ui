@@ -1,6 +1,6 @@
 import { describe, beforeEach, afterEach, it, expect } from '@jest/globals';
 import nock from 'nock';
-import { addData, getData } from './api';
+import { addData, deleteData, getData } from './api';
 import mockUsers from './mocks/users';
 
 describe('api tests', () => {
@@ -34,6 +34,22 @@ describe('api tests', () => {
       expect(await addData('http://example.com/success', reqData)).toEqual(
         resData
       );
+    });
+  });
+
+  describe('deleteData', () => {
+    it('throws error if response is 500', async () => {
+      nock('http://example.com').delete('/error/id').reply(500);
+
+      expect(async () => {
+        await deleteData('http://example.com/error/id');
+      }).rejects.toThrow(new Error('an error occurred with response code 500'));
+    });
+
+    it('returns nothing if successful', async () => {
+      nock('http://example.com').delete('/success/id').reply(202);
+
+      expect(await deleteData('http://example.com/success/id')).toBeTruthy();
     });
   });
 

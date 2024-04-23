@@ -2,9 +2,59 @@
 // API library for cloud foundry requests
 /***/
 import { cookies } from 'next/headers';
-import { getData } from './api';
+import { addData, deleteData, getData } from './api';
 
 const CF_API_URL = process.env.CF_API_URL;
+
+interface CfOrg {
+  guid: string;
+  created_at: string;
+  updated_at: string;
+  name: string;
+  suspended: boolean;
+  // relationships, metadata, and links are all objects, but as we
+  // do not rely on them existing yet, they are not defined in the interface
+  relationships: any;
+  metadata: any;
+  links: any;
+}
+
+interface NewRole {
+  orgGuid: string;
+  roleType: string;
+  username: string;
+}
+
+export async function addCFOrgRole({ orgGuid, roleType, username }: NewRole) {
+  try {
+    const data = {
+      type: roleType,
+      relationships: {
+        user: {
+          data: {
+            username: username,
+          },
+        },
+        organization: {
+          data: {
+            guid: orgGuid,
+          },
+        },
+      },
+    };
+    return await addData(CF_API_URL + '/roles', data);
+  } catch (error: any) {
+    throw new Error(`failed to add user to org: ${error.message}`);
+  }
+}
+
+export async function deleteCFOrgRole(roleGuid: string) {
+  try {
+    return await deleteData(CF_API_URL + '/roles/' + roleGuid);
+  } catch (error: any) {
+    throw new Error(`failed to remove user from org: ${error.message}`);
+  }
+}
 
 export async function getCFResources(resourcePath: string) {
   try {
@@ -22,21 +72,9 @@ export async function getCFResources(resourcePath: string) {
     throw new Error(error.message);
   }
 }
+
 export async function getCFApps() {
   return getCFResources('/apps');
-}
-
-interface CfOrg {
-  guid: string;
-  created_at: string;
-  updated_at: string;
-  name: string;
-  suspended: boolean;
-  // relationships, metadata, and links are all objects, but as we
-  // do not rely on them existing yet, they are not defined in the interface
-  relationships: any;
-  metadata: any;
-  links: any;
 }
 
 export async function getCFOrg(guid: string): Promise<CfOrg> {

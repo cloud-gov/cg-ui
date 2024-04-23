@@ -1,4 +1,5 @@
-// /v3/organizations/[guid]
+// Request /v3/organizations/[guid]
+// Response 200
 export const mockOrg = {
   guid: 'af961639-b7c4-4257-aa33-854f81a435a9',
   created_at: '2024-01-17T19:08:37Z',
@@ -32,8 +33,9 @@ export const mockOrg = {
   },
 };
 
-// /v3/organizations/[bad-guid]
-export const mockOrgNotFound = {
+// Request /v3/organizations/[invalid-guid]
+// Response 404
+export const mockOrgInvalid = {
   errors: [
     {
       detail: 'Organization not found',
@@ -43,7 +45,8 @@ export const mockOrgNotFound = {
   ],
 };
 
-// /v3/organizations/[guid]/users
+// Request /v3/organizations/[guid]/users
+// Response 200
 export const mockOrgUsers = {
   pagination: {
     total_results: 2,
@@ -95,7 +98,8 @@ export const mockOrgUsers = {
   ],
 };
 
-// /v3/organizations
+// Request /v3/organizations
+// Response 200
 export const mockOrgs = {
   pagination: {
     total_results: 3,

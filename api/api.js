@@ -21,6 +21,24 @@ export async function addData(url, body) {
   }
 }
 
+export async function deleteData(url) {
+  try {
+    const res = await fetch(url, {
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      method: 'DELETE',
+    });
+    if (res.ok) {
+      return true;
+    } else {
+      throw new Error(`an error occurred with response code ${res.status}`);
+    }
+  } catch (error) {
+    throw new Error(error.message);
+  }
+}
+
 export async function getData(url, options = {}) {
   try {
     const res = await fetch(url, {
