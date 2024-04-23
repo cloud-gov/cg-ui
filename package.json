@@ -20,7 +20,7 @@
     "react-dom": "18.2.0"
   },
   "engines": {
-    "node": ">=18"
+    "node": ">=20"
   },
   "devDependencies": {
     "@testing-library/jest-dom": "^6.4.2",
