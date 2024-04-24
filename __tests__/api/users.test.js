@@ -1,6 +1,6 @@
 import { describe, beforeEach, afterEach, it, expect } from '@jest/globals';
 import nock from 'nock';
-import { getUsers, getUser, userDomain, allUserRoute } from './users';
+import { getUsers, getUser, userDomain, allUserRoute } from '../../api/users';
 import mockUsers from './mocks/users';
 
 describe('users api', () => {
