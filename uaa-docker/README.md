@@ -41,7 +41,7 @@ sudo launchctl load /Library/LaunchDaemons/com.zscaler.service.plist /Library/La
 docker-compose up
 ```
 
-Give it just a minute, then check `localhost:9000` for your brand new UAA server.
+Give it just a minute, then check `localhost:9001` for your brand new UAA server.
 
 Your application will need the following things in order to work with UAA:
 
@@ -53,9 +53,9 @@ You can log in with the demo user emails / passwords found in `uaa.yml`.
 
 Some endpoints that might be useful (see the UAA documentation for more information):
 
-- `localhost:9000/oauth/authorize`
-- `localhost:9000/oauth/token`
-- `localhost:9000/logout.do`
+- `localhost:9001/oauth/authorize`
+- `localhost:9001/oauth/token`
+- `localhost:9001/logout.do`
 
 ### Shut down UAA
 
@@ -72,11 +72,8 @@ Simply run `docker-compose up` when you'd like to restart UAA.
 UAA is configured with the `uaa.yml` file. If you would like to change your client id / secret, listen on a different port, add users, or otherwise alter the configuration, you will need to remove your images and rebuild them.
 
 ```bash
-# list your images
-docker images
-
-# remove a specific image using the IMAGE ID or its name
-docker rmi fd839271
+docker rmi uaa-docker-uaa
+docker rmi uaa-docker-db
 ```
 
 Once the images are removed, use `docker-compose build` and `docker-compose up` to restart the UAA server.
