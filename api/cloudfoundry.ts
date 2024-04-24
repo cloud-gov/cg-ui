@@ -25,6 +25,9 @@ interface NewRole {
   username: string;
 }
 
+// TODO consider a generic addCFResource function that
+// will take care of headers like content-type and the token
+
 export async function addCFOrgRole({ orgGuid, roleType, username }: NewRole) {
   try {
     const data = {
@@ -42,39 +45,34 @@ export async function addCFOrgRole({ orgGuid, roleType, username }: NewRole) {
         },
       },
     };
-    return await addData(CF_API_URL + '/roles', data);
+    return await addData(CF_API_URL + '/roles', data, {
+      headers: {
+        Authorization: `bearer ${getToken()}`,
+      },
+    });
   } catch (error: any) {
     throw new Error(`failed to add user to org: ${error.message}`);
   }
 }
 
-export async function deleteCFOrgRole(roleGuid: string) {
+export async function deleteCFResource(path: string) {
   try {
-    return await deleteData(CF_API_URL + '/roles/' + roleGuid);
+    return await deleteData(CF_API_URL + path, {
+      headers: {
+        Authorization: `bearer ${getToken()}`,
+      },
+    });
   } catch (error: any) {
     throw new Error(`failed to remove user from org: ${error.message}`);
   }
 }
 
-export async function getCFResources(resourcePath: string) {
-  try {
-    const body = await getData(CF_API_URL + resourcePath, {
-      headers: {
-        Authorization: `bearer ${getToken()}`,
-      },
-    });
-    if (body.resources) {
-      return body.resources;
-    } else {
-      throw new Error('resources not found');
-    }
-  } catch (error: any) {
-    throw new Error(error.message);
-  }
+export async function deleteCFOrgRole(roleGuid: string) {
+  return await deleteCFResource('/roles/' + roleGuid);
 }
 
 export async function getCFApps() {
-  return getCFResources('/apps');
+  return await getCFResources('/apps');
 }
 
 export async function getCFOrg(guid: string): Promise<CfOrg> {
@@ -100,6 +98,23 @@ export async function getCFOrgUsers(guid: string) {
 
 export async function getCFOrgs() {
   return getCFResources('/organizations');
+}
+
+export async function getCFResources(resourcePath: string) {
+  try {
+    const body = await getData(CF_API_URL + resourcePath, {
+      headers: {
+        Authorization: `bearer ${getToken()}`,
+      },
+    });
+    if (body.resources) {
+      return body.resources;
+    } else {
+      throw new Error('resources not found');
+    }
+  } catch (error: any) {
+    throw new Error(error.message);
+  }
 }
 
 // if developing locally, uses the token you manually set
