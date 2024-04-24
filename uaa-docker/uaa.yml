@@ -13,8 +13,8 @@ scim:
   username_pattern: '[a-z0-9+\-_.@]+'
   users:
     # - name|password|email|firstName|lastName|groups|origin
-    - admin@example.com|password|admin@example.com|Admin|Admin|cg.admin
-    - user@example.com|password|user@example.com|User|User|cg.user
+    - admin@example.com|adminadmin|admin@example.com|Admin|Admin|cg.admin
+    - user@example.com|useruser|user@example.com|User|User|cg.user
 
 disableInternalAuth: false
 disableInternalUserManagement: false
@@ -42,23 +42,8 @@ oauth:
       redirect-uri: http://localhost:3000/auth/login/callback
       # below are the same configs from cg-deploy-cf dev: https://github.com/cloud-gov/cg-deploy-cf/blob/6257d28690ced89dc59c240a3a7e389b4e2e574b/bosh/opsfiles/clients.yml
       authorized-grant-types: authorization_code,client_credentials,refresh_token
-      scope: scim.me,openid,profile,uaa.user,cloud_controller.admin
+      scope: openid,uaa.user,cloud_controller.admin,cloud_controller.read,cloud_controller.write
       authorities: scim.userids,scim.invite,scim.read
-  # the following is from the Cloud.gov Pages local UAA information
-  # clients:
-  #   cg:
-  #     name: CG client
-  #     id: cg
-  #     secret: client-secret
-  #     override: true
-  #     scope: openid,scim.invite
-  #     authorized-grant-types: authorization_code,client_credentials
-  #     authorities: groups.update,scim.read,scim.invite,scim.write
-  #     access-token-validity: 600
-  #     refresh-token-validity: 259200
-  #     autoapprove: true
-  #     app-launch-url: http://localhost:8000
-  #     redirect-uri: http://localhost:8000,http://localhost:8000/auth/uaa/callback,http://localhost:1337/admin/auth/uaa/callback,http://localhost:1340/auth/uaa/callback,http://localhost:8000,http://localhost:8000/auth/uaa/callback,http://localhost:8000/admin/auth/uaa/callback
 
 encryption:
   active_key_label: CHANGE-THIS-KEY
