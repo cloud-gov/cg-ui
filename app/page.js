@@ -34,6 +34,9 @@ export default function Home() {
         <li>
           <Link href="/design-guide">Design guide</Link>
         </li>
+        <li>
+          <Link href="/prototypes/manage-users">Prototype: Manage Users</Link>
+        </li>
       </ul>
 
       <h2>Database experiment</h2>

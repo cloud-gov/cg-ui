@@ -1,0 +1,20 @@
+.users-table {
+  border-top: 1px solid grey;
+}
+
+.users-table-row {
+  border-bottom: 1px solid grey;
+}
+
+.users-table-timestamp {
+  flex-shrink: 0;
+  margin-left: auto;
+}
+
+.users-table-space {
+  border-right: 1px solid grey;
+}
+
+.users-table-spaces-btn {
+  margin-left: 1rem;
+}
