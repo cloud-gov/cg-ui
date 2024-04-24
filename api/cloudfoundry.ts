@@ -1,3 +1,4 @@
+'use server';
 /***/
 // API library for cloud foundry requests
 /***/
@@ -29,29 +30,37 @@ interface NewRole {
 // will take care of headers like content-type and the token
 
 export async function addCFOrgRole({ orgGuid, roleType, username }: NewRole) {
-  try {
-    const data = {
-      type: roleType,
-      relationships: {
-        user: {
-          data: {
-            username: username,
-          },
-        },
-        organization: {
-          data: {
-            guid: orgGuid,
-          },
+  const data = {
+    type: roleType,
+    relationships: {
+      user: {
+        data: {
+          username: username,
         },
       },
-    };
-    return await addData(CF_API_URL + '/roles', data, {
+      organization: {
+        data: {
+          guid: orgGuid,
+        },
+      },
+    },
+  };
+  try {
+    const response = await addData(CF_API_URL + '/roles', data, {
       headers: {
         Authorization: `bearer ${getToken()}`,
       },
     });
+    const resData = await response.json();
+    if (response.ok) {
+      return resData;
+    } else {
+      throw new Error(
+        `an error occurred with response code ${response.status}, error: ${resData.error}, error_description: ${resData.error_description}, original body: ${data}`
+      );
+    }
   } catch (error: any) {
-    throw new Error(`failed to add user to org: ${error.message}`);
+    throw new Error(`${error.message}, original body: ${JSON.stringify(data)}`);
   }
 }
 
@@ -119,11 +128,11 @@ export async function getCFResources(resourcePath: string) {
 
 // if developing locally, uses the token you manually set
 // otherwise, uses a token returned from UAA
-export function getToken(): string {
+function getToken(): string {
   return getLocalToken() || getCFToken();
 }
 
-export function getCFToken(): string {
+function getCFToken(): string {
   const authSession = cookies().get('authsession');
   if (authSession === undefined) throw new Error();
   try {
@@ -133,6 +142,6 @@ export function getCFToken(): string {
   }
 }
 
-export function getLocalToken(): string | undefined {
+function getLocalToken(): string | undefined {
   return process.env.CF_API_TOKEN;
 }
