@@ -27,8 +27,8 @@ export function UsersTableSpaces({
   return (
     <div>
       <div className="display-flex flex-row padding-x-2">
-        {spaces.slice(0, maxSpaces).map((space) => (
-          <UsersTableSpace space={space} key={space.spaceName} />
+        {spaces.slice(0, maxSpaces).map((space, i) => (
+          <UsersTableSpace space={space} key={i} />
         ))}
         {spaces.length > maxSpaces && (
           <button
