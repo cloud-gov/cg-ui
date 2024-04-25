@@ -1,8 +1,11 @@
 'use server';
 
 import Link from 'next/link';
-import { getCFOrg, getCFOrgUsers } from '../../../../api/cloudfoundry';
-import { UserAction } from './form.tsx';
+import {
+  getCFOrg,
+  getCFOrgUsers,
+} from '../../../../api/cloudfoundry/cloudfoundry';
+import { UserAction } from './form';
 
 export default async function OrgPage({
   params,

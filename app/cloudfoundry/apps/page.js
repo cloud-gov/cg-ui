@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { getCFApps } from '../../../api/cloudfoundry';
+import { getCFApps } from '../../../api/cloudfoundry/cloudfoundry';
 
 export default async function CloudFoundryAppsPage() {
   try {

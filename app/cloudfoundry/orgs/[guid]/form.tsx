@@ -38,7 +38,7 @@ export function UserAction({ orgGuid }: { orgGuid: string }) {
         </select>
         <div>
           <button className="usa-button" role="button" type="submit">
-            Add user (not implemented)
+            Add user
           </button>
         </div>
       </form>

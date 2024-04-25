@@ -2,8 +2,9 @@
 /***/
 // API library for cloud foundry requests
 /***/
-import { cookies } from 'next/headers';
-import { addData, deleteData, getData } from './api';
+
+import { addData, deleteData, getData } from '../api';
+import { getToken } from './token';
 
 const CF_API_URL = process.env.CF_API_URL;
 
@@ -49,16 +50,10 @@ export async function addCFOrgRole({ orgGuid, roleType, username }: NewRole) {
     const response = await addData(CF_API_URL + '/roles', data, {
       headers: {
         Authorization: `bearer ${getToken()}`,
+        'Content-Type': 'application/json',
       },
     });
-    const resData = await response.json();
-    if (response.ok) {
-      return resData;
-    } else {
-      throw new Error(
-        `an error occurred with response code ${response.status}, error: ${resData.error}, error_description: ${resData.error_description}, original body: ${data}`
-      );
-    }
+    return response;
   } catch (error: any) {
     throw new Error(`${error.message}, original body: ${JSON.stringify(data)}`);
   }
@@ -102,11 +97,11 @@ export async function getCFOrg(guid: string): Promise<CfOrg> {
 }
 
 export async function getCFOrgUsers(guid: string) {
-  return getCFResources('/organizations/' + guid + '/users');
+  return await getCFResources('/organizations/' + guid + '/users');
 }
 
 export async function getCFOrgs() {
-  return getCFResources('/organizations');
+  return await getCFResources('/organizations');
 }
 
 export async function getCFResources(resourcePath: string) {
@@ -124,24 +119,4 @@ export async function getCFResources(resourcePath: string) {
   } catch (error: any) {
     throw new Error(error.message);
   }
-}
-
-// if developing locally, uses the token you manually set
-// otherwise, uses a token returned from UAA
-function getToken(): string {
-  return getLocalToken() || getCFToken();
-}
-
-function getCFToken(): string {
-  const authSession = cookies().get('authsession');
-  if (authSession === undefined) throw new Error();
-  try {
-    return JSON.parse(authSession.value).accessToken;
-  } catch (error: any) {
-    throw new Error('accessToken not found, please confirm you are logged in');
-  }
-}
-
-function getLocalToken(): string | undefined {
-  return process.env.CF_API_TOKEN;
 }

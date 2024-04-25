@@ -1,6 +1,9 @@
 import nock from 'nock';
 import { afterEach, beforeEach, describe, expect, it } from '@jest/globals';
-import { addCFOrgRole, deleteCFOrgRole } from '../../../api/cloudfoundry';
+import {
+  addCFOrgRole,
+  deleteCFOrgRole,
+} from '../../../api/cloudfoundry/cloudfoundry';
 import {
   mockRoleCreate,
   mockRoleCreateBadRole,
@@ -70,17 +73,12 @@ describe('cloudfoundry tests', () => {
       nock(process.env.CF_API_URL)
         .post('/roles', reqData)
         .reply(422, mockRoleCreateBadRole);
-      expect(async () => {
-        await addCFOrgRole({
-          orgGuid: 'validOrg',
-          roleType: 'bad_role',
-          username: 'validUser',
-        });
-      }).rejects.toThrow(
-        new Error(
-          'failed to add user to org: an error occurred with response code 422'
-        )
-      );
+      const res = await addCFOrgRole({
+        orgGuid: 'validOrg',
+        roleType: 'bad_role',
+        username: 'validUser',
+      });
+      expect(res).toEqual(mockRoleCreateBadRole);
     });
 
     it('when the role already exists, returns error message', async () => {
@@ -92,17 +90,12 @@ describe('cloudfoundry tests', () => {
       nock(process.env.CF_API_URL)
         .post('/roles', reqData)
         .reply(422, mockRoleCreateExisting);
-      expect(async () => {
-        await addCFOrgRole({
-          orgGuid: 'validOrg',
-          roleType: 'organization_user',
-          username: 'validUser',
-        });
-      }).rejects.toThrow(
-        new Error(
-          'failed to add user to org: an error occurred with response code 422'
-        )
-      );
+      const res = await addCFOrgRole({
+        orgGuid: 'validOrg',
+        roleType: 'organization_user',
+        username: 'validUser',
+      });
+      expect(res).toEqual(mockRoleCreateExisting);
     });
 
     it('when given a nonexistent user, returns error message', async () => {
@@ -114,17 +107,12 @@ describe('cloudfoundry tests', () => {
       nock(process.env.CF_API_URL)
         .post('/roles', reqData)
         .reply(422, mockRoleCreateInvalid);
-      expect(async () => {
-        await addCFOrgRole({
-          orgGuid: 'validOrg',
-          roleType: 'organization_user',
-          username: 'invalidUser',
-        });
-      }).rejects.toThrow(
-        new Error(
-          'failed to add user to org: an error occurred with response code 422'
-        )
-      );
+      const res = await addCFOrgRole({
+        orgGuid: 'validOrg',
+        roleType: 'organization_user',
+        username: 'invalidUser',
+      });
+      expect(res).toEqual(mockRoleCreateInvalid);
     });
   });
 
