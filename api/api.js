@@ -2,18 +2,20 @@
 // API library for basic error handling and serialization
 /***/
 
-export async function addData(url, body) {
+export async function addData(url, body, options = {}) {
   try {
-    const res = await fetch(url, {
-      headers: {
-        'Content-Type': 'application/json',
-      },
+    const reqOptions = {
       method: 'POST',
       body: JSON.stringify(body),
-    });
-    if (res.ok) {
-      return await res.json();
+      ...options,
+    };
+    const res = await fetch(url, reqOptions);
+    if (res.ok || res.status == 422) {
+      const json = await res.json();
+      return json;
     } else {
+      // note: if debugging cloudcoundry responses, it may be helpful
+      // to check the res.json() contents here
       throw new Error(`an error occurred with response code ${res.status}`);
     }
   } catch (error) {
@@ -21,13 +23,11 @@ export async function addData(url, body) {
   }
 }
 
-export async function deleteData(url) {
+export async function deleteData(url, options = {}) {
   try {
     const res = await fetch(url, {
-      headers: {
-        'Content-Type': 'application/json',
-      },
       method: 'DELETE',
+      ...options,
     });
     if (res.ok) {
       return true;

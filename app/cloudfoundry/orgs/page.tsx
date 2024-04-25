@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { getCFOrgs } from '../../../api/cloudfoundry';
+import { getCFOrgs } from '../../../api/cloudfoundry/cloudfoundry';
 
 export default async function CloudFoundryOrgsPage() {
   try {
