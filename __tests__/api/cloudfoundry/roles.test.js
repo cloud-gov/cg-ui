@@ -3,13 +3,16 @@ import { afterEach, beforeEach, describe, expect, it } from '@jest/globals';
 import {
   addCFOrgRole,
   deleteCFOrgRole,
+  getCFOrgUsers,
 } from '../../../api/cloudfoundry/cloudfoundry';
+import { mockOrgNotFound } from '../mocks/organizations';
 import {
   mockRoleCreate,
   mockRoleCreateBadRole,
   mockRoleCreateExisting,
   mockRoleCreateInvalid,
   mockRoleDeleteInvalid,
+  mockUsersByOrganization,
 } from '../mocks/roles';
 
 const reqDataBuilder = function (orgGUID, roleType, username) {
@@ -48,6 +51,55 @@ describe('cloudfoundry tests', () => {
     nock.cleanAll();
     // https://github.com/nock/nock#memory-issues-with-jest
     nock.restore();
+  });
+
+  describe('getCFOrgUsers', () => {
+    it('when given a valid org guid, returns associated users', async () => {
+      nock(process.env.CF_API_URL)
+        .get('/roles?organization_guids=validGUID&include=user')
+        .reply(200, mockUsersByOrganization);
+      const res = await getCFOrgUsers('validGUID');
+
+      // getCFOrgUsers should rearrange the roles response to be oriented
+      // around the users
+      const expected = {
+        '73193f8c-e03b-43c8-aeee-8670908899d2': {
+          origin: 'example.com',
+          roles: [
+            {
+              guid: 'fb55574d-6b84-405e-b23c-0984f0a0964a',
+              type: 'organization_user',
+            },
+          ],
+          username: 'user1@example.com',
+        },
+        'ab9dc32e-d7be-4b8d-b9cb-d30d82ae0199': {
+          origin: 'example.com',
+          roles: [
+            {
+              guid: 'c98f8f55-dc53-498a-bb65-9991ab9f8b78',
+              type: 'organization_manager',
+            },
+          ],
+          username: 'user2@example.com',
+        },
+      };
+      expect(res).toEqual(expected);
+    });
+
+    it('when given an invalid or unauthorized org guid, throws an error', async () => {
+      nock(process.env.CF_API_URL)
+        .get('/roles?organization_guids=invalidGUID&include=user')
+        .reply(404, mockOrgNotFound);
+
+      expect(async () => {
+        await getCFOrgUsers('invalidGUID');
+      }).rejects.toThrow(
+        new Error(
+          'failed to get org user roles an error occurred with response code 404'
+        )
+      );
+    });
   });
 
   describe('addCFOrgRole', () => {
