@@ -32,7 +32,11 @@ export interface CfOrgUser {
   username: string;
 }
 
-interface NewRole {
+interface CfOrgUserRoleList {
+  [guid: string]: CfOrgUser;
+}
+
+interface SetOrgUserRole {
   orgGuid: string;
   roleType: string;
   username: string;
@@ -41,7 +45,11 @@ interface NewRole {
 // TODO consider a generic addCFResource function that
 // will take care of headers like content-type and the token
 
-export async function addCFOrgRole({ orgGuid, roleType, username }: NewRole) {
+export async function addCFOrgRole({
+  orgGuid,
+  roleType,
+  username,
+}: SetOrgUserRole) {
   const data = {
     type: roleType,
     relationships: {
@@ -111,9 +119,7 @@ export async function getCFOrg(guid: string): Promise<CfOrg> {
 // to return a list of users and their roles for an organization.
 // This is in contrast to the `/organizations/[guid]/users` endpoint, which
 // does not return role information
-export async function getCFOrgUsers(
-  guid: string
-): Promise<Record<string, CfOrgUser>> {
+export async function getCFOrgUsers(guid: string): Promise<CfOrgUserRoleList> {
   const url =
     CF_API_URL + '/roles?organization_guids=' + guid + '&include=user';
   try {
@@ -123,7 +129,7 @@ export async function getCFOrgUsers(
       },
     });
     // build a hash of the users we can push roles onto
-    const users: Record<string, CfOrgUser> = {};
+    const users: CfOrgUserRoleList = {};
     for (const user of body.included.users) {
       users[user.guid] = {
         username: user.username,

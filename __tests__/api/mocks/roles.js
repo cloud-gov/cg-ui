@@ -114,13 +114,11 @@ export const mockUsersByOrganization = {
       relationships: {
         user: {
           data: {
-            // DONE
             guid: '73193f8c-e03b-43c8-aeee-8670908899d2',
           },
         },
         organization: {
           data: {
-            // DONE
             guid: '89c0b2a8-957d-4900-abab-87395efaffdb',
           },
         },
@@ -130,21 +128,17 @@ export const mockUsersByOrganization = {
       },
       links: {
         self: {
-          // DONE
           href: 'https://example.com/v3/roles/fb55574d-6b84-405e-b23c-0984f0a0964a',
         },
         user: {
-          // DONE
           href: 'https://example.com/v3/users/73193f8c-e03b-43c8-aeee-8670908899d2',
         },
         organization: {
-          // DONE
           href: 'https://example.com/v3/organizations/89c0b2a8-957d-4900-abab-87395efaffdb',
         },
       },
     },
     {
-      // DONE
       guid: 'c98f8f55-dc53-498a-bb65-9991ab9f8b78',
       created_at: '2024-01-17T19:10:53Z',
       updated_at: '2024-01-17T19:10:53Z',
@@ -152,7 +146,6 @@ export const mockUsersByOrganization = {
       relationships: {
         user: {
           data: {
-            // DONE
             guid: 'ab9dc32e-d7be-4b8d-b9cb-d30d82ae0199',
           },
         },
