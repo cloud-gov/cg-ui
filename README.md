@@ -52,13 +52,13 @@ To obtain your token, first log into the correct environment in your CLI:
 cf login -a [your cf domain] --sso
 ```
 
-Then run:
+You can view your token at `cf oauth-token` and manually copy everything after "bearer" into `CF_API_TOKEN`, or you can run a script to do this for you:
 
 ```
-cf oauth-token
+./token-refresh.sh
 ```
 
-Copy this token and set it as your `CF_API_TOKEN` in `env.local`. Do not copy "bearer" at the beginning of the token.
+This command will be run automatically when you start your application if you use `npm run dev-cf`.
 
 Note that oauth tokens expire frequently. To obtain a new token, just run `cf oauth-token` again and replace your previous variable value with the new one.
 
@@ -81,6 +81,10 @@ docker-compose up
 Then run the dev server:
 
 ```bash
+# to run with a valid cloud foundry token
+npm run dev-cf
+
+# to run without accessing cloud foundry resources
 npm run dev
 ```
 
