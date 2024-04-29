@@ -1,0 +1,116 @@
+---
+jobs:
+  - name: set-self
+    plan:
+      - get: cg-ui
+        trigger: true
+      - set_pipeline: self
+        file: cg-ui/ci/pipeline.yml
+
+  - name: test-app
+    plan:
+      - in_parallel:
+          - get: cg-ui
+            passed: [set-self]
+            trigger: true
+          - get: node
+          - get: postgres
+      - task: install-deps
+        image: node
+        privileged: true
+        config:
+          platform: linux
+          inputs: [name: cg-ui]
+          outputs: [name: cg-ui]
+          run:
+            dir: cg-ui
+            path: bash
+            args: [-c, npm install]
+      - task: test-app
+        privileged: true
+        file: cg-ui/ci/partials/test.yml
+
+    on_failure:
+      put: slack
+      params:
+        text: |
+          :x: FAILED to test cg-ui in development
+          <$ATC_EXTERNAL_URL/teams/$BUILD_TEAM_NAME/pipelines/$BUILD_PIPELINE_NAME/jobs/$BUILD_JOB_NAME/builds/$BUILD_NAME|View build details>
+        channel: '#cg-platform-news'
+        username: ((slack-username))
+        icon_url: ((slack-icon-url))
+    on_success:
+      put: slack
+      params:
+        text: |
+          :white_check_mark: Successfully tested cg-ui in development
+          <$ATC_EXTERNAL_URL/teams/$BUILD_TEAM_NAME/pipelines/$BUILD_PIPELINE_NAME/jobs/$BUILD_JOB_NAME/builds/$BUILD_NAME|View build details>
+        channel: '#cg-platform-news'
+        username: ((slack-username))
+        icon_url: ((slack-icon-url))
+
+resources:
+  - name: cg-ui
+    type: git
+    source:
+      commit_verification_keys: ((cloud-gov-pgp-keys))
+      uri: git@github.com:cloud-gov/cg-ui.git
+      branch: main
+      private_key: ((cg-ci-bot-sshkey.private_key))
+
+  - name: node
+    type: registry-image
+    source:
+      aws_access_key_id: ((ecr_aws_key))
+      aws_secret_access_key: ((ecr_aws_secret))
+      repository: pages-node-v20
+      aws_region: us-gov-west-1
+      tag: latest
+
+  - name: postgres
+    type: registry-image
+    source:
+      repository: postgres
+      tag: 16-alpine
+
+  - name: slack
+    type: slack-notification
+    source:
+      url: ((slack-webhook-url))
+
+resource_types:
+  - name: registry-image
+    type: registry-image
+    source:
+      aws_access_key_id: ((ecr_aws_key))
+      aws_secret_access_key: ((ecr_aws_secret))
+      repository: registry-image-resource
+      aws_region: us-gov-west-1
+      tag: latest
+
+  - name: slack-notification
+    type: registry-image
+    source:
+      aws_access_key_id: ((ecr_aws_key))
+      aws_secret_access_key: ((ecr_aws_secret))
+      repository: slack-notification-resource
+      aws_region: us-gov-west-1
+      tag: latest
+
+  - name: git
+    type: registry-image
+    source:
+      aws_access_key_id: ((ecr_aws_key))
+      aws_secret_access_key: ((ecr_aws_secret))
+      repository: git-resource
+      aws_region: us-gov-west-1
+      tag: latest
+
+  - name: cf
+    type: registry-image
+    source:
+      aws_access_key_id: ((ecr_aws_key))
+      aws_secret_access_key: ((ecr_aws_secret))
+      repository: cf-resource
+      aws_region: us-gov-west-1
+      tag: latest
