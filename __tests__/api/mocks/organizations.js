@@ -45,59 +45,6 @@ export const mockOrgInvalid = {
   ],
 };
 
-// Request /v3/organizations/[guid]/users
-// Response 200
-export const mockOrgUsers = {
-  pagination: {
-    total_results: 2,
-    total_pages: 1,
-    first: {
-      href: 'https://example.com/v3/organizations/470bd8ff-ed0e-4d11-95c4-cf765202cebd/users?page=1\u0026per_page=50',
-    },
-    last: {
-      href: 'https://example.com/v3/organizations/470bd8ff-ed0e-4d11-95c4-cf765202cebd/users?page=1\u0026per_page=50',
-    },
-    next: null,
-    previous: null,
-  },
-  resources: [
-    {
-      guid: 'c017eb42-97f8-481d-9a23-13856c9d94ce',
-      created_at: '2020-07-02T17:23:28Z',
-      updated_at: '2020-07-02T17:23:28Z',
-      username: 'org1.user1@gsa.gov',
-      presentation_name: 'Org1 User1',
-      origin: 'gsa.gov',
-      metadata: {
-        labels: {},
-        annotations: {},
-      },
-      links: {
-        self: {
-          href: 'https://example.com/v3/users/c017eb42-97f8-481d-9a23-13856c9d94ce',
-        },
-      },
-    },
-    {
-      guid: '77f4f6ad-a21b-459e-8716-8add7e675dcc',
-      created_at: '2024-01-17T19:08:21Z',
-      updated_at: '2024-01-17T19:08:21Z',
-      username: 'org1.user2@gsa.gov',
-      presentation_name: 'Org1 User1',
-      origin: 'gsa.gov',
-      metadata: {
-        labels: {},
-        annotations: {},
-      },
-      links: {
-        self: {
-          href: 'https://example.com/v3/users/77f4f6ad-a21b-459e-8716-8add7e675dcc',
-        },
-      },
-    },
-  ],
-};
-
 // Request /v3/organizations
 // Response 200
 export const mockOrgs = {

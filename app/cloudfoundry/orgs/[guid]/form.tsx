@@ -32,9 +32,6 @@ export function UserAction({ orgGuid }: { orgGuid: string }) {
           <option value="organization_manager">Organization manager</option>
           <option value="organization_user">Organization user</option>
           <option value="organization_auditor">Organization auditor</option>
-          <option value="organization_billing_manager">
-            Organization billing_manager
-          </option>
         </select>
         <div>
           <button className="usa-button" role="button" type="submit">

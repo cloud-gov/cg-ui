@@ -4,6 +4,7 @@ import Link from 'next/link';
 import {
   getCFOrg,
   getCFOrgUsers,
+  CfOrgUser,
 } from '../../../../api/cloudfoundry/cloudfoundry';
 import { UserAction } from './form';
 
@@ -32,11 +33,20 @@ export default async function OrgPage({
             <div className="grid-col-6">
               <h2>Org members</h2>
               <ul>
-                {users.map((user: any) => (
-                  <li key={user.guid}>
-                    {user.username}, {user.origin}
-                  </li>
-                ))}
+                {Object.entries(users).map(
+                  ([guid, user]: [string, CfOrgUser]) => (
+                    <li key={guid}>
+                      <strong>
+                        {user.username}, {user.origin}
+                      </strong>
+                      <ul>
+                        {user.roles.map((role) => (
+                          <li key={role.guid}>{role.type}</li>
+                        ))}
+                      </ul>
+                    </li>
+                  )
+                )}
               </ul>
             </div>
             <div className="grid-col-6">

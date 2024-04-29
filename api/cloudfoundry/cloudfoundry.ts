@@ -21,6 +21,17 @@ interface CfOrg {
   links: any;
 }
 
+interface CfOrgUserRole {
+  guid: string;
+  type: 'organization_manager' | 'organizion_user' | 'organization_auditor';
+}
+
+export interface CfOrgUser {
+  origin: string;
+  roles: CfOrgUserRole[];
+  username: string;
+}
+
 interface NewRole {
   orgGuid: string;
   roleType: string;
@@ -96,8 +107,44 @@ export async function getCFOrg(guid: string): Promise<CfOrg> {
   }
 }
 
-export async function getCFOrgUsers(guid: string) {
-  return await getCFResources('/organizations/' + guid + '/users');
+// getCFOrgUsers uses the `/roles` endpoint and manipulates the response
+// to return a list of users and their roles for an organization.
+// This is in contrast to the `/organizations/[guid]/users` endpoint, which
+// does not return role information
+export async function getCFOrgUsers(
+  guid: string
+): Promise<Record<string, CfOrgUser>> {
+  const url =
+    CF_API_URL + '/roles?organization_guids=' + guid + '&include=user';
+  try {
+    const body = await getData(url, {
+      headers: {
+        Authorization: `bearer ${getToken()}`,
+      },
+    });
+    // build a hash of the users we can push roles onto
+    const users: Record<string, CfOrgUser> = {};
+    for (const user of body.included.users) {
+      users[user.guid] = {
+        username: user.username,
+        origin: user.origin,
+        roles: [],
+      };
+    }
+    // iterate through the roles and attach to individual users
+    for (const role of body.resources) {
+      const userGuid = role.relationships.user.data.guid;
+      if (userGuid in users) {
+        users[userGuid].roles.push({
+          type: role.type,
+          guid: role.guid,
+        });
+      }
+    }
+    return users;
+  } catch (error: any) {
+    throw new Error('failed to get org user roles ' + error.message);
+  }
 }
 
 export async function getCFOrgs() {

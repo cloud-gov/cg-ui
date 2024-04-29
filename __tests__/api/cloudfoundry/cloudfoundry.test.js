@@ -1,16 +1,7 @@
 import nock from 'nock';
 import { describe, it, expect, beforeEach, afterEach } from '@jest/globals';
-import {
-  getCFOrg,
-  getCFOrgUsers,
-  getCFOrgs,
-} from '../../../api/cloudfoundry/cloudfoundry';
-import {
-  mockOrg,
-  mockOrgNotFound,
-  mockOrgUsers,
-  mockOrgs,
-} from '../mocks/organizations';
+import { getCFOrg, getCFOrgs } from '../../../api/cloudfoundry/cloudfoundry';
+import { mockOrg, mockOrgNotFound, mockOrgs } from '../mocks/organizations';
 
 /* global jest */
 /* eslint no-undef: "off" */
@@ -48,26 +39,6 @@ describe('cloudfoundry tests', () => {
 
       expect(async () => {
         await getCFOrg('invalidGUID');
-      }).rejects.toThrow(new Error('an error occurred with response code 404'));
-    });
-  });
-
-  describe('getCFOrgUsers', () => {
-    it('when given a valid org guid, returns associated users', async () => {
-      nock(process.env.CF_API_URL)
-        .get('/organizations/validGUID/users')
-        .reply(200, mockOrgUsers);
-      const res = await getCFOrgUsers('validGUID');
-      expect(res).toEqual(mockOrgUsers.resources);
-    });
-
-    it('when given an invalid or unauthorized org guid, throws an error', async () => {
-      nock(process.env.CF_API_URL)
-        .get('/organizations/invalidGUID/users')
-        .reply(404, mockOrgNotFound);
-
-      expect(async () => {
-        await getCFOrgUsers('invalidGUID');
       }).rejects.toThrow(new Error('an error occurred with response code 404'));
     });
   });
