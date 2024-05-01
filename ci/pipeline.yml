@@ -1,4 +1,3 @@
----
 jobs:
   - name: set-self
     plan:
@@ -15,6 +14,7 @@ jobs:
             trigger: true
           - get: node
           - get: postgres
+
       - task: install-deps
         image: node
         privileged: true
@@ -26,9 +26,17 @@ jobs:
             dir: cg-ui
             path: bash
             args: [-c, npm install]
+
       - task: test-app
         privileged: true
         file: cg-ui/ci/partials/test.yml
+
+      - put: cloud-gov-development
+        params:
+          manifest: cg-ui/manifest.yml
+          path: cg-ui
+          vars:
+            domain: dev.us-gov-west-1.aws-us-gov.cloud.gov
 
     on_failure:
       put: slack
@@ -77,6 +85,16 @@ resources:
     type: slack-notification
     source:
       url: ((slack-webhook-url))
+
+  - name: cloud-gov-development
+    type: cf
+    source:
+      api: ((cf-api-url-development))
+      username: ((cf-deploy-username-development))
+      password: ((cf-deploy-password-development))
+      organization: cloud-gov
+      space: cg-ui
+      skip_cert_check: false
 
 resource_types:
   - name: registry-image
