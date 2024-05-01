@@ -4,9 +4,9 @@ import Link from 'next/link';
 import {
   getCFOrg,
   getCFOrgUsers,
-  CfOrgUser,
 } from '../../../../api/cloudfoundry/cloudfoundry';
 import { UserAction } from './form';
+import { OrgMembersList } from '../../../../components/CloudFoundry/OrgMembersList';
 
 export default async function OrgPage({
   params,
@@ -15,12 +15,13 @@ export default async function OrgPage({
     guid: string;
   };
 }) {
-  <Link href="/cloudfoundry">Back to Cloud Foundry home</Link>;
   try {
     const org = await getCFOrg(params.guid);
     const users = await getCFOrgUsers(params.guid);
+
     return (
       <>
+        <Link href="/cloudfoundry">Back to Cloud Foundry home</Link>;
         <div className="grid-container">
           <h1>{org.name}</h1>
           <ul>
@@ -32,22 +33,7 @@ export default async function OrgPage({
           <div className="grid-row">
             <div className="grid-col-6">
               <h2>Org members</h2>
-              <ul>
-                {Object.entries(users).map(
-                  ([guid, user]: [string, CfOrgUser]) => (
-                    <li key={guid}>
-                      <strong>
-                        {user.username}, {user.origin}
-                      </strong>
-                      <ul>
-                        {user.roles.map((role) => (
-                          <li key={role.guid}>{role.type}</li>
-                        ))}
-                      </ul>
-                    </li>
-                  )
-                )}
-              </ul>
+              <OrgMembersList users={users} />
             </div>
             <div className="grid-col-6">
               <UserAction orgGuid={params.guid} />

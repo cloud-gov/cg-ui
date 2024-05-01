@@ -32,7 +32,7 @@ export interface CfOrgUser {
   username: string;
 }
 
-interface CfOrgUserRoleList {
+export interface CfOrgUserRoleList {
   [guid: string]: CfOrgUser;
 }
 
