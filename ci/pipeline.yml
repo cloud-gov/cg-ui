@@ -89,9 +89,9 @@ resources:
   - name: cloud-gov-development
     type: cf
     source:
-      api: ((cf-api-url-development))
-      username: ((cf-deploy-username-development))
-      password: ((cf-deploy-password-development))
+      api: ((dev-cf-api-url))
+      username: ((dev-cf-username))
+      password: ((dev-cf-password))
       organization: cloud-gov
       space: cg-ui
       skip_cert_check: false
