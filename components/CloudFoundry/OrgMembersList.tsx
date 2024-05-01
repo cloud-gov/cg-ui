@@ -29,7 +29,7 @@ export function OrgMembersList({ users }: { users: CfOrgUserRoleList }) {
               {user.roles.map((role) => (
                 <li key={role.guid}>
                   {confirm === role.guid && (
-                    <Modal close={() => setConfirm('')}>
+                    <Modal close={() => setConfirm('')} id={role.guid}>
                       {!formState.success && formState.message && (
                         <div>Error</div>
                       )}

@@ -6,7 +6,7 @@ import {
   getCFOrgUsers,
 } from '../../../../api/cloudfoundry/cloudfoundry';
 import { UserAction } from './form';
-import { OrgMembersList } from '../../../../components/CloudFoundry/OrgMembersList';
+import { OrgMembersList } from '../../../../components/cloudfoundry/OrgMembersList';
 
 export default async function OrgPage({
   params,
