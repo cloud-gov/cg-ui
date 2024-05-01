@@ -18,9 +18,11 @@ export async function postData(
       roleType: formData.get('org-role') as string,
       username: formData.get('email-username') as string,
     });
-    // TODO this will need to detect if the response was returned
-    // that indicates the action was not successful, like a cf error
-    return { success: true, message: JSON.stringify(res) };
+    if (res.errors.length == 0) {
+      return { success: true, message: res.messages.join(', ') };
+    } else {
+      return { success: false, message: res.errors.join(', ') };
+    }
   } catch (error: any) {
     return { success: false, message: error.message };
   }
