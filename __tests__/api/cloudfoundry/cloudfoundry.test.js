@@ -3,13 +3,6 @@ import { describe, it, expect, beforeEach, afterEach } from '@jest/globals';
 import { getCFOrg, getCFOrgs } from '../../../api/cloudfoundry/cloudfoundry';
 import { mockOrg, mockOrgNotFound, mockOrgs } from '../mocks/organizations';
 
-/* global jest */
-/* eslint no-undef: "off" */
-jest.mock('next/headers', () => ({
-  cookies: jest.fn(),
-}));
-/* eslint no-undef: "error" */
-
 describe('cloudfoundry tests', () => {
   beforeEach(() => {
     if (!nock.isActive()) {
