@@ -147,7 +147,7 @@ The global SASS entrypoint is [assets/stylesheets/styles.scss](./assets/styleshe
 
 Our aim is to import only what we need from USWDS. Individual USWDS packages will be listed in `styles.scss` after the `uswds-core` import.
 
-### Javascript and Images
+### Images
 
 Nextjs has a top-level [public folder](https://nextjs.org/docs/app/building-your-application/optimizing/static-assets) where static assets can be stored. Assets stored here can be used as `src` urls by removing the `/public` prefix.
 
@@ -166,20 +166,16 @@ After a USWDS npm package update, copy the following files from `node_modules/@u
 
 ```
 /public
-  /js
-    /uswds
-      - uswds-init.js
-      - uswds-init.min.js
-      - uswds-init.min.js.map
-      - uswds.js
-      - uswds.min.js
-      - uswds.min.js.map
   /img
     /uswds
       - [any images from uswds that you need]
 ```
 
 For ease of updating, use the same file names. (This process could be converted to a script down the road.)
+
+### JavaScript
+
+Because interactivity will be handled through React, USWDS JavaScript will not be used.
 
 ## Deployment
 
