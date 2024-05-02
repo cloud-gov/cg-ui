@@ -37,13 +37,21 @@ describe('cloudfoundry token tests', () => {
       describe('when auth cookie is not set', () => {
         beforeEach(() => {
           cookies.mockImplementation(() => ({
-            get: () => null,
+            get: () => undefined,
           }));
         });
         it('throws an error when no cookie is set', () => {
-          expect(() => getToken()).toThrow(
-            'accessToken not found, please confirm you are logged in'
-          );
+          expect(() => getToken()).toThrow('please confirm you are logged in');
+        });
+      });
+      describe('when auth cookie is not in an expected format', () => {
+        beforeEach(() => {
+          cookies.mockImplementation(() => ({
+            get: () => 'unexpected format',
+          }));
+        });
+        it('throws an error', () => {
+          expect(() => getToken()).toThrow('unable to parse accessToken');
         });
       });
     });
