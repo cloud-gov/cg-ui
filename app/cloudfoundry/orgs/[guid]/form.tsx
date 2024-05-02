@@ -12,8 +12,7 @@ export function UserAction({ orgGuid }: { orgGuid: string }) {
 
   return (
     <>
-      {formState.success && <div>Success: {formState.success}</div>}
-      {formState.message && <div>Message: {formState.message}</div>}
+      {formState.message && <div>{formState.message}</div>}
       <form action={formAction} className="usa-form">
         <input type="hidden" value={orgGuid} id="guid" name="guid" />
         <label className="usa-label" htmlFor="email-username">

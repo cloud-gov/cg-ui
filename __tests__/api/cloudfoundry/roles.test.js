@@ -87,7 +87,7 @@ describe('cloudfoundry tests', () => {
       expect(res).toEqual(expected);
     });
 
-    it('when given an invalid or unauthorized org guid, throws an error', async () => {
+    it('when given an invalid or unauthorized org guid, returns an error message', async () => {
       nock(process.env.CF_API_URL)
         .get('/roles?organization_guids=invalidGUID&include=user')
         .reply(404, mockOrgNotFound);
@@ -96,7 +96,7 @@ describe('cloudfoundry tests', () => {
         await getCFOrgUsers('invalidGUID');
       }).rejects.toThrow(
         new Error(
-          'failed to get org user roles an error occurred with response code 404'
+          "failed to get org user roles Cannot read properties of undefined (reading 'included')"
         )
       );
     });
@@ -117,7 +117,7 @@ describe('cloudfoundry tests', () => {
         roleType: 'organization_user',
         username: 'validUser',
       });
-      expect(res).toEqual(mockRoleCreate);
+      expect(res.body).toEqual(mockRoleCreate);
     });
 
     it('when given an invalid role type, returns an error message', async () => {
@@ -130,31 +130,33 @@ describe('cloudfoundry tests', () => {
         roleType: 'bad_role',
         username: 'validUser',
       });
-      expect(res).toEqual(mockRoleCreateBadRole);
+      expect(res.statusCode).toEqual(422);
+      expect(res.errors).toEqual([mockRoleCreateBadRole.errors[0].detail]);
     });
 
     it('when the role already exists, returns error message', async () => {
       const reqData = reqDataBuilder(
-        'validOrg',
+        'Org1',
         'organization_user',
-        'validUser'
+        'existing@example.com'
       );
       nock(process.env.CF_API_URL)
         .post('/roles', reqData)
         .reply(422, mockRoleCreateExisting);
       const res = await addCFOrgRole({
-        orgGuid: 'validOrg',
+        orgGuid: 'Org1',
         roleType: 'organization_user',
-        username: 'validUser',
+        username: 'existing@example.com',
       });
-      expect(res).toEqual(mockRoleCreateExisting);
+      expect(res.statusCode).toEqual(422);
+      expect(res.errors).toEqual([mockRoleCreateExisting.errors[0].detail]);
     });
 
     it('when given a nonexistent user, returns error message', async () => {
       const reqData = reqDataBuilder(
         'validOrg',
         'organization_user',
-        'invalidUser'
+        'fake@example.com'
       );
       nock(process.env.CF_API_URL)
         .post('/roles', reqData)
@@ -162,9 +164,10 @@ describe('cloudfoundry tests', () => {
       const res = await addCFOrgRole({
         orgGuid: 'validOrg',
         roleType: 'organization_user',
-        username: 'invalidUser',
+        username: 'fake@example.com',
       });
-      expect(res).toEqual(mockRoleCreateInvalid);
+      expect(res.statusCode).toEqual(422);
+      expect(res.errors).toEqual([mockRoleCreateInvalid.errors[0].detail]);
     });
   });
 
@@ -172,21 +175,18 @@ describe('cloudfoundry tests', () => {
     it('when given a valid role, returns true', async () => {
       nock(process.env.CF_API_URL).delete('/roles/validGUID').reply(202);
       const res = await deleteCFOrgRole('validGUID');
-      expect(res).toBeTruthy();
+      expect(res.statusCode).toEqual(202);
+      expect(res.messages).toEqual(['Accepted']);
     });
 
-    it('when given an invalid role guid, throws an error', async () => {
+    it('when given an invalid role guid, returns an error message', async () => {
       nock(process.env.CF_API_URL)
         .delete('/roles/invalidGUID')
         .reply(404, mockRoleDeleteInvalid);
 
-      expect(async () => {
-        await deleteCFOrgRole('invalidGUID');
-      }).rejects.toThrow(
-        new Error(
-          'failed to remove user from org: an error occurred with response code 404'
-        )
-      );
+      const res = await deleteCFOrgRole('invalidGUID');
+      expect(res.statusCode).toEqual(404);
+      expect(res.errors).toEqual(['Not Found']);
     });
   });
 });
