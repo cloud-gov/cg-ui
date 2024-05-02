@@ -41,7 +41,7 @@ interface ApiRequestOptions {
 }
 
 interface ApiResponse {
-  statusCode: number;
+  statusCode: number | undefined;
   errors: string[];
   messages: string[];
   body: any | undefined;
@@ -57,13 +57,25 @@ export async function cfRequest(
   path: string,
   method: MethodType = 'get',
   data?: any
-) {
-  const options = await cfRequestOptions(method, data);
-  const apiRes = await request(CF_API_URL + path, options);
-  return cfResponse(apiRes);
+): Promise<ApiResponse> {
+  try {
+    const options = await cfRequestOptions(method, data);
+    const apiRes = await request(CF_API_URL + path, options);
+    return cfResponse(apiRes);
+  } catch (error: any) {
+    return {
+      statusCode: undefined,
+      errors: [error.message],
+      messages: [],
+      body: undefined,
+    };
+  }
 }
 
-async function cfRequestOptions(method: MethodType, data: any) {
+async function cfRequestOptions(
+  method: MethodType,
+  data: any
+): Promise<ApiRequestOptions> {
   const options: ApiRequestOptions = {
     method: method,
     headers: {
@@ -98,6 +110,8 @@ async function cfResponse(apiRes: any): Promise<ApiResponse> {
   }
   return res;
 }
+
+// Endpoint specific functions
 
 export async function addCFOrgRole({
   orgGuid,
