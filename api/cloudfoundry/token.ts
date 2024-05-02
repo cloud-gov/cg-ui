@@ -8,11 +8,12 @@ export function getToken(): string {
 
 function getCFToken(): string {
   const authSession = cookies().get('authsession');
-  if (authSession === undefined) throw new Error();
+  if (authSession === undefined)
+    throw new Error('please confirm you are logged in');
   try {
     return JSON.parse(authSession.value).accessToken;
   } catch (error: any) {
-    throw new Error('accessToken not found, please confirm you are logged in');
+    throw new Error('unable to parse accessToken');
   }
 }
 
