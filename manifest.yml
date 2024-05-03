@@ -14,5 +14,3 @@ applications:
       UAA_AUTH_PATH: /oauth/authorize
       UAA_TOKEN_PATH: /oauth/token
       UAA_LOGOUT_PATH: /logout.do
-    services:
-      - name: cgui-datastore
