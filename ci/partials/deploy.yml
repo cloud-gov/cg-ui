@@ -1,4 +1,0 @@
-platform: linux
-inputs: [name: cg-ui]
-run:
-  path: ci/tasks/deploy.sh

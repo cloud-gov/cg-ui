@@ -2,6 +2,7 @@
 applications:
   - name: cg-ui-test
     command: npm run build; npm start
+    timeout: 180
     env:
       AUTH_CALLBACK_PATH: auth/login/callback
       CF_API_URL: ((CF_API_URL))
