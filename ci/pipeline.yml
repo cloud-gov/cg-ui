@@ -65,7 +65,7 @@ resources:
     source:
       commit_verification_keys: ((cloud-gov-pgp-keys))
       uri: git@github.com:cloud-gov/cg-ui.git
-      branch: main
+      branch: develop
       private_key: ((cg-ci-bot-sshkey.private_key))
 
   - name: node
