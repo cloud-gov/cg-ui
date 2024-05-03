@@ -37,7 +37,6 @@ jobs:
           path: cg-ui
           vars:
             domain: dev.us-gov-west-1.aws-us-gov.cloud.gov
-          current_app_name: cg-ui-pipeline
           environment_variables:
             API_URL: ((dev-cf-api-url))
             AWS_REGION: ((aws-region))
@@ -53,8 +52,6 @@ jobs:
             CF_API_URL: ((dev-cf-api-url))/v3
             DB_SSL: 'true'
             DATABASE_SSL: 'true'
-            DB_NAME: cgui-datastore
-
     on_failure:
       put: slack
       params:
