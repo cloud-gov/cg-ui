@@ -20,6 +20,7 @@ interface CfOrgUserRole {
 }
 
 export interface CfOrgUser {
+  displayName: string;
   origin: string;
   roles: CfOrgUserRole[];
   username: string;
@@ -141,8 +142,38 @@ export async function addCFOrgRole({
   }
 }
 
-export async function deleteCFOrgRole(roleGuid: string) {
+export async function deleteCFRole(roleGuid: string) {
   return await cfRequest('/roles/' + roleGuid, 'delete');
+}
+
+export async function deleteCFOrgUser(orgGuid: string, userGuid: string) {
+  // TODO we technically already have a list of the org member roles on the page --
+  // do we want to pass those from the form instead of having a separate API call here?
+  try {
+    const roleUrl =
+      '/roles?organization_guids=' + orgGuid + '&user_guids=' + userGuid;
+    const roleRes = await cfRequest(roleUrl);
+    if (roleRes.errors.length > 0) {
+      throw new Error(roleRes.errors.join(', '));
+    }
+
+    const combined: { messages: string[]; errors: string[] } = {
+      messages: [],
+      errors: [],
+    };
+    for (const role of roleRes.body.resources) {
+      const guid = role.guid;
+      const deleteRes = await cfRequest('/roles/' + guid, 'delete');
+
+      // TODO what do we want to do when we have multiple responses which may
+      // have varying status codes, etc?
+      combined.messages.push(...deleteRes.messages);
+      combined.errors.push(...deleteRes.errors);
+    }
+    return combined;
+  } catch (error: any) {
+    throw new Error('failed to remove user from org: ' + error.message);
+  }
 }
 
 export async function getCFApps() {
@@ -161,13 +192,17 @@ export async function getCFOrgUsers(guid: string): Promise<CfOrgUserRoleList> {
   const url = '/roles?organization_guids=' + guid + '&include=user';
   try {
     const res = await cfRequest(url);
+    if (res.errors.length > 0) {
+      throw new Error(res.errors.join(', '));
+    }
     // build a hash of the users we can push roles onto
     const users: CfOrgUserRoleList = {};
     for (const user of res.body.included.users) {
       users[user.guid] = {
-        username: user.username,
+        displayName: user.presentation_name,
         origin: user.origin,
         roles: [],
+        username: user.username,
       };
     }
     // iterate through the roles and attach to individual users
@@ -182,7 +217,7 @@ export async function getCFOrgUsers(guid: string): Promise<CfOrgUserRoleList> {
     }
     return users;
   } catch (error: any) {
-    throw new Error('failed to get org user roles ' + error.message);
+    throw new Error('failed to get org user roles: ' + error.message);
   }
 }
 

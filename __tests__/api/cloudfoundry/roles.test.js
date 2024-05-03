@@ -2,7 +2,7 @@ import nock from 'nock';
 import { afterEach, beforeEach, describe, expect, it } from '@jest/globals';
 import {
   addCFOrgRole,
-  deleteCFOrgRole,
+  deleteCFRole,
   getCFOrgUsers,
 } from '../../../api/cloudfoundry/cloudfoundry';
 import { mockOrgNotFound } from '../mocks/organizations';
@@ -72,6 +72,7 @@ describe('cloudfoundry tests', () => {
             },
           ],
           username: 'user1@example.com',
+          displayName: 'User1 Example',
         },
         'ab9dc32e-d7be-4b8d-b9cb-d30d82ae0199': {
           origin: 'example.com',
@@ -82,6 +83,7 @@ describe('cloudfoundry tests', () => {
             },
           ],
           username: 'user2@example.com',
+          displayName: 'User2 Example',
         },
       };
       expect(res).toEqual(expected);
@@ -94,11 +96,7 @@ describe('cloudfoundry tests', () => {
 
       expect(async () => {
         await getCFOrgUsers('invalidGUID');
-      }).rejects.toThrow(
-        new Error(
-          "failed to get org user roles Cannot read properties of undefined (reading 'included')"
-        )
-      );
+      }).rejects.toThrow(new Error('failed to get org user roles: Not Found'));
     });
   });
 
@@ -171,10 +169,10 @@ describe('cloudfoundry tests', () => {
     });
   });
 
-  describe('deleteCFOrgRole', () => {
+  describe('deleteCFRole', () => {
     it('when given a valid role, returns true', async () => {
       nock(process.env.CF_API_URL).delete('/roles/validGUID').reply(202);
-      const res = await deleteCFOrgRole('validGUID');
+      const res = await deleteCFRole('validGUID');
       expect(res.statusCode).toEqual(202);
       expect(res.messages).toEqual(['Accepted']);
     });
@@ -184,7 +182,7 @@ describe('cloudfoundry tests', () => {
         .delete('/roles/invalidGUID')
         .reply(404, mockRoleDeleteInvalid);
 
-      const res = await deleteCFOrgRole('invalidGUID');
+      const res = await deleteCFRole('invalidGUID');
       expect(res.statusCode).toEqual(404);
       expect(res.errors).toEqual(['Not Found']);
     });

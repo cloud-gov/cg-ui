@@ -35,7 +35,7 @@ export default async function OrgPage({
             <div className="grid-row">
               <div className="grid-col-6">
                 <h2>Org members</h2>
-                <OrgMembersList users={users} />
+                <OrgMembersList org={org} users={users} />
               </div>
               <div className="grid-col-6">
                 <UserAction orgGuid={params.guid} />

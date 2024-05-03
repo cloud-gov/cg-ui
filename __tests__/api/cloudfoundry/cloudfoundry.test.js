@@ -1,7 +1,12 @@
 import nock from 'nock';
 import { describe, it, expect, beforeEach, afterEach } from '@jest/globals';
-import { getCFOrg, getCFOrgs } from '../../../api/cloudfoundry/cloudfoundry';
-import { mockOrg, mockOrgNotFound, mockOrgs } from '../mocks/organizations';
+import {
+  deleteCFOrgUser,
+  getCFOrg,
+  getCFOrgs,
+} from '../../../api/cloudfoundry/cloudfoundry';
+import { mockOrg, mockOrgs, mockOrgNotFound } from '../mocks/organizations';
+import { mockRolesFilteredByOrgAndUser } from '../mocks/roles';
 
 describe('cloudfoundry tests', () => {
   beforeEach(() => {
@@ -14,6 +19,30 @@ describe('cloudfoundry tests', () => {
     nock.cleanAll();
     // https://github.com/nock/nock#memory-issues-with-jest
     nock.restore();
+  });
+
+  describe('deleteCFOrgUser', () => {
+    it('when given a valid org and user, removes all user roles from org', async () => {
+      nock(process.env.CF_API_URL)
+        .get('/roles?organization_guids=orgGuid&user_guids=userGuid')
+        .reply(200, mockRolesFilteredByOrgAndUser);
+
+      // expects two different requests to delete by guid
+      nock(process.env.CF_API_URL)
+        .delete(/\/roles\/([\d\w]+-)+/)
+        .times(2)
+        .reply(202);
+
+      const res = await deleteCFOrgUser('orgGuid', 'userGuid');
+      expect(res).toEqual({
+        errors: [],
+        messages: ['Accepted', 'Accepted'],
+      });
+    });
+
+    it.todo(
+      'when something goes wrong with a request, we should determine what the user sees'
+    );
   });
 
   describe('getCFOrg', () => {
