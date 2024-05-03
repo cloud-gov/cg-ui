@@ -38,20 +38,11 @@ jobs:
           vars:
             domain: dev.us-gov-west-1.aws-us-gov.cloud.gov
           environment_variables:
-            API_URL: ((dev-cf-api-url))
-            AWS_REGION: ((aws-region))
-            UAA_URL: ((dev-uaa-base-url))
-            OAUTH_CLIENT_ID: cg-ui
+            CF_API_URL: ((dev-cf-api-url))/v3
             OAUTH_CLIENT_SECRET: ((uaa-client-secret))
             ROOT_URL: https://cg-ui-pipeline.dev.us-gov-west-1.aws-us-gov.cloud.gov/
-            UAA_AUTH_PATH: /oauth/authorize
-            UAA_LOGOUT_PATH: /logout.do
             UAA_ROOT_URL: ((dev-uaa-root-url))
-            UAA_TOKEN_PATH: /oauth/token
-            AUTH_CALLBACK_PATH: auth/login/callback
-            CF_API_URL: ((dev-cf-api-url))/v3
-            DB_SSL: 'true'
-            DATABASE_SSL: 'true'
+
     on_failure:
       put: slack
       params:

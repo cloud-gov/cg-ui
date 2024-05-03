@@ -3,15 +3,13 @@ applications:
   - name: cg-ui
     command: npm run build; npm start
     env:
-      AUTH_CALLBACK_PATH: ((AUTH_CALLBACK_PATH))
+      AUTH_CALLBACK_PATH: auth/login/callback
       CF_API_URL: ((CF_API_URL))
-      DATABASE_SSL: ((DB_SSL))
-      OAUTH_CLIENT_ID: ((OAUTH_CLIENT_ID))
+      DATABASE_SSL: 'true'
+      OAUTH_CLIENT_ID: cg-ui
       OAUTH_CLIENT_SECRET: ((OAUTH_CLIENT_SECRET))
       ROOT_URL: ((ROOT_URL))
       UAA_ROOT_URL: ((UAA_ROOT_URL))
-      UAA_AUTH_PATH: ((UAA_AUTH_PATH))
-      UAA_TOKEN_PATH: ((UAA_TOKEN_PATH))
-      UAA_LOGOUT_PATH: ((UAA_LOGOUT_PATH))
-    services:
-      - name: cgui-datastore
+      UAA_AUTH_PATH: /oauth/authorize
+      UAA_TOKEN_PATH: /oauth/token
+      UAA_LOGOUT_PATH: /logout.do
