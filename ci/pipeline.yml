@@ -52,8 +52,8 @@ jobs:
             AUTH_CALLBACK_PATH: auth/login/callback
             CF_API_URL: ((dev-cf-api-url))/v3
             DB_NAME: cgui-datastore
-            DB_SSL: true
-            DATABASE_SSL: true
+            DB_SSL: 'true'
+            DATABASE_SSL: 'true'
 
     on_failure:
       put: slack
