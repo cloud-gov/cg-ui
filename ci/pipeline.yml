@@ -44,7 +44,7 @@ jobs:
       put: slack
       params:
         text: |
-          :x: FAILED to test cg-ui in development
+          :x: FAILED to deploy cg-ui in development
           <$ATC_EXTERNAL_URL/teams/$BUILD_TEAM_NAME/pipelines/$BUILD_PIPELINE_NAME/jobs/$BUILD_JOB_NAME/builds/$BUILD_NAME|View build details>
         channel: '#cg-platform-news'
         username: ((slack-username))
@@ -53,7 +53,7 @@ jobs:
       put: slack
       params:
         text: |
-          :white_check_mark: Successfully tested cg-ui in development
+          :white_check_mark: Successfully deployed cg-ui in development
           <$ATC_EXTERNAL_URL/teams/$BUILD_TEAM_NAME/pipelines/$BUILD_PIPELINE_NAME/jobs/$BUILD_JOB_NAME/builds/$BUILD_NAME|View build details>
         channel: '#cg-platform-news'
         username: ((slack-username))
