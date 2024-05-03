@@ -1,0 +1,74 @@
+name: pull request
+
+on:
+  pull_request:
+    paths-ignore:
+      - 'docs/**'
+
+env:
+  NODE_VERSION: 20
+
+jobs:
+  build:
+    name: Build Nextjs app
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Use node
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+      - name: Install node dependencies
+        run: npm install
+      - name: Run build
+        run: npm run build
+
+  lint-next:
+    name: Lint Nextjs app
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Use node
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+      - name: Install node dependencies
+        run: npm install
+      - name: Run linter
+        run: npm run lint
+
+  test-next:
+    name: Run Nextjs app tests
+    runs-on: ubuntu-latest
+
+    services:
+      # from github docs to run jobs directly on a runner machine:
+      # https://docs.github.com/en/actions/using-containerized-services/creating-postgresql-service-containers
+      postgres:
+        image: postgres
+        env:
+          POSTGRES_DB: cgui
+          POSTGRES_PORT: 5432
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          # Maps tcp port 5432 on service container to the host
+          - 5432:5432
+
+    steps:
+      - uses: actions/checkout@v4
+      - name: Use node
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+      - name: Install node dependencies
+        run: npm install
+      - name: Run tests
+        run: npm test
+        env:
+          DATABASE_URL: postgres://postgres:postgres@localhost:5432/cgui
