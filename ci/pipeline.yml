@@ -37,8 +37,8 @@ jobs:
           path: cg-ui
           vars:
             domain: dev.us-gov-west-1.aws-us-gov.cloud.gov
+          current_app_name: cg-ui-pipeline
           environment_variables:
-            APP_NAME: cg-ui-pipeline
             API_URL: ((dev-cf-api-url))
             AWS_REGION: ((aws-region))
             UAA_URL: ((dev-uaa-base-url))
@@ -51,9 +51,9 @@ jobs:
             UAA_TOKEN_PATH: /oauth/token
             AUTH_CALLBACK_PATH: auth/login/callback
             CF_API_URL: ((dev-cf-api-url))/v3
-            DB_NAME: cgui-datastore
             DB_SSL: 'true'
             DATABASE_SSL: 'true'
+            DB_NAME: cgui-datastore
 
     on_failure:
       put: slack
