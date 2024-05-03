@@ -40,7 +40,7 @@ jobs:
           environment_variables:
             CF_API_URL: ((dev-cf-api-url))/v3
             OAUTH_CLIENT_SECRET: ((uaa-client-secret))
-            ROOT_URL: https://cg-ui-pipeline.dev.us-gov-west-1.aws-us-gov.cloud.gov/
+            ROOT_URL: ((dev-app-root-url))
             UAA_ROOT_URL: ((dev-uaa-root-url))
 
     on_failure:
