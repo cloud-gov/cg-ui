@@ -1,0 +1,6 @@
+platform: linux
+inputs: [name: cg-ui]
+run:
+  dir: cg-ui
+  path: bash
+  args: [-c, npm run lint]

@@ -6,7 +6,7 @@ jobs:
       - set_pipeline: self
         file: cg-ui/ci/pipeline.yml
 
-  - name: test-app
+  - name: test-and-deploy-app
     plan:
       - in_parallel:
           - get: cg-ui
@@ -16,20 +16,17 @@ jobs:
           - get: postgres
 
       - task: install-deps
+        file: cg-ui/ci/partials/install.yml
         image: node
-        privileged: true
-        config:
-          platform: linux
-          inputs: [name: cg-ui]
-          outputs: [name: cg-ui]
-          run:
-            dir: cg-ui
-            path: bash
-            args: [-c, npm install]
 
-      - task: test-app
-        privileged: true
-        file: cg-ui/ci/partials/test.yml
+      - in_parallel:
+          - task: lint-app
+            file: cg-ui/ci/partials/lint.yml
+            image: node
+
+          - task: test-app
+            privileged: true
+            file: cg-ui/ci/partials/test.yml
 
       - put: cloud-gov-development
         params:
