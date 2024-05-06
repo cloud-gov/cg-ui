@@ -3,6 +3,8 @@ applications:
   - name: cg-ui
     command: npm run build; npm start
     timeout: 180
+    services:
+      - cgui-datastore
     env:
       AUTH_CALLBACK_PATH: auth/login/callback
       CF_API_URL: ((CF_API_URL))
