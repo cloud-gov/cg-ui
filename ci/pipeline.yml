@@ -38,7 +38,7 @@ jobs:
           # If a new deployment, manually re-trigger the build once the RDS is up.
           wait_for_service: true
           timeout: 1200 # RDS take a long time to provision
-          service_instance: cgui-datastore
+          service_instance: cg-ui-datastore
           service: aws-rds
           plan: micro-psql
 
