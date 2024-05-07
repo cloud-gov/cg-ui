@@ -13,12 +13,17 @@ export default async function OrgPage({
   params,
 }: {
   params: {
-    guid: string;
+    orgGuid: string;
   };
 }) {
   try {
     const orgRes = await getOrg(params.guid);
     const users = await getOrgUsers(params.guid);
+    const spacesRes = await getSpaces([params.orgGuid]);
+    const spaces =
+      spacesRes.body && spacesRes.body.resources
+        ? spacesRes.body.resources
+        : [];
 
     if (orgRes.payload) {
       const org = orgRes.payload;
@@ -31,6 +36,19 @@ export default async function OrgPage({
               <li>Name: {org.name}</li>
               <li>Suspended: {org.suspended}</li>
               <li>Created: {org.created_at}</li>
+            </ul>
+
+            <h2>Spaces</h2>
+            <ul>
+              {spaces.map((space) => (
+                <li key={space.guid}>
+                  <Link
+                    href={`/cloudfoundry/orgs/${org.guid}/spaces/${space.guid}`}
+                  >
+                    {space.name}
+                  </Link>
+                </li>
+              ))}
             </ul>
 
             <div className="grid-row">

@@ -139,3 +139,18 @@ export async function getRoles(
   const urlParams = new URLSearchParams(params);
   return await cfRequest('/roles?' + urlParams.toString());
 }
+
+// SPACES
+
+export async function getCFSpace(guid: string): Promise<ApiResponse> {
+  return await cfRequest('/spaces/' + guid, 'get');
+}
+
+export async function getCFSpaces(org_guids?: string[]): Promise<ApiResponse> {
+  const url =
+    '/spaces' +
+    (org_guids && org_guids.length > 0
+      ? '?organization_guids=' + org_guids.join(',')
+      : '');
+  return await cfRequest(url, 'get');
+}
