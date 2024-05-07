@@ -38,6 +38,7 @@ For storing local environment variables, create a `.env.local` file in the proje
 ### Running locally
 
 In this directory, run this to install dependencies:
+
 ```bash
 npm install
 ```
@@ -106,6 +107,7 @@ npm test
 ```
 
 To run test files matching certain text (one example):
+
 ```
 npm test -- serverside
 ```
@@ -113,6 +115,7 @@ npm test -- serverside
 ### Linting
 
 To run eslint and prettier:
+
 ```
 npm run lint
 ```
@@ -152,6 +155,7 @@ Our aim is to import only what we need from USWDS. Individual USWDS packages wil
 Nextjs has a top-level [public folder](https://nextjs.org/docs/app/building-your-application/optimizing/static-assets) where static assets can be stored. Assets stored here can be used as `src` urls by removing the `/public` prefix.
 
 #### Examples:
+
 ```
 // Folder: /public/img/uswds/icon.png
 
@@ -191,10 +195,10 @@ cf login -a api.fr.cloud.gov --sso
 If you have already deployed to this space before, you probably already have a database and can skip this step!
 
 ```bash
-cf create-service aws-rds micro-psql cgui-datastore
+cf create-service aws-rds micro-psql cg-ui-datastore
 ```
 
-Wait several minutes for your database to be created. You will know it is ready when the following shows `cgui-datastore` with a last operation of "create succeeded".
+Wait several minutes for your database to be created. You will know it is ready when the following shows `cg-ui-datastore` with a last operation of "create succeeded".
 
 ```bash
 cf services
@@ -233,6 +237,7 @@ cf push --vars-file=.env.cloud.yml
 ### Updating Node
 
 The Node version should be updated in the following places:
-1) [.nvmrc](./.nvmrc) which controls the version for cloud builds
-1) [Github workflow containers](./.github/workflows/pull-request.yml) `NODE_VERSION` which controls the version in Github action containers
-1) [package.json](./package.json) under `engines` to specify which version(s) our app works with
+
+1. [.nvmrc](./.nvmrc) which controls the version for cloud builds
+1. [Github workflow containers](./.github/workflows/pull-request.yml) `NODE_VERSION` which controls the version in Github action containers
+1. [package.json](./package.json) under `engines` to specify which version(s) our app works with
