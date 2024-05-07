@@ -1,0 +1,22 @@
+version: '3'
+
+services:
+  app:
+    image: node:20.9-bullseye
+    volumes:
+      - ../..:/app
+    depends_on:
+      - db
+    environment:
+      DATABASE_URL: postgresql://postgres:password@db:5432/cg-ui-test
+  db:
+    image: postgres:16-alpine
+    build:
+      dockerfile: ../../cgui-db-docker/Dockerfile-db
+      context: .
+    ports:
+      - '5432:5432'
+    environment:
+      POSTGRES_DB: cg-ui-test
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
