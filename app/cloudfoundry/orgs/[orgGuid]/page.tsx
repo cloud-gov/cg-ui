@@ -40,7 +40,7 @@ export default async function OrgPage({
 
             <h2>Spaces</h2>
             <ul>
-              {spaces.map((space) => (
+              {spaces.map((space: any) => (
                 <li key={space.guid}>
                   <Link
                     href={`/cloudfoundry/orgs/${org.guid}/spaces/${space.guid}`}
