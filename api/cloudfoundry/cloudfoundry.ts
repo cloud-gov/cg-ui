@@ -117,7 +117,7 @@ export async function addCFOrgRole({
   orgGuid,
   roleType,
   username,
-}: SetOrgUserRole) {
+}: SetOrgUserRole): Promise<ApiResponse> {
   const data = {
     type: roleType,
     relationships: {
@@ -141,15 +141,15 @@ export async function addCFOrgRole({
   }
 }
 
-export async function deleteCFOrgRole(roleGuid: string) {
+export async function deleteCFOrgRole(roleGuid: string): Promise<ApiResponse> {
   return await cfRequest('/roles/' + roleGuid, 'delete');
 }
 
-export async function getCFApps() {
+export async function getCFApps(): Promise<ApiResponse> {
   return await cfRequest('/apps', 'get');
 }
 
-export async function getCFOrg(guid: string) {
+export async function getCFOrg(guid: string): Promise<ApiResponse> {
   return await cfRequest('/organizations/' + guid, 'get');
 }
 
@@ -186,6 +186,6 @@ export async function getCFOrgUsers(guid: string): Promise<CfOrgUserRoleList> {
   }
 }
 
-export async function getCFOrgs() {
+export async function getCFOrgs(): Promise<ApiResponse> {
   return await cfRequest('/organizations', 'get');
 }
