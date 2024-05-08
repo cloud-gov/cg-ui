@@ -150,9 +150,11 @@ export async function deleteCFOrgUser(orgGuid: string, userGuid: string) {
   // TODO we technically already have a list of the org member roles on the page --
   // do we want to pass those from the form instead of having a separate API call here?
   try {
-    const roleUrl =
-      '/roles?organization_guids=' + orgGuid + '&user_guids=' + userGuid;
-    const roleRes = await cfRequest(roleUrl);
+    const params = new URLSearchParams({
+      organization_guids: orgGuid,
+      user_guids: userGuid,
+    });
+    const roleRes = await cfRequest('/roles?' + params.toString());
     if (roleRes.errors.length > 0) {
       throw new Error(roleRes.errors.join(', '));
     }
@@ -189,9 +191,12 @@ export async function getCFOrg(guid: string) {
 // This is in contrast to the `/organizations/[guid]/users` endpoint, which
 // does not return role information
 export async function getCFOrgUsers(guid: string): Promise<CfOrgUserRoleList> {
-  const url = '/roles?organization_guids=' + guid + '&include=user';
   try {
-    const res = await cfRequest(url);
+    const params = new URLSearchParams({
+      organization_guids: guid,
+      include: 'user',
+    });
+    const res = await cfRequest('/roles?' + params.toString());
     if (res.errors.length > 0) {
       throw new Error(res.errors.join(', '));
     }
