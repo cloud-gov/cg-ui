@@ -19,7 +19,7 @@ export default async function OrgPage({
     const orgRes = await getCFOrg(params.guid);
     const users = await getCFOrgUsers(params.guid);
 
-    if (orgRes.body) {
+    if (orgRes.status == 'success' && orgRes.body) {
       const org = orgRes.body;
       return (
         <>
@@ -45,7 +45,7 @@ export default async function OrgPage({
         </>
       );
     } else {
-      return <div role="alert">{orgRes.errors.join(', ')}</div>;
+      return <div role="alert">{orgRes.messages.join(', ')}</div>;
     }
   } catch (error: any) {
     return <div role="alert">{error.message}</div>;

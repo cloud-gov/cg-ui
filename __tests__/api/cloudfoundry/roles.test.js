@@ -89,11 +89,13 @@ describe('cloudfoundry tests', () => {
       expect(res).toEqual(expected);
     });
 
-    it('when given an invalid or unauthorized org guid, returns an error message', async () => {
+    it('when given an invalid or unauthorized org guid, throws an error message', async () => {
       nock(process.env.CF_API_URL)
         .get('/roles?organization_guids=invalidGUID&include=user')
         .reply(404, mockOrgNotFound);
 
+      // make sure that the console.error isn't what is caught up by this test
+      jest.spyOn(console, 'error').mockImplementation(() => {});
       expect(async () => {
         await getCFOrgUsers('invalidGUID');
       }).rejects.toThrow(new Error('failed to get org user roles: Not Found'));
@@ -128,8 +130,8 @@ describe('cloudfoundry tests', () => {
         roleType: 'bad_role',
         username: 'validUser',
       });
-      expect(res.statusCode).toEqual(422);
-      expect(res.errors).toEqual([mockRoleCreateBadRole.errors[0].detail]);
+      expect(res.status).toEqual('error');
+      expect(res.messages).toEqual([mockRoleCreateBadRole.errors[0].detail]);
     });
 
     it('when the role already exists, returns error message', async () => {
@@ -146,8 +148,8 @@ describe('cloudfoundry tests', () => {
         roleType: 'organization_user',
         username: 'existing@example.com',
       });
-      expect(res.statusCode).toEqual(422);
-      expect(res.errors).toEqual([mockRoleCreateExisting.errors[0].detail]);
+      expect(res.status).toEqual('error');
+      expect(res.messages).toEqual([mockRoleCreateExisting.errors[0].detail]);
     });
 
     it('when given a nonexistent user, returns error message', async () => {
@@ -164,8 +166,8 @@ describe('cloudfoundry tests', () => {
         roleType: 'organization_user',
         username: 'fake@example.com',
       });
-      expect(res.statusCode).toEqual(422);
-      expect(res.errors).toEqual([mockRoleCreateInvalid.errors[0].detail]);
+      expect(res.status).toEqual('error');
+      expect(res.messages).toEqual([mockRoleCreateInvalid.errors[0].detail]);
     });
   });
 
@@ -173,7 +175,7 @@ describe('cloudfoundry tests', () => {
     it('when given a valid role, returns true', async () => {
       nock(process.env.CF_API_URL).delete('/roles/validGUID').reply(202);
       const res = await deleteCFRole('validGUID');
-      expect(res.statusCode).toEqual(202);
+      expect(res.status).toEqual('success');
       expect(res.messages).toEqual(['Accepted']);
     });
 
@@ -183,8 +185,8 @@ describe('cloudfoundry tests', () => {
         .reply(404, mockRoleDeleteInvalid);
 
       const res = await deleteCFRole('invalidGUID');
-      expect(res.statusCode).toEqual(404);
-      expect(res.errors).toEqual(['Not Found']);
+      expect(res.status).toEqual('error');
+      expect(res.messages).toEqual(['Not Found']);
     });
   });
 });
