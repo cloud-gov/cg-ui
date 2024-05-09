@@ -1,5 +1,5 @@
 import { describe, it, expect } from '@jest/globals';
-import { cfRequest } from '../../../api/cloudfoundry/cloudfoundry';
+import { cfRequest } from '../../../api/cf/cloudfoundry';
 import { request } from '../../../api/api';
 
 /* global jest */

@@ -1,9 +1,9 @@
 import Link from 'next/link';
-import { getCFApps } from '../../../api/cloudfoundry/cloudfoundry';
+import { getApps } from '../../../api/cf/cloudfoundry';
 
 export default async function CloudFoundryAppsPage() {
   try {
-    const res = await getCFApps();
+    const res = await getApps();
     if (res.body) {
       const apps = res.body.resources;
       return (

@@ -2,10 +2,7 @@
 
 import { useState } from 'react';
 import { useFormState } from 'react-dom';
-import {
-  CfOrgUser,
-  CfOrgUserRoleList,
-} from '../../api/cloudfoundry/cloudfoundry';
+import { CfOrgUser, CfOrgUserRoleList } from '../../api/cf/cloudfoundry';
 import { Modal } from '../Modal';
 import {
   removeRole,

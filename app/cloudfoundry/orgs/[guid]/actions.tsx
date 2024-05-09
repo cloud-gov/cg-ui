@@ -1,8 +1,8 @@
 import {
-  addCFOrgRole,
-  deleteCFRole,
-  deleteCFOrgUser,
-} from '../../../../api/cloudfoundry/cloudfoundry';
+  addOrgRole,
+  deleteRole,
+  deleteOrgUser,
+} from '../../../../api/cf/cloudfoundry';
 
 interface FormResponse {
   success: boolean;
@@ -14,7 +14,7 @@ export async function postData(
   formData: FormData
 ): Promise<FormResponse> {
   try {
-    const res = await addCFOrgRole({
+    const res = await addOrgRole({
       orgGuid: formData.get('guid') as string,
       roleType: formData.get('org-role') as string,
       username: formData.get('email-username') as string,
@@ -35,7 +35,7 @@ export async function removeRole(
 ): Promise<FormResponse> {
   try {
     const roleGuid = formData.get('roleGuid') as string;
-    const res = await deleteCFRole(roleGuid);
+    const res = await deleteRole(roleGuid);
     return { success: true, message: JSON.stringify(res) };
   } catch (error: any) {
     return { success: false, message: error.message };
@@ -49,7 +49,7 @@ export async function removeUser(
   try {
     const orgGuid = formData.get('orgGuid') as string;
     const userGuid = formData.get('userGuid') as string;
-    const res = await deleteCFOrgUser(orgGuid, userGuid);
+    const res = await deleteOrgUser(orgGuid, userGuid);
     return { success: true, message: JSON.stringify(res) };
   } catch (error: any) {
     return { success: false, message: error.message };

@@ -1,9 +1,9 @@
 import Link from 'next/link';
-import { getCFOrgs } from '../../../api/cloudfoundry/cloudfoundry';
+import { getOrgs } from '../../../api/cf/cloudfoundry';
 
 export default async function CloudFoundryOrgsPage() {
   try {
-    const res = await getCFOrgs();
+    const res = await getOrgs();
     if (res.body) {
       const orgs = res.body.resources;
       return (

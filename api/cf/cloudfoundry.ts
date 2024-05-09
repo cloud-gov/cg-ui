@@ -8,26 +8,26 @@ import { getToken } from './token';
 
 const CF_API_URL = process.env.CF_API_URL;
 
-interface Cf422Error {
+interface Error422 {
   detail: string;
   title: string;
   code: number;
 }
 
-interface CfOrgUserRole {
+interface OrgUserRole {
   guid: string;
   type: 'organization_manager' | 'organizion_user' | 'organization_auditor';
 }
 
-export interface CfOrgUser {
+export interface OrgUser {
   displayName: string;
   origin: string;
-  roles: CfOrgUserRole[];
+  roles: OrgUserRole[];
   username: string;
 }
 
-export interface CfOrgUserRoleList {
-  [guid: string]: CfOrgUser;
+export interface OrgUserRoleList {
+  [guid: string]: OrgUser;
 }
 
 type MethodType = 'delete' | 'get' | 'patch' | 'post';
@@ -105,7 +105,7 @@ async function cfResponse(apiRes: any): Promise<ApiResponse> {
     res.body = await apiRes.json();
   } else if (apiRes.status == 422) {
     const msg = await apiRes.json();
-    res.errors = msg.errors.map((e: Cf422Error) => e.detail);
+    res.errors = msg.errors.map((e: Error422) => e.detail);
   } else {
     res.errors.push(apiRes.statusText);
   }
@@ -114,7 +114,7 @@ async function cfResponse(apiRes: any): Promise<ApiResponse> {
 
 // Endpoint specific functions
 
-export async function addCFOrgRole({
+export async function addOrgRole({
   orgGuid,
   roleType,
   username,
@@ -142,11 +142,11 @@ export async function addCFOrgRole({
   }
 }
 
-export async function deleteCFRole(roleGuid: string) {
+export async function deleteRole(roleGuid: string) {
   return await cfRequest('/roles/' + roleGuid, 'delete');
 }
 
-export async function deleteCFOrgUser(orgGuid: string, userGuid: string) {
+export async function deleteOrgUser(orgGuid: string, userGuid: string) {
   // TODO we technically already have a list of the org member roles on the page --
   // do we want to pass those from the form instead of having a separate API call here?
   try {
@@ -178,19 +178,19 @@ export async function deleteCFOrgUser(orgGuid: string, userGuid: string) {
   }
 }
 
-export async function getCFApps() {
+export async function getApps() {
   return await cfRequest('/apps', 'get');
 }
 
-export async function getCFOrg(guid: string) {
+export async function getOrg(guid: string) {
   return await cfRequest('/organizations/' + guid, 'get');
 }
 
-// getCFOrgUsers uses the `/roles` endpoint and manipulates the response
+// getOrgUsers uses the `/roles` endpoint and manipulates the response
 // to return a list of users and their roles for an organization.
 // This is in contrast to the `/organizations/[guid]/users` endpoint, which
 // does not return role information
-export async function getCFOrgUsers(guid: string): Promise<CfOrgUserRoleList> {
+export async function getOrgUsers(guid: string): Promise<OrgUserRoleList> {
   try {
     const params = new URLSearchParams({
       organization_guids: guid,
@@ -201,7 +201,7 @@ export async function getCFOrgUsers(guid: string): Promise<CfOrgUserRoleList> {
       throw new Error(res.errors.join(', '));
     }
     // build a hash of the users we can push roles onto
-    const users: CfOrgUserRoleList = {};
+    const users: OrgUserRoleList = {};
     for (const user of res.body.included.users) {
       users[user.guid] = {
         displayName: user.presentation_name,
@@ -226,6 +226,6 @@ export async function getCFOrgUsers(guid: string): Promise<CfOrgUserRoleList> {
   }
 }
 
-export async function getCFOrgs() {
+export async function getOrgs() {
   return await cfRequest('/organizations', 'get');
 }

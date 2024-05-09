@@ -1,10 +1,7 @@
 'use server';
 
 import Link from 'next/link';
-import {
-  getCFOrg,
-  getCFOrgUsers,
-} from '../../../../api/cloudfoundry/cloudfoundry';
+import { getOrg, getOrgUsers } from '../../../../api/cf/cloudfoundry';
 import { UserAction } from './form';
 import { OrgMembersList } from '../../../../components/CloudFoundry/OrgMembersList';
 
@@ -16,14 +13,14 @@ export default async function OrgPage({
   };
 }) {
   try {
-    const orgRes = await getCFOrg(params.guid);
-    const users = await getCFOrgUsers(params.guid);
+    const orgRes = await getOrg(params.guid);
+    const users = await getOrgUsers(params.guid);
 
     if (orgRes.body) {
       const org = orgRes.body;
       return (
         <>
-          <Link href="/cloudfoundry">Back to Cloud Foundry home</Link>;
+          <Link href="/cloudfoundry">Back to Cloud Foundry home</Link>
           <div className="grid-container">
             <h1>{org.name}</h1>
             <ul>

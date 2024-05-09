@@ -1,10 +1,10 @@
 import nock from 'nock';
 import { afterEach, beforeEach, describe, expect, it } from '@jest/globals';
 import {
-  addCFOrgRole,
-  deleteCFRole,
-  getCFOrgUsers,
-} from '../../../api/cloudfoundry/cloudfoundry';
+  addOrgRole,
+  deleteRole,
+  getOrgUsers,
+} from '../../../api/cf/cloudfoundry';
 import { mockOrgNotFound } from '../mocks/organizations';
 import {
   mockRoleCreate,
@@ -53,14 +53,14 @@ describe('cloudfoundry tests', () => {
     nock.restore();
   });
 
-  describe('getCFOrgUsers', () => {
+  describe('getOrgUsers', () => {
     it('when given a valid org guid, returns associated users', async () => {
       nock(process.env.CF_API_URL)
         .get('/roles?organization_guids=validGUID&include=user')
         .reply(200, mockUsersByOrganization);
-      const res = await getCFOrgUsers('validGUID');
+      const res = await getOrgUsers('validGUID');
 
-      // getCFOrgUsers should rearrange the roles response to be oriented
+      // getOrgUsers should rearrange the roles response to be oriented
       // around the users
       const expected = {
         '73193f8c-e03b-43c8-aeee-8670908899d2': {
@@ -95,12 +95,12 @@ describe('cloudfoundry tests', () => {
         .reply(404, mockOrgNotFound);
 
       expect(async () => {
-        await getCFOrgUsers('invalidGUID');
+        await getOrgUsers('invalidGUID');
       }).rejects.toThrow(new Error('failed to get org user roles: Not Found'));
     });
   });
 
-  describe('addCFOrgRole', () => {
+  describe('addOrgRole', () => {
     it('when given a valid data, returns create message', async () => {
       const reqData = reqDataBuilder(
         'validOrg',
@@ -110,7 +110,7 @@ describe('cloudfoundry tests', () => {
       nock(process.env.CF_API_URL)
         .post('/roles', reqData)
         .reply(201, mockRoleCreate);
-      const res = await addCFOrgRole({
+      const res = await addOrgRole({
         orgGuid: 'validOrg',
         roleType: 'organization_user',
         username: 'validUser',
@@ -123,7 +123,7 @@ describe('cloudfoundry tests', () => {
       nock(process.env.CF_API_URL)
         .post('/roles', reqData)
         .reply(422, mockRoleCreateBadRole);
-      const res = await addCFOrgRole({
+      const res = await addOrgRole({
         orgGuid: 'validOrg',
         roleType: 'bad_role',
         username: 'validUser',
@@ -141,7 +141,7 @@ describe('cloudfoundry tests', () => {
       nock(process.env.CF_API_URL)
         .post('/roles', reqData)
         .reply(422, mockRoleCreateExisting);
-      const res = await addCFOrgRole({
+      const res = await addOrgRole({
         orgGuid: 'Org1',
         roleType: 'organization_user',
         username: 'existing@example.com',
@@ -159,7 +159,7 @@ describe('cloudfoundry tests', () => {
       nock(process.env.CF_API_URL)
         .post('/roles', reqData)
         .reply(422, mockRoleCreateInvalid);
-      const res = await addCFOrgRole({
+      const res = await addOrgRole({
         orgGuid: 'validOrg',
         roleType: 'organization_user',
         username: 'fake@example.com',
@@ -169,10 +169,10 @@ describe('cloudfoundry tests', () => {
     });
   });
 
-  describe('deleteCFRole', () => {
+  describe('deleteRole', () => {
     it('when given a valid role, returns true', async () => {
       nock(process.env.CF_API_URL).delete('/roles/validGUID').reply(202);
-      const res = await deleteCFRole('validGUID');
+      const res = await deleteRole('validGUID');
       expect(res.statusCode).toEqual(202);
       expect(res.messages).toEqual(['Accepted']);
     });
@@ -182,7 +182,7 @@ describe('cloudfoundry tests', () => {
         .delete('/roles/invalidGUID')
         .reply(404, mockRoleDeleteInvalid);
 
-      const res = await deleteCFRole('invalidGUID');
+      const res = await deleteRole('invalidGUID');
       expect(res.statusCode).toEqual(404);
       expect(res.errors).toEqual(['Not Found']);
     });
