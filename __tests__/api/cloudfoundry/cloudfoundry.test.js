@@ -35,8 +35,8 @@ describe('cloudfoundry tests', () => {
 
       const res = await deleteCFOrgUser('orgGuid', 'userGuid');
       expect(res).toEqual({
-        status: 'success',
-        messages: [],
+        errors: [],
+        messages: ['Accepted', 'Accepted'],
       });
     });
 
@@ -52,21 +52,24 @@ describe('cloudfoundry tests', () => {
         .reply(200, mockOrg);
       const res = await getCFOrg('validGUID');
       expect(res).toEqual({
-        status: 'success',
+        statusCode: 200,
+        errors: [],
         messages: ['OK'],
         body: mockOrg,
       });
     });
 
-    it('when given an invalid or unauthorized org guid, responds with an error', async () => {
+    it('when given an invalid or unauthorized org guid, throws an error', async () => {
       nock(process.env.CF_API_URL)
         .get('/organizations/invalidGUID')
         .reply(404, mockOrgNotFound);
 
       const res = await getCFOrg('invalidGUID');
       expect(res).toEqual({
-        status: 'error',
-        messages: ['Not Found'],
+        statusCode: 404,
+        errors: ['Not Found'],
+        messages: [],
+        body: undefined,
       });
     });
   });
@@ -76,7 +79,8 @@ describe('cloudfoundry tests', () => {
       nock(process.env.CF_API_URL).get('/organizations').reply(200, mockOrgs);
       const res = await getCFOrgs();
       expect(res).toEqual({
-        status: 'success',
+        statusCode: 200,
+        errors: [],
         messages: ['OK'],
         body: mockOrgs,
       });

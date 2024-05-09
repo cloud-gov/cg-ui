@@ -4,7 +4,7 @@ import { getCFOrgs } from '../../../api/cloudfoundry/cloudfoundry';
 export default async function CloudFoundryOrgsPage() {
   try {
     const res = await getCFOrgs();
-    if (res.status == 'success' && res.body) {
+    if (res.body) {
       const orgs = res.body.resources;
       return (
         <>
@@ -20,7 +20,7 @@ export default async function CloudFoundryOrgsPage() {
         </>
       );
     } else {
-      return <div role="alert">{res.messages.join(', ')}</div>;
+      return <div role="alert">{res.errors.join(', ')}</div>;
     }
   } catch (error: any) {
     return <div role="alert">{error.message}</div>;

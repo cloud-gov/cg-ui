@@ -8,8 +8,7 @@ import { getToken } from './token';
 
 const CF_API_URL = process.env.CF_API_URL;
 
-// the CF API sends back a similar response for 404 and 422 errors
-interface Cf40XError {
+interface Cf422Error {
   detail: string;
   title: string;
   code: number;
@@ -43,13 +42,11 @@ interface ApiRequestOptions {
 }
 
 interface ApiResponse {
-  status: ApiResponseStatus | undefined;
+  statusCode: number | undefined;
+  errors: string[];
   messages: string[];
-  body?: any;
+  body: any | undefined;
 }
-
-// drawing status from USWDS alert types: https://designsystem.digital.gov/components/alert/
-type ApiResponseStatus = 'success' | 'info' | 'warning' | 'error';
 
 interface SetOrgUserRole {
   orgGuid: string;
@@ -67,10 +64,11 @@ export async function cfRequest(
     const apiRes = await request(CF_API_URL + path, options);
     return cfResponse(apiRes);
   } catch (error: any) {
-    console.error(`${method} request to ${path} failed: ${error.message}`);
     return {
-      status: 'error',
-      messages: [error.message],
+      statusCode: undefined,
+      errors: [error.message],
+      messages: [],
+      body: undefined,
     };
   }
 }
@@ -93,25 +91,25 @@ async function cfRequestOptions(
 }
 
 async function cfResponse(apiRes: any): Promise<ApiResponse> {
-  if (apiRes.ok) {
-    return {
-      status: 'success',
-      messages: [apiRes.statusText],
-      // 202 responses do not have any json to parse
-      body: apiRes.status != 202 ? await apiRes.json() : undefined,
-    };
+  const res: ApiResponse = {
+    statusCode: apiRes.status,
+    errors: [],
+    messages: [],
+    body: undefined,
+  };
+  if (apiRes.status == 202) {
+    // indicates resource was deleted successfully, no response body
+    res.messages.push(apiRes.statusText);
+  } else if (apiRes.ok) {
+    res.messages.push(apiRes.statusText);
+    res.body = await apiRes.json();
   } else if (apiRes.status == 422) {
     const msg = await apiRes.json();
-    return {
-      status: 'error',
-      messages: msg.errors.map((e: Cf40XError) => e.detail),
-    };
+    res.errors = msg.errors.map((e: Cf422Error) => e.detail);
+  } else {
+    res.errors.push(apiRes.statusText);
   }
-
-  return {
-    status: 'error',
-    messages: [apiRes.statusText],
-  };
+  return res;
 }
 
 // Endpoint specific functions
@@ -120,7 +118,7 @@ export async function addCFOrgRole({
   orgGuid,
   roleType,
   username,
-}: SetOrgUserRole): Promise<ApiResponse> {
+}: SetOrgUserRole) {
   const data = {
     type: roleType,
     relationships: {
@@ -137,15 +135,10 @@ export async function addCFOrgRole({
     },
   };
   try {
-    return await cfRequest('/roles', 'post', data);
+    const response = await cfRequest('/roles', 'post', data);
+    return response;
   } catch (error: any) {
-    console.error(
-      `Unable to add org role ${roleType} for ${username} and org ${orgGuid}: ${error.message}`
-    );
-    return {
-      status: 'error',
-      messages: ['failed to add ' + username + ' as a ' + roleType],
-    };
+    throw new Error(`${error.message}, original body: ${JSON.stringify(data)}`);
   }
 }
 
@@ -153,10 +146,7 @@ export async function deleteCFRole(roleGuid: string) {
   return await cfRequest('/roles/' + roleGuid, 'delete');
 }
 
-export async function deleteCFOrgUser(
-  orgGuid: string,
-  userGuid: string
-): Promise<ApiResponse> {
+export async function deleteCFOrgUser(orgGuid: string, userGuid: string) {
   // TODO we technically already have a list of the org member roles on the page --
   // do we want to pass those from the form instead of having a separate API call here?
   try {
@@ -165,33 +155,26 @@ export async function deleteCFOrgUser(
       user_guids: userGuid,
     });
     const roleRes = await cfRequest('/roles?' + params.toString());
-    if (roleRes.status != 'success') {
-      throw new Error(roleRes.messages.join(', '));
+    if (roleRes.errors.length > 0) {
+      throw new Error(roleRes.errors.join(', '));
     }
 
-    const responses = await Promise.all(
-      roleRes.body.resources.map((role: any) =>
-        cfRequest('/roles/' + role.guid, 'delete')
-      )
-    );
-
-    // if any responses were not successful, throw an error so it can be logged and returned to the user
-    if (responses.some((res) => res.status != 'success')) {
-      throw new Error();
-    }
-
-    return {
-      status: 'success',
+    const combined: { messages: string[]; errors: string[] } = {
       messages: [],
+      errors: [],
     };
+    for (const role of roleRes.body.resources) {
+      const guid = role.guid;
+      const deleteRes = await cfRequest('/roles/' + guid, 'delete');
+
+      // TODO what do we want to do when we have multiple responses which may
+      // have varying status codes, etc?
+      combined.messages.push(...deleteRes.messages);
+      combined.errors.push(...deleteRes.errors);
+    }
+    return combined;
   } catch (error: any) {
-    console.error(
-      `failed to remove user ${userGuid} from org ${orgGuid}: ${error.message}`
-    );
-    return {
-      status: 'error',
-      messages: ['failed to remove user from org'],
-    };
+    throw new Error('failed to remove user from org: ' + error.message);
   }
 }
 
@@ -214,8 +197,8 @@ export async function getCFOrgUsers(guid: string): Promise<CfOrgUserRoleList> {
       include: 'user',
     });
     const res = await cfRequest('/roles?' + params.toString());
-    if (res.status != 'success') {
-      throw new Error(res.messages.join(', '));
+    if (res.errors.length > 0) {
+      throw new Error(res.errors.join(', '));
     }
     // build a hash of the users we can push roles onto
     const users: CfOrgUserRoleList = {};
@@ -239,9 +222,6 @@ export async function getCFOrgUsers(guid: string): Promise<CfOrgUserRoleList> {
     }
     return users;
   } catch (error: any) {
-    console.error(
-      `failed to get org user roles for org ${guid}: ${error.message}`
-    );
     throw new Error('failed to get org user roles: ' + error.message);
   }
 }

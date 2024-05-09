@@ -12,15 +12,14 @@ jest.mock('../../../api/api');
 describe('cloudfoundry tests', () => {
   describe('cfRequest', () => {
     it('when an api request throws an error, catches and returns as ApiResponse object', async () => {
-      // make sure that the console.error isn't what is caught up by this test
-      jest.spyOn(console, 'error').mockImplementation(() => {});
       request.mockImplementation(() => {
         throw new Error('something went wrong');
       });
       const res = await cfRequest('path');
       expect(res).toEqual({
-        status: 'error',
-        messages: ['something went wrong'],
+        statusCode: undefined,
+        errors: ['something went wrong'],
+        messages: [],
         body: undefined,
       });
     });

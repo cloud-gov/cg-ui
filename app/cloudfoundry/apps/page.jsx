@@ -4,7 +4,7 @@ import { getCFApps } from '../../../api/cloudfoundry/cloudfoundry';
 export default async function CloudFoundryAppsPage() {
   try {
     const res = await getCFApps();
-    if (res.status == 'success' && res.body) {
+    if (res.body) {
       const apps = res.body.resources;
       return (
         <>
@@ -18,7 +18,7 @@ export default async function CloudFoundryAppsPage() {
         </>
       );
     } else {
-      return <div role="alert">{res.messages.join(', ')}</div>;
+      return <div role="alert">{res.errors.join(', ')}</div>;
     }
   } catch (error) {
     return <div role="alert">{error.message}</div>;
