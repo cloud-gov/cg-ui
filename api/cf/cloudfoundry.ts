@@ -24,7 +24,7 @@ interface ApiRequestOptions {
   body?: any;
 }
 
-interface addRoleForUsernameArgs {
+interface addRoleArgs {
   orgGuid?: string;
   roleType: string;
   username: string;
@@ -90,7 +90,7 @@ export async function addRole({
   orgGuid,
   roleType,
   username,
-}: addRoleForUsernameArgs): Promise<Response> {
+}: addRoleArgs): Promise<Response> {
   const data = {
     type: roleType,
     relationships: {
@@ -117,13 +117,19 @@ export async function deleteRole(roleGuid: string): Promise<Response> {
 // that could be pretty flexible depending on what we need (no filters vs org filters vs includes, etc)
 export async function getRoles(
   orgGuids: string[],
-  userGuids: string[]
+  userGuids: string[],
+  include?: string[]
 ): Promise<Response> {
-  const params = new URLSearchParams({
-    organization_guids: orgGuids.join(','),
-    user_guids: userGuids.join(','),
-    // current behavior is to always assume we want access to usernames
-    include: 'user',
-  });
-  return await cfRequest('/roles?' + params.toString());
+  const params = {};
+  if (orgGuids.length > 0) {
+    params['organization_guids'] = orgGuids.join(', ');
+  }
+  if (userGuids.length > 0) {
+    params['user_guids'] = userGuids.join(', ');
+  }
+  if (include && include.length > 0) {
+    params['include'] = include.join(', ');
+  }
+  const urlParams = new URLSearchParams(params);
+  return await cfRequest('/roles?' + urlParams.toString());
 }

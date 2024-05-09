@@ -8,13 +8,11 @@ import * as CF from '../api/cf/cloudfoundry';
 export interface OrgUser {
   displayName: string;
   origin: string;
-  roles: OrgUserRole[];
+  roles: {
+    guid: string;
+    type: CF.OrgRole;
+  }[];
   username: string;
-}
-
-export interface OrgUserRole {
-  guid: string;
-  type: CF.OrgRole;
 }
 
 export interface OrgUserRoleList {
@@ -102,31 +100,27 @@ export async function deleteOrgUser(orgGuid: string, userGuid: string) {
 
     if (!roleRes.ok) {
       // TODO probably want better logging here
-      throw new Error(`${message.fail}: ${roleRes.status}`);
+      throw new Error(`${roleRes.status}`);
     }
 
     const roleResBody = await roleRes.json();
 
+    const responses = await Promise.all(
+      roleResBody.resources.map((role: any) => CF.deleteRole(role.guid))
+    );
+
+    // if any responses were not successful, throw an error so it can be logged and returned to the user
+    if (responses.some((res: Response) => !res.ok)) {
+      throw new Error('failed to remove all roles');
+    }
+
     return {
       success: true,
       status: 'success',
-      body: roleResBody,
+      message: message.success,
     };
-
-    // TODO come back and rethink how this works now that we're redoing everything
-
-    // for (const role of roleRes.body.resources) {
-    //   const guid = role.guid;
-    //   const deleteRes = await cfRequest('/roles/' + guid, 'delete');
-
-    //   // TODO what do we want to do when we have multiple responses which may
-    //   // have varying status codes, etc?
-    //   combined.messages.push(...deleteRes.messages);
-    //   combined.errors.push(...deleteRes.errors);
-    // }
-    // return combined;
   } catch (error: any) {
-    throw new Error('failed to remove user from org: ' + error.message);
+    throw new Error(`${message.fail}: ${error.message}`);
   }
 }
 
@@ -152,11 +146,11 @@ export async function getOrgUsers(guid: string): Promise<OrgUserRoleList> {
     fail: 'unable to get list of users',
   };
   try {
-    const res = await CF.getRoles([guid], []);
+    const res = await CF.getRoles([guid], [], ['user']);
 
     if (!res.ok) {
       // TODO rethink how we want the error handling to work here
-      throw new Error(`${message.fail}: problem with getRoles ${res.status}`);
+      throw new Error(`problem with getRoles ${res.status}`);
     }
 
     const body = await res.json();
