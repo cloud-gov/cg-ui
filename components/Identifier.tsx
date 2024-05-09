@@ -1,6 +1,37 @@
 import Image from 'next/image';
 
 export function Identifier() {
+  const links = [
+    {
+      name: 'About GSA',
+      url: 'https://www.gsa.gov/about-us',
+    },
+    {
+      name: 'Accessibility statement',
+      url: 'https://www.gsa.gov/website-information/accessibility-statement',
+    },
+    {
+      name: 'FOIA requests',
+      url: 'https://www.gsa.gov/reference/freedom-of-information-act-foia',
+    },
+    {
+      name: 'No FEAR Act data',
+      url: 'https://www.gsa.gov/reference/civil-rights-programs/the-no-fear-act',
+    },
+    {
+      name: 'Office of the Inspector General',
+      url: 'https://www.gsaig.gov/',
+    },
+    {
+      name: 'Performance reports',
+      url: 'https://www.gsa.gov/reference/reports/budget-performance',
+    },
+    {
+      name: 'Privacy policy',
+      url: 'https://www.gsa.gov/website-information/website-policies',
+    },
+  ];
+
   return (
     <div className="usa-identifier">
       <section
@@ -40,68 +71,19 @@ export function Identifier() {
       >
         <div className="usa-identifier__container">
           <ul className="usa-identifier__required-links-list">
-            <li className="usa-identifier__required-links-item">
-              <a
-                href="https://www.gsa.gov/about-us"
-                className="usa-identifier__required-link usa-link"
+            {links.map((link) => (
+              <li
+                className="usa-identifier__required-links-item"
+                key={link.url}
               >
-                About GSA
-              </a>
-            </li>
-
-            <li className="usa-identifier__required-links-item">
-              <a
-                href="https://www.gsa.gov/website-information/accessibility-statement"
-                className="usa-identifier__required-link usa-link"
-              >
-                Accessibility statement
-              </a>
-            </li>
-
-            <li className="usa-identifier__required-links-item">
-              <a
-                href="https://www.gsa.gov/reference/freedom-of-information-act-foia"
-                className="usa-identifier__required-link usa-link"
-              >
-                FOIA requests
-              </a>
-            </li>
-
-            <li className="usa-identifier__required-links-item">
-              <a
-                href="https://www.gsa.gov/reference/civil-rights-programs/the-no-fear-act"
-                className="usa-identifier__required-link usa-link"
-              >
-                No FEAR Act data
-              </a>
-            </li>
-
-            <li className="usa-identifier__required-links-item">
-              <a
-                href="https://www.gsaig.gov/"
-                className="usa-identifier__required-link usa-link"
-              >
-                Office of the Inspector General
-              </a>
-            </li>
-
-            <li className="usa-identifier__required-links-item">
-              <a
-                href="https://www.gsa.gov/reference/reports/budget-performance"
-                className="usa-identifier__required-link usa-link"
-              >
-                Performance reports
-              </a>
-            </li>
-
-            <li className="usa-identifier__required-links-item">
-              <a
-                href="https://www.gsa.gov/website-information/website-policies"
-                className="usa-identifier__required-link usa-link"
-              >
-                Privacy policy
-              </a>
-            </li>
+                <a
+                  href={link.url}
+                  className="usa-identifier__required-link usa-link"
+                >
+                  {link.name}
+                </a>
+              </li>
+            ))}
           </ul>
         </div>
       </nav>
