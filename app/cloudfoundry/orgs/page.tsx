@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { getOrgs } from '../../../api/cf/cloudfoundry';
+import { getOrgs } from '../../../controllers/controllers';
 
 export default async function CloudFoundryOrgsPage() {
   try {
@@ -20,7 +20,7 @@ export default async function CloudFoundryOrgsPage() {
         </>
       );
     } else {
-      return <div role="alert">{res.errors.join(', ')}</div>;
+      return <div role="alert">{res.message}</div>;
     }
   } catch (error: any) {
     return <div role="alert">{error.message}</div>;

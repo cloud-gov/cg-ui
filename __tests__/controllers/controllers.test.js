@@ -7,7 +7,7 @@ import {
   mockUsersByOrganization,
 } from '../api/mocks/roles';
 
-describe('cloudfoundry tests', () => {
+describe('controllers tests', () => {
   beforeEach(() => {
     if (!nock.isActive()) {
       nock.activate();
@@ -78,7 +78,7 @@ describe('cloudfoundry tests', () => {
           displayName: 'User2 Example',
         },
       };
-      expect(res).toEqual(expected);
+      expect(res.body).toEqual(expected);
     });
 
     it('when given an invalid or unauthorized org guid, returns an error message', async () => {
@@ -89,7 +89,7 @@ describe('cloudfoundry tests', () => {
       expect(async () => {
         await getOrgUsers('invalidGUID');
       }).rejects.toThrow(
-        new Error('unable to get list of users: problem with getRoles 404')
+        new Error('unable to list the org users: problem with getRoles 404')
       );
     });
   });

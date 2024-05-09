@@ -2,14 +2,14 @@
 
 import { useState } from 'react';
 import { useFormState } from 'react-dom';
-import { CfOrgUser, CfOrgUserRoleList } from '../../api/cf/cloudfoundry';
+import { OrgUser, OrgUserRoleList } from '../../controllers/controllers';
 import { Modal } from '../Modal';
 import {
   removeRole,
   removeUser,
 } from '../../app/cloudfoundry/orgs/[guid]/actions';
 
-function MemberLabel({ user }: { user: CfOrgUser }) {
+function MemberLabel({ user }: { user: OrgUser }) {
   return (
     <>
       {user.displayName ? user.displayName : user.username}
@@ -23,7 +23,7 @@ export function OrgMembersList({
   users,
 }: {
   org: any;
-  users: CfOrgUserRoleList;
+  users: OrgUserRoleList;
 }) {
   const [confirmRoleRemove, setConfirmRoleRemove] = useState('');
   const [formStateRoleRemove, formActionRoleRemove] = useFormState(removeRole, {
@@ -40,7 +40,7 @@ export function OrgMembersList({
   return (
     <>
       <ul>
-        {Object.entries(users).map(([guid, user]: [string, CfOrgUser]) => (
+        {Object.entries(users).map(([guid, user]: [string, OrgUser]) => (
           <li key={guid}>
             <button
               onClick={() => setConfirmUserRemove(guid)}

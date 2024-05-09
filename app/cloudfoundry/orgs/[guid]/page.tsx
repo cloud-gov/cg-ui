@@ -1,7 +1,11 @@
 'use server';
 
 import Link from 'next/link';
-import { getOrg, getOrgUsers } from '../../../../api/cf/cloudfoundry';
+import {
+  getOrg,
+  getOrgUsers,
+  Result,
+} from '../../../../controllers/controllers';
 import { UserAction } from './form';
 import { OrgMembersList } from '../../../../components/CloudFoundry/OrgMembersList';
 
@@ -30,21 +34,33 @@ export default async function OrgPage({
             </ul>
 
             <div className="grid-row">
-              <div className="grid-col-6">
-                <h2>Org members</h2>
-                <OrgMembersList org={org} users={users} />
-              </div>
-              <div className="grid-col-6">
-                <UserAction orgGuid={params.guid} />
-              </div>
+              <OrgMembers org={org} users={users} />
             </div>
           </div>
         </>
       );
     } else {
-      return <div role="alert">{orgRes.errors.join(', ')}</div>;
+      return <div role="alert">{orgRes.message}</div>;
     }
   } catch (error: any) {
     return <div role="alert">{error.message}</div>;
+  }
+}
+
+async function OrgMembers({ org, users }: { org: any; users: Result }) {
+  if (users && users.body) {
+    return (
+      <>
+        <div className="grid-col-6">
+          <h2>Org members</h2>
+          <OrgMembersList org={org} users={users.body} />
+        </div>
+        <div className="grid-col-6">
+          <UserAction orgGuid={org.guid} />
+        </div>
+      </>
+    );
+  } else {
+    return <div role="alert">{users.message}</div>;
   }
 }

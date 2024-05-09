@@ -5,6 +5,12 @@
 
 import * as CF from '../api/cf/cloudfoundry';
 
+interface AddOrgRoleArgs {
+  orgGuid: string;
+  roleType: CF.OrgRole;
+  username: string;
+}
+
 export interface OrgUser {
   displayName: string;
   origin: string;
@@ -19,8 +25,8 @@ export interface OrgUserRoleList {
   [guid: string]: OrgUser;
 }
 
-interface Result {
-  success: boolean | undefined;
+export interface Result {
+  success: boolean;
   status?: ResultStatus;
   message?: string;
   body?: any;
@@ -34,7 +40,7 @@ interface UserMessage {
   fail?: string;
 }
 
-// maps cloud foundry fetch response to user friendly message
+// maps basic cloud foundry fetch response to frontend ready result
 async function mapCfResult(
   apiResponse: Response,
   message?: UserMessage
@@ -62,11 +68,11 @@ async function mapCfResult(
   };
 }
 
-export async function addOrgRole(
-  orgGuid: string,
-  roleType: CF.OrgRole,
-  username: string
-): Promise<Result> {
+export async function addOrgRole({
+  orgGuid,
+  roleType,
+  username,
+}: AddOrgRoleArgs): Promise<Result> {
   const message = {
     success: `added ${username} to org`,
     fail: `unable to add ${username} to org`,
@@ -79,16 +85,18 @@ export async function addOrgRole(
     });
     return await mapCfResult(res, message);
   } catch (error: any) {
-    console.log(`${message.fail}: ${error.message}`);
     return {
       success: false,
       status: 'error',
-      message: message.fail,
+      message: `${message.fail}: ${error.message}`,
     };
   }
 }
 
-export async function deleteOrgUser(orgGuid: string, userGuid: string) {
+export async function deleteOrgUser(
+  orgGuid: string,
+  userGuid: string
+): Promise<Result> {
   // TODO we technically already have a list of the org member roles on the page --
   // do we want to pass those from the form instead of having a separate API call here?
   const message = {
@@ -124,15 +132,16 @@ export async function deleteOrgUser(orgGuid: string, userGuid: string) {
   }
 }
 
-export async function getApps(): Promise<Result> {
+export async function deleteRole(guid: string): Promise<Result> {
   const message = {
-    fail: 'unable to list applications',
+    success: `deleted role ${guid}`,
+    fail: `failed to delete role ${guid}`,
   };
   try {
-    const res = await CF.getApps();
+    const res = await CF.deleteRole(guid);
     return await mapCfResult(res, message);
   } catch (error: any) {
-    console.error(`${message.fail}: ${error.message}`);
+    // console.error(`${message.fail}: ${error.message}`);
     return {
       success: false,
       status: 'error',
@@ -141,9 +150,60 @@ export async function getApps(): Promise<Result> {
   }
 }
 
-export async function getOrgUsers(guid: string): Promise<OrgUserRoleList> {
+export async function getApps(): Promise<Result> {
   const message = {
-    fail: 'unable to get list of users',
+    fail: 'unable to list your applications',
+  };
+  try {
+    const res = await CF.getApps();
+    return await mapCfResult(res, message);
+  } catch (error: any) {
+    // console.error(`${message.fail}: ${error.message}`);
+    return {
+      success: false,
+      status: 'error',
+      message: message.fail,
+    };
+  }
+}
+
+export async function getOrg(guid: string): Promise<Result> {
+  const message = {
+    fail: 'failed to retrieve organization information',
+  };
+  try {
+    const res = await CF.getOrg(guid);
+    return await mapCfResult(res, message);
+  } catch (error: any) {
+    // console.error(`${message.fail}: ${error.message}`);
+    return {
+      success: false,
+      status: 'error',
+      message: message.fail,
+    };
+  }
+}
+
+export async function getOrgs(): Promise<Result> {
+  const message = {
+    fail: 'unable to list your organizations',
+  };
+  try {
+    const res = await CF.getOrgs();
+    return await mapCfResult(res, message);
+  } catch (error: any) {
+    // console.error(`${message.fail}: ${error.message}`);
+    return {
+      success: false,
+      status: 'error',
+      message: message.fail,
+    };
+  }
+}
+
+export async function getOrgUsers(guid: string): Promise<Result> {
+  const message = {
+    fail: 'unable to list the org users',
   };
   try {
     const res = await CF.getRoles([guid], [], ['user']);
@@ -174,7 +234,11 @@ export async function getOrgUsers(guid: string): Promise<OrgUserRoleList> {
         });
       }
     }
-    return users;
+    return {
+      success: true,
+      status: 'success',
+      body: users,
+    };
   } catch (error: any) {
     throw new Error(`${message.fail}: ${error.message}`);
   }

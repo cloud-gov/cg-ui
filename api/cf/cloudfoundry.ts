@@ -39,9 +39,9 @@ export async function cfRequest(
     const options = await cfRequestOptions(method, data);
     return await request(CF_API_URL + path, options);
   } catch (error: any) {
-    console.error(
-      `request to ${path} with method ${method} failed: ${error.statusCode} -- ${error.message}`
-    );
+    // console.error(
+    //   `request to ${path} with method ${method} failed: ${error.statusCode} -- ${error.message}`
+    // );
     throw new Error(`something went wrong: ${error.message}`);
   }
 }
@@ -120,7 +120,11 @@ export async function getRoles(
   userGuids: string[],
   include?: string[]
 ): Promise<Response> {
-  const params = {};
+  const params: {
+    organization_guids?: string;
+    user_guids?: string;
+    include?: string;
+  } = {};
   if (orgGuids.length > 0) {
     params['organization_guids'] = orgGuids.join(', ');
   }

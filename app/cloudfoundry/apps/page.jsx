@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { getApps } from '../../../api/cf/cloudfoundry';
+import { getApps } from '../../../controllers/controllers';
 
 export default async function CloudFoundryAppsPage() {
   try {
@@ -18,7 +18,7 @@ export default async function CloudFoundryAppsPage() {
         </>
       );
     } else {
-      return <div role="alert">{res.errors.join(', ')}</div>;
+      return <div role="alert">{res.message}</div>;
     }
   } catch (error) {
     return <div role="alert">{error.message}</div>;

@@ -36,7 +36,7 @@ describe('cloudfoundry tests', () => {
         const res = await getOrg('invalidGUID');
         expect(res.status).toEqual(404);
         // TODO why isn't this working?
-        // expect(await res.text()).toEqual(mockOrgNotFound);
+        // expect(await res.json()).toEqual(mockOrgNotFound);
       });
     });
 
