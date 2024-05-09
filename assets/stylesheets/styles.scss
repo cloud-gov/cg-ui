@@ -1,22 +1,24 @@
 // 1. Load your project's USWDS settings configuration
-@forward "uswds-settings.scss";
+@forward 'uswds-settings.scss';
 
 // 2. Load USWDS source code
-@forward "uswds-core"; // core must come first
-@forward "uswds-global";
-@forward "uswds-utilities";
+@forward 'uswds-core'; // core must come first
+@forward 'uswds-global';
+@forward 'uswds-utilities';
 
 // USWDS components
-@forward "usa-layout-grid";
-@forward "usa-accordion";
-@forward "usa-banner";
-@forward "usa-button";
-@forward "usa-form";
-@forward "usa-input";
-@forward "usa-label";
-@forward "usa-link";
-@forward "usa-select";
-@forward "usa-modal";
+@forward 'usa-layout-grid';
+@forward 'usa-accordion';
+@forward 'usa-banner';
+@forward 'usa-button';
+@forward 'usa-form';
+@forward 'usa-input';
+@forward 'usa-label';
+@forward 'usa-link';
+@forward 'usa-select';
+@forward 'usa-modal';
+@forward 'usa-header';
+@forward 'usa-identifier';
 
 // 3. Load any custom SASS
 // none yet
