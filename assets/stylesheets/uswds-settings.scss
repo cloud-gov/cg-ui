@@ -1,7 +1,7 @@
 // https://designsystem.digital.gov/documentation/settings/
-@use "uswds-core" with (
-  $theme-font-path: "../../../../../../dist/fonts",
-  $theme-image-path: "../../../../../../dist/img",
+@use 'uswds-core' with (
+  $theme-font-path: '../../../../../../dist/fonts',
+  $theme-image-path: '../../../../../../dist/img',
 
   // base colors
   $theme-color-base-family: 'gray-cool',
@@ -61,5 +61,8 @@
 
   // layout grid
   $theme-grid-container-max-width: 'desktop-lg',
-  $theme-banner-max-width: 'desktop-lg'
+  $theme-banner-max-width: 'desktop-lg',
+  $theme-header-max-width: 'desktop-lg',
+  $theme-header-min-width: 'none',
+  $theme-identifier-max-width: 'desktop-lg'
 );
