@@ -2,15 +2,19 @@
 // API library for basic error handling and serialization
 /***/
 
-export async function request(url, options = {}) {
+export async function request(url: string, options = {}): Promise<Response> {
   try {
     return await fetch(url, options);
-  } catch (error) {
+  } catch (error: any) {
     throw new Error(error.message);
   }
 }
 
-export async function addData(url, body, options = {}) {
+export async function addData(
+  url: string,
+  body: any,
+  options = {}
+): Promise<object> {
   try {
     const reqOptions = {
       method: 'POST',
@@ -23,12 +27,12 @@ export async function addData(url, body, options = {}) {
     } else {
       throw new Error(`an error occurred with response code ${res.status}`);
     }
-  } catch (error) {
+  } catch (error: any) {
     throw new Error(error.message);
   }
 }
 
-export async function deleteData(url, options = {}) {
+export async function deleteData(url: string, options = {}): Promise<boolean> {
   try {
     const res = await fetch(url, {
       method: 'DELETE',
@@ -39,12 +43,12 @@ export async function deleteData(url, options = {}) {
     } else {
       throw new Error(`an error occurred with response code ${res.status}`);
     }
-  } catch (error) {
+  } catch (error: any) {
     throw new Error(error.message);
   }
 }
 
-export async function getData(url, options = {}) {
+export async function getData(url: string, options = {}): Promise<object> {
   try {
     const res = await fetch(url, {
       method: 'GET',
@@ -55,7 +59,7 @@ export async function getData(url, options = {}) {
     } else {
       throw new Error(`an error occurred with response code ${res.status}`);
     }
-  } catch (error) {
+  } catch (error: any) {
     throw new Error(error.message);
   }
 }

@@ -8,27 +8,10 @@ import { getToken } from './token';
 
 const CF_API_URL = process.env.CF_API_URL;
 
-interface Error422 {
-  detail: string;
-  title: string;
-  code: number;
-}
-
-interface OrgUserRole {
-  guid: string;
-  type: 'organization_manager' | 'organizion_user' | 'organization_auditor';
-}
-
-export interface OrgUser {
-  displayName: string;
-  origin: string;
-  roles: OrgUserRole[];
-  username: string;
-}
-
-export interface OrgUserRoleList {
-  [guid: string]: OrgUser;
-}
+export type OrgRole =
+  | 'organization_manager'
+  | 'organizion_user'
+  | 'organization_auditor';
 
 type MethodType = 'delete' | 'get' | 'patch' | 'post';
 
@@ -41,15 +24,8 @@ interface ApiRequestOptions {
   body?: any;
 }
 
-interface ApiResponse {
-  statusCode: number | undefined;
-  errors: string[];
-  messages: string[];
-  body: any | undefined;
-}
-
-interface SetOrgUserRole {
-  orgGuid: string;
+interface addRoleForUsernameArgs {
+  orgGuid?: string;
   roleType: string;
   username: string;
 }
@@ -58,18 +34,15 @@ export async function cfRequest(
   path: string,
   method: MethodType = 'get',
   data?: any
-): Promise<ApiResponse> {
+): Promise<Response> {
   try {
     const options = await cfRequestOptions(method, data);
-    const apiRes = await request(CF_API_URL + path, options);
-    return cfResponse(apiRes);
+    return await request(CF_API_URL + path, options);
   } catch (error: any) {
-    return {
-      statusCode: undefined,
-      errors: [error.message],
-      messages: [],
-      body: undefined,
-    };
+    console.error(
+      `request to ${path} with method ${method} failed: ${error.statusCode} -- ${error.message}`
+    );
+    throw new Error(`something went wrong: ${error.message}`);
   }
 }
 
@@ -90,35 +63,34 @@ async function cfRequestOptions(
   return options;
 }
 
-async function cfResponse(apiRes: any): Promise<ApiResponse> {
-  const res: ApiResponse = {
-    statusCode: apiRes.status,
-    errors: [],
-    messages: [],
-    body: undefined,
-  };
-  if (apiRes.status == 202) {
-    // indicates resource was deleted successfully, no response body
-    res.messages.push(apiRes.statusText);
-  } else if (apiRes.ok) {
-    res.messages.push(apiRes.statusText);
-    res.body = await apiRes.json();
-  } else if (apiRes.status == 422) {
-    const msg = await apiRes.json();
-    res.errors = msg.errors.map((e: Error422) => e.detail);
-  } else {
-    res.errors.push(apiRes.statusText);
-  }
-  return res;
+/***/
+// ENDPOINT SPECIFIC FUNCTIONS
+/***/
+
+// APPS
+
+export async function getApps(): Promise<Response> {
+  return await cfRequest('/apps', 'get');
 }
 
-// Endpoint specific functions
+// ORGANIZATIONS
 
-export async function addOrgRole({
+export async function getOrg(guid: string): Promise<Response> {
+  return await cfRequest('/organizations/' + guid, 'get');
+}
+
+export async function getOrgs(): Promise<Response> {
+  return await cfRequest('/organizations', 'get');
+}
+
+// ROLES
+
+// NOTE: addRole relies on username rather than user guid
+export async function addRole({
   orgGuid,
   roleType,
   username,
-}: SetOrgUserRole) {
+}: addRoleForUsernameArgs): Promise<Response> {
   const data = {
     type: roleType,
     relationships: {
@@ -134,98 +106,24 @@ export async function addOrgRole({
       },
     },
   };
-  try {
-    const response = await cfRequest('/roles', 'post', data);
-    return response;
-  } catch (error: any) {
-    throw new Error(`${error.message}, original body: ${JSON.stringify(data)}`);
-  }
+  return await cfRequest('/roles', 'post', data);
 }
 
-export async function deleteRole(roleGuid: string) {
+export async function deleteRole(roleGuid: string): Promise<Response> {
   return await cfRequest('/roles/' + roleGuid, 'delete');
 }
 
-export async function deleteOrgUser(orgGuid: string, userGuid: string) {
-  // TODO we technically already have a list of the org member roles on the page --
-  // do we want to pass those from the form instead of having a separate API call here?
-  try {
-    const params = new URLSearchParams({
-      organization_guids: orgGuid,
-      user_guids: userGuid,
-    });
-    const roleRes = await cfRequest('/roles?' + params.toString());
-    if (roleRes.errors.length > 0) {
-      throw new Error(roleRes.errors.join(', '));
-    }
-
-    const combined: { messages: string[]; errors: string[] } = {
-      messages: [],
-      errors: [],
-    };
-    for (const role of roleRes.body.resources) {
-      const guid = role.guid;
-      const deleteRes = await cfRequest('/roles/' + guid, 'delete');
-
-      // TODO what do we want to do when we have multiple responses which may
-      // have varying status codes, etc?
-      combined.messages.push(...deleteRes.messages);
-      combined.errors.push(...deleteRes.errors);
-    }
-    return combined;
-  } catch (error: any) {
-    throw new Error('failed to remove user from org: ' + error.message);
-  }
-}
-
-export async function getApps() {
-  return await cfRequest('/apps', 'get');
-}
-
-export async function getOrg(guid: string) {
-  return await cfRequest('/organizations/' + guid, 'get');
-}
-
-// getOrgUsers uses the `/roles` endpoint and manipulates the response
-// to return a list of users and their roles for an organization.
-// This is in contrast to the `/organizations/[guid]/users` endpoint, which
-// does not return role information
-export async function getOrgUsers(guid: string): Promise<OrgUserRoleList> {
-  try {
-    const params = new URLSearchParams({
-      organization_guids: guid,
-      include: 'user',
-    });
-    const res = await cfRequest('/roles?' + params.toString());
-    if (res.errors.length > 0) {
-      throw new Error(res.errors.join(', '));
-    }
-    // build a hash of the users we can push roles onto
-    const users: OrgUserRoleList = {};
-    for (const user of res.body.included.users) {
-      users[user.guid] = {
-        displayName: user.presentation_name,
-        origin: user.origin,
-        roles: [],
-        username: user.username,
-      };
-    }
-    // iterate through the roles and attach to individual users
-    for (const role of res.body.resources) {
-      const userGuid = role.relationships.user.data.guid;
-      if (userGuid in users) {
-        users[userGuid].roles.push({
-          type: role.type,
-          guid: role.guid,
-        });
-      }
-    }
-    return users;
-  } catch (error: any) {
-    throw new Error('failed to get org user roles: ' + error.message);
-  }
-}
-
-export async function getOrgs() {
-  return await cfRequest('/organizations', 'get');
+// TODO think about how we want to handle arguments for something
+// that could be pretty flexible depending on what we need (no filters vs org filters vs includes, etc)
+export async function getRoles(
+  orgGuids: string[],
+  userGuids: string[]
+): Promise<Response> {
+  const params = new URLSearchParams({
+    organization_guids: orgGuids.join(','),
+    user_guids: userGuids.join(','),
+    // current behavior is to always assume we want access to usernames
+    include: 'user',
+  });
+  return await cfRequest('/roles?' + params.toString());
 }
