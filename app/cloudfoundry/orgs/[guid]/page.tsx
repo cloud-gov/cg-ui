@@ -20,8 +20,8 @@ export default async function OrgPage({
     const orgRes = await getOrg(params.guid);
     const users = await getOrgUsers(params.guid);
 
-    if (orgRes.body) {
-      const org = orgRes.body;
+    if (orgRes.payload) {
+      const org = orgRes.payload;
       return (
         <>
           <Link href="/cloudfoundry">Back to Cloud Foundry home</Link>
@@ -48,12 +48,12 @@ export default async function OrgPage({
 }
 
 async function OrgMembers({ org, users }: { org: any; users: Result }) {
-  if (users && users.body) {
+  if (users && users.payload) {
     return (
       <>
         <div className="grid-col-6">
           <h2>Org members</h2>
-          <OrgMembersList org={org} users={users.body} />
+          <OrgMembersList org={org} users={users.payload} />
         </div>
         <div className="grid-col-6">
           <UserAction orgGuid={org.guid} />

@@ -29,7 +29,7 @@ export interface Result {
   success: boolean;
   status?: ResultStatus;
   message?: string;
-  body?: any;
+  payload?: any;
 }
 
 // taken from USWDS alert options: https://designsystem.digital.gov/components/alert/
@@ -50,15 +50,15 @@ async function mapCfResult(
       success: true,
       status: 'success',
       message: message ? message.success : undefined,
-      // 202 (successful delete) does not return any body
-      body: apiResponse.status == 202 ? undefined : await apiResponse.json(),
+      // 202 (successful delete) does not return any json
+      payload: apiResponse.status == 202 ? undefined : await apiResponse.json(),
     };
   } else if (apiResponse.status == 422) {
     return {
       success: false,
       status: 'error',
       message: message ? message.fail : undefined,
-      body: await apiResponse.json(),
+      payload: await apiResponse.json(),
     };
   }
   return {
@@ -111,10 +111,10 @@ export async function deleteOrgUser(
       throw new Error(`${roleRes.status}`);
     }
 
-    const roleResBody = await roleRes.json();
+    const roleResJson = await roleRes.json();
 
     const responses = await Promise.all(
-      roleResBody.resources.map((role: any) => CF.deleteRole(role.guid))
+      roleResJson.resources.map((role: any) => CF.deleteRole(role.guid))
     );
 
     // if any responses were not successful, throw an error so it can be logged and returned to the user
@@ -221,10 +221,10 @@ export async function getOrgUsers(guid: string): Promise<Result> {
       throw new Error(`problem with getRoles ${res.status}`);
     }
 
-    const body = await res.json();
+    const payload = await res.json();
     // build a hash of the users we can push roles onto
     const users: OrgUserRoleList = {};
-    for (const user of body.included.users) {
+    for (const user of payload.included.users) {
       users[user.guid] = {
         displayName: user.presentation_name,
         origin: user.origin,
@@ -233,7 +233,7 @@ export async function getOrgUsers(guid: string): Promise<Result> {
       };
     }
     // iterate through the roles and attach to individual users
-    for (const role of body.resources) {
+    for (const role of payload.resources) {
       const userGuid = role.relationships.user.data.guid;
       if (userGuid in users) {
         users[userGuid].roles.push({
@@ -245,7 +245,7 @@ export async function getOrgUsers(guid: string): Promise<Result> {
     return {
       success: true,
       status: 'success',
-      body: users,
+      payload: users,
     };
   } catch (error: any) {
     throw new Error(`${message.fail}: ${error.message}`);

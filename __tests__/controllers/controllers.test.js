@@ -78,7 +78,7 @@ describe('controllers tests', () => {
           displayName: 'User2 Example',
         },
       };
-      expect(res.body).toEqual(expected);
+      expect(res.payload).toEqual(expected);
     });
 
     it('when given an invalid or unauthorized org guid, returns an error message', async () => {

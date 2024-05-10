@@ -4,8 +4,8 @@ import { getOrgs } from '../../../controllers/controllers';
 export default async function CloudFoundryOrgsPage() {
   try {
     const res = await getOrgs();
-    if (res.body) {
-      const orgs = res.body.resources;
+    if (res.payload) {
+      const orgs = res.payload.resources;
       return (
         <>
           <h1>Your CF Organizations</h1>

@@ -4,8 +4,8 @@ import { getApps } from '../../../controllers/controllers';
 export default async function CloudFoundryAppsPage() {
   try {
     const res = await getApps();
-    if (res.body) {
-      const apps = res.body.resources;
+    if (res.payload) {
+      const apps = res.payload.resources;
       return (
         <>
           <h1>Your CF Apps</h1>
