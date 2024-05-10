@@ -23,8 +23,7 @@ export function logout() {
   );
   const params = new URLSearchParams(logoutUrl.search);
   params.set('client_id', process.env.OAUTH_CLIENT_ID);
-  params.set('redirect', process.env.ROOT_URL);
-  // TODO: not sure why our local uaa server isn't redirecting us back to our site
+  params.set('redirect', process.env.ROOT_URL + process.env.AUTH_CALLBACK_PATH);
   const response = NextResponse.redirect(logoutUrl + '?' + params.toString());
   response.cookies.delete('authsession');
   return response;
@@ -46,14 +45,13 @@ export function setAuthCookie(data, response) {
 
 export async function requestAndSetAuthToken(request) {
   const stateCookie = request.cookies.get('state');
+  let response = NextResponse.redirect(new URL('/', request.url));
+
   if (
     !stateCookie ||
     request.nextUrl.searchParams.get('state') != stateCookie['value']
   ) {
-    return NextResponse.json(
-      { error: 'state param does not match' },
-      { status: 400 }
-    );
+    return response;
   }
   const data = await postToAuthTokenUrl({
     code: request.nextUrl.searchParams.get('code'),
@@ -62,7 +60,6 @@ export async function requestAndSetAuthToken(request) {
     client_id: process.env.OAUTH_CLIENT_ID,
     client_secret: process.env.OAUTH_CLIENT_SECRET,
   });
-  let response = NextResponse.redirect(new URL('/', request.url));
   response = setAuthCookie(data, response);
   response.cookies.delete('state');
   return response;
