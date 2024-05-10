@@ -5,7 +5,6 @@ import { request } from '../../../api/api';
 /* global jest */
 /* eslint no-undef: "off" */
 jest.mock('../../../api/api');
-jest.spyOn(console, 'error').mockImplementation(() => {});
 /* eslint no-undef: "error" */
 
 // this test is in its own file because of difficulties mocking request and

@@ -1,7 +1,7 @@
 import nock from 'nock';
 import { describe, it, expect, beforeEach, afterEach } from '@jest/globals';
 import { getOrg, getOrgs } from '../../../api/cf/cloudfoundry';
-import { mockOrg, mockOrgs, mockOrgNotFound } from '../mocks/organizations';
+import { mockOrg, mockOrgs, mockOrgInvalid } from '../mocks/organizations';
 
 describe('cloudfoundry tests', () => {
   beforeEach(() => {
@@ -31,12 +31,11 @@ describe('cloudfoundry tests', () => {
       it('when given an invalid or unauthorized org guid, throws an error', async () => {
         nock(process.env.CF_API_URL)
           .get('/organizations/invalidGUID')
-          .reply(404, mockOrgNotFound);
+          .reply(404, mockOrgInvalid);
 
         const res = await getOrg('invalidGUID');
         expect(res.status).toEqual(404);
-        // TODO why isn't this working?
-        // expect(await res.json()).toEqual(mockOrgNotFound);
+        expect(await res.json()).toEqual(mockOrgInvalid);
       });
     });
 

@@ -130,6 +130,7 @@ describe('cloudfoundry tests', () => {
 
       const res = await deleteRole('invalidGUID');
       expect(res.status).toEqual(404);
+      expect(await res.json()).toEqual(mockRoleDeleteInvalid);
     });
   });
 

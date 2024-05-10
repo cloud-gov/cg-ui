@@ -39,9 +39,11 @@ export async function cfRequest(
     const options = await cfRequestOptions(method, data);
     return await request(CF_API_URL + path, options);
   } catch (error: any) {
-    // console.error(
-    //   `request to ${path} with method ${method} failed: ${error.statusCode} -- ${error.message}`
-    // );
+    if (process.env.NODE_ENV == 'development') {
+      console.error(
+        `request to ${path} with method ${method} failed: ${error.statusCode} -- ${error.message}`
+      );
+    }
     throw new Error(`something went wrong: ${error.message}`);
   }
 }

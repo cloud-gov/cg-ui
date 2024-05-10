@@ -141,7 +141,9 @@ export async function deleteRole(guid: string): Promise<Result> {
     const res = await CF.deleteRole(guid);
     return await mapCfResult(res, message);
   } catch (error: any) {
-    // console.error(`${message.fail}: ${error.message}`);
+    if (process.env.NODE_ENV == 'development') {
+      console.error(`${message.fail}: ${error.message}`);
+    }
     return {
       success: false,
       status: 'error',
@@ -158,7 +160,9 @@ export async function getApps(): Promise<Result> {
     const res = await CF.getApps();
     return await mapCfResult(res, message);
   } catch (error: any) {
-    // console.error(`${message.fail}: ${error.message}`);
+    if (process.env.NODE_ENV == 'development') {
+      console.error(`${message.fail}: ${error.message}`);
+    }
     return {
       success: false,
       status: 'error',
@@ -175,7 +179,9 @@ export async function getOrg(guid: string): Promise<Result> {
     const res = await CF.getOrg(guid);
     return await mapCfResult(res, message);
   } catch (error: any) {
-    // console.error(`${message.fail}: ${error.message}`);
+    if (process.env.NODE_ENV == 'development') {
+      console.error(`${message.fail}: ${error.message}`);
+    }
     return {
       success: false,
       status: 'error',
@@ -192,7 +198,9 @@ export async function getOrgs(): Promise<Result> {
     const res = await CF.getOrgs();
     return await mapCfResult(res, message);
   } catch (error: any) {
-    // console.error(`${message.fail}: ${error.message}`);
+    if (process.env.NODE_ENV == 'development') {
+      console.error(`${message.fail}: ${error.message}`);
+    }
     return {
       success: false,
       status: 'error',
