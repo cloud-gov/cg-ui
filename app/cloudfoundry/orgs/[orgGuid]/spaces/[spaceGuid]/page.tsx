@@ -1,7 +1,7 @@
 'use server';
 
 import Link from 'next/link';
-import { getCFSpace } from '../../../../../../api/cloudfoundry/cloudfoundry';
+import { getSpace } from '../../../../../../controllers/controllers';
 
 export default async function SpacePage({
   params,
@@ -12,10 +12,10 @@ export default async function SpacePage({
   };
 }) {
   try {
-    const spaceRes = await getCFSpace(params.spaceGuid);
+    const spaceRes = await getSpace(params.spaceGuid);
 
-    if (spaceRes.body) {
-      const space = spaceRes.body;
+    if (spaceRes.payload) {
+      const space = spaceRes.payload;
       return (
         <>
           <div className="grid-container">
@@ -30,7 +30,7 @@ export default async function SpacePage({
         </>
       );
     } else {
-      return <div role="alert">{spaceRes.errors.join(', ')}</div>;
+      return <div role="alert">{spaceRes.message}</div>;
     }
   } catch (error: any) {
     return <div role="alert">{error.message}</div>;

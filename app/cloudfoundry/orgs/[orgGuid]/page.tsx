@@ -4,6 +4,7 @@ import Link from 'next/link';
 import {
   getOrg,
   getOrgUsers,
+  getSpaces,
   Result,
 } from '../../../../controllers/controllers';
 import { UserAction } from './form';
@@ -17,13 +18,10 @@ export default async function OrgPage({
   };
 }) {
   try {
-    const orgRes = await getOrg(params.guid);
-    const users = await getOrgUsers(params.guid);
+    const orgRes = await getOrg(params.orgGuid);
+    const users = await getOrgUsers(params.orgGuid);
     const spacesRes = await getSpaces([params.orgGuid]);
-    const spaces =
-      spacesRes.body && spacesRes.body.resources
-        ? spacesRes.body.resources
-        : [];
+    const spaces = spacesRes.payload?.resources || [];
 
     if (orgRes.payload) {
       const org = orgRes.payload;

@@ -54,12 +54,24 @@ async function mapCfResult(
       payload: apiResponse.status == 202 ? undefined : await apiResponse.json(),
     };
   } else if (apiResponse.status == 422) {
+    const cfPayload = await apiResponse.json();
+    if (process.env.NODE_ENV == 'development') {
+      console.error(
+        `${message ? message.fail : '422 error with cf request'}: ${JSON.stringify(cfPayload)}`
+      );
+    }
     return {
       success: false,
       status: 'error',
       message: message ? message.fail : undefined,
-      payload: await apiResponse.json(),
+      payload: cfPayload,
     };
+  }
+
+  if (process.env.NODE_ENV == 'development') {
+    console.error(
+      `${message ? message.fail : 'error with cf request'}: ${apiResponse.status}`
+    );
   }
   return {
     success: false,
@@ -249,5 +261,43 @@ export async function getOrgUsers(guid: string): Promise<Result> {
     };
   } catch (error: any) {
     throw new Error(`${message.fail}: ${error.message}`);
+  }
+}
+
+export async function getSpace(guid: string): Promise<Result> {
+  const message = {
+    fail: 'unable to retrieve space information',
+  };
+  try {
+    const res = await CF.getSpace(guid);
+    return await mapCfResult(res, message);
+  } catch (error: any) {
+    if (process.env.NODE_ENV == 'development') {
+      console.error(`${message.fail}: ${error.message}`);
+    }
+    return {
+      success: false,
+      status: 'error',
+      message: message.fail,
+    };
+  }
+}
+
+export async function getSpaces(org_guids: string[]): Promise<Result> {
+  const message = {
+    fail: 'unable to list the organization spaces',
+  };
+  try {
+    const res = await CF.getSpaces(org_guids);
+    return await mapCfResult(res, message);
+  } catch (error: any) {
+    if (process.env.NODE_ENV == 'development') {
+      console.error(`${message.fail}: ${error.message}`);
+    }
+    return {
+      success: false,
+      status: 'error',
+      message: message.fail,
+    };
   }
 }
