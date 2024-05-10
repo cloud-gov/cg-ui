@@ -90,6 +90,89 @@ export const mockRoleDeleteInvalid = {
   ],
 };
 
+// Request /v3/roles?organization_guids=[guid]&user_guids=[guid]
+// Response 200
+export const mockRolesFilteredByOrgAndUser = {
+  pagination: {
+    total_results: 2,
+    total_pages: 1,
+    first: {
+      href: 'https://example.com/v3/roles?order_by=%2Bcreated_at\u0026organization_guids=e8e31994-0dba-41e3-96ea-39942f1b30a4\u0026page=1\u0026per_page=50\u0026user_guids=46ff1fd5-4238-4e22-a00a-1bec4fc0f9da',
+    },
+    last: {
+      href: 'https://example.com/v3/roles?order_by=%2Bcreated_at\u0026organization_guids=e8e31994-0dba-41e3-96ea-39942f1b30a4\u0026page=1\u0026per_page=50\u0026user_guids=46ff1fd5-4238-4e22-a00a-1bec4fc0f9da',
+    },
+    next: null,
+    previous: null,
+  },
+  resources: [
+    {
+      guid: 'c7c1b7d7-1f1d-4abb-84d4-72bcc254e180',
+      created_at: '2024-01-17T19:34:54Z',
+      updated_at: '2024-01-17T19:34:54Z',
+      type: 'organization_manager',
+      relationships: {
+        user: {
+          data: {
+            guid: '46ff1fd5-4238-4e22-a00a-1bec4fc0f9da',
+          },
+        },
+        organization: {
+          data: {
+            guid: 'e8e31994-0dba-41e3-96ea-39942f1b30a4',
+          },
+        },
+        space: {
+          data: null,
+        },
+      },
+      links: {
+        self: {
+          href: 'https://example.com/v3/roles/c7c1b7d7-1f1d-4abb-84d4-72bcc254e180',
+        },
+        user: {
+          href: 'https://example.com/v3/users/46ff1fd5-4238-4e22-a00a-1bec4fc0f9da',
+        },
+        organization: {
+          href: 'https://example.com/v3/organizations/e8e31994-0dba-41e3-96ea-39942f1b30a4',
+        },
+      },
+    },
+    {
+      guid: '48215058-5d30-4f02-99d2-7c0f200549b7',
+      created_at: '2024-01-17T19:35:20Z',
+      updated_at: '2024-01-17T19:35:20Z',
+      type: 'organization_user',
+      relationships: {
+        user: {
+          data: {
+            guid: '46ff1fd5-4238-4e22-a00a-1bec4fc0f9da',
+          },
+        },
+        organization: {
+          data: {
+            guid: 'e8e31994-0dba-41e3-96ea-39942f1b30a4',
+          },
+        },
+        space: {
+          data: null,
+        },
+      },
+      links: {
+        self: {
+          href: 'https://example.com/v3/roles/48215058-5d30-4f02-99d2-7c0f200549b7',
+        },
+        user: {
+          href: 'https://example.com/v3/users/46ff1fd5-4238-4e22-a00a-1bec4fc0f9da',
+        },
+        organization: {
+          href: 'https://example.com/v3/organizations/e8e31994-0dba-41e3-96ea-39942f1b30a4',
+        },
+      },
+    },
+  ],
+};
+
 // Request /v3/organizations/[guid]/users
 // Response 200
 export const mockUsersByOrganization = {

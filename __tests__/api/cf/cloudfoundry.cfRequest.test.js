@@ -1,5 +1,5 @@
 import { describe, it, expect } from '@jest/globals';
-import { cfRequest } from '../../../api/cloudfoundry/cloudfoundry';
+import { cfRequest } from '../../../api/cf/cloudfoundry';
 import { request } from '../../../api/api';
 
 /* global jest */
@@ -13,15 +13,12 @@ describe('cloudfoundry tests', () => {
   describe('cfRequest', () => {
     it('when an api request throws an error, catches and returns as ApiResponse object', async () => {
       request.mockImplementation(() => {
-        throw new Error('something went wrong');
+        throw new Error('some error');
       });
-      const res = await cfRequest('path');
-      expect(res).toEqual({
-        statusCode: undefined,
-        errors: ['something went wrong'],
-        messages: [],
-        body: undefined,
-      });
+
+      expect(async () => {
+        await cfRequest('path');
+      }).rejects.toThrow(new Error('something went wrong: some error'));
     });
   });
 });

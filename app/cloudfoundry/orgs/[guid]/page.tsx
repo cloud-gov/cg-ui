@@ -2,9 +2,10 @@
 
 import Link from 'next/link';
 import {
-  getCFOrg,
-  getCFOrgUsers,
-} from '../../../../api/cloudfoundry/cloudfoundry';
+  getOrg,
+  getOrgUsers,
+  Result,
+} from '../../../../controllers/controllers';
 import { UserAction } from './form';
 import { OrgMembersList } from '../../../../components/CloudFoundry/OrgMembersList';
 
@@ -16,14 +17,14 @@ export default async function OrgPage({
   };
 }) {
   try {
-    const orgRes = await getCFOrg(params.guid);
-    const users = await getCFOrgUsers(params.guid);
+    const orgRes = await getOrg(params.guid);
+    const users = await getOrgUsers(params.guid);
 
-    if (orgRes.body) {
-      const org = orgRes.body;
+    if (orgRes.payload) {
+      const org = orgRes.payload;
       return (
         <>
-          <Link href="/cloudfoundry">Back to Cloud Foundry home</Link>;
+          <Link href="/cloudfoundry">Back to Cloud Foundry home</Link>
           <div className="grid-container">
             <h1>{org.name}</h1>
             <ul>
@@ -33,21 +34,33 @@ export default async function OrgPage({
             </ul>
 
             <div className="grid-row">
-              <div className="grid-col-6">
-                <h2>Org members</h2>
-                <OrgMembersList users={users} />
-              </div>
-              <div className="grid-col-6">
-                <UserAction orgGuid={params.guid} />
-              </div>
+              <OrgMembers org={org} users={users} />
             </div>
           </div>
         </>
       );
     } else {
-      return <div role="alert">{orgRes.errors.join(', ')}</div>;
+      return <div role="alert">{orgRes.message}</div>;
     }
   } catch (error: any) {
     return <div role="alert">{error.message}</div>;
+  }
+}
+
+async function OrgMembers({ org, users }: { org: any; users: Result }) {
+  if (users && users.payload) {
+    return (
+      <>
+        <div className="grid-col-6">
+          <h2>Org members</h2>
+          <OrgMembersList org={org} users={users.payload} />
+        </div>
+        <div className="grid-col-6">
+          <UserAction orgGuid={org.guid} />
+        </div>
+      </>
+    );
+  } else {
+    return <div role="alert">{users.message}</div>;
   }
 }

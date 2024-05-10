@@ -1,11 +1,11 @@
 import Link from 'next/link';
-import { getCFApps } from '../../../api/cloudfoundry/cloudfoundry';
+import { getApps } from '../../../controllers/controllers';
 
 export default async function CloudFoundryAppsPage() {
   try {
-    const res = await getCFApps();
-    if (res.body) {
-      const apps = res.body.resources;
+    const res = await getApps();
+    if (res.payload) {
+      const apps = res.payload.resources;
       return (
         <>
           <h1>Your CF Apps</h1>
@@ -18,7 +18,7 @@ export default async function CloudFoundryAppsPage() {
         </>
       );
     } else {
-      return <div role="alert">{res.errors.join(', ')}</div>;
+      return <div role="alert">{res.message}</div>;
     }
   } catch (error) {
     return <div role="alert">{error.message}</div>;
