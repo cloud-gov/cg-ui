@@ -7,7 +7,7 @@ import { Modal } from '../Modal';
 import {
   removeRole,
   removeUser,
-} from '../../app/cloudfoundry/orgs/[guid]/actions';
+} from '../../app/cloudfoundry/orgs/[orgGuid]/actions';
 
 function MemberLabel({ user }: { user: OrgUser }) {
   return (

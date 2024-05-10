@@ -4,6 +4,7 @@ import Link from 'next/link';
 import {
   getOrg,
   getOrgUsers,
+  getSpaces,
   Result,
 } from '../../../../controllers/controllers';
 import { UserAction } from './form';
@@ -13,12 +14,14 @@ export default async function OrgPage({
   params,
 }: {
   params: {
-    guid: string;
+    orgGuid: string;
   };
 }) {
   try {
-    const orgRes = await getOrg(params.guid);
-    const users = await getOrgUsers(params.guid);
+    const orgRes = await getOrg(params.orgGuid);
+    const users = await getOrgUsers(params.orgGuid);
+    const spacesRes = await getSpaces([params.orgGuid]);
+    const spaces = spacesRes.payload?.resources || [];
 
     if (orgRes.payload) {
       const org = orgRes.payload;
@@ -31,6 +34,19 @@ export default async function OrgPage({
               <li>Name: {org.name}</li>
               <li>Suspended: {org.suspended}</li>
               <li>Created: {org.created_at}</li>
+            </ul>
+
+            <h2>Spaces</h2>
+            <ul>
+              {spaces.map((space: any) => (
+                <li key={space.guid}>
+                  <Link
+                    href={`/cloudfoundry/orgs/${org.guid}/spaces/${space.guid}`}
+                  >
+                    {space.name}
+                  </Link>
+                </li>
+              ))}
             </ul>
 
             <div className="grid-row">
