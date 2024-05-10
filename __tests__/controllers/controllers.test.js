@@ -1,11 +1,16 @@
 import nock from 'nock';
 import { describe, it, expect, beforeEach, afterEach } from '@jest/globals';
-import { deleteOrgUser, getOrgUsers } from '../../controllers/controllers';
+import {
+  deleteOrgUser,
+  getOrgUsers,
+  getSpaces,
+} from '../../controllers/controllers';
 import { mockOrgNotFound } from '../api/mocks/organizations';
 import {
   mockRolesFilteredByOrgAndUser,
   mockUsersByOrganization,
 } from '../api/mocks/roles';
+import { mockSpaces } from '../api/mocks/spaces';
 
 describe('controllers tests', () => {
   beforeEach(() => {
@@ -91,6 +96,34 @@ describe('controllers tests', () => {
       }).rejects.toThrow(
         new Error('unable to list the org users: problem with getRoles 404')
       );
+    });
+  });
+
+  describe('getSpaces', () => {
+    it('when given a valid org, returns a list of spaces', async () => {
+      nock(process.env.CF_API_URL)
+        .get('/spaces?organization_guids=validOrgGuid')
+        .reply(200, mockSpaces);
+
+      const res = await getSpaces(['validOrgGuid']);
+      expect(res).toEqual({
+        success: true,
+        status: 'success',
+        payload: mockSpaces,
+      });
+    });
+
+    it('when getting a 500 from the server, sends a friendly error message to user', async () => {
+      nock(process.env.CF_API_URL)
+        .get('/spaces?organization_guids=validOrgGuid')
+        .reply(500);
+
+      const res = await getSpaces(['validOrgGuid']);
+      expect(res).toEqual({
+        success: false,
+        status: 'error',
+        message: 'unable to list the organization spaces',
+      });
     });
   });
 });
