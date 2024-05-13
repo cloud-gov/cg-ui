@@ -3,7 +3,7 @@
 // Library for translating UI actions to API requests and back
 /***/
 
-import * as CF from '../api/cf/cloudfoundry';
+import * as CF from '@api/cf/cloudfoundry';
 
 interface AddOrgRoleArgs {
   orgGuid: string;

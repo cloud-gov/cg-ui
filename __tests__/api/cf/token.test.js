@@ -1,6 +1,6 @@
 import { cookies } from 'next/headers';
 import { describe, it, expect, beforeEach, afterEach } from '@jest/globals';
-import { getToken } from '../../../api/cf/token';
+import { getToken } from '@api/cf/token';
 
 /* global jest */
 /* eslint no-undef: "off" */

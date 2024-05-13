@@ -1,8 +1,8 @@
-import { Header } from '../components/Header';
-import { Identifier } from '../components/Identifier';
-import { USABanner } from '../components/USABanner';
+import { Header } from '@components/Header';
+import { Identifier } from '@components/Identifier';
+import { USABanner } from '@components/USABanner';
 
-import '../assets/stylesheets/styles.scss';
+import '@assets/stylesheets/styles.scss';
 
 export const metadata = {
   title: 'cloud.gov Dashboard',

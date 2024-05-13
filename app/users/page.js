@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { getUsers } from '../../api/users';
+import { getUsers } from '@api/users';
 
 export default async function UsersPage() {
   let users;

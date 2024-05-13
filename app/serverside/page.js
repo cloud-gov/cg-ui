@@ -1,4 +1,4 @@
-import { getUsers } from '../../api/users';
+import { getUsers } from '@api/users';
 
 export default async function Serverside() {
   try {

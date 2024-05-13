@@ -18,6 +18,17 @@
     "resolveJsonModule": true,
     "isolatedModules": true,
     "jsx": "preserve",
+    // baseUrl required to use path aliases
+    "baseUrl": ".",
+    "paths": {
+      "@api/*": ["api/*"],
+      "@app/*": ["app/*"],
+      "@assets/*": ["assets/*"],
+      "@components/*": ["components/*"],
+      "@controllers/*": ["controllers/*"],
+      "@tests/*": ["__tests__/*"],
+      "@mocks/*": ["__tests__/api/mocks/*"],
+    },
     "plugins": [
       {
         "name": "next"
