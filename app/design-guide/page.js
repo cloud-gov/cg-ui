@@ -1,6 +1,6 @@
 'use client';
 
-import { USABanner } from '../../components/USABanner';
+import { USABanner } from '@components/USABanner';
 
 export default function DesignGuidePage() {
   return (

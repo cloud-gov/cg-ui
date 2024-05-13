@@ -3,8 +3,8 @@
  */
 import { describe, expect, it } from '@jest/globals';
 import { render, screen } from '@testing-library/react';
-import UserPage from '../../../../app/users/[id]/page';
-import { getUser } from '../../../../api/users';
+import UserPage from '@app/users/[id]/page';
+import { getUser } from '@api/users';
 /* global jest */
 /* eslint no-undef: "off" */
 jest.mock('../../../../api/users', () => ({
