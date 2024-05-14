@@ -7,7 +7,7 @@ import {
   mockRoleCreateExisting,
   mockRoleCreateInvalid,
   mockRoleDeleteInvalid,
-} from '@/mocks/roles';
+} from '../mocks/roles';
 
 const reqDataBuilder = function (orgGUID, roleType, username) {
   return {
