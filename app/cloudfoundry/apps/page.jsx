@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { getApps } from '@controllers/controllers';
+import { getApps } from '../../../controllers/controllers';
 
 export default async function CloudFoundryAppsPage() {
   try {

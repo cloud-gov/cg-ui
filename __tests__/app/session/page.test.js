@@ -3,8 +3,8 @@
  */
 import { describe, expect, it } from '@jest/globals';
 import { render, screen } from '@testing-library/react';
-import Page from '@app/session/page';
-import { getData } from '@api/api';
+import Page from '../../../app/session/page';
+import { getData } from '../../../api/api';
 
 /* global jest */
 /* eslint no-undef: "off" */

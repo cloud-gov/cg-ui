@@ -4,8 +4,8 @@
 import { describe, expect, it } from '@jest/globals';
 import '@testing-library/jest-dom';
 import { render, screen } from '@testing-library/react';
-import Clientside from '@app/clientside/page';
-import { getUsers } from '@api/users';
+import Clientside from '../../../app/clientside/page';
+import { getUsers } from '../../../api/users';
 
 // Initial mock setup:
 // All mocks are hoisted to the top of the code block.

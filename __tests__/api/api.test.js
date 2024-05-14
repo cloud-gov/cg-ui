@@ -1,7 +1,7 @@
 import { describe, beforeEach, afterEach, it, expect } from '@jest/globals';
 import nock from 'nock';
-import { addData, deleteData, getData } from '@api/api';
-import mockUsers from '@mocks/users';
+import { addData, deleteData, getData } from '../../api/api';
+import mockUsers from './mocks/users';
 
 describe('api tests', () => {
   beforeEach(() => {
