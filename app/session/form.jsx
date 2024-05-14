@@ -1,4 +1,4 @@
-import { addData } from '@api/api';
+import { addData } from '../../api/api';
 
 export function SessionForm({ sessions, setSessionData }) {
   const addSession = async (event) => {

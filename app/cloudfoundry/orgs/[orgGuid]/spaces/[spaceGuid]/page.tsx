@@ -1,7 +1,7 @@
 'use server';
 
 import Link from 'next/link';
-import { getSpace } from '@controllers/controllers';
+import { getSpace } from '../../../../../../controllers/controllers';
 
 export default async function SpacePage({
   params,
