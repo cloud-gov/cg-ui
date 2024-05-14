@@ -2,8 +2,8 @@ import {
   addOrgRole,
   deleteRole,
   deleteOrgUser,
-} from '../../../../controllers/controllers';
-import { OrgRole } from '../../../../api/cf/cloudfoundry';
+} from '@/controllers/controllers';
+import { OrgRole } from '@/api/cf/cloudfoundry';
 
 interface FormResponse {
   success: boolean;

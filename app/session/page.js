@@ -1,6 +1,6 @@
 'use client';
 
-import { getData } from '../../api/api';
+import { getData } from '@/api/api';
 import { SessionForm } from './form';
 import { SessionList } from './list';
 import { useEffect, useState } from 'react';

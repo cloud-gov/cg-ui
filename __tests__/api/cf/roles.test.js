@@ -1,6 +1,6 @@
 import nock from 'nock';
 import { afterEach, beforeEach, describe, expect, it } from '@jest/globals';
-import { addRole, deleteRole } from '../../../api/cf/cloudfoundry';
+import { addRole, deleteRole } from '@/api/cf/cloudfoundry';
 import {
   mockRoleCreate,
   mockRoleCreateBadRole,

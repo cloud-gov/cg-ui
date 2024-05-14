@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { getOrgs } from '../../../controllers/controllers';
+import { getOrgs } from '@/controllers/controllers';
 
 export default async function CloudFoundryOrgsPage() {
   try {

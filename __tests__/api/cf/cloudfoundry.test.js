@@ -1,11 +1,6 @@
 import nock from 'nock';
 import { describe, it, expect, beforeEach, afterEach } from '@jest/globals';
-import {
-  getOrg,
-  getOrgs,
-  getSpace,
-  getSpaces,
-} from '../../../api/cf/cloudfoundry';
+import { getOrg, getOrgs, getSpace, getSpaces } from '@/api/cf/cloudfoundry';
 import { mockOrg, mockOrgs, mockOrgInvalid } from '../mocks/organizations';
 import { mockSpace, mockSpaceInvalid, mockSpaces } from '../mocks/spaces';
 

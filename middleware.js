@@ -1,7 +1,7 @@
 // docs: https://nextjs.org/docs/app/building-your-application/routing/middleware
 import { NextResponse } from 'next/server';
 import { decodeJwt } from 'jose';
-import { postToAuthTokenUrl } from './api/auth';
+import { postToAuthTokenUrl } from '@/api/auth';
 
 export function login(request) {
   const state = request.nextUrl.searchParams.get('state');
