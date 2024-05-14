@@ -5,7 +5,7 @@ import { middleware } from '../middleware.js';
 // Need to disable eslint for this import because
 // you need to import the module you're going to mock with Jest
 // eslint-disable-next-line no-unused-vars
-import { postToAuthTokenUrl } from '../api/auth';
+import { postToAuthTokenUrl } from '@/api/auth';
 
 const mockEmailAddress = 'foo@example.com';
 const mockAccessToken = jwt.sign({ email: mockEmailAddress }, 'fooPrivateKey');

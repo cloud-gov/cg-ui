@@ -1,6 +1,6 @@
 import { describe, expect, it } from '@jest/globals';
 import { addSession, viewSessions } from '../../../../db/session';
-import { GET, POST } from '../../../../app/api/session/route';
+import { GET, POST } from '@/app/api/session/route';
 
 /* global jest */
 /* global Promise */

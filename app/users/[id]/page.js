@@ -1,4 +1,4 @@
-import { getUser } from '../../../api/users';
+import { getUser } from '@/api/users';
 
 export default async function UserPage({ params }) {
   try {

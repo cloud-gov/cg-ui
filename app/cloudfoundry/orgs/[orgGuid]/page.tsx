@@ -6,9 +6,9 @@ import {
   getOrgUsers,
   getSpaces,
   Result,
-} from '../../../../controllers/controllers';
+} from '@/controllers/controllers';
 import { UserAction } from './form';
-import { OrgMembersList } from '../../../../components/CloudFoundry/OrgMembersList';
+import { OrgMembersList } from '@/components/CloudFoundry/OrgMembersList';
 
 export default async function OrgPage({
   params,

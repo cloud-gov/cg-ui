@@ -2,12 +2,12 @@
 
 import { useState } from 'react';
 import { useFormState } from 'react-dom';
-import { OrgUser, OrgUserRoleList } from '../../controllers/controllers';
+import { OrgUser, OrgUserRoleList } from '@/controllers/controllers';
 import { Modal } from '../Modal';
 import {
   removeRole,
   removeUser,
-} from '../../app/cloudfoundry/orgs/[orgGuid]/actions';
+} from '@/app/cloudfoundry/orgs/[orgGuid]/actions';
 
 function MemberLabel({ user }: { user: OrgUser }) {
   return (

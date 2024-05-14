@@ -1,6 +1,6 @@
 'use client';
 import { useEffect, useState } from 'react';
-import { getUsers } from '../../api/users';
+import { getUsers } from '@/api/users';
 
 function Users() {
   const [users, setUsers] = useState([]);
