@@ -33,7 +33,7 @@ This convention follows an [MVC](https://en.wikipedia.org/wiki/Model%E2%80%93vie
 
 #### 3. Form Actions layer
 
-_Form Actions is a Next.js specific [term](https://nextjs.org/docs/app/building-your-application/data-fetching/server-actions-and-mutations#behavior)_
+_This uses Next.js specific [behavior](https://nextjs.org/docs/app/building-your-application/data-fetching/server-actions-and-mutations#behavior) where a form element invokes a server-side action. While the action function is server-side, it can be invoked from either a server or client component._
 
 - **Responsibility**: Interfaces with the UI; specific to that UI
   - Used by UI components
