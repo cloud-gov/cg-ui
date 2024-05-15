@@ -13,8 +13,8 @@
   },
   "dependencies": {
     "@uswds/uswds": "3.8.0",
-    "jose": "^5.2.4",
     "husky": "^9.0.11",
+    "jose": "^5.2.4",
     "next": "latest",
     "pg": "^8.11.5",
     "react": "18.3.1",

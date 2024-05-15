@@ -9,6 +9,10 @@ applications:
       AUTH_CALLBACK_PATH: auth/login/callback
       CF_API_URL: ((CF_API_URL))
       DATABASE_SSL: 'true'
+      # Note, with NPM_CONFIG_PRODUCTION=true the npm pruning process removes
+      # devDependencies (like typescript) that are required for `next build`
+      # https://devcenter.heroku.com/articles/nodejs-support#skip-pruning
+      NPM_CONFIG_PRODUCTION: 'false'
       OAUTH_CLIENT_ID: cg-ui
       OAUTH_CLIENT_SECRET: ((OAUTH_CLIENT_SECRET))
       ROOT_URL: ((ROOT_URL))
