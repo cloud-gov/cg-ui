@@ -241,3 +241,8 @@ The Node version should be updated in the following places:
 1. [.nvmrc](./.nvmrc) which controls the version for cloud builds
 1. [Github workflow containers](./.github/workflows/pull-request.yml) `NODE_VERSION` which controls the version in Github action containers
 1. [package.json](./package.json) under `engines` to specify which version(s) our app works with
+
+## Further reading
+
+- [More developer documentation](./docs/for-developers.md)
+- [Architecture decision records](./docs/adr)
