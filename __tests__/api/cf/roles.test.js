@@ -1,12 +1,13 @@
 import nock from 'nock';
 import { afterEach, beforeEach, describe, expect, it } from '@jest/globals';
-import { addRole, deleteRole } from '@/api/cf/cloudfoundry';
+import { addRole, deleteRole, getRoles } from '@/api/cf/cloudfoundry';
 import {
   mockRoleCreate,
   mockRoleCreateBadRole,
   mockRoleCreateExisting,
   mockRoleCreateInvalid,
   mockRoleDeleteInvalid,
+  mockRolesFilteredByOrgAndUser,
 } from '../mocks/roles';
 
 const reqDataBuilder = function (orgGUID, roleType, username) {
@@ -135,7 +136,36 @@ describe('cloudfoundry tests', () => {
   });
 
   describe('getRoles', () => {
-    it.todo('returns an unfiltered list of roles');
-    it.todo('when given an org and user filter, returns a list of roles');
+    // note: using mockRolesFilteredByOrgAndUser for roles list response as we are testing
+    // the url being sent here rather than the response
+    it('returns an unfiltered list of roles', async () => {
+      nock(process.env.CF_API_URL)
+        .get('/roles')
+        .reply(200, mockRolesFilteredByOrgAndUser);
+      const res = await getRoles({});
+      expect(res.status).toEqual(200);
+    });
+
+    it('when given an org and user filter, returns a list of roles', async () => {
+      nock(process.env.CF_API_URL)
+        .get('/roles?organization_guids=validOrgGuid&user_guids=userGuid')
+        .reply(200, mockRolesFilteredByOrgAndUser);
+      const res = await getRoles({
+        orgGuids: ['validOrgGuid'],
+        userGuids: ['userGuid'],
+      });
+      expect(res.status).toEqual(200);
+    });
+
+    it('when given a space and user filter, returns a list of roles', async () => {
+      nock(process.env.CF_API_URL)
+        .get('/roles?space_guids=validSpaceGuid&include=user')
+        .reply(200, mockRolesFilteredByOrgAndUser);
+      const res = await getRoles({
+        spaceGuids: ['validSpaceGuid'],
+        include: ['user'],
+      });
+      expect(res.status).toEqual(200);
+    });
   });
 });

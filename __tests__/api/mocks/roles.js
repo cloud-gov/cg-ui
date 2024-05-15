@@ -173,7 +173,7 @@ export const mockRolesFilteredByOrgAndUser = {
   ],
 };
 
-// Request /v3/organizations/[guid]/users
+// Request /v3/roles?organization_guids=[guid]&include=user
 // Response 200
 export const mockUsersByOrganization = {
   pagination: {
@@ -287,6 +287,112 @@ export const mockUsersByOrganization = {
         links: {
           self: {
             href: 'https://example.com/v3/users/ab9dc32e-d7be-4b8d-b9cb-d30d82ae0199',
+          },
+        },
+      },
+    ],
+  },
+};
+
+// Request /v3/roles?space_guids=[guid]&include=user
+// Response 200
+export const mockUsersBySpace = {
+  pagination: {
+    total_results: 15,
+    total_pages: 8,
+    first: {
+      href: 'https://example.com/v3/roles?include=user\u0026order_by=%2Bcreated_at\u0026page=1\u0026per_page=2\u0026space_guids=dedb82bb-9f35-49f4-8ff9-7130ae2e3198',
+    },
+    last: {
+      href: 'https://example.com/v3/roles?include=user\u0026order_by=%2Bcreated_at\u0026page=8\u0026per_page=2\u0026space_guids=dedb82bb-9f35-49f4-8ff9-7130ae2e3198',
+    },
+    next: {
+      href: 'https://example.com/v3/roles?include=user\u0026order_by=%2Bcreated_at\u0026page=2\u0026per_page=2\u0026space_guids=dedb82bb-9f35-49f4-8ff9-7130ae2e3198',
+    },
+    previous: null,
+  },
+  resources: [
+    {
+      guid: '12ac7aa5-8a8e-48a4-9c90-a3b908c6e702',
+      created_at: '2024-01-17T19:08:55Z',
+      updated_at: '2024-01-17T19:08:55Z',
+      type: 'space_manager',
+      relationships: {
+        user: {
+          data: {
+            guid: 'c0a41062-2df2-41d9-9995-50c5eb6c9a18',
+          },
+        },
+        space: {
+          data: {
+            guid: 'dedb82bb-9f35-49f4-8ff9-7130ae2e3198',
+          },
+        },
+        organization: {
+          data: null,
+        },
+      },
+      links: {
+        self: {
+          href: 'https://example.com/v3/roles/12ac7aa5-8a8e-48a4-9c90-a3b908c6e702',
+        },
+        user: {
+          href: 'https://example.com/v3/users/c0a41062-2df2-41d9-9995-50c5eb6c9a18',
+        },
+        space: {
+          href: 'https://example.com/v3/spaces/dedb82bb-9f35-49f4-8ff9-7130ae2e3198',
+        },
+      },
+    },
+    {
+      guid: '1293d5ae-0266-413c-bacf-9f5474be984d',
+      created_at: '2024-01-17T19:08:55Z',
+      updated_at: '2024-01-17T19:08:55Z',
+      type: 'space_developer',
+      relationships: {
+        user: {
+          data: {
+            guid: 'c0a41062-2df2-41d9-9995-50c5eb6c9a18',
+          },
+        },
+        space: {
+          data: {
+            guid: 'dedb82bb-9f35-49f4-8ff9-7130ae2e3198',
+          },
+        },
+        organization: {
+          data: null,
+        },
+      },
+      links: {
+        self: {
+          href: 'https://example.com/v3/roles/1293d5ae-0266-413c-bacf-9f5474be984d',
+        },
+        user: {
+          href: 'https://example.com/v3/users/c0a41062-2df2-41d9-9995-50c5eb6c9a18',
+        },
+        space: {
+          href: 'https://example.com/v3/spaces/dedb82bb-9f35-49f4-8ff9-7130ae2e3198',
+        },
+      },
+    },
+  ],
+  included: {
+    users: [
+      {
+        guid: 'c0a41062-2df2-41d9-9995-50c5eb6c9a18',
+        created_at: '2020-07-02T17:23:28Z',
+        updated_at: '2020-07-02T17:23:28Z',
+        username: 'user1@example.com',
+        presentation_name: 'User1 Example',
+        origin: 'example.com',
+        metadata: {
+          labels: {},
+          annotations: {},
+        },
+        links: {
+          self: {
+            href: 'https://example.com/v3/users/085d0619-3f86-4b29-8756-9f788d4e8b62',
           },
         },
       },

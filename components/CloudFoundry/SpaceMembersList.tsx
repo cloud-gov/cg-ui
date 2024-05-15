@@ -7,7 +7,7 @@ import { Modal } from '../Modal';
 import {
   removeRole,
   removeUser,
-} from '@/app/cloudfoundry/orgs/[orgGuid]/actions';
+} from '@/app/cloudfoundry/orgs/[orgGuid]/spaces/[spaceGuid]/actions';
 
 function MemberLabel({ user }: { user: UserWithRoles }) {
   return (
@@ -18,11 +18,11 @@ function MemberLabel({ user }: { user: UserWithRoles }) {
   );
 }
 
-export function OrgMembersList({
-  org,
+export function SpaceMembersList({
+  space,
   users,
 }: {
-  org: any;
+  space: any;
   users: UserRoleList;
 }) {
   const [confirmRoleRemove, setConfirmRoleRemove] = useState('');
@@ -61,14 +61,14 @@ export function OrgMembersList({
                       <div>
                         are you sure you want to remove the user{' '}
                         <MemberLabel user={user} />
-                        from the <strong>{org.name}</strong> organization?
+                        from the <strong>{space.name}</strong> space?
                       </div>
                       <form action={formActionUserRemove}>
                         <input
                           type="hidden"
-                          name="orgGuid"
-                          id="orgGuid-{org.guid}"
-                          value={org.guid}
+                          name="spaceGuid"
+                          id="spaceGuid-{space.guid}"
+                          value={space.guid}
                         />
                         <input
                           type="hidden"

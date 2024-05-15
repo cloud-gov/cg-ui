@@ -4,11 +4,13 @@ import {
   deleteOrgUser,
   getOrgUsers,
   getSpaces,
+  getSpaceUsers,
 } from '../../controllers/controllers';
 import { mockOrgNotFound } from '../api/mocks/organizations';
 import {
   mockRolesFilteredByOrgAndUser,
   mockUsersByOrganization,
+  mockUsersBySpace,
 } from '../api/mocks/roles';
 import { mockSpaces } from '../api/mocks/spaces';
 
@@ -41,7 +43,7 @@ describe('controllers tests', () => {
       expect(res).toEqual({
         success: true,
         status: 'success',
-        message: 'removed userGuid from org',
+        message: 'removed user from org',
       });
     });
 
@@ -124,6 +126,35 @@ describe('controllers tests', () => {
         status: 'error',
         message: 'unable to list the organization spaces',
       });
+    });
+  });
+
+  describe('getSpaceUsers', () => {
+    it('when given a valid space guid, returns associated users', async () => {
+      nock(process.env.CF_API_URL)
+        .get('/roles?space_guids=validGUID&include=user')
+        .reply(200, mockUsersBySpace);
+      const res = await getSpaceUsers('validGUID');
+
+      // one user with multiple roles should be returned
+      const expected = {
+        'c0a41062-2df2-41d9-9995-50c5eb6c9a18': {
+          origin: 'example.com',
+          roles: [
+            {
+              guid: '12ac7aa5-8a8e-48a4-9c90-a3b908c6e702',
+              type: 'space_manager',
+            },
+            {
+              guid: '1293d5ae-0266-413c-bacf-9f5474be984d',
+              type: 'space_developer',
+            },
+          ],
+          username: 'user1@example.com',
+          displayName: 'User1 Example',
+        },
+      };
+      expect(res.payload).toEqual(expected);
     });
   });
 });
