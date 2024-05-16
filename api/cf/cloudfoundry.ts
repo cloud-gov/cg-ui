@@ -13,6 +13,12 @@ export type OrgRole =
   | 'organizion_user'
   | 'organization_auditor';
 
+export type SpaceRole =
+  | 'space_manager'
+  | 'space_developer'
+  | 'space_auditor'
+  | 'space_supporter';
+
 type MethodType = 'delete' | 'get' | 'patch' | 'post';
 
 interface ApiRequestOptions {
@@ -24,10 +30,39 @@ interface ApiRequestOptions {
   body?: any;
 }
 
+interface AddRoleApiData {
+  type: string;
+  relationships: {
+    user: {
+      data: {
+        username: string;
+      };
+    };
+    organization?: {
+      data: {
+        guid: string;
+      };
+    };
+    space?: {
+      data: {
+        guid: string;
+      };
+    };
+  };
+}
+
 interface addRoleArgs {
   orgGuid?: string;
   roleType: string;
+  spaceGuid?: string;
   username: string;
+}
+
+export interface getRoleArgs {
+  include?: string[];
+  orgGuids?: string[];
+  spaceGuids?: string[];
+  userGuids?: string[];
 }
 
 export async function cfRequest(
@@ -91,9 +126,10 @@ export async function getOrgs(): Promise<Response> {
 export async function addRole({
   orgGuid,
   roleType,
+  spaceGuid,
   username,
 }: addRoleArgs): Promise<Response> {
-  const data = {
+  const data: AddRoleApiData = {
     type: roleType,
     relationships: {
       user: {
@@ -101,13 +137,18 @@ export async function addRole({
           username: username,
         },
       },
-      organization: {
-        data: {
-          guid: orgGuid,
-        },
-      },
     },
   };
+  if (orgGuid) {
+    data.relationships.organization = {
+      data: { guid: orgGuid },
+    };
+  }
+  if (spaceGuid) {
+    data.relationships.space = {
+      data: { guid: spaceGuid },
+    };
+  }
   return await cfRequest('/roles', 'post', data);
 }
 
@@ -117,24 +158,30 @@ export async function deleteRole(roleGuid: string): Promise<Response> {
 
 // TODO think about how we want to handle arguments for something
 // that could be pretty flexible depending on what we need (no filters vs org filters vs includes, etc)
-export async function getRoles(
-  orgGuids: string[],
-  userGuids: string[],
-  include?: string[]
-): Promise<Response> {
+export async function getRoles({
+  include,
+  orgGuids,
+  spaceGuids,
+  userGuids,
+}: getRoleArgs): Promise<Response> {
+  // params are all comma separated lists
   const params: {
-    organization_guids?: string;
-    user_guids?: string;
     include?: string;
+    organization_guids?: string;
+    space_guids?: string;
+    user_guids?: string;
   } = {};
-  if (orgGuids.length > 0) {
-    params['organization_guids'] = orgGuids.join(', ');
-  }
-  if (userGuids.length > 0) {
-    params['user_guids'] = userGuids.join(', ');
-  }
   if (include && include.length > 0) {
-    params['include'] = include.join(', ');
+    params['include'] = include.join(',');
+  }
+  if (orgGuids && orgGuids.length > 0) {
+    params['organization_guids'] = orgGuids.join(',');
+  }
+  if (spaceGuids && spaceGuids.length > 0) {
+    params['space_guids'] = spaceGuids.join(',');
+  }
+  if (userGuids && userGuids.length > 0) {
+    params['user_guids'] = userGuids.join(',');
   }
   const urlParams = new URLSearchParams(params);
   return await cfRequest('/roles?' + urlParams.toString());
