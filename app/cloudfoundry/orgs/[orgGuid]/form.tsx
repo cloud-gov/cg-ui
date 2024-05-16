@@ -2,6 +2,7 @@
 
 import { useFormState } from 'react-dom';
 import { postData } from './actions';
+import { Button } from '../../../../components/Button';
 
 export function UserAction({ orgGuid }: { orgGuid: string }) {
   const initialState = {
@@ -33,9 +34,9 @@ export function UserAction({ orgGuid }: { orgGuid: string }) {
           <option value="organization_auditor">Organization auditor</option>
         </select>
         <div>
-          <button className="usa-button" role="button" type="submit">
+          <Button role="button" type="submit">
             Add user
-          </button>
+          </Button>
         </div>
       </form>
     </>

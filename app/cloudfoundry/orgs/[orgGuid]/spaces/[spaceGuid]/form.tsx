@@ -2,6 +2,7 @@
 
 import { useFormState } from 'react-dom';
 import { postData } from './actions';
+import { Button } from '../../../../../../components/Button';
 
 export function UserAction({ spaceGuid }: { spaceGuid: string }) {
   const initialState = {
@@ -39,9 +40,9 @@ export function UserAction({ spaceGuid }: { spaceGuid: string }) {
           <option value="space_supporter">Space supporter</option>
         </select>
         <div>
-          <button className="usa-button" role="button" type="submit">
+          <Button role="button" type="submit">
             Add user
-          </button>
+          </Button>
         </div>
       </form>
     </>
