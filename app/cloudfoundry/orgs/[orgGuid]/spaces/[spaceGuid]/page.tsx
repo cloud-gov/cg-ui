@@ -45,7 +45,7 @@ export default async function SpacePage({
 }
 
 async function SpaceMembers({ space, users }: { space: any; users: Result }) {
-  if (users && users.payload) {
+  if (users?.payload) {
     return (
       <>
         <div className="grid-col-6">
