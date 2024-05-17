@@ -13,6 +13,7 @@
   },
   "dependencies": {
     "@uswds/uswds": "3.8.0",
+    "classnames": "^2.5.1",
     "husky": "^9.0.11",
     "jose": "^5.2.4",
     "next": "latest",
