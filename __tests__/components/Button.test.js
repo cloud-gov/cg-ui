@@ -3,7 +3,7 @@
  */
 import { describe, expect, it } from '@jest/globals';
 import { render, fireEvent } from '@testing-library/react';
-import { Button } from '../../components/Button';
+import { Button } from '@/components/Button';
 
 function selectButton(rendered) {
   return rendered.container.querySelector('#test');

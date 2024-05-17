@@ -2,7 +2,7 @@
 
 import { useFormState } from 'react-dom';
 import { postData } from './actions';
-import { Button } from '../../../../../../components/Button';
+import { Button } from '@/components/Button';
 
 export function UserAction({ spaceGuid }: { spaceGuid: string }) {
   const initialState = {
