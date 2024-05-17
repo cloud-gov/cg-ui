@@ -34,9 +34,7 @@ export function UserAction({ orgGuid }: { orgGuid: string }) {
           <option value="organization_auditor">Organization auditor</option>
         </select>
         <div>
-          <Button role="button" type="submit">
-            Add user
-          </Button>
+          <Button type="submit">Add user</Button>
         </div>
       </form>
     </>
