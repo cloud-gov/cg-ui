@@ -26,7 +26,7 @@ export function Button({
   outline,
   secondary,
   size,
-  type = 'button',
+  type,
   unstyled,
   ...defaultProps
   // eslint-disable-next-line no-undef
