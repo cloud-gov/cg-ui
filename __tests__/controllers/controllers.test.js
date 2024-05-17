@@ -109,22 +109,27 @@ describe('controllers tests', () => {
 
       const res = await getSpaces(['validOrgGuid']);
       expect(res).toEqual({
-        success: true,
-        status: 'success',
+        meta: { status: 'success' },
         payload: mockSpaces,
       });
     });
 
-    it('when getting a 500 from the server, sends a friendly error message to user', async () => {
+    it('when getting a 500 from the server, sends an api error message', async () => {
+      const mock500error = { error: 'foo' };
       nock(process.env.CF_API_URL)
         .get('/spaces?organization_guids=validOrgGuid')
-        .reply(500);
+        .reply(500, mock500error);
 
       const res = await getSpaces(['validOrgGuid']);
       expect(res).toEqual({
-        success: false,
-        status: 'error',
-        message: 'unable to list the organization spaces',
+        meta: { status: 'error' },
+        errors: [
+          {
+            title: 'api error',
+            details: JSON.stringify(mock500error),
+            httpStatus: 500,
+          },
+        ],
       });
     });
   });

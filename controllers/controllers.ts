@@ -31,6 +31,7 @@ export interface UserRoleList {
   [guid: string]: UserWithRoles;
 }
 
+// TODO: remove this Result in favor of the interfaces below
 export interface Result {
   success: boolean;
   status?: ResultStatus;
@@ -40,6 +41,28 @@ export interface Result {
 
 // taken from USWDS alert options: https://designsystem.digital.gov/components/alert/
 type ResultStatus = 'success' | 'info' | 'warning' | 'error' | 'emergency';
+
+export interface ControllerMetadata {
+  status: ResultStatus;
+}
+
+export interface ControllerError {
+  title: 'api error' | 'controller error';
+  details: string;
+  httpStatus?: Number;
+}
+
+export interface ControllerErrorResult {
+  errors: ControllerError[];
+  meta: ControllerMetadata;
+}
+
+export interface ControllerSuccessResult {
+  payload: any;
+  meta: ControllerMetadata;
+}
+
+export type ControllerResult = ControllerSuccessResult | ControllerErrorResult;
 
 interface RoleResIncludeUsers {
   pagination: any;
@@ -408,21 +431,34 @@ export async function getSpaceUsers(guid: string): Promise<Result> {
   }
 }
 
-export async function getSpaces(org_guids: string[]): Promise<Result> {
-  const message = {
-    fail: 'unable to list the organization spaces',
-  };
+export async function getSpaces(
+  org_guids: string[]
+): Promise<ControllerResult> {
   try {
     const res = await CF.getSpaces(org_guids);
-    return await mapCfResult(res, message);
-  } catch (error: any) {
-    if (process.env.NODE_ENV == 'development') {
-      console.error(`${message.fail}: ${error.message}`);
+    if (res.ok) {
+      return {
+        meta: { status: 'success' },
+        payload: await res.json(),
+      };
+    } else {
+      const details = await res.json();
+      return {
+        meta: { status: 'error' },
+        errors: [
+          {
+            title: 'api error',
+            details: JSON.stringify(details),
+            httpStatus: res.status,
+          },
+        ],
+      };
     }
+  } catch (error: any) {
+    if (process.env.NODE_ENV == 'development') console.error(error.message);
     return {
-      success: false,
-      status: 'error',
-      message: message.fail,
+      meta: { status: 'error' },
+      errors: [{ title: 'controller error', details: error.message }],
     };
   }
 }

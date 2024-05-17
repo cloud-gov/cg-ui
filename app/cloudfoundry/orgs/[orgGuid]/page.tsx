@@ -6,6 +6,7 @@ import {
   getOrgUsers,
   getSpaces,
   Result,
+  ControllerSuccessResult,
 } from '@/controllers/controllers';
 import { UserAction } from './form';
 import { OrgMembersList } from '@/components/CloudFoundry/OrgMembersList';
@@ -20,8 +21,10 @@ export default async function OrgPage({
   try {
     const orgRes = await getOrg(params.orgGuid);
     const users = await getOrgUsers(params.orgGuid);
-    const spacesRes = await getSpaces([params.orgGuid]);
-    const spaces = spacesRes.payload?.resources || [];
+    const spacesRes = (await getSpaces([
+      params.orgGuid,
+    ])) as ControllerSuccessResult;
+    const spaces = spacesRes.payload.resources || [];
 
     if (orgRes.payload) {
       const org = orgRes.payload;
