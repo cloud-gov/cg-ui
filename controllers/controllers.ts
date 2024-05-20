@@ -462,3 +462,45 @@ export async function getSpaces(
     };
   }
 }
+
+export async function getOrgPage(orgGuid: string): Promise<ControllerResult> {
+  try {
+    const [orgRes, usersRes, spacesRes] = await Promise.all([
+      CF.getOrg(orgGuid),
+      CF.getRoles({ orgGuids: [orgGuid], include: ['user'] }),
+      CF.getSpaces([orgGuid]),
+    ]);
+    [orgRes, usersRes, spacesRes].map(async (res) => {
+      if (!res.ok) {
+        const details = JSON.stringify(await res.json());
+        if (process.env.NODE_ENV == 'development') {
+          console.error(`api error on get org page: ${details}`);
+        }
+        return {
+          meta: { status: 'error' },
+          errors: [
+            {
+              title: 'api error',
+              details: details,
+              httpStatus: res.status,
+            },
+          ],
+        };
+      }
+    });
+    return {
+      meta: { status: 'success' },
+      payload: {
+        org: await orgRes.json(),
+        users: await usersRes.json(),
+        spaces: await spacesRes.json(),
+      },
+    };
+  } catch (error: any) {
+    if (process.env.NODE_ENV == 'development') console.error(error.message);
+    return {
+      meta: { status: 'error' },
+      errors: [{ title: 'controller error', details: error.message }],
+    };
+  }
+}
