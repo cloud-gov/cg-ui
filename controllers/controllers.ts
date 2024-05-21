@@ -46,23 +46,10 @@ export interface ControllerMetadata {
   status: ResultStatus;
 }
 
-export interface ControllerError {
-  title: 'api error' | 'controller error';
-  details: string;
-  httpStatus?: Number;
-}
-
-export interface ControllerErrorResult {
-  errors: ControllerError[];
-  meta: ControllerMetadata;
-}
-
 export interface ControllerSuccessResult {
   payload: any;
   meta: ControllerMetadata;
 }
-
-export type ControllerResult = ControllerSuccessResult | ControllerErrorResult;
 
 interface RoleResIncludeUsers {
   pagination: any;
@@ -431,76 +418,30 @@ export async function getSpaceUsers(guid: string): Promise<Result> {
   }
 }
 
-export async function getSpaces(
-  org_guids: string[]
-): Promise<ControllerResult> {
-  try {
-    const res = await CF.getSpaces(org_guids);
-    if (res.ok) {
-      return {
-        meta: { status: 'success' },
-        payload: await res.json(),
-      };
-    } else {
-      const details = await res.json();
-      return {
-        meta: { status: 'error' },
-        errors: [
-          {
-            title: 'api error',
-            details: JSON.stringify(details),
-            httpStatus: res.status,
-          },
-        ],
-      };
-    }
-  } catch (error: any) {
-    if (process.env.NODE_ENV == 'development') console.error(error.message);
-    return {
-      meta: { status: 'error' },
-      errors: [{ title: 'controller error', details: error.message }],
-    };
-  }
-}
-
-export async function getOrgPage(orgGuid: string): Promise<ControllerResult> {
-  try {
-    const [orgRes, usersRes, spacesRes] = await Promise.all([
-      CF.getOrg(orgGuid),
-      CF.getRoles({ orgGuids: [orgGuid], include: ['user'] }),
-      CF.getSpaces([orgGuid]),
-    ]);
-    [orgRes, usersRes, spacesRes].map(async (res) => {
-      if (!res.ok) {
-        const details = JSON.stringify(await res.json());
-        if (process.env.NODE_ENV == 'development') {
-          console.error(`api error on get org page: ${details}`);
-        }
-        return {
-          meta: { status: 'error' },
-          errors: [
-            {
-              title: 'api error',
-              details: details,
-              httpStatus: res.status,
-            },
-          ],
-        };
+export async function getOrgPage(
+  orgGuid: string
+): Promise<ControllerSuccessResult> {
+  const [orgRes, usersRes, spacesRes] = await Promise.all([
+    CF.getOrg(orgGuid),
+    CF.getRoles({ orgGuids: [orgGuid], include: ['user'] }),
+    CF.getSpaces([orgGuid]),
+  ]);
+  [orgRes, usersRes, spacesRes].map(async (res) => {
+    if (!res.ok) {
+      const details = JSON.stringify(await res.json());
+      if (process.env.NODE_ENV == 'development') {
+        console.error(`api error on cf org page: ${details}`);
       }
-    });
-    return {
-      meta: { status: 'success' },
-      payload: {
-        org: await orgRes.json(),
-        users: await usersRes.json(),
-        spaces: await spacesRes.json(),
-      },
-    };
-  } catch (error: any) {
-    if (process.env.NODE_ENV == 'development') console.error(error.message);
-    return {
-      meta: { status: 'error' },
-      errors: [{ title: 'controller error', details: error.message }],
-    };
-  }
+      throw new Error(`something went wrong: ${details}`);
+    }
+  });
+  const userRoleList = await associateUsersWithRoles(await usersRes.json());
+  return {
+    meta: { status: 'success' },
+    payload: {
+      org: await orgRes.json(),
+      users: userRoleList,
+      spaces: (await spacesRes.json()).resources,
+    },
+  };
 }

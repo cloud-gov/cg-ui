@@ -3,7 +3,6 @@ import { describe, it, expect, beforeEach, afterEach } from '@jest/globals';
 import {
   deleteOrgUser,
   getOrgUsers,
-  getSpaces,
   getSpaceUsers,
 } from '../../controllers/controllers';
 import { mockOrgNotFound } from '../api/mocks/organizations';
@@ -12,7 +11,6 @@ import {
   mockUsersByOrganization,
   mockUsersBySpace,
 } from '../api/mocks/roles';
-import { mockSpaces } from '../api/mocks/spaces';
 
 describe('controllers tests', () => {
   beforeEach(() => {
@@ -98,39 +96,6 @@ describe('controllers tests', () => {
       }).rejects.toThrow(
         new Error('unable to list the org users: problem with getRoles 404')
       );
-    });
-  });
-
-  describe('getSpaces', () => {
-    it('when given a valid org, returns a list of spaces', async () => {
-      nock(process.env.CF_API_URL)
-        .get('/spaces?organization_guids=validOrgGuid')
-        .reply(200, mockSpaces);
-
-      const res = await getSpaces(['validOrgGuid']);
-      expect(res).toEqual({
-        meta: { status: 'success' },
-        payload: mockSpaces,
-      });
-    });
-
-    it('when getting a 500 from the server, sends an api error message', async () => {
-      const mock500error = { error: 'foo' };
-      nock(process.env.CF_API_URL)
-        .get('/spaces?organization_guids=validOrgGuid')
-        .reply(500, mock500error);
-
-      const res = await getSpaces(['validOrgGuid']);
-      expect(res).toEqual({
-        meta: { status: 'error' },
-        errors: [
-          {
-            title: 'api error',
-            details: JSON.stringify(mock500error),
-            httpStatus: 500,
-          },
-        ],
-      });
     });
   });
 

@@ -1,11 +1,7 @@
 'use server';
 
 import Link from 'next/link';
-import {
-  Result,
-  ControllerSuccessResult,
-  getOrgPage,
-} from '@/controllers/controllers';
+import { ControllerSuccessResult, getOrgPage } from '@/controllers/controllers';
 import { UserAction } from './form';
 import { OrgMembersList } from '@/components/CloudFoundry/OrgMembersList';
 
@@ -16,54 +12,51 @@ export default async function OrgPage({
     orgGuid: string;
   };
 }) {
-  try {
-    const controllerRes = (await getOrgPage(
-      params.orgGuid
-    )) as ControllerSuccessResult;
-    const { org, users, spaces } = controllerRes.payload;
+  const controllerRes = (await getOrgPage(
+    params.orgGuid
+  )) as ControllerSuccessResult;
 
-    return (
-      <>
-        <Link href="/cloudfoundry">Back to Cloud Foundry home</Link>
-        <div className="grid-container">
-          <h1>{org.name}</h1>
-          <ul>
-            <li>Name: {org.name}</li>
-            <li>Suspended: {org.suspended}</li>
-            <li>Created: {org.created_at}</li>
-          </ul>
+  const { org, users, spaces } = controllerRes.payload;
 
-          <h2>Spaces</h2>
-          <ul>
-            {spaces.map((space: any) => (
-              <li key={space.guid}>
-                <Link
-                  href={`/cloudfoundry/orgs/${org.guid}/spaces/${space.guid}`}
-                >
-                  {space.name}
-                </Link>
-              </li>
-            ))}
-          </ul>
+  return (
+    <>
+      <Link href="/cloudfoundry">Back to Cloud Foundry home</Link>
+      <div className="grid-container">
+        <h1>{org.name}</h1>
+        <ul>
+          <li>Name: {org.name}</li>
+          <li>Suspended: {org.suspended}</li>
+          <li>Created: {org.created_at}</li>
+        </ul>
 
-          <div className="grid-row">
-            <OrgMembers org={org} users={users} />
-          </div>
+        <h2>Spaces</h2>
+        <ul>
+          {spaces.map((space: any) => (
+            <li key={space.guid}>
+              <Link
+                href={`/cloudfoundry/orgs/${org.guid}/spaces/${space.guid}`}
+              >
+                {space.name}
+              </Link>
+            </li>
+          ))}
+        </ul>
+
+        <div className="grid-row">
+          <OrgMembers org={org} users={users} />
         </div>
-      </>
-    );
-  } catch (error: any) {
-    return <div role="alert">{error.message}</div>;
-  }
+      </div>
+    </>
+  );
 }
 
-async function OrgMembers({ org, users }: { org: any; users: Result }) {
+async function OrgMembers({ org, users }: { org: any; users: any }) {
   if (users) {
     return (
       <>
         <div className="grid-col-6">
           <h2>Org members</h2>
-          <OrgMembersList org={org} users={users.payload} />
+          <OrgMembersList org={org} users={users} />
         </div>
         <div className="grid-col-6">
           <UserAction orgGuid={org.guid} />
