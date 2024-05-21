@@ -3,7 +3,7 @@
  */
 import { describe, expect, it } from '@jest/globals';
 import { render, screen } from '@testing-library/react';
-import { Alert } from '@/components/Alert';
+import { Alert } from '@/components/uswds/Alert';
 
 function selectAlert(rendered) {
   return rendered.container.querySelector('#test');

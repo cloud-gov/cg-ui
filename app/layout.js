@@ -1,6 +1,6 @@
 import { Header } from '@/components/Header';
 import { Identifier } from '@/components/Identifier';
-import { USABanner } from '@/components/USABanner';
+import { Banner } from '@/components/uswds/Banner';
 
 import '../assets/stylesheets/styles.scss';
 
@@ -13,7 +13,7 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <body>
-        <USABanner />
+        <Banner />
         <Header />
         <main className="padding-y-4">
           <div className="grid-container">{children}</div>

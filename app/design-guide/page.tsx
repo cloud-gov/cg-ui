@@ -1,13 +1,13 @@
 'use client';
 
-import { Alert } from '@/components/Alert';
-import { Button } from '@/components/Button';
-import { USABanner } from '@/components/USABanner';
+import { Alert } from '@/components/uswds/Alert';
+import { Button } from '@/components/uswds/Button';
+import { Banner } from '@/components/uswds/Banner';
 
 export default function DesignGuidePage() {
   return (
     <>
-      <USABanner />
+      <Banner />
       <h1>Design components</h1>
 
       <div className="grid-container">
