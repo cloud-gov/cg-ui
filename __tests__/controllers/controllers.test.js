@@ -3,10 +3,10 @@ import { describe, it, expect, beforeEach, afterEach } from '@jest/globals';
 import {
   deleteOrgUser,
   getOrgUsers,
-  getSpaces,
   getSpaceUsers,
+  getOrgPage,
 } from '../../controllers/controllers';
-import { mockOrgNotFound } from '../api/mocks/organizations';
+import { mockOrg, mockOrgNotFound } from '../api/mocks/organizations';
 import {
   mockRolesFilteredByOrgAndUser,
   mockUsersByOrganization,
@@ -101,34 +101,6 @@ describe('controllers tests', () => {
     });
   });
 
-  describe('getSpaces', () => {
-    it('when given a valid org, returns a list of spaces', async () => {
-      nock(process.env.CF_API_URL)
-        .get('/spaces?organization_guids=validOrgGuid')
-        .reply(200, mockSpaces);
-
-      const res = await getSpaces(['validOrgGuid']);
-      expect(res).toEqual({
-        success: true,
-        status: 'success',
-        payload: mockSpaces,
-      });
-    });
-
-    it('when getting a 500 from the server, sends a friendly error message to user', async () => {
-      nock(process.env.CF_API_URL)
-        .get('/spaces?organization_guids=validOrgGuid')
-        .reply(500);
-
-      const res = await getSpaces(['validOrgGuid']);
-      expect(res).toEqual({
-        success: false,
-        status: 'error',
-        message: 'unable to list the organization spaces',
-      });
-    });
-  });
-
   describe('getSpaceUsers', () => {
     it('when given a valid space guid, returns associated users', async () => {
       nock(process.env.CF_API_URL)
@@ -155,6 +127,53 @@ describe('controllers tests', () => {
         },
       };
       expect(res.payload).toEqual(expected);
+    });
+  });
+
+  describe('getOrgPage', () => {
+    describe('if any CF requests fail', () => {
+      it('throws an error', async () => {
+        // setup
+        const guid = 'foo';
+        const errMessage = { message: 'failed' };
+        nock(process.env.CF_API_URL)
+          .get(/spaces/)
+          .reply(500, errMessage);
+        nock(process.env.CF_API_URL)
+          .get(/roles/)
+          .reply(200, { message: 'foo success' });
+        nock(process.env.CF_API_URL)
+          .get(/organizations/)
+          .reply(200, { message: 'foo success' });
+        // act and assert
+        expect(async () => {
+          await getOrgPage(guid);
+        }).rejects.toThrow(new Error('something went wrong with the request'));
+      });
+    });
+
+    describe('if all requests succeed', () => {
+      it('returns the expected controller result', async () => {
+        // setup
+        const guid = 'foo';
+        nock(process.env.CF_API_URL)
+          .get(/spaces/)
+          .reply(200, mockSpaces);
+        nock(process.env.CF_API_URL)
+          .get(/roles/)
+          .reply(200, mockUsersByOrganization);
+        nock(process.env.CF_API_URL)
+          .get(/organizations/)
+          .reply(200, mockOrg);
+        // act
+        const result = await getOrgPage(guid);
+        // assert
+        expect(result).toHaveProperty('meta');
+        expect(result).toHaveProperty('payload');
+        expect(result.payload.org).toEqual(mockOrg);
+        expect(result.payload.spaces).toEqual(mockSpaces.resources);
+        expect(result.payload.users).toBeDefined();
+      });
     });
   });
 });

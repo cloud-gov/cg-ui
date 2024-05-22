@@ -31,6 +31,7 @@ export interface UserRoleList {
   [guid: string]: UserWithRoles;
 }
 
+// TODO: remove this Result in favor of the interfaces below
 export interface Result {
   success: boolean;
   status?: ResultStatus;
@@ -40,6 +41,15 @@ export interface Result {
 
 // taken from USWDS alert options: https://designsystem.digital.gov/components/uswds/Alert/
 type ResultStatus = 'success' | 'info' | 'warning' | 'error' | 'emergency';
+
+export interface ControllerMetadata {
+  status: ResultStatus;
+}
+
+export interface ControllerResult {
+  payload: any;
+  meta: ControllerMetadata;
+}
 
 interface RoleResIncludeUsers {
   pagination: any;
@@ -408,21 +418,29 @@ export async function getSpaceUsers(guid: string): Promise<Result> {
   }
 }
 
-export async function getSpaces(org_guids: string[]): Promise<Result> {
-  const message = {
-    fail: 'unable to list the organization spaces',
-  };
-  try {
-    const res = await CF.getSpaces(org_guids);
-    return await mapCfResult(res, message);
-  } catch (error: any) {
-    if (process.env.NODE_ENV == 'development') {
-      console.error(`${message.fail}: ${error.message}`);
+export async function getOrgPage(orgGuid: string): Promise<ControllerResult> {
+  const [orgRes, usersRes, spacesRes] = await Promise.all([
+    CF.getOrg(orgGuid),
+    CF.getRoles({ orgGuids: [orgGuid], include: ['user'] }),
+    CF.getSpaces([orgGuid]),
+  ]);
+  [orgRes, usersRes, spacesRes].map((res) => {
+    if (!res.ok) {
+      if (process.env.NODE_ENV == 'development') {
+        console.error(
+          `api error on cf org page with http code ${res.status} for url: ${res.url}`
+        );
+      }
+      throw new Error('something went wrong with the request');
     }
-    return {
-      success: false,
-      status: 'error',
-      message: message.fail,
-    };
-  }
+  });
+  const userRoleList = await associateUsersWithRoles(await usersRes.json());
+  return {
+    meta: { status: 'success' },
+    payload: {
+      org: await orgRes.json(),
+      users: userRoleList,
+      spaces: (await spacesRes.json()).resources,
+    },
+  };
 }
