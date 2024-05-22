@@ -1,7 +1,11 @@
 'use server';
 
 import Link from 'next/link';
-import { ControllerResult, getOrgPage } from '@/controllers/controllers';
+import {
+  ControllerResult,
+  getOrgPage,
+  UserWithRoles,
+} from '@/controllers/controllers';
 import { UserAction } from './form';
 import { OrgMembersList } from '@/components/CloudFoundry/OrgMembersList';
 
@@ -40,7 +44,7 @@ export default async function OrgPage({
           ))}
         </ul>
 
-        <div className="grid-row">
+        <div className="grid-row grid-gap">
           <OrgMembers org={org} users={users} />
         </div>
       </div>
@@ -48,7 +52,13 @@ export default async function OrgPage({
   );
 }
 
-async function OrgMembers({ org, users }: { org: any; users: any }) {
+async function OrgMembers({
+  org,
+  users,
+}: {
+  org: any;
+  users: UserWithRoles[];
+}) {
   if (users) {
     return (
       <>
@@ -62,6 +72,6 @@ async function OrgMembers({ org, users }: { org: any; users: any }) {
       </>
     );
   } else {
-    return <div role="alert">{users.message}</div>;
+    return <div role="alert">This organization does not have users</div>;
   }
 }

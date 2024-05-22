@@ -11,10 +11,10 @@ import {
 
 function MemberLabel({ user }: { user: UserWithRoles }) {
   return (
-    <>
+    <span className="font-body-lg text-heavy">
       {user.username}
       {user.origin && ' [' + user.origin + ']'}
-    </>
+    </span>
   );
 }
 
@@ -39,7 +39,7 @@ export function OrgMembersList({
 
   return (
     <>
-      <ul>
+      <ul className="height-card-lg overflow-x-hidden outline-1px">
         {users.map((user: UserWithRoles) => (
           <li key={user.guid}>
             <button
