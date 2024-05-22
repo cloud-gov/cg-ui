@@ -156,8 +156,6 @@ export async function deleteRole(roleGuid: string): Promise<Response> {
   return await cfRequest('/roles/' + roleGuid, 'delete');
 }
 
-// TODO think about how we want to handle arguments for something
-// that could be pretty flexible depending on what we need (no filters vs org filters vs includes, etc)
 export async function getRoles({
   include,
   orgGuids,
@@ -168,9 +166,13 @@ export async function getRoles({
   const params: {
     include?: string;
     organization_guids?: string;
+    per_page: string;
     space_guids?: string;
     user_guids?: string;
-  } = {};
+  } = {
+    // set to max allowed value
+    per_page: '5000',
+  };
   if (include && include.length > 0) {
     params['include'] = include.join(',');
   }

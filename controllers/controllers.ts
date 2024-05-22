@@ -18,17 +18,13 @@ interface AddSpaceRoleArgs {
 }
 
 export interface UserWithRoles {
-  displayName: string;
+  guid: string;
   origin: string;
   roles: {
     guid: string;
     type: CF.OrgRole | CF.SpaceRole;
   }[];
   username: string;
-}
-
-export interface UserRoleList {
-  [guid: string]: UserWithRoles;
 }
 
 // TODO: remove this Result in favor of the interfaces below
@@ -180,27 +176,29 @@ export async function addSpaceRole({
 
 export async function associateUsersWithRoles(
   payload: RoleResIncludeUsers
-): Promise<UserRoleList> {
-  // build a hash of the users we can push roles onto
-  const users: UserRoleList = {};
-  for (const user of payload.included.users) {
-    users[user.guid] = {
-      displayName: user.presentation_name,
-      origin: user.origin,
-      roles: [],
-      username: user.username,
-    };
-  }
-  // iterate through the roles and attach to individual users
-  for (const role of payload.resources) {
-    const userGuid = role.relationships.user.data.guid;
-    if (userGuid in users) {
-      users[userGuid].roles.push({
-        type: role.type,
-        guid: role.guid,
+): Promise<UserWithRoles[]> {
+  const users = payload.included.users
+    .map(function (userObj) {
+      const user = structuredClone(userObj);
+      const associatedRoles = payload.resources.filter(function (role) {
+        return user.guid == role.relationships.user.data.guid;
       });
-    }
-  }
+      return {
+        guid: user.guid,
+        username: user.username,
+        origin: user.origin,
+        roles: associatedRoles.map(function (role) {
+          return {
+            guid: role.guid,
+            type: role.type,
+          };
+        }),
+      };
+    })
+    .sort(function (a, b) {
+      // sort null usernames at the bottom of the list
+      return a.username ? a.username.localeCompare(b.username) : 1;
+    });
   return users;
 }
 

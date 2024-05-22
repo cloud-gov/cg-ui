@@ -140,7 +140,7 @@ describe('cloudfoundry tests', () => {
     // the url being sent here rather than the response
     it('returns an unfiltered list of roles', async () => {
       nock(process.env.CF_API_URL)
-        .get('/roles')
+        .get('/roles?per_page=5000')
         .reply(200, mockRolesFilteredByOrgAndUser);
       const res = await getRoles({});
       expect(res.status).toEqual(200);
@@ -148,7 +148,9 @@ describe('cloudfoundry tests', () => {
 
     it('when given an org and user filter, returns a list of roles', async () => {
       nock(process.env.CF_API_URL)
-        .get('/roles?organization_guids=validOrgGuid&user_guids=userGuid')
+        .get(
+          '/roles?organization_guids=validOrgGuid&user_guids=userGuid&per_page=5000'
+        )
         .reply(200, mockRolesFilteredByOrgAndUser);
       const res = await getRoles({
         orgGuids: ['validOrgGuid'],
@@ -159,7 +161,7 @@ describe('cloudfoundry tests', () => {
 
     it('when given a space and user filter, returns a list of roles', async () => {
       nock(process.env.CF_API_URL)
-        .get('/roles?space_guids=validSpaceGuid&include=user')
+        .get('/roles?space_guids=validSpaceGuid&include=user&per_page=5000')
         .reply(200, mockRolesFilteredByOrgAndUser);
       const res = await getRoles({
         spaceGuids: ['validSpaceGuid'],
