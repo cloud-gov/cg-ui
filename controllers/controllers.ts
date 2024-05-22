@@ -38,7 +38,7 @@ export interface Result {
   payload?: any;
 }
 
-// taken from USWDS alert options: https://designsystem.digital.gov/components/alert/
+// taken from USWDS alert options: https://designsystem.digital.gov/components/uswds/Alert/
 type ResultStatus = 'success' | 'info' | 'warning' | 'error' | 'emergency';
 
 interface RoleResIncludeUsers {
