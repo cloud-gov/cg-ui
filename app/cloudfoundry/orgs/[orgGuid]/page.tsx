@@ -1,7 +1,7 @@
 'use server';
 
 import Link from 'next/link';
-import { ControllerSuccessResult, getOrgPage } from '@/controllers/controllers';
+import { ControllerResult, getOrgPage } from '@/controllers/controllers';
 import { UserAction } from './form';
 import { OrgMembersList } from '@/components/CloudFoundry/OrgMembersList';
 
@@ -12,9 +12,7 @@ export default async function OrgPage({
     orgGuid: string;
   };
 }) {
-  const controllerRes = (await getOrgPage(
-    params.orgGuid
-  )) as ControllerSuccessResult;
+  const controllerRes = (await getOrgPage(params.orgGuid)) as ControllerResult;
 
   const { org, users, spaces } = controllerRes.payload;
 

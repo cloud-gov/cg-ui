@@ -4,13 +4,15 @@ import {
   deleteOrgUser,
   getOrgUsers,
   getSpaceUsers,
+  getOrgPage,
 } from '../../controllers/controllers';
-import { mockOrgNotFound } from '../api/mocks/organizations';
+import { mockOrg, mockOrgNotFound } from '../api/mocks/organizations';
 import {
   mockRolesFilteredByOrgAndUser,
   mockUsersByOrganization,
   mockUsersBySpace,
 } from '../api/mocks/roles';
+import { mockSpaces } from '../api/mocks/spaces';
 
 describe('controllers tests', () => {
   beforeEach(() => {
@@ -125,6 +127,53 @@ describe('controllers tests', () => {
         },
       };
       expect(res.payload).toEqual(expected);
+    });
+  });
+
+  describe('getOrgPage', () => {
+    describe('if any CF requests fail', () => {
+      it('throws an error', async () => {
+        // setup
+        const guid = 'foo';
+        const errMessage = { message: 'failed' };
+        nock(process.env.CF_API_URL)
+          .get(/spaces/)
+          .reply(500, errMessage);
+        nock(process.env.CF_API_URL)
+          .get(/roles/)
+          .reply(200, { message: 'foo success' });
+        nock(process.env.CF_API_URL)
+          .get(/organizations/)
+          .reply(200, { message: 'foo success' });
+        // act and assert
+        expect(async () => {
+          await getOrgPage(guid);
+        }).rejects.toThrow(new Error('something went wrong with the request'));
+      });
+    });
+
+    describe('if all requests succeed', () => {
+      it('returns the expected controller result', async () => {
+        // setup
+        const guid = 'foo';
+        nock(process.env.CF_API_URL)
+          .get(/spaces/)
+          .reply(200, mockSpaces);
+        nock(process.env.CF_API_URL)
+          .get(/roles/)
+          .reply(200, mockUsersByOrganization);
+        nock(process.env.CF_API_URL)
+          .get(/organizations/)
+          .reply(200, mockOrg);
+        // act
+        const result = await getOrgPage(guid);
+        // assert
+        expect(result).toHaveProperty('meta');
+        expect(result).toHaveProperty('payload');
+        expect(result.payload.org).toEqual(mockOrg);
+        expect(result.payload.spaces).toEqual(mockSpaces.resources);
+        expect(result.payload.users).toBeDefined();
+      });
     });
   });
 });
