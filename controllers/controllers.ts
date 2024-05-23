@@ -2,87 +2,15 @@
 /***/
 // Library for translating UI actions to API requests and back
 /***/
-
 import * as CF from '@/api/cf/cloudfoundry';
-
-interface AddOrgRoleArgs {
-  orgGuid: string;
-  roleType: CF.OrgRole;
-  username: string;
-}
-
-interface AddSpaceRoleArgs {
-  spaceGuid: string;
-  roleType: CF.SpaceRole;
-  username: string;
-}
-
-export interface UserWithRoles {
-  guid: string;
-  origin: string;
-  roles: {
-    guid: string;
-    type: CF.OrgRole | CF.SpaceRole;
-  }[];
-  username: string;
-}
-
-// TODO: remove this Result in favor of the interfaces below
-export interface Result {
-  success: boolean;
-  status?: ResultStatus;
-  message?: string;
-  payload?: any;
-}
-
-// taken from USWDS alert options: https://designsystem.digital.gov/components/uswds/Alert/
-type ResultStatus = 'success' | 'info' | 'warning' | 'error' | 'emergency';
-
-export interface ControllerMetadata {
-  status: ResultStatus;
-}
-
-export interface ControllerResult {
-  payload: any;
-  meta: ControllerMetadata;
-}
-
-interface RoleResIncludeUsers {
-  pagination: any;
-  resources: {
-    guid: string;
-    created_at: string;
-    updated_at: string;
-    type: CF.OrgRole;
-    relationships: {
-      user: {
-        data: {
-          guid: string;
-        };
-      };
-      organization: any;
-      space: any;
-    };
-    links: any;
-  }[];
-  included: {
-    users: {
-      guid: string;
-      created_at: string;
-      updated_at: string;
-      username: string;
-      presentation_name: string;
-      origin: string;
-      metadata: any;
-      links: any;
-    }[];
-  };
-}
-
-interface UserMessage {
-  success?: string;
-  fail?: string;
-}
+import {
+  AddOrgRoleArgs,
+  AddSpaceRoleArgs,
+  ControllerResult,
+  UserMessage,
+  Result,
+} from './controller-types';
+import { associateUsersWithRoles } from './controller-helpers';
 
 // maps basic cloud foundry fetch response to frontend ready result
 async function mapCfResult(
@@ -172,34 +100,6 @@ export async function addSpaceRole({
       message: `${message.fail}: ${error.message}`,
     };
   }
-}
-
-export async function associateUsersWithRoles(
-  payload: RoleResIncludeUsers
-): Promise<UserWithRoles[]> {
-  const users = payload.included.users
-    .map(function (userObj) {
-      const user = structuredClone(userObj);
-      const associatedRoles = payload.resources.filter(function (role) {
-        return user.guid == role.relationships.user.data.guid;
-      });
-      return {
-        guid: user.guid,
-        username: user.username,
-        origin: user.origin,
-        roles: associatedRoles.map(function (role) {
-          return {
-            guid: role.guid,
-            type: role.type,
-          };
-        }),
-      };
-    })
-    .sort(function (a, b) {
-      // sort null usernames at the bottom of the list
-      return a.username ? a.username.localeCompare(b.username) : 1;
-    });
-  return users;
 }
 
 async function deleteGroupUser(

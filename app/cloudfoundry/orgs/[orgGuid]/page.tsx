@@ -1,11 +1,11 @@
 'use server';
 
 import Link from 'next/link';
+import { getOrgPage } from '@/controllers/controllers';
 import {
   ControllerResult,
-  getOrgPage,
   UserWithRoles,
-} from '@/controllers/controllers';
+} from '@/controllers/controller-types';
 import { UserAction } from './form';
 import { OrgMembersList } from '@/components/CloudFoundry/OrgMembersList';
 
