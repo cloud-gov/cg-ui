@@ -1,6 +1,6 @@
 import { describe, expect, it } from '@jest/globals';
 import { createSessionTable, deleteSessionTable } from '../../../../db/session';
-import { GET, DELETE } from '@/app/api/table/route';
+import { GET, DELETE } from '@/app/test/api/table/route';
 
 /* global jest */
 /* eslint no-undef: "off" */

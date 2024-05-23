@@ -44,14 +44,16 @@ export default function Home() {
       <p>You can also interact with the database via API.</p>
 
       <ul>
-        <li>View sessions: curl http://localhost:3000/api/session</li>
+        <li>View sessions: curl http://localhost:3000/test/api/session</li>
         <li>
           Add session: curl -X POST -d &apos;&#123;&quot;username&quot;:
-          &quot;Your name&quot; &#125;&apos; http://localhost:3000/api/session
+          &quot;Your name&quot; &#125;&apos;
+          http://localhost:3000/test/api/session
         </li>
-        <li>Create session table: curl http://localhost:3000/api/table</li>
+        <li>Create session table: curl http://localhost:3000/test/api/table</li>
         <li>
-          Delete session table: curl -X DELETE http://localhost:3000/api/table
+          Delete session table: curl -X DELETE
+          http://localhost:3000/test/api/table
         </li>
       </ul>
     </div>
