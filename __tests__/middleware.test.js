@@ -119,12 +119,12 @@ describe('/logout', () => {
   });
 });
 
-describe('/authenticated/:path*', () => {
+describe('/test/authenticated/:path*', () => {
   describe('when not logged in', () => {
     it('redirects back to homepage', async () => {
       // setup
       const request = new NextRequest(
-        new URL('/authenticated/example', process.env.ROOT_URL)
+        new URL('/test/authenticated/example', process.env.ROOT_URL)
       );
       // run
       const response = await middleware(request);
@@ -140,7 +140,7 @@ describe('/authenticated/:path*', () => {
     it('refreshes token, then sends you to requested page', async () => {
       // setup
       const request = new NextRequest(
-        new URL('/authenticated/example', process.env.ROOT_URL)
+        new URL('/test/authenticated/example', process.env.ROOT_URL)
       );
       request.cookies.set(
         'authsession',
@@ -171,7 +171,7 @@ describe('/authenticated/:path*', () => {
     it('sends you to requested page', async () => {
       // setup
       const request = new NextRequest(
-        new URL('/authenticated/example', process.env.ROOT_URL)
+        new URL('/test/authenticated/example', process.env.ROOT_URL)
       );
       request.cookies.set(
         'authsession',

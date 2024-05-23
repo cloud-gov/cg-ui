@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { useFormState } from 'react-dom';
-import { UserWithRoles } from '@/controllers/controllers';
+import { UserWithRoles } from '@/controllers/controller-types';
 import { Modal } from '../Modal';
 import {
   removeRole,
