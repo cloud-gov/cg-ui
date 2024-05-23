@@ -1,7 +1,8 @@
 'use server';
 
 import Link from 'next/link';
-import { getSpace, getSpaceUsers, Result } from '@/controllers/controllers';
+import { getSpace, getSpaceUsers } from '@/controllers/controllers';
+import { Result } from '@/controllers/controller-types';
 import { UserAction } from './form';
 import { SpaceMembersList } from '@/components/CloudFoundry/SpaceMembersList';
 

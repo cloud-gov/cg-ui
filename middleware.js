@@ -94,7 +94,7 @@ export async function authenticateRoute(request) {
 }
 
 export function middleware(request) {
-  if (request.nextUrl.pathname.startsWith('/authenticated')) {
+  if (request.nextUrl.pathname.startsWith('/test/authenticated')) {
     return authenticateRoute(request);
   }
   if (request.nextUrl.pathname.startsWith('/login')) {
@@ -116,6 +116,6 @@ export const config = {
     '/auth/login/callback',
     '/logout',
     '/login',
-    '/authenticated/:path*',
+    '/test/authenticated/:path*',
   ],
 };

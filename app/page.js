@@ -6,37 +6,39 @@ export default function Home() {
       <h1>Hello world!</h1>
       <ul>
         <li>
-          <Link href="/authenticated/example">
+          <Link href="/test/authenticated/example">
             Example of an authenticated page (you can&apos;t get to it unless
             you&apos;re logged in).
           </Link>
         </li>
         <li>
-          <Link href="/clientside">Example of clientside rendering</Link>
+          <Link href="/test/clientside">Example of clientside rendering</Link>
         </li>
         <li>
-          <Link href="/serverside">Example of serverside rendering</Link>
+          <Link href="/test/serverside">Example of serverside rendering</Link>
         </li>
         <li>
-          <Link href="/users">Example of dynamic rendering (server-side)</Link>
+          <Link href="/test/users">
+            Example of dynamic rendering (server-side)
+          </Link>
         </li>
         <li>
-          <Link href="/cloudfoundry">Cloudfoundry home</Link>
+          <Link href="/test/cloudfoundry">Cloudfoundry home</Link>
         </li>
         <li>
-          <Link href="/design-guide">Design guide</Link>
+          <Link href="/test/design-guide">Design guide</Link>
         </li>
       </ul>
 
       <h2>Database experiment</h2>
       <ul>
         <li>
-          <Link href="/api/table">
+          <Link href="/test/api/table">
             Step 1: create a session table via API request
           </Link>
         </li>
         <li>
-          <Link href="/session">Step 2: Add your name!</Link>
+          <Link href="/test/session">Step 2: Add your name!</Link>
         </li>
       </ul>
 

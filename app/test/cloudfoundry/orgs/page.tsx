@@ -9,11 +9,13 @@ export default async function CloudFoundryOrgsPage() {
       return (
         <>
           <h1>Your CF Organizations</h1>
-          <Link href="/cloudfoundry">Back to Cloud Foundry home</Link>
+          <Link href="/test/cloudfoundry">Back to Cloud Foundry home</Link>
           <ul>
             {orgs.map((org: any) => (
               <li key={org.guid}>
-                <Link href={`/cloudfoundry/orgs/${org.guid}`}>{org.name}</Link>
+                <Link href={`/test/cloudfoundry/orgs/${org.guid}`}>
+                  {org.name}
+                </Link>
               </li>
             ))}
           </ul>
