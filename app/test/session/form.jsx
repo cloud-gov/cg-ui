@@ -9,7 +9,7 @@ export function SessionForm({ sessions, setSessionData }) {
       if (!username) {
         return;
       }
-      const res = await addData('/api/session', { username: username });
+      const res = await addData('/test/api/session', { username: username });
       if (!res) {
         return;
       }

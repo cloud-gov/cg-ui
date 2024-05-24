@@ -1,4 +1,4 @@
-import { viewSessions, addSession } from '../../../db/session.js';
+import { viewSessions, addSession } from '../../../../db/session.js';
 
 export async function GET() {
   try {

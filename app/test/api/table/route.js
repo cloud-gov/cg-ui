@@ -1,4 +1,7 @@
-import { createSessionTable, deleteSessionTable } from '../../../db/session.js';
+import {
+  createSessionTable,
+  deleteSessionTable,
+} from '../../../../db/session.js';
 
 export async function GET() {
   try {

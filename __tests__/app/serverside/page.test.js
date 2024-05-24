@@ -3,7 +3,7 @@
  */
 import { describe, expect, it } from '@jest/globals';
 import { render, screen } from '@testing-library/react';
-import Serverside from '@/app/serverside/page';
+import Serverside from '@/app/test/serverside/page';
 import { getUsers } from '@/api/users';
 /* global jest */
 /* eslint no-undef: "off" */

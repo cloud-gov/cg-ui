@@ -65,3 +65,7 @@ _This uses Next.js specific [behavior](https://nextjs.org/docs/app/building-your
 - We will use [Pascal Case](https://en.wiktionary.org/wiki/Pascal_case) for component names and any directories named after components:
   - Incorrect: `orgMembersList`
   - Correct: `OrgMembersList`
+
+## Routes
+
+Anything under the `/test/*` route is considered experimental and not ready for production. We will remove these routes as we near production.

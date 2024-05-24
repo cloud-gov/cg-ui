@@ -4,7 +4,7 @@
 import { describe, expect, it } from '@jest/globals';
 import '@testing-library/jest-dom';
 import { render, screen } from '@testing-library/react';
-import { SessionForm } from '@/app/session/form';
+import { SessionForm } from '@/app/test/session/form';
 
 describe('SessionForm', () => {
   it('renders the elements of the form', async () => {

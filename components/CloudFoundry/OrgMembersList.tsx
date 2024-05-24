@@ -2,19 +2,19 @@
 
 import { useState } from 'react';
 import { useFormState } from 'react-dom';
-import { UserWithRoles, UserRoleList } from '@/controllers/controllers';
+import { UserWithRoles } from '@/controllers/controller-types';
 import { Modal } from '../Modal';
 import {
   removeRole,
   removeUser,
-} from '@/app/cloudfoundry/orgs/[orgGuid]/actions';
+} from '@/app/test/cloudfoundry/orgs/[orgGuid]/actions';
 
 function MemberLabel({ user }: { user: UserWithRoles }) {
   return (
-    <>
-      {user.displayName ? user.displayName : user.username}
+    <span className="font-body-lg text-heavy">
+      {user.username}
       {user.origin && ' [' + user.origin + ']'}
-    </>
+    </span>
   );
 }
 
@@ -23,7 +23,7 @@ export function OrgMembersList({
   users,
 }: {
   org: any;
-  users: UserRoleList;
+  users: UserWithRoles[];
 }) {
   const [confirmRoleRemove, setConfirmRoleRemove] = useState('');
   const [formStateRoleRemove, formActionRoleRemove] = useFormState(removeRole, {
@@ -39,11 +39,11 @@ export function OrgMembersList({
 
   return (
     <>
-      <ul>
-        {Object.entries(users).map(([guid, user]: [string, UserWithRoles]) => (
-          <li key={guid}>
+      <ul className="height-card-lg overflow-x-hidden outline-1px">
+        {users.map((user: UserWithRoles) => (
+          <li key={user.guid}>
             <button
-              onClick={() => setConfirmUserRemove(guid)}
+              onClick={() => setConfirmUserRemove(user.guid)}
               className="display-inline-block margin-right-1"
             >
               x
@@ -51,8 +51,8 @@ export function OrgMembersList({
             <strong>
               <MemberLabel user={user} />
             </strong>
-            {confirmUserRemove === guid && (
-              <Modal close={() => setConfirmUserRemove('')} id={guid}>
+            {confirmUserRemove === user.guid && (
+              <Modal close={() => setConfirmUserRemove('')} id={user.guid}>
                 {!formStateUserRemove.success &&
                   formStateUserRemove.message && <div>Error</div>}
                 {!formStateUserRemove.success &&
@@ -74,7 +74,7 @@ export function OrgMembersList({
                           type="hidden"
                           name="userGuid"
                           id="userGuid-{guid}"
-                          value={guid}
+                          value={user.guid}
                         />
                         <button role="button" type="submit">
                           yes

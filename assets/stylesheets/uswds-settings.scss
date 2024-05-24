@@ -64,5 +64,13 @@
   $theme-banner-max-width: 'desktop-lg',
   $theme-header-max-width: 'desktop-lg',
   $theme-header-min-width: 'none',
-  $theme-identifier-max-width: 'desktop-lg'
+  $theme-identifier-max-width: 'desktop-lg',
+
+  // header size
+  $theme-h1-font-size: '3xl',
+  $theme-h2-font-size: '2xl',
+  $theme-h3-font-size: 'xl',
+  $theme-h4-font-size: 'lg',
+  $theme-h5-font-size: 'sm',
+  $theme-h6-font-size: 'xs',
 );

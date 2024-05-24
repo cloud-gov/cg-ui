@@ -260,8 +260,8 @@ export const mockUsersByOrganization = {
         guid: '73193f8c-e03b-43c8-aeee-8670908899d2',
         created_at: '2020-07-02T17:23:28Z',
         updated_at: '2020-07-02T17:23:28Z',
-        username: 'user1@example.com',
-        presentation_name: 'User1 Example',
+        username: 'z_user1@example.com',
+        presentation_name: 'z_user1@example.com',
         origin: 'example.com',
         metadata: {
           labels: {},
@@ -277,8 +277,8 @@ export const mockUsersByOrganization = {
         guid: 'ab9dc32e-d7be-4b8d-b9cb-d30d82ae0199',
         created_at: '2024-01-17T19:08:21Z',
         updated_at: '2024-01-17T19:08:21Z',
-        username: 'user2@example.com',
-        presentation_name: 'User2 Example',
+        username: 'a_user2@example.com',
+        presentation_name: 'a_user2@example.com',
         origin: 'example.com',
         metadata: {
           labels: {},

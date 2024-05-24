@@ -2,17 +2,17 @@
 
 import { useState } from 'react';
 import { useFormState } from 'react-dom';
-import { UserWithRoles, UserRoleList } from '@/controllers/controllers';
+import { UserWithRoles } from '@/controllers/controller-types';
 import { Modal } from '../Modal';
 import {
   removeRole,
   removeUser,
-} from '@/app/cloudfoundry/orgs/[orgGuid]/spaces/[spaceGuid]/actions';
+} from '@/app/test/cloudfoundry/orgs/[orgGuid]/spaces/[spaceGuid]/actions';
 
 function MemberLabel({ user }: { user: UserWithRoles }) {
   return (
     <>
-      {user.displayName ? user.displayName : user.username}
+      {user.username}
       {user.origin && ' [' + user.origin + ']'}
     </>
   );
@@ -23,7 +23,7 @@ export function SpaceMembersList({
   users,
 }: {
   space: any;
-  users: UserRoleList;
+  users: UserWithRoles[];
 }) {
   const [confirmRoleRemove, setConfirmRoleRemove] = useState('');
   const [formStateRoleRemove, formActionRoleRemove] = useFormState(removeRole, {
@@ -40,10 +40,10 @@ export function SpaceMembersList({
   return (
     <>
       <ul>
-        {Object.entries(users).map(([guid, user]: [string, UserWithRoles]) => (
-          <li key={guid}>
+        {users.map((user: UserWithRoles) => (
+          <li key={user.guid}>
             <button
-              onClick={() => setConfirmUserRemove(guid)}
+              onClick={() => setConfirmUserRemove(user.guid)}
               className="display-inline-block margin-right-1"
             >
               x
@@ -51,8 +51,8 @@ export function SpaceMembersList({
             <strong>
               <MemberLabel user={user} />
             </strong>
-            {confirmUserRemove === guid && (
-              <Modal close={() => setConfirmUserRemove('')} id={guid}>
+            {confirmUserRemove === user.guid && (
+              <Modal close={() => setConfirmUserRemove('')} id={user.guid}>
                 {!formStateUserRemove.success &&
                   formStateUserRemove.message && <div>Error</div>}
                 {!formStateUserRemove.success &&
@@ -74,7 +74,7 @@ export function SpaceMembersList({
                           type="hidden"
                           name="userGuid"
                           id="userGuid-{guid}"
-                          value={guid}
+                          value={user.guid}
                         />
                         <button role="button" type="submit">
                           yes

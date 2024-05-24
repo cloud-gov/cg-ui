@@ -9,7 +9,7 @@ export default async function CloudFoundryAppsPage() {
       return (
         <>
           <h1>Your CF Apps</h1>
-          <Link href="/cloudfoundry">Back to Cloud Foundry home</Link>
+          <Link href="/test/cloudfoundry">Back to Cloud Foundry home</Link>
           <ul>
             {apps.map((app) => (
               <li key={app.guid}>{app.name}</li>

@@ -2,91 +2,15 @@
 /***/
 // Library for translating UI actions to API requests and back
 /***/
-
 import * as CF from '@/api/cf/cloudfoundry';
-
-interface AddOrgRoleArgs {
-  orgGuid: string;
-  roleType: CF.OrgRole;
-  username: string;
-}
-
-interface AddSpaceRoleArgs {
-  spaceGuid: string;
-  roleType: CF.SpaceRole;
-  username: string;
-}
-
-export interface UserWithRoles {
-  displayName: string;
-  origin: string;
-  roles: {
-    guid: string;
-    type: CF.OrgRole | CF.SpaceRole;
-  }[];
-  username: string;
-}
-
-export interface UserRoleList {
-  [guid: string]: UserWithRoles;
-}
-
-// TODO: remove this Result in favor of the interfaces below
-export interface Result {
-  success: boolean;
-  status?: ResultStatus;
-  message?: string;
-  payload?: any;
-}
-
-// taken from USWDS alert options: https://designsystem.digital.gov/components/uswds/Alert/
-type ResultStatus = 'success' | 'info' | 'warning' | 'error' | 'emergency';
-
-export interface ControllerMetadata {
-  status: ResultStatus;
-}
-
-export interface ControllerResult {
-  payload: any;
-  meta: ControllerMetadata;
-}
-
-interface RoleResIncludeUsers {
-  pagination: any;
-  resources: {
-    guid: string;
-    created_at: string;
-    updated_at: string;
-    type: CF.OrgRole;
-    relationships: {
-      user: {
-        data: {
-          guid: string;
-        };
-      };
-      organization: any;
-      space: any;
-    };
-    links: any;
-  }[];
-  included: {
-    users: {
-      guid: string;
-      created_at: string;
-      updated_at: string;
-      username: string;
-      presentation_name: string;
-      origin: string;
-      metadata: any;
-      links: any;
-    }[];
-  };
-}
-
-interface UserMessage {
-  success?: string;
-  fail?: string;
-}
+import {
+  AddOrgRoleArgs,
+  AddSpaceRoleArgs,
+  ControllerResult,
+  UserMessage,
+  Result,
+} from './controller-types';
+import { associateUsersWithRoles } from './controller-helpers';
 
 // maps basic cloud foundry fetch response to frontend ready result
 async function mapCfResult(
@@ -176,32 +100,6 @@ export async function addSpaceRole({
       message: `${message.fail}: ${error.message}`,
     };
   }
-}
-
-export async function associateUsersWithRoles(
-  payload: RoleResIncludeUsers
-): Promise<UserRoleList> {
-  // build a hash of the users we can push roles onto
-  const users: UserRoleList = {};
-  for (const user of payload.included.users) {
-    users[user.guid] = {
-      displayName: user.presentation_name,
-      origin: user.origin,
-      roles: [],
-      username: user.username,
-    };
-  }
-  // iterate through the roles and attach to individual users
-  for (const role of payload.resources) {
-    const userGuid = role.relationships.user.data.guid;
-    if (userGuid in users) {
-      users[userGuid].roles.push({
-        type: role.type,
-        guid: role.guid,
-      });
-    }
-  }
-  return users;
 }
 
 async function deleteGroupUser(
