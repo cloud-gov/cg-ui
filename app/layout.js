@@ -1,8 +1,12 @@
-import { Header } from '@/components/Header';
-import { Identifier } from '@/components/Identifier';
-import { Banner } from '@/components/uswds/Banner';
+import Image from 'next/image';
 
-import '../assets/stylesheets/styles.scss';
+import { Banner } from '@/components/uswds/Banner';
+import { Identifier } from '@/components/Identifier';
+import { Footer } from '@/components/Footer';
+
+import cloudGovIcon from '@/public/img/cloud-gov-logo.svg';
+
+import '@/assets/stylesheets/styles.scss';
 
 export const metadata = {
   title: 'cloud.gov Dashboard',
@@ -12,12 +16,23 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
-      <body>
+      <body className="bg-accent-warm-light">
         <Banner />
-        <Header />
-        <main className="padding-y-4">
-          <div className="grid-container">{children}</div>
-        </main>
+        <div className="grid-container">
+          <div className="grid-row">
+            <div className="tablet:grid-col-2">
+              <div className="margin-y-4 tablet:margin-y-6 text-center">
+                <Image priority src={cloudGovIcon} alt="cloud.gov" />
+              </div>
+            </div>
+            <div className="tablet:grid-col-10 bg-white">
+              <div className="grid-container">
+                <main className="padding-y-4">{children}</main>
+              </div>
+            </div>
+          </div>
+        </div>
+        <Footer />
         <Identifier />
       </body>
     </html>

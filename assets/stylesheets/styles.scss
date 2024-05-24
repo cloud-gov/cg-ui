@@ -4,7 +4,7 @@
 // 2. Load USWDS source code
 @forward 'uswds-core'; // core must come first
 @forward 'uswds-global';
-@forward 'uswds-utilities';
+@forward 'uswds-typography';
 
 // USWDS components
 @forward 'usa-layout-grid';
@@ -20,6 +20,13 @@
 @forward 'usa-modal';
 @forward 'usa-header';
 @forward 'usa-identifier';
+@forward 'usa-footer';
+
+// USWDS utilities
+@forward 'uswds-utilities';
 
 // 3. Load any custom SASS
-// none yet
+body,
+html {
+  height: 100%;
+}

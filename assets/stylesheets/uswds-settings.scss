@@ -40,7 +40,7 @@
   $theme-color-accent-warm-family: 'grey-warm',
   $theme-color-accent-warm-lightest: false,
   $theme-color-accent-warm-lighter: false,
-  $theme-color-accent-warm-light: 'gray-warm-4',
+  $theme-color-accent-warm-light: 'gray-warm-5',
   $theme-color-accent-warm: 'gray-warm-10',
   $theme-color-accent-warm-dark: 'gray-warm-20',
   $theme-color-accent-warm-darker: 'gray-warm-40',
@@ -65,6 +65,7 @@
   $theme-header-max-width: 'desktop-lg',
   $theme-header-min-width: 'none',
   $theme-identifier-max-width: 'desktop-lg',
+  $theme-footer-max-width: 'desktop-lg',
 
   // header size
   $theme-h1-font-size: '3xl',
@@ -72,5 +73,5 @@
   $theme-h3-font-size: 'xl',
   $theme-h4-font-size: 'lg',
   $theme-h5-font-size: 'sm',
-  $theme-h6-font-size: 'xs',
+  $theme-h6-font-size: 'xs'
 );
