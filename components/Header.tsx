@@ -7,25 +7,13 @@ export function Header() {
   const authSession = cookieStore.get('authsession');
 
   return (
-    <header className="usa-header usa-header--basic">
-      <div className="usa-nav-container">
-        <div className="usa-navbar">
-          <div className="usa-logo">
-            <em className="usa-logo__text">
-              <a href="/" title="cloud.gov">
-                cloud.gov
-              </a>
-            </em>
-          </div>
-        </div>
-        <nav aria-label="Primary navigation" className="usa-nav">
-          <ul className="usa-nav__primary usa-accordion">
-            <li className="usa-nav__primary-item">
-              {authSession ? <LogoutButton /> : <LoginButton />}
-            </li>
-          </ul>
-        </nav>
+    <div className="desktop:display-flex flex-align-center flex-justify border-bottom border-accent-warm-light shrink">
+      <div className="padding-x-4 padding-y-2 desktop:order-last display-flex flex-justify-end border-bottom border-accent-warm-light desktop:border-0 font-ui-xs">
+        {authSession ? <LogoutButton /> : <LoginButton />}
       </div>
-    </header>
+      <div className="padding-x-4 font-ui-lg padding-y-2 text-semibold">
+        Org : 18F Stratos rebuild
+      </div>
+    </div>
   );
 }
