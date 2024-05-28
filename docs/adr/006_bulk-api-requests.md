@@ -15,7 +15,7 @@ We used organization users and their roles as a proof of concept for pulling and
 We learned that in the Cloud.gov production environment, the organizations with the largest number of roles and users are those with sandbox accounts (where every new user is given a space within a sandbox org). These accounts are largely automated, and moderators are unlikely to use the UI for management. Outside of these sandbox accounts, the largest number of roles for a production organization as of May 2024 was 150 roles.
 
 ## Considered options
-* Option 1: Request 5000 results and parse them within our application
+* Option 1: Request up to 5000 results and parse them within our application
 * Option 2: Explore bulk data request, storage, and manipulation options
 
 ## Decision outcome
