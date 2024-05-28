@@ -20,17 +20,17 @@ export default function RootLayout({ children }) {
         <div className="border-bottom border-white">
           <Banner />
         </div>
-        <div className="grid-container height-full desktop:display-flex overflow-hidden">
+        <div className="grid-container desktop:height-full desktop:display-flex desktop:overflow-hidden">
           <div className="desktop:grid-col-2">
             <div className="margin-y-4 text-center">
               <Image priority src={cloudGovIcon} alt="cloud.gov" width="160" />
             </div>
           </div>
           <div className="desktop:grid-col-10 bg-white height-full flex-column display-flex">
-            <div className="padding-x-4 display-flex border-bottom border-accent-warm-light shrink">
-              <span className="font-ui-xl padding-y-2 text-bold">
+            <div className="padding-x-4 desktop:display-flex border-bottom border-accent-warm-light shrink">
+              <div className="font-ui-xl padding-y-2 text-semibold">
                 Org : 18F Stratos rebuild
-              </span>
+              </div>
             </div>
             <main className="padding-4 overflow-y-auto grow">{children}</main>
           </div>

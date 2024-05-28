@@ -2,6 +2,8 @@
 @use 'uswds-core' with (
   $theme-font-path: '../../../../../../dist/fonts',
   $theme-image-path: '../../../../../../dist/img',
+  $theme-font-type-sans: 'public-sans',
+  $theme-hero-image: '../img/hero.jpg',
 
   // base colors
   $theme-color-base-family: 'gray-cool',
@@ -73,5 +75,17 @@
   $theme-h3-font-size: 'xl',
   $theme-h4-font-size: 'lg',
   $theme-h5-font-size: 'sm',
-  $theme-h6-font-size: 'xs'
+  $theme-h6-font-size: 'xs',
+
+  $display-settings: (
+    responsive: true,
+  ),
+
+  $height-settings: (
+    responsive: true,
+  ),
+
+  $overflow-settings: (
+    responsive: true,
+  )
 );
