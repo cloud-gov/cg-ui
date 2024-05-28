@@ -7,7 +7,6 @@
 @forward 'uswds-typography';
 
 // USWDS components
-@forward 'usa-layout-grid';
 @forward 'usa-accordion';
 @forward 'usa-alert';
 @forward 'usa-banner';
@@ -21,12 +20,22 @@
 @forward 'usa-header';
 @forward 'usa-identifier';
 @forward 'usa-footer';
+@forward 'usa-layout-grid';
 
 // USWDS utilities
 @forward 'uswds-utilities';
 
 // 3. Load any custom SASS
-body,
-html {
-  height: 100%;
+
+.grow {
+  flex-grow: 1;
+}
+.grow-0 {
+  flex-grow: 0;
+}
+.shrink {
+  flex-shrink: 1;
+}
+.shrink-0 {
+  flex-shrink: 0;
 }
