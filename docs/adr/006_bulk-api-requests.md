@@ -1,6 +1,6 @@
 # Bulk API requests
 
-Status: proposed
+Status: accepted
 
 ## Context and problem statement
 
