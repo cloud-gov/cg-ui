@@ -31,11 +31,11 @@ export function UsersListSpaceRoles({
           </Link>
         </span>
       </div>
-      <div className="display-flex padding-top-1">
+      <div className="tablet:display-flex padding-top-1">
         {spaces.slice(0, displaySize).map((role, i) => (
           <div
             key={`UsersListSpaceRoles-spaces-${i}`}
-            className="padding-right-1"
+            className="flex-1 padding-right-1"
           >
             <div className="text-bold">{role.spaceName}</div>
             <div>{role.roleName}</div>
