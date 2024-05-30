@@ -67,7 +67,7 @@ describe('controllers tests', () => {
         {
           guid: 'ab9dc32e-d7be-4b8d-b9cb-d30d82ae0199',
           origin: 'example.com',
-          roles: [
+          orgRoles: [
             {
               guid: 'c98f8f55-dc53-498a-bb65-9991ab9f8b78',
               type: 'organization_manager',
@@ -78,7 +78,7 @@ describe('controllers tests', () => {
         {
           guid: '73193f8c-e03b-43c8-aeee-8670908899d2',
           origin: 'example.com',
-          roles: [
+          orgRoles: [
             {
               guid: 'fb55574d-6b84-405e-b23c-0984f0a0964a',
               type: 'organization_user',
@@ -113,9 +113,9 @@ describe('controllers tests', () => {
       // one user with multiple roles should be returned
       const expected = [
         {
-          guid: 'c0a41062-2df2-41d9-9995-50c5eb6c9a18',
+          guid: '73193f8c-e03b-43c8-aeee-8670908899d2',
           origin: 'example.com',
-          roles: [
+          spaceRoles: [
             {
               guid: '12ac7aa5-8a8e-48a4-9c90-a3b908c6e702',
               type: 'space_manager',
@@ -125,7 +125,7 @@ describe('controllers tests', () => {
               type: 'space_developer',
             },
           ],
-          username: 'user1@example.com',
+          username: 'z_user1@example.com',
         },
       ];
       expect(res.payload).toEqual(expected);
@@ -167,6 +167,8 @@ describe('controllers tests', () => {
         nock(process.env.CF_API_URL)
           .get(/organizations/)
           .reply(200, mockOrg);
+        // sends a second request to get the roles associated with spaces
+        nock(process.env.CF_API_URL).get(/roles/).reply(200, mockUsersBySpace);
         // act
         const result = await getOrgPage(guid);
         // assert
@@ -175,6 +177,20 @@ describe('controllers tests', () => {
         expect(result.payload.org).toEqual(mockOrg);
         expect(result.payload.spaces).toEqual(mockSpaces.resources);
         expect(result.payload.users).toBeDefined();
+        expect(result.payload.users[1].spaceRoles).toEqual([
+          {
+            guid: '12ac7aa5-8a8e-48a4-9c90-a3b908c6e702',
+            spaceGuid: 'dedb82bb-9f35-49f4-8ff9-7130ae2e3198',
+            spaceName: 'Space1',
+            type: 'space_manager',
+          },
+          {
+            guid: '1293d5ae-0266-413c-bacf-9f5474be984d',
+            spaceGuid: 'dedb82bb-9f35-49f4-8ff9-7130ae2e3198',
+            spaceName: 'Space1',
+            type: 'space_developer',
+          },
+        ]);
       });
     });
   });

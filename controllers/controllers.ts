@@ -4,13 +4,21 @@
 /***/
 import * as CF from '@/api/cf/cloudfoundry';
 import {
+  GetRoleArgs,
+  ListRolesRes,
+  SpaceObj,
+} from '@/api/cf/cloudfoundry-types';
+import {
   AddOrgRoleArgs,
   AddSpaceRoleArgs,
   ControllerResult,
   UserMessage,
   Result,
 } from './controller-types';
-import { associateUsersWithRoles } from './controller-helpers';
+import {
+  associateUsersWithOrgAndSpaceRoles,
+  associateUsersWithSpaceRoles,
+} from './controller-helpers';
 
 // maps basic cloud foundry fetch response to frontend ready result
 async function mapCfResult(
@@ -108,7 +116,7 @@ async function deleteGroupUser(
   userGuid: string
 ) {
   try {
-    const args: CF.getRoleArgs = {
+    const args: GetRoleArgs = {
       userGuids: [userGuid],
     };
     groupType == 'org' ? (args.orgGuids = guids) : (args.spaceGuids = guids);
@@ -261,7 +269,7 @@ export async function getOrgUsers(guid: string): Promise<Result> {
     }
 
     const payload = await res.json();
-    const userRoleList = await associateUsersWithRoles(payload);
+    const userRoleList = await associateUsersWithOrgAndSpaceRoles(payload);
 
     return {
       success: true,
@@ -305,7 +313,7 @@ export async function getSpaceUsers(guid: string): Promise<Result> {
     }
 
     const payload = await res.json();
-    const userRoleList = await associateUsersWithRoles(payload);
+    const userRoleList = await associateUsersWithSpaceRoles(payload);
     return {
       success: true,
       status: 'success',
@@ -317,12 +325,12 @@ export async function getSpaceUsers(guid: string): Promise<Result> {
 }
 
 export async function getOrgPage(orgGuid: string): Promise<ControllerResult> {
-  const [orgRes, usersRes, spacesRes] = await Promise.all([
+  const [orgRes, orgUserRes, spacesRes] = await Promise.all([
     CF.getOrg(orgGuid),
     CF.getRoles({ orgGuids: [orgGuid], include: ['user'] }),
     CF.getSpaces([orgGuid]),
   ]);
-  [orgRes, usersRes, spacesRes].map((res) => {
+  [orgRes, orgUserRes, spacesRes].map((res) => {
     if (!res.ok) {
       if (process.env.NODE_ENV == 'development') {
         console.error(
@@ -332,13 +340,31 @@ export async function getOrgPage(orgGuid: string): Promise<ControllerResult> {
       throw new Error('something went wrong with the request');
     }
   });
-  const userRoleList = await associateUsersWithRoles(await usersRes.json());
+  const spacesPayload = (await spacesRes.json()).resources;
+  const userSpaceRoleList = await getOrgSpaceRoles(spacesPayload);
+  const userOrgRoleList = associateUsersWithOrgAndSpaceRoles(
+    await orgUserRes.json(),
+    userSpaceRoleList
+  );
   return {
     meta: { status: 'success' },
     payload: {
       org: await orgRes.json(),
-      users: userRoleList,
-      spaces: (await spacesRes.json()).resources,
+      users: userOrgRoleList,
+      spaces: spacesPayload,
     },
   };
+}
+
+export async function getOrgSpaceRoles(
+  spaces: SpaceObj[]
+): Promise<ListRolesRes> {
+  const guids = spaces.map((space: SpaceObj) => {
+    return space.guid;
+  });
+  const rolesRes = await CF.getRoles({
+    spaceGuids: guids,
+    include: ['space', 'user'],
+  });
+  return await rolesRes.json();
 }

@@ -1,23 +1,29 @@
-import * as CF from '@/api/cf/cloudfoundry';
+import { RoleType } from '@/api/cf/cloudfoundry-types';
 
 export interface AddOrgRoleArgs {
   orgGuid: string;
-  roleType: CF.OrgRole;
+  roleType: RoleType;
   username: string;
 }
 
 export interface AddSpaceRoleArgs {
   spaceGuid: string;
-  roleType: CF.SpaceRole;
+  roleType: RoleType;
   username: string;
 }
 
 export interface UserWithRoles {
   guid: string;
   origin: string;
-  roles: {
+  orgRoles?: {
     guid: string;
-    type: CF.OrgRole | CF.SpaceRole;
+    type: RoleType;
+  }[];
+  spaceRoles?: {
+    spaceGuid?: string;
+    spaceName?: string;
+    guid: string;
+    type: RoleType;
   }[];
   username: string;
 }
@@ -40,38 +46,6 @@ export interface ControllerMetadata {
 export interface ControllerResult {
   payload: any;
   meta: ControllerMetadata;
-}
-
-export interface RoleResIncludeUsers {
-  pagination: any;
-  resources: {
-    guid: string;
-    created_at: string;
-    updated_at: string;
-    type: CF.OrgRole;
-    relationships: {
-      user: {
-        data: {
-          guid: string;
-        };
-      };
-      organization: any;
-      space: any;
-    };
-    links: any;
-  }[];
-  included: {
-    users: {
-      guid: string;
-      created_at: string;
-      updated_at: string;
-      username: string;
-      presentation_name: string;
-      origin: string;
-      metadata: any;
-      links: any;
-    }[];
-  };
 }
 
 export interface UserMessage {
