@@ -5,19 +5,7 @@
 @forward 'uswds';
 
 // 3. Load any custom SASS
-// flex
-.grow {
-  flex-grow: 1;
-}
-.grow-0 {
-  flex-grow: 0;
-}
-.shrink {
-  flex-shrink: 1;
-}
-.shrink-0 {
-  flex-shrink: 0;
-}
+
 // text styling
 .text-capitalize {
   text-transform: capitalize;
