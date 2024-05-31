@@ -50,14 +50,14 @@ export interface RoleObj {
         guid: string;
       };
     };
-    organization?: {
+    organization: {
       data: {
-        guid: string;
+        guid: string | undefined;
       };
     };
-    space?: {
+    space: {
       data: {
-        guid: string;
+        guid: string | undefined;
       };
     };
   };

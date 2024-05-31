@@ -2,11 +2,11 @@ import nock from 'nock';
 import { describe, it, expect, beforeEach, afterEach } from '@jest/globals';
 import {
   deleteOrgUser,
-  getOrgUsers,
-  getSpaceUsers,
   getOrgPage,
+  getOrgTestPage,
+  getSpaceUsers,
 } from '../../controllers/controllers';
-import { mockOrg, mockOrgNotFound } from '../api/mocks/organizations';
+import { mockOrg } from '../api/mocks/organizations';
 import {
   mockRolesFilteredByOrgAndUser,
   mockUsersByOrganization,
@@ -14,19 +14,19 @@ import {
 } from '../api/mocks/roles';
 import { mockSpaces } from '../api/mocks/spaces';
 
+beforeEach(() => {
+  if (!nock.isActive()) {
+    nock.activate();
+  }
+});
+
+afterEach(() => {
+  nock.cleanAll();
+  // https://github.com/nock/nock#memory-issues-with-jest
+  nock.restore();
+});
+
 describe('controllers tests', () => {
-  beforeEach(() => {
-    if (!nock.isActive()) {
-      nock.activate();
-    }
-  });
-
-  afterEach(() => {
-    nock.cleanAll();
-    // https://github.com/nock/nock#memory-issues-with-jest
-    nock.restore();
-  });
-
   describe('deleteOrgUser', () => {
     it('when given a valid org and user, removes all user roles from org', async () => {
       nock(process.env.CF_API_URL)
@@ -54,55 +54,6 @@ describe('controllers tests', () => {
     );
   });
 
-  describe('getOrgUsers', () => {
-    it('when given a valid org guid, returns associated users', async () => {
-      nock(process.env.CF_API_URL)
-        .get('/roles?organization_guids=validGUID&include=user&per_page=5000')
-        .reply(200, mockUsersByOrganization);
-      const res = await getOrgUsers('validGUID');
-
-      // getOrgUsers should rearrange the roles response to be oriented
-      // around the users
-      const expected = [
-        {
-          guid: 'ab9dc32e-d7be-4b8d-b9cb-d30d82ae0199',
-          origin: 'example.com',
-          orgRoles: [
-            {
-              guid: 'c98f8f55-dc53-498a-bb65-9991ab9f8b78',
-              type: 'organization_manager',
-            },
-          ],
-          username: 'a_user2@example.com',
-        },
-        {
-          guid: '73193f8c-e03b-43c8-aeee-8670908899d2',
-          origin: 'example.com',
-          orgRoles: [
-            {
-              guid: 'fb55574d-6b84-405e-b23c-0984f0a0964a',
-              type: 'organization_user',
-            },
-          ],
-          username: 'z_user1@example.com',
-        },
-      ];
-      expect(res.payload).toEqual(expected);
-    });
-
-    it('when given an invalid or unauthorized org guid, returns an error message', async () => {
-      nock(process.env.CF_API_URL)
-        .get('/roles?organization_guids=invalidGUID&include=user&per_page=5000')
-        .reply(404, mockOrgNotFound);
-
-      expect(async () => {
-        await getOrgUsers('invalidGUID');
-      }).rejects.toThrow(
-        new Error('unable to list the org users: problem with getRoles 404')
-      );
-    });
-  });
-
   describe('getSpaceUsers', () => {
     it('when given a valid space guid, returns associated users', async () => {
       nock(process.env.CF_API_URL)
@@ -115,7 +66,7 @@ describe('controllers tests', () => {
         {
           guid: '73193f8c-e03b-43c8-aeee-8670908899d2',
           origin: 'example.com',
-          spaceRoles: [
+          roles: [
             {
               guid: '12ac7aa5-8a8e-48a4-9c90-a3b908c6e702',
               type: 'space_manager',
@@ -133,6 +84,113 @@ describe('controllers tests', () => {
   });
 
   describe('getOrgPage', () => {
+    describe('if any of the first CF requests fail', () => {
+      it('throws an error', async () => {
+        // setup
+        const orgGuid = 'orgGuid';
+        nock(process.env.CF_API_URL)
+          .get(
+            `/roles?organization_guids=${orgGuid}&include=organization,user&per_page=5000`
+          )
+          .reply(500);
+        nock(process.env.CF_API_URL)
+          .get(`/spaces?organization_guids=${orgGuid}`)
+          .reply(200);
+
+        // assert
+        expect(async () => {
+          await getOrgPage(orgGuid);
+        }).rejects.toThrow(new Error('something went wrong with the request'));
+      });
+    });
+    describe('if the follow up CF request fails', () => {
+      it('throws an error', async () => {
+        console.log('in the fail version');
+        // setup
+        const orgGuid = 'orgGuid';
+        nock(process.env.CF_API_URL)
+          .get(
+            `/roles?organization_guids=${orgGuid}&per_page=5000&include=organization,user`
+          )
+          .reply(200, mockUsersByOrganization);
+        nock(process.env.CF_API_URL)
+          .get(/spaces/)
+          .reply(200, mockSpaces);
+        nock(process.env.CF_API_URL).get(/roles/).reply(500);
+
+        // assert
+        expect(async () => {
+          await getOrgPage(orgGuid);
+        }).rejects.toThrow(new Error('something went wrong with the request'));
+      });
+    });
+
+    describe('if the CF requests succeed', () => {
+      it('returns the expected controller result', async () => {
+        // setup
+        const orgGuid = 'orgGuid';
+        const testSpaceGuids = {
+          resources: [
+            {
+              guid: 'space1',
+            },
+            {
+              guid: 'space2',
+            },
+            {
+              guid: 'space3',
+            },
+          ],
+        };
+        nock(process.env.CF_API_URL)
+          .get(
+            `/roles?organization_guids=${orgGuid}&per_page=5000&include=organization,user`
+          )
+          .reply(200, mockUsersByOrganization);
+        nock(process.env.CF_API_URL)
+          .get(`/spaces?organization_guids=${orgGuid}`)
+          .reply(200, testSpaceGuids);
+        nock(process.env.CF_API_URL)
+          .get('/roles?per_page=5000&space_guids=space1,space2,space3')
+          .reply(200, mockUsersBySpace);
+
+        const result = await getOrgPage(orgGuid);
+        const firstUserRoles =
+          result.payload.roles['73193f8c-e03b-43c8-aeee-8670908899d2'];
+
+        // assert
+        expect(result).toHaveProperty('meta');
+        expect(result).toHaveProperty('payload');
+        expect(result.payload.org).toEqual(
+          mockUsersByOrganization.included.organizations[0]
+        );
+        expect(result.payload.spaces).toBeDefined();
+        expect(result.payload.users).toBeDefined();
+        expect(firstUserRoles).toEqual({
+          org: [
+            {
+              guid: '89c0b2a8-957d-4900-abab-87395efaffdb',
+              role: 'organization_user',
+            },
+          ],
+          space: [
+            {
+              guid: 'dedb82bb-9f35-49f4-8ff9-7130ae2e3198',
+              role: 'space_manager',
+            },
+            {
+              guid: 'dedb82bb-9f35-49f4-8ff9-7130ae2e3198',
+              role: 'space_developer',
+            },
+          ],
+        });
+      });
+    });
+  });
+
+  // TODO delete getOrgTestPage tests after we no longer need the prototype
+  // test org detail page
+  describe('getOrgTestPage', () => {
     describe('if any CF requests fail', () => {
       it('throws an error', async () => {
         // setup
@@ -149,7 +207,7 @@ describe('controllers tests', () => {
           .reply(200, { message: 'foo success' });
         // act and assert
         expect(async () => {
-          await getOrgPage(guid);
+          await getOrgTestPage(guid);
         }).rejects.toThrow(new Error('something went wrong with the request'));
       });
     });
@@ -168,29 +226,15 @@ describe('controllers tests', () => {
           .get(/organizations/)
           .reply(200, mockOrg);
         // sends a second request to get the roles associated with spaces
-        nock(process.env.CF_API_URL).get(/roles/).reply(200, mockUsersBySpace);
+        // nock(process.env.CF_API_URL).get(/roles/).reply(200, mockUsersBySpace);
         // act
-        const result = await getOrgPage(guid);
+        const result = await getOrgTestPage(guid);
         // assert
         expect(result).toHaveProperty('meta');
         expect(result).toHaveProperty('payload');
         expect(result.payload.org).toEqual(mockOrg);
         expect(result.payload.spaces).toEqual(mockSpaces.resources);
         expect(result.payload.users).toBeDefined();
-        expect(result.payload.users[1].spaceRoles).toEqual([
-          {
-            guid: '12ac7aa5-8a8e-48a4-9c90-a3b908c6e702',
-            spaceGuid: 'dedb82bb-9f35-49f4-8ff9-7130ae2e3198',
-            spaceName: 'Space1',
-            type: 'space_manager',
-          },
-          {
-            guid: '1293d5ae-0266-413c-bacf-9f5474be984d',
-            spaceGuid: 'dedb82bb-9f35-49f4-8ff9-7130ae2e3198',
-            spaceName: 'Space1',
-            type: 'space_developer',
-          },
-        ]);
       });
     });
   });

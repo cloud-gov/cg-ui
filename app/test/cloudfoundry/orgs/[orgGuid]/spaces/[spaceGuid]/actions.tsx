@@ -3,7 +3,7 @@ import {
   deleteRole,
   deleteSpaceUser,
 } from '@/controllers/controllers';
-import { SpaceRole } from '@/api/cf/cloudfoundry';
+import { RoleType } from '@/api/cf/cloudfoundry-types';
 
 interface FormResponse {
   success: boolean;
@@ -17,7 +17,7 @@ export async function postData(
   try {
     const res = await addSpaceRole({
       spaceGuid: formData.get('space-guid') as string,
-      roleType: formData.get('space-role') as SpaceRole,
+      roleType: formData.get('space-role') as RoleType,
       username: formData.get('email-username') as string,
     });
     return { success: res.success, message: res.message };

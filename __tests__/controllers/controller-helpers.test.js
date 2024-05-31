@@ -1,88 +1,60 @@
 import { describe, it, expect } from '@jest/globals';
-import {
-  associateUsersWithOrgAndSpaceRoles,
-  associateUsersWithSpaceRoles,
-} from '../../controllers/controller-helpers';
+import { associateUsersWithRoles } from '@/controllers/controller-helpers';
 import { mockUsersByOrganization, mockUsersBySpace } from '../api/mocks/roles';
 
 describe('controller-helpers', () => {
-  describe('associateUsersWithOrgAndSpaceRoles', () => {
-    describe('when only receiving an organization result', () => {
-      it('returns an array of users with a roles array', () => {
+  describe('associateUsersWithRoles', () => {
+    describe('when receiving an organization specific result', () => {
+      it('returns a RolesByUser object with only org roles', () => {
         // act
-        const result = associateUsersWithOrgAndSpaceRoles(
-          mockUsersByOrganization
+        const result = associateUsersWithRoles(
+          mockUsersByOrganization.resources
         );
-        const testUser = result[0];
+        const testUser = result['ab9dc32e-d7be-4b8d-b9cb-d30d82ae0199'];
         // assert
-        expect(result.length).toBeGreaterThan(0);
-        expect(testUser.guid).toEqual('ab9dc32e-d7be-4b8d-b9cb-d30d82ae0199');
-        expect(testUser.origin).toEqual('example.com');
-        expect(testUser.username).toEqual('a_user2@example.com');
-        expect(testUser.orgRoles).toEqual([
-          {
-            guid: 'c98f8f55-dc53-498a-bb65-9991ab9f8b78',
-            type: 'organization_manager',
-          },
-        ]);
+        expect(testUser.org[0].guid).toEqual(
+          '89c0b2a8-957d-4900-abab-87395efaffdb'
+        );
+        expect(testUser.org[0].role).toEqual('organization_manager');
+        expect(testUser.space).toEqual([]);
       });
     });
 
-    describe('when receiving both org and space roles', () => {
-      it('returns an array of users with a org and space role arrays', () => {
+    describe('when receiving a space specific result', () => {
+      it('returns a RolesByUser object with only space roles', () => {
         // act
-        const result = associateUsersWithOrgAndSpaceRoles(
-          mockUsersByOrganization,
-          mockUsersBySpace
-        );
-        const testUser = result[1];
+        const result = associateUsersWithRoles(mockUsersBySpace.resources);
+        const testUser = result['73193f8c-e03b-43c8-aeee-8670908899d2'];
         // assert
-        expect(result.length).toBeGreaterThan(0);
-        expect(testUser.guid).toEqual('73193f8c-e03b-43c8-aeee-8670908899d2');
-        expect(testUser.origin).toEqual('example.com');
-        expect(testUser.username).toEqual('z_user1@example.com');
-        expect(testUser.orgRoles).toEqual([
-          {
-            guid: 'fb55574d-6b84-405e-b23c-0984f0a0964a',
-            type: 'organization_user',
-          },
-        ]);
-        expect(testUser.spaceRoles).toEqual([
-          {
-            guid: '12ac7aa5-8a8e-48a4-9c90-a3b908c6e702',
-            spaceGuid: 'dedb82bb-9f35-49f4-8ff9-7130ae2e3198',
-            spaceName: 'Space1',
-            type: 'space_manager',
-          },
-          {
-            guid: '1293d5ae-0266-413c-bacf-9f5474be984d',
-            spaceGuid: 'dedb82bb-9f35-49f4-8ff9-7130ae2e3198',
-            spaceName: 'Space1',
-            type: 'space_developer',
-          },
-        ]);
+        expect(testUser.org).toEqual([]);
+        expect(testUser.space[0].guid).toEqual(
+          'dedb82bb-9f35-49f4-8ff9-7130ae2e3198'
+        );
+        expect(testUser.space[0].role).toEqual('space_manager');
       });
     });
   });
 
-  describe('associateUsersWithSpaceRoles', () => {
-    it('returns an array of users with a space roles array', () => {
+  describe('when receiving org and space roles', () => {
+    it('returns a RolesByUser object with both org and space roles', () => {
       // act
-      const result = associateUsersWithSpaceRoles(mockUsersBySpace);
-      const testUser = result[0];
+      const result = associateUsersWithRoles(
+        mockUsersBySpace.resources.concat(mockUsersByOrganization.resources)
+      );
+      const testUser = result['73193f8c-e03b-43c8-aeee-8670908899d2'];
+
       // assert
-      expect(result.length).toBeGreaterThan(0);
-      expect(testUser.guid).toEqual('73193f8c-e03b-43c8-aeee-8670908899d2');
-      expect(testUser.origin).toEqual('example.com');
-      expect(testUser.username).toEqual('z_user1@example.com');
-      expect(testUser.spaceRoles).toEqual([
+      expect(testUser.org).toEqual([
         {
-          guid: '12ac7aa5-8a8e-48a4-9c90-a3b908c6e702',
-          type: 'space_manager',
+          guid: '89c0b2a8-957d-4900-abab-87395efaffdb',
+          role: 'organization_user',
         },
+      ]);
+      expect(testUser.space).toEqual([
+        { guid: 'dedb82bb-9f35-49f4-8ff9-7130ae2e3198', role: 'space_manager' },
         {
-          guid: '1293d5ae-0266-413c-bacf-9f5474be984d',
-          type: 'space_developer',
+          guid: 'dedb82bb-9f35-49f4-8ff9-7130ae2e3198',
+          role: 'space_developer',
         },
       ]);
     });

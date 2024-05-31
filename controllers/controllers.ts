@@ -3,11 +3,7 @@
 // Library for translating UI actions to API requests and back
 /***/
 import * as CF from '@/api/cf/cloudfoundry';
-import {
-  GetRoleArgs,
-  ListRolesRes,
-  SpaceObj,
-} from '@/api/cf/cloudfoundry-types';
+import { GetRoleArgs, SpaceObj } from '@/api/cf/cloudfoundry-types';
 import {
   AddOrgRoleArgs,
   AddSpaceRoleArgs,
@@ -16,8 +12,8 @@ import {
   Result,
 } from './controller-types';
 import {
-  associateUsersWithOrgAndSpaceRoles,
-  associateUsersWithSpaceRoles,
+  associateUsersWithRoles,
+  associateUsersWithRolesTest,
 } from './controller-helpers';
 
 // maps basic cloud foundry fetch response to frontend ready result
@@ -256,31 +252,6 @@ export async function getOrgs(): Promise<Result> {
   }
 }
 
-export async function getOrgUsers(guid: string): Promise<Result> {
-  const message = {
-    fail: 'unable to list the org users',
-  };
-  try {
-    const res = await CF.getRoles({ orgGuids: [guid], include: ['user'] });
-
-    if (!res.ok) {
-      // TODO rethink how we want the error handling to work here
-      throw new Error(`problem with getRoles ${res.status}`);
-    }
-
-    const payload = await res.json();
-    const userRoleList = await associateUsersWithOrgAndSpaceRoles(payload);
-
-    return {
-      success: true,
-      status: 'success',
-      payload: userRoleList,
-    };
-  } catch (error: any) {
-    throw new Error(`${message.fail}: ${error.message}`);
-  }
-}
-
 export async function getSpace(guid: string): Promise<Result> {
   const message = {
     fail: 'unable to retrieve space information',
@@ -313,7 +284,7 @@ export async function getSpaceUsers(guid: string): Promise<Result> {
     }
 
     const payload = await res.json();
-    const userRoleList = await associateUsersWithSpaceRoles(payload);
+    const userRoleList = await associateUsersWithRolesTest(payload);
     return {
       success: true,
       status: 'success',
@@ -325,12 +296,12 @@ export async function getSpaceUsers(guid: string): Promise<Result> {
 }
 
 export async function getOrgPage(orgGuid: string): Promise<ControllerResult> {
-  const [orgRes, orgUserRes, spacesRes] = await Promise.all([
-    CF.getOrg(orgGuid),
-    CF.getRoles({ orgGuids: [orgGuid], include: ['user'] }),
+  const [orgUserRolesRes, spacesRes] = await Promise.all([
+    // use this request to roles to also obtain the organization details and list the org users
+    CF.getRoles({ orgGuids: [orgGuid], include: ['organization', 'user'] }),
     CF.getSpaces([orgGuid]),
   ]);
-  [orgRes, orgUserRes, spacesRes].map((res) => {
+  [orgUserRolesRes, spacesRes].map((res) => {
     if (!res.ok) {
       if (process.env.NODE_ENV == 'development') {
         console.error(
@@ -340,31 +311,60 @@ export async function getOrgPage(orgGuid: string): Promise<ControllerResult> {
       throw new Error('something went wrong with the request');
     }
   });
-  const spacesPayload = (await spacesRes.json()).resources;
-  const userSpaceRoleList = await getOrgSpaceRoles(spacesPayload);
-  const userOrgRoleList = associateUsersWithOrgAndSpaceRoles(
-    await orgUserRes.json(),
-    userSpaceRoleList
-  );
+  const orgUserRolesPayload = await orgUserRolesRes.json();
+  const spaces = (await spacesRes.json()).resources;
+  const spaceGuids = spaces.map(function (space: SpaceObj) {
+    return space.guid;
+  });
+  try {
+    const spaceRoles = (
+      await (await CF.getRoles({ spaceGuids: spaceGuids })).json()
+    ).resources;
+    const rolesByUser = associateUsersWithRoles(
+      orgUserRolesPayload.resources.concat(spaceRoles)
+    );
+    return {
+      meta: { status: 'success' },
+      payload: {
+        org: orgUserRolesPayload.included.organizations[0],
+        roles: rolesByUser,
+        spaces: spaces,
+        users: orgUserRolesPayload.included.users,
+      },
+    };
+  } catch (error: any) {
+    if (process.env.NODE_ENV == 'development') {
+      console.error(`error on cf org page: ${error.message}`);
+    }
+    throw new Error('something went wrong with the request');
+  }
+}
+
+export async function getOrgTestPage(
+  orgGuid: string
+): Promise<ControllerResult> {
+  const [orgRes, usersRes, spacesRes] = await Promise.all([
+    CF.getOrg(orgGuid),
+    CF.getRoles({ orgGuids: [orgGuid], include: ['user'] }),
+    CF.getSpaces([orgGuid]),
+  ]);
+  [orgRes, usersRes, spacesRes].map((res) => {
+    if (!res.ok) {
+      if (process.env.NODE_ENV == 'development') {
+        console.error(
+          `api error on cf org page with http code ${res.status} for url: ${res.url}`
+        );
+      }
+      throw new Error('something went wrong with the request');
+    }
+  });
+  const userRoleList = await associateUsersWithRolesTest(await usersRes.json());
   return {
     meta: { status: 'success' },
     payload: {
       org: await orgRes.json(),
-      users: userOrgRoleList,
-      spaces: spacesPayload,
+      users: userRoleList,
+      spaces: (await spacesRes.json()).resources,
     },
   };
-}
-
-export async function getOrgSpaceRoles(
-  spaces: SpaceObj[]
-): Promise<ListRolesRes> {
-  const guids = spaces.map((space: SpaceObj) => {
-    return space.guid;
-  });
-  const rolesRes = await CF.getRoles({
-    spaceGuids: guids,
-    include: ['space', 'user'],
-  });
-  return await rolesRes.json();
 }

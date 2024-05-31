@@ -12,6 +12,19 @@ export interface AddSpaceRoleArgs {
   username: string;
 }
 
+export interface RolesByUser {
+  [userGuid: string]: {
+    org: {
+      guid: string;
+      role: RoleType;
+    }[];
+    space: {
+      guid: string;
+      role: RoleType;
+    }[];
+  };
+}
+
 export interface UserWithRoles {
   guid: string;
   origin: string;

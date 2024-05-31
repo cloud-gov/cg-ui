@@ -1,13 +1,11 @@
 'use server';
 
 import Link from 'next/link';
-import { getOrgPage } from '@/controllers/controllers';
-import {
-  ControllerResult,
-  // UserWithRoles,
-} from '@/controllers/controller-types';
-// import { UserAction } from './form';
-// import { OrgMembersList } from '@/components/CloudFoundry/OrgMembersList';
+import { getOrgTestPage } from '@/controllers/controllers';
+import { ControllerResult } from '@/controllers/controller-types';
+import { RoleType } from '@/api/cf/cloudfoundry-types';
+import { UserAction } from './form';
+import { OrgMembersList } from '@/components/CloudFoundry/OrgMembersList';
 
 export default async function OrgPage({
   params,
@@ -16,7 +14,9 @@ export default async function OrgPage({
     orgGuid: string;
   };
 }) {
-  const controllerRes = (await getOrgPage(params.orgGuid)) as ControllerResult;
+  const controllerRes = (await getOrgTestPage(
+    params.orgGuid
+  )) as ControllerResult;
 
   const { org, users, spaces } = controllerRes.payload;
 
@@ -36,7 +36,7 @@ export default async function OrgPage({
           {spaces.map((space: any) => (
             <li key={space.guid}>
               <Link
-                href={`/cloudfoundry/orgs/${org.guid}/spaces/${space.guid}`}
+                href={`/test/cloudfoundry/orgs/${org.guid}/spaces/${space.guid}`}
               >
                 {space.name}
               </Link>
@@ -45,36 +45,41 @@ export default async function OrgPage({
         </ul>
 
         <div className="grid-row grid-gap">
-          {JSON.stringify(users)}
-          {/* <OrgMembers org={org} users={users} /> */}
+          <OrgMembers org={org} users={users} />
         </div>
       </div>
     </>
   );
 }
 
-/* eslint no-undef: "off" */
-// async function OrgMembers({
-//   org,
-//   users,
-// }: {
-//   org: any;
-//   users: UserWithRoles[];
-// }) {
-//   if (users) {
-//     return (
-//       <>
-//         <div className="grid-col-6">
-//           <h2>Org members</h2>
-//           <OrgMembersList org={org} users={users} />
-//         </div>
-//         <div className="grid-col-6">
-//           <UserAction orgGuid={org.guid} />
-//         </div>
-//       </>
-//     );
-//   } else {
-//     return <div role="alert">This organization does not have users</div>;
-//   }
-// }
-/* eslint no-undef: "error" */
+async function OrgMembers({
+  org,
+  users,
+}: {
+  org: any;
+  users: {
+    guid: string;
+    origin: string;
+    roles: {
+      guid: string;
+      type: RoleType;
+    }[];
+    username: string;
+  }[];
+}) {
+  if (users) {
+    return (
+      <>
+        <div className="grid-col-6">
+          <h2>Org members</h2>
+          <OrgMembersList org={org} users={users} />
+        </div>
+        <div className="grid-col-6">
+          <UserAction orgGuid={org.guid} />
+        </div>
+      </>
+    );
+  } else {
+    return <div role="alert">This organization does not have users</div>;
+  }
+}

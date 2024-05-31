@@ -291,6 +291,40 @@ export const mockUsersByOrganization = {
         },
       },
     ],
+    organizations: [
+      {
+        guid: '89c0b2a8-957d-4900-abab-87395efaffdb',
+        created_at: '2024-01-17T19:08:37Z',
+        updated_at: '2024-01-17T19:08:37Z',
+        name: 'Org1',
+        suspended: false,
+        relationships: {
+          quota: {
+            data: {
+              guid: 'e649ef69-0483-4c28-bc05-fa67bf30b180',
+            },
+          },
+        },
+        metadata: {
+          labels: {},
+          annotations: {},
+        },
+        links: {
+          self: {
+            href: 'https://example.com/v3/organizations/89c0b2a8-957d-4900-abab-87395efaffdb',
+          },
+          domains: {
+            href: 'https://example.com/v3/organizations/89c0b2a8-957d-4900-abab-87395efaffdb/domains',
+          },
+          default_domain: {
+            href: 'https://example.com/v3/organizations/89c0b2a8-957d-4900-abab-87395efaffdb/domains/default',
+          },
+          quota: {
+            href: 'https://example.com/v3/organization_quotas/3564fac5-c405-480e-b758-57912da29f9e',
+          },
+        },
+      },
+    ],
   },
 };
 
