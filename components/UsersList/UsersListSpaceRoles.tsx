@@ -20,7 +20,7 @@ export function UsersListSpaceRoles({
 }) {
   const extra = numberExtra(spaces.length);
   return (
-    <div>
+    <div className="margin-right-2">
       <div className="display-flex flex-align-center padding-bottom-1">
         <h4 className="font-heading-2xs margin-0 padding-right-1">
           Spaces and roles

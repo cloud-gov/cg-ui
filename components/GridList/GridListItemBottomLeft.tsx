@@ -5,5 +5,9 @@ export function GridListItemBottomLeft({
 }: {
   children: React.ReactNode;
 }) {
-  return <div className="tablet:grid-col-3">{children}</div>;
+  return (
+    <div className="tablet:grid-col-2 tablet:margin-right-2 tablet:border-right tablet:border-base-lighter">
+      {children}
+    </div>
+  );
 }
