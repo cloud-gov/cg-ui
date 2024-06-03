@@ -20,11 +20,16 @@ export function UsersListSpaceRoles({
 }) {
   const extra = numberExtra(spaces.length);
   return (
-    <div className="tablet:padding-right-2 tablet:border-right tablet:border-base-lighter tablet:height-full">
+    <div className="tablet:padding-right-2 tablet:border-right tablet:border-base-light tablet:height-full">
       <div className="display-flex flex-align-center padding-bottom-1">
-        <h4 className="font-heading-2xs margin-0 padding-right-1">
+        <h4 className="margin-0 margin-right-2 font-body-xs text-semibold text-base">
           Spaces and roles
         </h4>
+        <span>
+          <Link href="/todo" className="margin-right-2 font-body-2xs">
+            Edit
+          </Link>
+        </span>
         <span>
           <Link href="/todo" className="font-body-2xs">
             View All

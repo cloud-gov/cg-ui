@@ -8,9 +8,11 @@ export interface UserOrgRole {
 
 export function UsersListOrgRoles({ roles }: { roles: Array<UserOrgRole> }) {
   return (
-    <div className="margin-bottom-2 tablet:margin-bottom-0 tablet:margin-right-2 tablet:border-right tablet:border-base-lighter">
+    <div className="margin-bottom-2 tablet:margin-bottom-0 tablet:margin-right-2 tablet:border-right tablet:border-base-light">
       <div className="display-flex flex-align-center padding-bottom-1">
-        <h4 className="font-heading-2xs margin-0 padding-right-1">Org roles</h4>
+        <h4 className="margin-0 padding-right-1 font-body-xs text-semibold text-base">
+          Org roles
+        </h4>
         <span>
           <Link href="/todo" className="font-body-2xs">
             Edit
