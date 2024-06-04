@@ -3,7 +3,8 @@
 // Library for translating UI actions to API requests and back
 /***/
 import * as CF from '@/api/cf/cloudfoundry';
-import { GetRoleArgs, SpaceObj } from '@/api/cf/cloudfoundry-types';
+import * as UAA from '@/api/uaa/uaa';
+import { GetRoleArgs, SpaceObj, UserObj } from '@/api/cf/cloudfoundry-types';
 import {
   AddOrgRoleArgs,
   AddSpaceRoleArgs,
@@ -311,33 +312,60 @@ export async function getOrgPage(orgGuid: string): Promise<ControllerResult> {
       throw new Error('something went wrong with the request');
     }
   });
+
   const orgUserRolesPayload = await orgUserRolesRes.json();
+  const users = orgUserRolesPayload.included.users;
+  const userGuids = users.map(function (user: UserObj) {
+    return user.guid;
+  });
+
   const spaces = (await spacesRes.json()).resources;
   const spaceGuids = spaces.map(function (space: SpaceObj) {
     return space.guid;
   });
-  try {
-    const spaceRoles = (
-      await (await CF.getRoles({ spaceGuids: spaceGuids })).json()
-    ).resources;
-    const rolesByUser = associateUsersWithRoles(
-      orgUserRolesPayload.resources.concat(spaceRoles)
-    );
-    return {
-      meta: { status: 'success' },
-      payload: {
-        org: orgUserRolesPayload.included.organizations[0],
-        roles: rolesByUser,
-        spaces: spaces,
-        users: orgUserRolesPayload.included.users,
-      },
-    };
-  } catch (error: any) {
-    if (process.env.NODE_ENV == 'development') {
-      console.error(`error on cf org page: ${error.message}`);
+
+  const [spaceRolesRes, userInfoRes] = await Promise.all([
+    await CF.getRoles({ spaceGuids: spaceGuids }),
+    await UAA.getUsers(
+      ['id', 'active', 'verified', 'previousLogonTime'],
+      'id',
+      userGuids
+    ),
+  ]);
+
+  [spaceRolesRes, userInfoRes].map((res) => {
+    if (!res.ok) {
+      if (process.env.NODE_ENV == 'development') {
+        console.error(
+          `api error on cf org page with http code ${res.status} for url: ${res.url}`
+        );
+      }
+      throw new Error('something went wrong with the request');
     }
-    throw new Error('something went wrong with the request');
-  }
+  });
+
+  const spaceRoles = (await spaceRolesRes.json()).resources;
+  const rolesByUser = associateUsersWithRoles(
+    orgUserRolesPayload.resources.concat(spaceRoles)
+  );
+
+  const userInfo = await userInfoRes.json();
+  const uaaUsers = userInfo.resources.reduce((usersObj: any, current: any) => {
+    const id = current['id'];
+    usersObj[id] = current;
+    return usersObj;
+  }, {});
+
+  return {
+    meta: { status: 'success' },
+    payload: {
+      org: orgUserRolesPayload.included.organizations[0],
+      roles: rolesByUser,
+      spaces: spaces,
+      users: users,
+      uaaUsers: uaaUsers,
+    },
+  };
 }
 
 export async function getOrgTestPage(
