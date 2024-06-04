@@ -15,6 +15,7 @@ import {
 import {
   associateUsersWithRoles,
   associateUsersWithRolesTest,
+  resourceKeyedById,
 } from './controller-helpers';
 
 // maps basic cloud foundry fetch response to frontend ready result
@@ -320,6 +321,7 @@ export async function getOrgPage(orgGuid: string): Promise<ControllerResult> {
   });
 
   const spaces = (await spacesRes.json()).resources;
+  const spacesBySpaceId = resourceKeyedById(spaces);
   const spaceGuids = spaces.map(function (space: SpaceObj) {
     return space.guid;
   });
@@ -361,7 +363,7 @@ export async function getOrgPage(orgGuid: string): Promise<ControllerResult> {
     payload: {
       org: orgUserRolesPayload.included.organizations[0],
       roles: rolesByUser,
-      spaces: spaces,
+      spaces: spacesBySpaceId,
       users: users,
       uaaUsers: uaaUsers,
     },

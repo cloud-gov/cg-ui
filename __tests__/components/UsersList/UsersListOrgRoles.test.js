@@ -8,9 +8,13 @@ import { UsersListOrgRoles } from '@/components/UsersList/UsersListOrgRoles';
 describe('UsersListOrgRoles', () => {
   it('lists all given org roles', () => {
     // setup
-    const mockRoles = [{ name: 'foo' }, { name: 'bar' }, { name: 'baz' }];
+    const mockRoles = [
+      { guid: 'guid1', role: 'foo' },
+      { guid: 'guid2', role: 'bar' },
+      { guid: 'guid3', role: 'baz' },
+    ];
     // act
-    render(<UsersListOrgRoles roles={mockRoles} />);
+    render(<UsersListOrgRoles orgRoles={mockRoles} />);
     // query
     const item1 = screen.getByText('foo');
     const item2 = screen.getByText('bar');

@@ -1,4 +1,4 @@
-import { RoleType } from '@/api/cf/cloudfoundry-types';
+import { RoleType, SpaceObj } from '@/api/cf/cloudfoundry-types';
 
 export interface AddOrgRoleArgs {
   orgGuid: string;
@@ -12,17 +12,22 @@ export interface AddSpaceRoleArgs {
   username: string;
 }
 
+export interface RolesByUserRole {
+  guid: string;
+  role: RoleType;
+}
+
+export interface RolesByUserItem {
+  org: RolesByUserRole[];
+  space: RolesByUserRole[];
+}
+
 export interface RolesByUser {
-  [userGuid: string]: {
-    org: {
-      guid: string;
-      role: RoleType;
-    }[];
-    space: {
-      guid: string;
-      role: RoleType;
-    }[];
-  };
+  [userGuid: string]: RolesByUserItem;
+}
+
+export interface SpacesBySpaceId {
+  [spaceGuid: string]: SpaceObj;
 }
 
 export interface UserWithRoles {

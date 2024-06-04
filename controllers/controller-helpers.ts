@@ -1,16 +1,25 @@
 import { RolesByUser, UserWithRoles } from './controller-types';
 import { ListRolesRes, RoleObj } from '@/api/cf/cloudfoundry-types';
 
+export function resourceKeyedById(resource: Array<any>): Object {
+  return resource.reduce((acc, item) => {
+    acc[item.guid] = item;
+    return acc;
+  }, {});
+}
+
 export function associateUsersWithRoles(roles: RoleObj[]): RolesByUser {
   return roles.reduce((userObj, resource: RoleObj) => {
     const relation = resource.relationships;
     if (!userObj[relation.user.data.guid]) {
       userObj[relation.user.data.guid] = { org: [], space: [] };
     }
+    // evaluate space role
     if (relation.space.data?.guid) {
       const spaceObj = { guid: relation.space.data.guid, role: resource.type };
       userObj[relation.user.data.guid].space.push(spaceObj);
     }
+    // evaluate org role
     if (relation.organization.data?.guid) {
       const orgObj = {
         guid: relation.organization.data.guid,
