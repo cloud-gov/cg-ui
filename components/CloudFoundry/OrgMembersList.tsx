@@ -2,12 +2,22 @@
 
 import { useState } from 'react';
 import { useFormState } from 'react-dom';
-import { UserWithRoles } from '@/controllers/controller-types';
 import { Modal } from '../Modal';
+import { RoleType } from '@/api/cf/cloudfoundry-types';
 import {
   removeRole,
   removeUser,
 } from '@/app/test/cloudfoundry/orgs/[orgGuid]/actions';
+
+interface UserWithRoles {
+  guid: string;
+  origin: string;
+  roles: {
+    guid: string;
+    type: RoleType;
+  }[];
+  username: string;
+}
 
 function MemberLabel({ user }: { user: UserWithRoles }) {
   return (

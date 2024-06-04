@@ -1,11 +1,9 @@
 'use server';
 
 import Link from 'next/link';
-import { getOrgPage } from '@/controllers/controllers';
-import {
-  ControllerResult,
-  UserWithRoles,
-} from '@/controllers/controller-types';
+import { getOrgTestPage } from '@/controllers/controllers';
+import { ControllerResult } from '@/controllers/controller-types';
+import { RoleType } from '@/api/cf/cloudfoundry-types';
 import { UserAction } from './form';
 import { OrgMembersList } from '@/components/CloudFoundry/OrgMembersList';
 
@@ -16,7 +14,9 @@ export default async function OrgPage({
     orgGuid: string;
   };
 }) {
-  const controllerRes = (await getOrgPage(params.orgGuid)) as ControllerResult;
+  const controllerRes = (await getOrgTestPage(
+    params.orgGuid
+  )) as ControllerResult;
 
   const { org, users, spaces } = controllerRes.payload;
 
@@ -36,7 +36,7 @@ export default async function OrgPage({
           {spaces.map((space: any) => (
             <li key={space.guid}>
               <Link
-                href={`/cloudfoundry/orgs/${org.guid}/spaces/${space.guid}`}
+                href={`/test/cloudfoundry/orgs/${org.guid}/spaces/${space.guid}`}
               >
                 {space.name}
               </Link>
@@ -57,7 +57,15 @@ async function OrgMembers({
   users,
 }: {
   org: any;
-  users: UserWithRoles[];
+  users: {
+    guid: string;
+    origin: string;
+    roles: {
+      guid: string;
+      type: RoleType;
+    }[];
+    username: string;
+  }[];
 }) {
   if (users) {
     return (

@@ -3,7 +3,7 @@ import {
   deleteRole,
   deleteOrgUser,
 } from '@/controllers/controllers';
-import { OrgRole } from '@/api/cf/cloudfoundry';
+import { RoleType } from '@/api/cf/cloudfoundry-types';
 
 interface FormResponse {
   success: boolean;
@@ -17,7 +17,7 @@ export async function postData(
   try {
     const res = await addOrgRole({
       orgGuid: formData.get('guid') as string,
-      roleType: formData.get('org-role') as OrgRole,
+      roleType: formData.get('org-role') as RoleType,
       username: formData.get('email-username') as string,
     });
     return { success: res.success, message: res.message };
