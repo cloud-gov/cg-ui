@@ -5,3 +5,11 @@
 @forward 'uswds';
 
 // 3. Load any custom SASS
+
+// text styling
+.text-capitalize {
+  text-transform: capitalize;
+}
+.text-break-all {
+  word-break: break-all;
+}
