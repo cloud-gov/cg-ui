@@ -14,7 +14,10 @@ export function UsersListOrgRoles({ roles }: { roles: Array<UserOrgRole> }) {
           Org roles
         </h4>
         <span>
-          <Link href="/todo" className="font-body-2xs">
+          <Link
+            href="/todo"
+            className="usa-button usa-button--unstyled font-body-2xs"
+          >
             Edit
           </Link>
         </span>

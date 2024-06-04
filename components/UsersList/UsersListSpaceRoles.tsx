@@ -26,12 +26,18 @@ export function UsersListSpaceRoles({
           Spaces and roles
         </h4>
         <span>
-          <Link href="/todo" className="margin-right-2 font-body-2xs">
+          <Link
+            href="/todo"
+            className="usa-button usa-button--unstyled margin-right-2 font-body-2xs"
+          >
             Edit
           </Link>
         </span>
         <span>
-          <Link href="/todo" className="font-body-2xs">
+          <Link
+            href="/todo"
+            className="usa-button usa-button--unstyled font-body-2xs"
+          >
             View All
           </Link>
         </span>
@@ -46,7 +52,11 @@ export function UsersListSpaceRoles({
             <div>{role.roleName}</div>
           </div>
         ))}
-        {extra > 0 && <Link href="/todo">+ {extra}</Link>}
+        {extra > 0 && (
+          <Link href="/todo" className="usa-button usa-button--unstyled">
+            + {extra}
+          </Link>
+        )}
       </div>
     </div>
   );
