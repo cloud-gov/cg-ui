@@ -3,7 +3,7 @@ export function addDays(date: Date, days: number): Date {
 }
 
 export function isDateExpired(
-  timestamp: string,
+  timestamp: number,
   daysToExpiry: number
 ): boolean {
   const timestampDate = new Date(timestamp);
@@ -14,7 +14,7 @@ export function isDateExpired(
 }
 
 export function daysToExpiration(
-  timestamp: string,
+  timestamp: number,
   daysToExpiry: number
 ): number {
   const timestampDate = new Date(timestamp);

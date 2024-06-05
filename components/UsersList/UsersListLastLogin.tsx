@@ -2,7 +2,7 @@
 
 import { isDateExpired, daysToExpiration } from '@/helpers/dates';
 
-export function formatDate(timestamp: string): string {
+export function formatDate(timestamp: number): string {
   return new Date(timestamp).toLocaleDateString('en-US', {
     year: 'numeric',
     month: 'short',
@@ -10,7 +10,7 @@ export function formatDate(timestamp: string): string {
   });
 }
 
-export function formatTime(timestamp: string): string {
+export function formatTime(timestamp: number): string {
   const tz = Intl.DateTimeFormat().resolvedOptions().timeZone;
   return new Date(timestamp).toLocaleTimeString('en-US', {
     timeZone: tz,
@@ -24,7 +24,7 @@ const expirationWindowDays = 90;
 export function UsersListLastLogin({
   timestamp,
 }: {
-  timestamp: string | null;
+  timestamp: number | null;
 }) {
   const isExpired: boolean = timestamp
     ? isDateExpired(timestamp, expirationWindowDays)

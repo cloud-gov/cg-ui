@@ -3,6 +3,7 @@
 import {
   RolesByUserItem,
   SpacesBySpaceId,
+  UAAUser,
 } from '@/controllers/controller-types';
 import { UserObj } from '@/api/cf/cloudfoundry-types';
 import { GridListItem } from '@/components/GridList/GridListItem';
@@ -24,10 +25,12 @@ export function UsersListItem({
   user,
   roles,
   spaces,
+  uaaUser,
 }: {
   user: UsersListItemUserInterface;
   roles: RolesByUserItem;
   spaces: SpacesBySpaceId;
+  uaaUser: UAAUser;
 }) {
   return (
     <GridListItem>
@@ -42,7 +45,7 @@ export function UsersListItem({
           <UsersListSpaceRoles roles={roles.space} spaces={spaces} />
         </GridListItemBottomCenter>
         <GridListItemBottomRight>
-          <UsersListLastLogin timestamp={user.lastLogin} />
+          <UsersListLastLogin timestamp={uaaUser.previousLogonTime} />
         </GridListItemBottomRight>
       </GridListItemBottom>
     </GridListItem>

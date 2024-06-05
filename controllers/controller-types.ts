@@ -1,5 +1,16 @@
 import { RoleType, SpaceObj } from '@/api/cf/cloudfoundry-types';
 
+export interface UAAUser {
+  previousLogonTime: number;
+  verified: boolean;
+  active: boolean;
+  id: string;
+}
+
+export interface UAAUsersById {
+  [uaaUserId: string]: UAAUser;
+}
+
 export interface AddOrgRoleArgs {
   orgGuid: string;
   roleType: RoleType;

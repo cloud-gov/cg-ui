@@ -4,7 +4,7 @@ import { RoleType } from '@/api/cf/cloudfoundry-types';
 
 export function resourceKeyedById(resource: Array<any>): Object {
   return resource.reduce((acc, item) => {
-    acc[item.guid] = item;
+    acc[item.guid || item.id] = item;
     return acc;
   }, {});
 }

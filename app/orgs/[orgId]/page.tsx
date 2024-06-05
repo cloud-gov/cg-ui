@@ -7,11 +7,16 @@ export default async function OrgPage({
   params: { orgId: string };
 }) {
   const { payload } = await getOrgPage(params.orgId);
-  const { roles, spaces, users } = payload;
+  const { roles, spaces, users, uaaUsers } = payload;
 
   return (
     <>
-      <UsersList users={users} roles={roles} spaces={spaces} />
+      <UsersList
+        users={users}
+        roles={roles}
+        spaces={spaces}
+        uaaUsers={uaaUsers}
+      />
     </>
   );
 }

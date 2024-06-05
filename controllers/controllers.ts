@@ -11,6 +11,7 @@ import {
   ControllerResult,
   UserMessage,
   Result,
+  UAAUsersById,
 } from './controller-types';
 import {
   associateUsersWithRoles,
@@ -352,11 +353,7 @@ export async function getOrgPage(orgGuid: string): Promise<ControllerResult> {
   );
 
   const userInfo = await userInfoRes.json();
-  const uaaUsers = userInfo.resources.reduce((usersObj: any, current: any) => {
-    const id = current['id'];
-    usersObj[id] = current;
-    return usersObj;
-  }, {});
+  const uaaUsers = resourceKeyedById(userInfo.resources) as UAAUsersById;
 
   return {
     meta: { status: 'success' },
