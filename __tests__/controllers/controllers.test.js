@@ -133,11 +133,7 @@ describe('controllers tests', () => {
         nock(process.env.CF_API_URL)
           .get('/roles?per_page=5000&space_guids=space1,space2,space3')
           .reply(200, mockUsersBySpace);
-        nock(process.env.UAA_API_URL)
-          .get(
-            '/Users?attributes=id,active,verified,previousLogonTime&filter=id+eq+%2273193f8c-e03b-43c8-aeee-8670908899d2%22+or+id+eq+%22ab9dc32e-d7be-4b8d-b9cb-d30d82ae0199%22'
-          )
-          .reply(200, mockUaaUsers);
+        nock(process.env.UAA_API_URL).get(/Users/).reply(200, mockUaaUsers);
 
         const result = await getOrgPage(orgGuid);
         const firstUserRoles =
@@ -219,7 +215,7 @@ describe('controllers tests', () => {
           .get(/organizations/)
           .reply(200, mockOrg);
         // sends a second request to get the roles associated with spaces
-        // nock(process.env.CF_API_URL).get(/roles/).reply(200, mockUsersBySpace);
+        nock(process.env.CF_API_URL).get(/roles/).reply(200, mockUsersBySpace);
         // act
         const result = await getOrgTestPage(guid);
         // assert
