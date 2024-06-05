@@ -33,7 +33,7 @@ export function UsersListLastLogin({
     ? daysToExpiration(timestamp, expirationWindowDays)
     : 0;
   return (
-    <div className="text-right">
+    <div className="text-right text-base">
       <div>
         {!timestamp && 'Never logged in'}
         {timestamp && isExpired && 'Login expired'}
