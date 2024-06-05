@@ -17,17 +17,13 @@ import { UsersListOrgRoles } from '@/components/UsersList/UsersListOrgRoles';
 import { UsersListSpaceRoles } from '@/components/UsersList/UsersListSpaceRoles';
 import { UsersListLastLogin } from '@/components/UsersList/UsersListLastLogin';
 
-export interface UsersListItemUserInterface extends UserObj {
-  lastLogin: string | null;
-}
-
 export function UsersListItem({
   user,
   roles,
   spaces,
   uaaUser,
 }: {
-  user: UsersListItemUserInterface;
+  user: UserObj;
   roles: RolesByUserItem;
   spaces: SpacesBySpaceId;
   uaaUser: UAAUser;

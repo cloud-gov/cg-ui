@@ -10,17 +10,13 @@ import {
 } from '@/controllers/controller-types';
 import { UserObj } from '@/api/cf/cloudfoundry-types';
 
-export interface UsersListItemUserInterface extends UserObj {
-  lastLogin: string | null;
-}
-
 export function UsersList({
   users,
   roles,
   spaces,
   uaaUsers,
 }: {
-  users: Array<UsersListItemUserInterface>;
+  users: Array<UserObj>;
   roles: RolesByUser;
   spaces: SpacesBySpaceId;
   uaaUsers: UAAUsersById;
