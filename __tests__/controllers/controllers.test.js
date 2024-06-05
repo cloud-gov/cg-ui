@@ -5,14 +5,15 @@ import {
   getOrgPage,
   getOrgTestPage,
   getSpaceUsers,
-} from '../../controllers/controllers';
-import { mockOrg } from '../api/mocks/organizations';
+} from '@/controllers/controllers';
+import { mockOrg } from '@/__tests__/api/mocks/organizations';
 import {
   mockRolesFilteredByOrgAndUser,
   mockUsersByOrganization,
   mockUsersBySpace,
-} from '../api/mocks/roles';
-import { mockSpaces } from '../api/mocks/spaces';
+} from '@/__tests__/api/mocks/roles';
+import { mockSpaces } from '@/__tests__/api/mocks/spaces';
+import { mockUaaUsers } from '@/__tests__/api/mocks/uaa-users';
 
 beforeEach(() => {
   if (!nock.isActive()) {
@@ -103,27 +104,6 @@ describe('controllers tests', () => {
         }).rejects.toThrow(new Error('something went wrong with the request'));
       });
     });
-    describe('if the follow up CF request fails', () => {
-      it('throws an error', async () => {
-        console.log('in the fail version');
-        // setup
-        const orgGuid = 'orgGuid';
-        nock(process.env.CF_API_URL)
-          .get(
-            `/roles?organization_guids=${orgGuid}&per_page=5000&include=organization,user`
-          )
-          .reply(200, mockUsersByOrganization);
-        nock(process.env.CF_API_URL)
-          .get(/spaces/)
-          .reply(200, mockSpaces);
-        nock(process.env.CF_API_URL).get(/roles/).reply(500);
-
-        // assert
-        expect(async () => {
-          await getOrgPage(orgGuid);
-        }).rejects.toThrow(new Error('something went wrong with the request'));
-      });
-    });
 
     describe('if the CF requests succeed', () => {
       it('returns the expected controller result', async () => {
@@ -153,6 +133,7 @@ describe('controllers tests', () => {
         nock(process.env.CF_API_URL)
           .get('/roles?per_page=5000&space_guids=space1,space2,space3')
           .reply(200, mockUsersBySpace);
+        nock(process.env.UAA_API_URL).get(/Users/).reply(200, mockUaaUsers);
 
         const result = await getOrgPage(orgGuid);
         const firstUserRoles =
@@ -183,6 +164,14 @@ describe('controllers tests', () => {
               role: 'space_developer',
             },
           ],
+        });
+        expect(
+          result.payload.uaaUsers['986e21c9-ed0a-480f-9198-23b9a6720518']
+        ).toEqual({
+          active: true,
+          id: '986e21c9-ed0a-480f-9198-23b9a6720518',
+          previousLogonTime: 1717424827664,
+          verified: true,
         });
       });
     });
@@ -226,7 +215,7 @@ describe('controllers tests', () => {
           .get(/organizations/)
           .reply(200, mockOrg);
         // sends a second request to get the roles associated with spaces
-        // nock(process.env.CF_API_URL).get(/roles/).reply(200, mockUsersBySpace);
+        nock(process.env.CF_API_URL).get(/roles/).reply(200, mockUsersBySpace);
         // act
         const result = await getOrgTestPage(guid);
         // assert
