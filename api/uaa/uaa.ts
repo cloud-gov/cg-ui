@@ -8,7 +8,7 @@ import { request } from '@/api/api';
 import { getToken } from '@/api/cf/token';
 import { UsersFieldList } from '@/api/uaa/uaa-types';
 
-const UAA_API_URL = process.env.UAA_API_URL;
+const UAA_API_URL = process.env.UAA_API_URL || process.env.UAA_ROOT_URL;
 
 async function uaaRequest(path: string): Promise<Response> {
   try {
