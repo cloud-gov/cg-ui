@@ -13,13 +13,19 @@ const mockSpaces = {
   spaceGuid5: { guid: 'spaceGuid5', name: 'fooSpaceName2' },
 };
 
-const mockRoles = [
-  { guid: 'spaceGuid1', role: 'fooRoleRame1' },
-  { guid: 'spaceGuid2', role: 'fooRoleRame2' },
-  { guid: 'spaceGuid3', role: 'fooRoleRame3' },
-  { guid: 'spaceGuid4', role: 'fooRoleRame4' },
-  { guid: 'spaceGuid5', role: 'fooRoleRame5' },
-];
+const mockRoles = {
+  spaceGuid1: { guid: 'spaceGuid1', role: 'fooRoleRame1' },
+  spaceGuid2: { guid: 'spaceGuid2', role: 'fooRoleRame2' },
+  spaceGuid3: { guid: 'spaceGuid3', role: 'fooRoleRame3' },
+  spaceGuid4: { guid: 'spaceGuid4', role: 'fooRoleRame4' },
+  spaceGuid5: { guid: 'spaceGuid5', role: 'fooRoleRame5' },
+};
+
+const fewerRoles = {
+  spaceGuid1: { guid: 'spaceGuid1', role: 'fooRoleRame1' },
+  spaceGuid2: { guid: 'spaceGuid2', role: 'fooRoleRame2' },
+  spaceGuid3: { guid: 'spaceGuid3', role: 'fooRoleRame3' },
+};
 
 describe('UsersListSpaceRoles', () => {
   describe('when there are more spaces than we can show', () => {
@@ -37,8 +43,6 @@ describe('UsersListSpaceRoles', () => {
 
   describe('when there is no overflow', () => {
     it('does not show overflow amount', () => {
-      // setup
-      const fewerRoles = mockRoles.slice(0, 4);
       // act
       render(<UsersListSpaceRoles spaces={mockSpaces} roles={fewerRoles} />);
       // query

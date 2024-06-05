@@ -17,9 +17,13 @@ export interface RolesByUserRole {
   role: RoleType;
 }
 
+export interface RankedSpaceRoles {
+  [spaceGuid: string]: RolesByUserRole;
+}
+
 export interface RolesByUserItem {
   org: RolesByUserRole[];
-  space: RolesByUserRole[];
+  space: RankedSpaceRoles;
 }
 
 export interface RolesByUser {
