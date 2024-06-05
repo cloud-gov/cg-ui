@@ -1,8 +1,4 @@
-import {
-  RolesByUser,
-  UserWithRoles,
-  RolesByUserRole,
-} from './controller-types';
+import { RolesByUser, UserWithRoles, RoleRanking } from './controller-types';
 import { ListRolesRes, RoleObj } from '@/api/cf/cloudfoundry-types';
 import { RoleType } from '@/api/cf/cloudfoundry-types';
 
@@ -49,10 +45,6 @@ export function associateUsersWithRoles(roles: RoleObj[]): RolesByUser {
   }, {} as RolesByUser);
 }
 
-interface RoleRanking {
-  [roleType: string]: number;
-}
-
 const role_ranking: RoleRanking = {
   space_manager: 4,
   space_developer: 3,
@@ -60,32 +52,11 @@ const role_ranking: RoleRanking = {
   space_supporter: 1,
 };
 
-interface RankedSpaceRoles {
-  [spaceGuid: string]: RoleType;
-}
-
 export function rankRole(curRole: string, newRole: string): string {
   if (role_ranking[newRole] > role_ranking[curRole]) {
     return newRole;
   }
   return curRole;
-}
-
-export function rankSpaceRoles(
-  roles: Array<RolesByUserRole>
-): RankedSpaceRoles {
-  return roles.reduce((acc: RankedSpaceRoles, item) => {
-    if (!acc[item.guid]) {
-      acc[item.guid] = item.role;
-      return acc;
-    }
-    var thisRole = item.role;
-    var currentRole = acc[item.guid];
-    if (role_ranking[thisRole] > role_ranking[currentRole]) {
-      acc[item.guid] = item.role;
-    }
-    return acc;
-  }, {} as RankedSpaceRoles);
 }
 
 // TODO delete associateUsersWithRolesTest and

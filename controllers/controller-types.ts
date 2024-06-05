@@ -16,6 +16,9 @@ export interface RolesByUserRole {
   guid: string;
   role: RoleType;
 }
+export interface RoleRanking {
+  [roleType: string]: number;
+}
 
 export interface RankedSpaceRoles {
   [spaceGuid: string]: RolesByUserRole;
