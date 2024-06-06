@@ -1,16 +1,39 @@
-import { RolesByUser, UserWithRoles } from './controller-types';
+import { RolesByUser, UserWithRoles, RoleRanking } from './controller-types';
 import { ListRolesRes, RoleObj } from '@/api/cf/cloudfoundry-types';
+import { RoleType } from '@/api/cf/cloudfoundry-types';
+
+export function resourceKeyedById(resource: Array<any>): Object {
+  return resource.reduce((acc, item) => {
+    acc[item.guid || item.id] = item;
+    return acc;
+  }, {});
+}
 
 export function associateUsersWithRoles(roles: RoleObj[]): RolesByUser {
   return roles.reduce((userObj, resource: RoleObj) => {
     const relation = resource.relationships;
-    if (!userObj[relation.user.data.guid]) {
-      userObj[relation.user.data.guid] = { org: [], space: [] };
+    const userId = relation.user.data.guid;
+    // add a user object if one doesn't exist yet
+    if (!userObj[userId]) {
+      userObj[userId] = { org: [], space: {} };
     }
+    // if the role is a space role, evaluate space role
     if (relation.space.data?.guid) {
-      const spaceObj = { guid: relation.space.data.guid, role: resource.type };
-      userObj[relation.user.data.guid].space.push(spaceObj);
+      const spaceId = relation.space.data.guid;
+      if (userObj[userId].space[spaceId]) {
+        const rankedRole = rankRole(
+          userObj[userId].space[spaceId].role,
+          resource.type
+        );
+        userObj[userId].space[spaceId] = {
+          guid: spaceId,
+          role: rankedRole as RoleType,
+        };
+      } else {
+        userObj[userId].space[spaceId] = { guid: spaceId, role: resource.type };
+      }
     }
+    // evaluate org role
     if (relation.organization.data?.guid) {
       const orgObj = {
         guid: relation.organization.data.guid,
@@ -20,6 +43,20 @@ export function associateUsersWithRoles(roles: RoleObj[]): RolesByUser {
     }
     return userObj;
   }, {} as RolesByUser);
+}
+
+const role_ranking: RoleRanking = {
+  space_manager: 4,
+  space_developer: 3,
+  space_auditor: 2,
+  space_supporter: 1,
+};
+
+export function rankRole(curRole: string, newRole: string): string {
+  if (role_ranking[newRole] > role_ranking[curRole]) {
+    return newRole;
+  }
+  return curRole;
 }
 
 // TODO delete associateUsersWithRolesTest and

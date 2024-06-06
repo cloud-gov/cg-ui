@@ -1,4 +1,15 @@
-import { RoleType } from '@/api/cf/cloudfoundry-types';
+import { RoleType, SpaceObj } from '@/api/cf/cloudfoundry-types';
+
+export interface UAAUser {
+  previousLogonTime: number;
+  verified: boolean;
+  active: boolean;
+  id: string;
+}
+
+export interface UAAUsersById {
+  [uaaUserId: string]: UAAUser;
+}
 
 export interface AddOrgRoleArgs {
   orgGuid: string;
@@ -12,17 +23,29 @@ export interface AddSpaceRoleArgs {
   username: string;
 }
 
+export interface RolesByUserRole {
+  guid: string;
+  role: RoleType;
+}
+export interface RoleRanking {
+  [roleType: string]: number;
+}
+
+export interface RankedSpaceRoles {
+  [spaceGuid: string]: RolesByUserRole;
+}
+
+export interface RolesByUserItem {
+  org: RolesByUserRole[];
+  space: RankedSpaceRoles;
+}
+
 export interface RolesByUser {
-  [userGuid: string]: {
-    org: {
-      guid: string;
-      role: RoleType;
-    }[];
-    space: {
-      guid: string;
-      role: RoleType;
-    }[];
-  };
+  [userGuid: string]: RolesByUserItem;
+}
+
+export interface SpacesBySpaceId {
+  [spaceGuid: string]: SpaceObj;
 }
 
 export interface UserWithRoles {

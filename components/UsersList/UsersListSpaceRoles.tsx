@@ -1,11 +1,11 @@
 'use client';
 
 import Link from 'next/link';
-
-export interface UserSpaceRole {
-  spaceName: string;
-  roleName: string;
-}
+import { underscoreToText } from '@/helpers/text';
+import {
+  SpacesBySpaceId,
+  RankedSpaceRoles,
+} from '@/controllers/controller-types';
 
 const displaySize = 4;
 
@@ -14,11 +14,15 @@ export function numberExtra(size: number): number {
 }
 
 export function UsersListSpaceRoles({
+  roles,
   spaces,
 }: {
-  spaces: Array<UserSpaceRole>;
+  roles: RankedSpaceRoles;
+  spaces: SpacesBySpaceId;
 }) {
-  const extra = numberExtra(spaces.length);
+  // const rolesRes = groupedRoles(roles);
+  const rolesKeys = Object.keys(roles);
+  const extra = numberExtra(rolesKeys.length);
   return (
     <div className="tablet:padding-right-2 tablet:border-right tablet:border-base-light tablet:height-full">
       <div className="display-flex flex-align-center padding-bottom-1">
@@ -42,14 +46,18 @@ export function UsersListSpaceRoles({
           </Link>
         </span>
       </div>
-      <div className="tablet:display-flex padding-top-1">
-        {spaces.slice(0, displaySize).map((role, i) => (
+      <div className="tablet:display-flex tablet:flex-row padding-top-1">
+        {rolesKeys.slice(0, displaySize).map((spaceGuid: string, i: number) => (
           <div
             key={`UsersListSpaceRoles-spaces-${i}`}
-            className="flex-1 padding-right-1"
+            className="width-card padding-right-1"
           >
-            <div className="text-bold">{role.spaceName}</div>
-            <div>{role.roleName}</div>
+            <div className="text-bold text-capitalize">
+              {spaces[spaceGuid].name}
+            </div>
+            <div className="text-capitalize">
+              {underscoreToText(roles[spaceGuid].role)}
+            </div>
           </div>
         ))}
         {extra > 0 && (

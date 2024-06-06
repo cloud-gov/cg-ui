@@ -16,7 +16,7 @@ describe('controller-helpers', () => {
           '89c0b2a8-957d-4900-abab-87395efaffdb'
         );
         expect(testUser.org[0].role).toEqual('organization_manager');
-        expect(testUser.space).toEqual([]);
+        expect(testUser.space).toEqual({});
       });
     });
 
@@ -27,10 +27,12 @@ describe('controller-helpers', () => {
         const testUser = result['73193f8c-e03b-43c8-aeee-8670908899d2'];
         // assert
         expect(testUser.org).toEqual([]);
-        expect(testUser.space[0].guid).toEqual(
-          'dedb82bb-9f35-49f4-8ff9-7130ae2e3198'
-        );
-        expect(testUser.space[0].role).toEqual('space_manager');
+        expect(
+          testUser.space['dedb82bb-9f35-49f4-8ff9-7130ae2e3198'].guid
+        ).toEqual('dedb82bb-9f35-49f4-8ff9-7130ae2e3198');
+        expect(
+          testUser.space['dedb82bb-9f35-49f4-8ff9-7130ae2e3198'].role
+        ).toEqual('space_manager');
       });
     });
   });
@@ -50,13 +52,12 @@ describe('controller-helpers', () => {
           role: 'organization_user',
         },
       ]);
-      expect(testUser.space).toEqual([
-        { guid: 'dedb82bb-9f35-49f4-8ff9-7130ae2e3198', role: 'space_manager' },
-        {
+      expect(testUser.space).toEqual({
+        'dedb82bb-9f35-49f4-8ff9-7130ae2e3198': {
           guid: 'dedb82bb-9f35-49f4-8ff9-7130ae2e3198',
-          role: 'space_developer',
+          role: 'space_manager',
         },
-      ]);
+      });
     });
   });
 });

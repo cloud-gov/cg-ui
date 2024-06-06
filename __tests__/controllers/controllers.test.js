@@ -154,16 +154,12 @@ describe('controllers tests', () => {
               role: 'organization_user',
             },
           ],
-          space: [
-            {
+          space: {
+            'dedb82bb-9f35-49f4-8ff9-7130ae2e3198': {
               guid: 'dedb82bb-9f35-49f4-8ff9-7130ae2e3198',
               role: 'space_manager',
             },
-            {
-              guid: 'dedb82bb-9f35-49f4-8ff9-7130ae2e3198',
-              role: 'space_developer',
-            },
-          ],
+          },
         });
         expect(
           result.payload.uaaUsers['986e21c9-ed0a-480f-9198-23b9a6720518']

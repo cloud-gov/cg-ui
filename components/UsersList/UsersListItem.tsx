@@ -1,5 +1,11 @@
 'use client';
 
+import {
+  RolesByUserItem,
+  SpacesBySpaceId,
+  UAAUser,
+} from '@/controllers/controller-types';
+import { UserObj } from '@/api/cf/cloudfoundry-types';
 import { GridListItem } from '@/components/GridList/GridListItem';
 import { GridListItemTop } from '@/components/GridList/GridListItemTop';
 import { GridListItemBottom } from '@/components/GridList/GridListItemBottom';
@@ -11,14 +17,17 @@ import { UsersListOrgRoles } from '@/components/UsersList/UsersListOrgRoles';
 import { UsersListSpaceRoles } from '@/components/UsersList/UsersListSpaceRoles';
 import { UsersListLastLogin } from '@/components/UsersList/UsersListLastLogin';
 
-export interface UsersListItemUserInterface {
-  username: string;
-  orgRoles: Array<any>;
-  spaceRoles: Array<any>;
-  lastLogin: string | null;
-}
-
-export function UsersListItem({ user }: { user: UsersListItemUserInterface }) {
+export function UsersListItem({
+  user,
+  roles,
+  spaces,
+  uaaUser,
+}: {
+  user: UserObj;
+  roles: RolesByUserItem;
+  spaces: SpacesBySpaceId;
+  uaaUser: UAAUser;
+}) {
   return (
     <GridListItem>
       <GridListItemTop>
@@ -26,13 +35,13 @@ export function UsersListItem({ user }: { user: UsersListItemUserInterface }) {
       </GridListItemTop>
       <GridListItemBottom>
         <GridListItemBottomLeft>
-          <UsersListOrgRoles roles={user.orgRoles} />
+          <UsersListOrgRoles orgRoles={roles.org} />
         </GridListItemBottomLeft>
         <GridListItemBottomCenter>
-          <UsersListSpaceRoles spaces={user.spaceRoles} />
+          <UsersListSpaceRoles roles={roles.space} spaces={spaces} />
         </GridListItemBottomCenter>
         <GridListItemBottomRight>
-          <UsersListLastLogin timestamp={user.lastLogin} />
+          <UsersListLastLogin timestamp={uaaUser.previousLogonTime} />
         </GridListItemBottomRight>
       </GridListItemBottom>
     </GridListItem>

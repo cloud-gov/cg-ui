@@ -11,10 +11,12 @@ import {
   ControllerResult,
   UserMessage,
   Result,
+  UAAUsersById,
 } from './controller-types';
 import {
   associateUsersWithRoles,
   associateUsersWithRolesTest,
+  resourceKeyedById,
 } from './controller-helpers';
 
 // maps basic cloud foundry fetch response to frontend ready result
@@ -320,6 +322,7 @@ export async function getOrgPage(orgGuid: string): Promise<ControllerResult> {
   });
 
   const spaces = (await spacesRes.json()).resources;
+  const spacesBySpaceId = resourceKeyedById(spaces);
   const spaceGuids = spaces.map(function (space: SpaceObj) {
     return space.guid;
   });
@@ -350,18 +353,14 @@ export async function getOrgPage(orgGuid: string): Promise<ControllerResult> {
   );
 
   const userInfo = await userInfoRes.json();
-  const uaaUsers = userInfo.resources.reduce((usersObj: any, current: any) => {
-    const id = current['id'];
-    usersObj[id] = current;
-    return usersObj;
-  }, {});
+  const uaaUsers = resourceKeyedById(userInfo.resources) as UAAUsersById;
 
   return {
     meta: { status: 'success' },
     payload: {
       org: orgUserRolesPayload.included.organizations[0],
       roles: rolesByUser,
-      spaces: spaces,
+      spaces: spacesBySpaceId,
       users: users,
       uaaUsers: uaaUsers,
     },

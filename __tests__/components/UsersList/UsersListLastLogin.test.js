@@ -17,7 +17,7 @@ describe('UsersListLastLogin', () => {
 
   describe('when timestamp is expired', () => {
     it('shows expired text', () => {
-      render(<UsersListLastLogin timestamp={'2020-05-29T13:27:12+0000'} />);
+      render(<UsersListLastLogin timestamp={1706652770377} />); // Tues, Jan 30 2024
 
       const content = screen.queryByText('Login expired');
       expect(content).toBeInTheDocument();
@@ -28,7 +28,7 @@ describe('UsersListLastLogin', () => {
     it('shows formatted date and time with login expiration text', () => {
       // setup
       var now = new Date();
-      var ts = new Date(now.setDate(now.getDate() - 2)).toISOString(); // 2 days ago
+      var ts = new Date(now.setDate(now.getDate() - 2)); // 2 days ago
       //act
       render(<UsersListLastLogin timestamp={ts} />);
       // query
