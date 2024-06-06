@@ -61,14 +61,6 @@ export function UsersListOrgRoles({
         </span>
       </div>
       <RoleNamesList orgRoles={orgRoles} />
-      {/* {orgRoles.map((role, i) => (
-        <div
-          key={`UsersListOrgRoles-roles-${i}`}
-          className="padding-top-1 text-capitalize"
-        >
-          {formatOrgRoleName(role.role)}
-        </div>
-      ))} */}
     </div>
   );
 }
