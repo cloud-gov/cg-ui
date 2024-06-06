@@ -1,6 +1,5 @@
 'use client';
 
-// import { useState } from 'react';
 import { GridList } from '@/components/GridList/GridList';
 import { UsersListItem } from '@/components/UsersList/UsersListItem';
 import {

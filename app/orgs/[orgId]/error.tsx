@@ -5,7 +5,7 @@ import { Alert } from '@/components/uswds/Alert';
 
 export default function Error({
   error,
-  // reset,
+  // reset, // reset is for retrying actions, see https://nextjs.org/docs/app/building-your-application/routing/error-handling
 }: {
   error: Error & { digest?: string };
   // reset: () => void;
