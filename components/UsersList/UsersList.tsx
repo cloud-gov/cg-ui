@@ -8,6 +8,7 @@ import {
   UAAUsersById,
 } from '@/controllers/controller-types';
 import { UserObj } from '@/api/cf/cloudfoundry-types';
+import { sortObjectsByParam } from '@/helpers/arrays';
 
 export function UsersList({
   users,
@@ -20,9 +21,11 @@ export function UsersList({
   spaces: SpacesBySpaceId;
   uaaUsers: UAAUsersById;
 }) {
+  const usersSorted = sortObjectsByParam(users, 'username');
+
   return (
     <GridList>
-      {users.map((user, i) => {
+      {usersSorted.map((user, i) => {
         if (uaaUsers[user.guid]) {
           return (
             <UsersListItem
