@@ -37,16 +37,24 @@ export function UsersListSpaceRoles({
             Edit
           </Link>
         </span>
-        <span>
-          <Link
-            href="/todo"
-            className="usa-button usa-button--unstyled font-body-2xs"
-          >
-            View All
-          </Link>
-        </span>
+        {rolesKeys.length > 0 && (
+          <span>
+            <Link
+              href="/todo"
+              className="usa-button usa-button--unstyled font-body-2xs"
+            >
+              View All
+            </Link>
+          </span>
+        )}
       </div>
       <div className="tablet:display-flex tablet:flex-row padding-top-1">
+        {!rolesKeys.length && (
+          <p className="text-italic text-base">
+            This user has not been added to any spaces. You can add them to
+            spaces and manage access by clicking Edit.
+          </p>
+        )}
         {rolesKeys.slice(0, displaySize).map((spaceGuid: string, i: number) => (
           <div
             key={`UsersListSpaceRoles-spaces-${i}`}
