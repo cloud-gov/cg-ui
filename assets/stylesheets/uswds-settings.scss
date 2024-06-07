@@ -2,7 +2,6 @@
 @use 'uswds-core' with (
   $theme-font-path: '../../../../../../dist/fonts',
   $theme-image-path: '../../../../../../dist/img',
-  $theme-font-type-sans: 'public-sans',
   $theme-hero-image: '../img/hero.jpg',
 
   // base colors
@@ -68,6 +67,9 @@
   $theme-header-min-width: 'none',
   $theme-identifier-max-width: 'desktop-lg',
   $theme-footer-max-width: 'desktop-lg',
+
+  // typography
+  $theme-font-role-heading: 'sans',
 
   // header size
   $theme-h1-font-size: '3xl',
