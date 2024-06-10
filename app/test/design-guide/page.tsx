@@ -8,11 +8,19 @@ export default function DesignGuidePage() {
   return (
     <>
       <Banner />
+
       <h1>Design components</h1>
 
-      <div className="grid-container">
-        <div className="grid-row">hello world</div>
+      <h2>Headers in prose:</h2>
 
+      <div className="usa-prose">
+        <h1>This is a header 1</h1>
+        <h2>This is a header 2</h2>
+        <h3>This is a header 3</h3>
+        <h4>This is a header 3</h4>
+      </div>
+
+      <div className="grid-container">
         <h2>Button time</h2>
         <div className="grid-row">
           <Button>Generic button</Button>

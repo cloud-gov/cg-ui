@@ -1,5 +1,6 @@
 import { UsersList } from '@/components/UsersList/UsersList';
 import { getOrgPage } from '@/controllers/controllers';
+import { PageHeader } from '@/components/PageHeader';
 
 export default async function OrgPage({
   params,
@@ -11,6 +12,11 @@ export default async function OrgPage({
 
   return (
     <>
+      <PageHeader
+        heading="Manage users"
+        intro="Add and remove users from an org. Add users to spaces and set access
+        levels using role."
+      />
       <UsersList
         users={users}
         roles={roles}
