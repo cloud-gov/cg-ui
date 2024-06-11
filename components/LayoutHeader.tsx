@@ -1,8 +1,9 @@
+import React from 'react';
 import { cookies } from 'next/headers';
 import { LoginButton } from './auth/LoginButton';
 import { LogoutButton } from './auth/LogoutButton';
 
-export function Header() {
+export function LayoutHeader({ children }: { children: React.ReactNode }) {
   const cookieStore = cookies();
   const authSession = cookieStore.get('authsession');
 
@@ -12,7 +13,7 @@ export function Header() {
         {authSession ? <LogoutButton /> : <LoginButton />}
       </div>
       <div className="padding-x-4 font-ui-lg padding-y-2 text-semibold">
-        Org : 18F Stratos rebuild
+        {children}
       </div>
     </div>
   );

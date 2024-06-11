@@ -1,5 +1,4 @@
 import { Banner } from '@/components/uswds/Banner';
-import { Header } from '@/components/Header';
 import { Identifier } from '@/components/uswds/Identifier';
 import { Footer } from '@/components/uswds/Footer';
 import { Sidebar } from '@/components/Sidebar';
@@ -23,8 +22,7 @@ export default function RootLayout({ children }) {
             <Sidebar />
           </div>
           <div className="desktop:grid-col-10 bg-white height-full flex-column display-flex">
-            <Header />
-            <main className="padding-4 overflow-y-auto">{children}</main>
+            {children}
           </div>
         </div>
         <Footer />
