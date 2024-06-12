@@ -33,6 +33,7 @@ export function UsersListSpaceRoles({
           <Link
             href="/todo"
             className="usa-button usa-button--unstyled margin-right-2 font-body-2xs"
+            aria-label="edit spaces and roles for this user"
           >
             Edit
           </Link>
@@ -42,6 +43,7 @@ export function UsersListSpaceRoles({
             <Link
               href="/todo"
               className="usa-button usa-button--unstyled font-body-2xs"
+              aria-label="view all spaces and roles for this user"
             >
               View All
             </Link>

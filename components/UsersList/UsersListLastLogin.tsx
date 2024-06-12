@@ -2,7 +2,9 @@
 
 import { isDateExpired, daysToExpiration } from '@/helpers/dates';
 
-export function formatDate(timestamp: number): string {
+export function formatDate(timestamp: number | null): string {
+  if (!timestamp) return '';
+
   return new Date(timestamp).toLocaleDateString('en-US', {
     year: 'numeric',
     month: 'short',
@@ -10,7 +12,9 @@ export function formatDate(timestamp: number): string {
   });
 }
 
-export function formatTime(timestamp: number): string {
+export function formatTime(timestamp: number | null): string {
+  if (!timestamp) return '';
+
   const tz = Intl.DateTimeFormat().resolvedOptions().timeZone;
   return new Date(timestamp).toLocaleTimeString('en-US', {
     timeZone: tz,
@@ -32,22 +36,23 @@ export function UsersListLastLogin({
   const expiresInDays: number = timestamp
     ? daysToExpiration(timestamp, expirationWindowDays)
     : 0;
+  const showTimestamp: boolean = !!timestamp && !isExpired;
   return (
-    <div className="text-right text-base">
+    <div className="text-right text-base" aria-label="last login time">
       <div>
         {!timestamp && 'Never logged in'}
         {timestamp && isExpired && 'Login expired'}
-        {timestamp && !isExpired && formatTime(timestamp)}
+        {showTimestamp && formatTime(timestamp)}
       </div>
-      <div>
+      <div aria-label="last login date">
         {(!timestamp || (timestamp && isExpired)) && (
           <button className="usa-button usa-button--unstyled">
             Resend invite
           </button>
         )}
-        {timestamp && !isExpired && formatDate(timestamp)}
+        {showTimestamp && formatDate(timestamp)}
       </div>
-      {timestamp && !isExpired && (
+      {showTimestamp && (
         <div className="padding-top-1 text-italic">
           Login expires in {expiresInDays} day{expiresInDays > 1 && 's'}
         </div>

@@ -55,6 +55,7 @@ export function UsersListOrgRoles({
           <Link
             href="/todo"
             className="usa-button usa-button--unstyled font-body-2xs"
+            aria-label="Edit organization roles for this user"
           >
             Edit
           </Link>
