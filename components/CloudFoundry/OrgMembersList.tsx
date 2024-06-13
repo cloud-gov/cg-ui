@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { useFormState } from 'react-dom';
-import { Modal } from '../Modal';
+import { Modal } from '../uswds/Modal';
 import { RoleType } from '@/api/cf/cloudfoundry-types';
 import {
   removeRole,

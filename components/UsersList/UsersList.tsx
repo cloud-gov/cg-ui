@@ -15,11 +15,15 @@ export function UsersList({
   roles,
   spaces,
   uaaUsers,
+  // orgGuid,
+  removeUser,
 }: {
   users: Array<UserObj>;
   roles: RolesByUser;
   spaces: SpacesBySpaceId;
   uaaUsers: UAAUsersById;
+  // orgGuid: string;
+  removeUser: Function;
 }) {
   const usersSorted = sortObjectsByParam(users, 'username');
 
@@ -34,6 +38,8 @@ export function UsersList({
               roles={roles[user.guid]}
               spaces={spaces}
               uaaUser={uaaUsers[user.guid]}
+              // orgGuid={orgGuid}
+              removeUser={removeUser}
             />
           );
         }
