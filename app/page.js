@@ -1,13 +1,40 @@
 import Link from 'next/link';
+import { cookies } from 'next/headers';
+import { LoginButton } from '@/components/auth/LoginButton';
+import { LogoutButton } from '@/components/auth/LogoutButton';
 
 export default function Home() {
+  const cookieStore = cookies();
+  const authSession = cookieStore.get('authsession');
   return (
-    <div>
-      <h1>test routes</h1>
+    <div className="margin-x-3">
+      <h1>Welcome to the cloud.gov dashboard prototype</h1>
+
+      <div
+        class="usa-summary-box"
+        role="region"
+        aria-labelledby="summary-box-key-information"
+      >
+        <div class="usa-summary-box__body">
+          <h4 class="usa-summary-box__heading" id="summary-box-key-information">
+            Usability testing
+          </h4>
+          <div class="usa-summary-box__text">
+            {authSession ? <LogoutButton /> : <LoginButton />}
+            <p>
+              <Link href="/orgs/470bd8ff-ed0e-4d11-95c4-cf765202cebd">
+                18f-stratos-rebuild org page
+              </Link>
+            </p>
+            <p>
+              To view a different org page, go to <strong>/orgs/[orgId]</strong>
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <h2>Test routes</h2>
       <ul>
-        <li>
-          To test a Cf org page, go to <strong>/orgs/[orgId]</strong>
-        </li>
         <li>
           <Link href="/test/authenticated/example">
             Example of an authenticated page (you can&apos;t get to it unless
