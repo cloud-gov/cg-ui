@@ -1,6 +1,16 @@
-import { RolesByUser, UserWithRoles, RoleRanking } from './controller-types';
-import { ListRolesRes, RoleObj } from '@/api/cf/cloudfoundry-types';
-import { RoleType } from '@/api/cf/cloudfoundry-types';
+import {
+  RolesByUser,
+  UserWithRoles,
+  RoleRanking,
+  UAAUser,
+} from './controller-types';
+import {
+  ListRolesRes,
+  RoleObj,
+  RoleType,
+  UserObj,
+} from '@/api/cf/cloudfoundry-types';
+import { addDays, randomDate } from '@/helpers/dates';
 
 export function resourceKeyedById(resource: Array<any>): Object {
   return resource.reduce((acc, item) => {
@@ -93,4 +103,48 @@ export function associateUsersWithRolesTest(
       return a.username ? a.username.localeCompare(b.username) : 1;
     });
   return users;
+}
+
+export function createFakeUaaUser(user: UserObj): UAAUser {
+  const cases = [
+    // never logged in
+    {
+      id: user.guid,
+      verified: false,
+      active: false,
+      previousLogonTime: null,
+    },
+    // logged in previously but expired
+    {
+      id: user.guid,
+      verified: true,
+      active: false,
+      previousLogonTime: randomDate(
+        addDays(new Date(), -180),
+        addDays(new Date(), -90)
+      ).getTime(),
+    },
+    // logged in recently
+    {
+      id: user.guid,
+      verified: true,
+      active: true,
+      previousLogonTime: randomDate(
+        addDays(new Date(), -10),
+        addDays(new Date(), -1)
+      ).getTime(),
+    },
+    // logged in previously, not expired
+    {
+      id: user.guid,
+      verified: true,
+      active: true,
+      previousLogonTime: randomDate(
+        addDays(new Date(), -89),
+        addDays(new Date(), -11)
+      ).getTime(),
+    },
+  ];
+  const index = Math.floor(Math.random() * cases.length);
+  return cases[index];
 }
