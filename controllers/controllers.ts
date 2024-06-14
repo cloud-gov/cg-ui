@@ -223,6 +223,13 @@ export async function getOrg(guid: string): Promise<Result> {
   };
   try {
     const res = await CF.getOrg(guid);
+    if (!res.ok) {
+      return {
+        success: false,
+        status: 'error',
+        message: 'something went wrong with the request',
+      };
+    }
     return await mapCfResult(res, message);
   } catch (error: any) {
     if (process.env.NODE_ENV == 'development') {
