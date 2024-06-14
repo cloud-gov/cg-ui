@@ -6,6 +6,7 @@ import {
   getOrgTestPage,
   getSpaceUsers,
 } from '@/controllers/controllers';
+import { createFakeUaaUser } from '@/controllers/controller-helpers';
 import { mockOrg } from '@/__tests__/api/mocks/organizations';
 import {
   mockRolesFilteredByOrgAndUser,
@@ -14,6 +15,21 @@ import {
 } from '@/__tests__/api/mocks/roles';
 import { mockSpaces } from '@/__tests__/api/mocks/spaces';
 import { mockUaaUsers } from '@/__tests__/api/mocks/uaa-users';
+
+/* global jest */
+/* eslint no-undef: "off" */
+jest.mock('../../controllers/controller-helpers', () => ({
+  ...jest.requireActual('../../controllers/controller-helpers'),
+  createFakeUaaUser: jest.fn(() => {
+    return {
+      id: 'userId',
+      verified: false,
+      active: false,
+      previousLogonTime: null,
+    };
+  }),
+}));
+/* eslint no-undef: "error" */
 
 beforeEach(() => {
   if (!nock.isActive()) {
@@ -102,6 +118,43 @@ describe('controllers tests', () => {
         expect(async () => {
           await getOrgPage(orgGuid);
         }).rejects.toThrow(new Error('something went wrong with the request'));
+      });
+    });
+
+    describe('if the UAA request fails', () => {
+      it('returns the expected controller result with fake UAA data', async () => {
+        // setup
+        const orgGuid = 'orgGuid';
+        const testSpaceGuids = {
+          resources: [
+            {
+              guid: 'space1',
+            },
+            {
+              guid: 'space2',
+            },
+            {
+              guid: 'space3',
+            },
+          ],
+        };
+        nock(process.env.CF_API_URL)
+          .get(
+            `/roles?organization_guids=${orgGuid}&per_page=5000&include=organization,user`
+          )
+          .reply(200, mockUsersByOrganization);
+        nock(process.env.CF_API_URL)
+          .get(`/spaces?organization_guids=${orgGuid}`)
+          .reply(200, testSpaceGuids);
+        nock(process.env.CF_API_URL)
+          .get('/roles?per_page=5000&space_guids=space1,space2,space3')
+          .reply(200, mockUsersBySpace);
+        nock(process.env.UAA_API_URL).get(/Users/).reply(403);
+
+        await getOrgPage(orgGuid);
+
+        // assert that two users were created to match the mockUsersByOrganization response
+        expect(createFakeUaaUser).toHaveBeenCalledTimes(2);
       });
     });
 

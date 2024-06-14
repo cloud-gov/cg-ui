@@ -24,3 +24,10 @@ export function daysToExpiration(
   const now = new Date();
   return Math.round((futureDate - now.getTime()) / 1000 / 60 / 60 / 24);
 }
+
+// taken from https://stackoverflow.com/a/60180035
+export function randomDate(from: Date, to: Date) {
+  const fromTime = from.getTime();
+  const toTime = to.getTime();
+  return new Date(fromTime + Math.random() * (toTime - fromTime));
+}

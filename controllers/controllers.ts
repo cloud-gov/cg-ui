@@ -9,13 +9,14 @@ import {
   AddOrgRoleArgs,
   AddSpaceRoleArgs,
   ControllerResult,
-  UserMessage,
   Result,
+  UserMessage,
   UAAUsersById,
 } from './controller-types';
 import {
   associateUsersWithRoles,
   associateUsersWithRolesTest,
+  createFakeUaaUser,
   resourceKeyedById,
 } from './controller-helpers';
 
@@ -343,24 +344,37 @@ export async function getOrgPage(orgGuid: string): Promise<ControllerResult> {
     ),
   ]);
 
-  [spaceRolesRes, userInfoRes].map((res) => {
-    if (!res.ok) {
-      if (process.env.NODE_ENV == 'development') {
-        console.error(
-          `api error on cf org page with http code ${res.status} for url: ${res.url}`
-        );
-      }
-      throw new Error('something went wrong with the request');
+  if (!spaceRolesRes.ok) {
+    if (process.env.NODE_ENV == 'development') {
+      console.error(
+        `api error on cf org page with http code ${spaceRolesRes.status} for url: ${spaceRolesRes.url}`
+      );
     }
-  });
+    throw new Error('something went wrong with the request');
+  }
+  if (!userInfoRes.ok && userInfoRes.status != 403) {
+    if (process.env.NODE_ENV == 'development') {
+      console.error(
+        `uaa api error on cf org page with http code ${spaceRolesRes.status} for url: ${spaceRolesRes.url}`
+      );
+    }
+    throw new Error('something went wrong with the request');
+  }
+  const uaaUsers =
+    userInfoRes.status == 403
+      ? resourceKeyedById(
+          users.map(function (user: UserObj) {
+            return createFakeUaaUser(user);
+          })
+        )
+      : (resourceKeyedById(
+          (await userInfoRes.json()).resources
+        ) as UAAUsersById);
 
   const spaceRoles = (await spaceRolesRes.json()).resources;
   const rolesByUser = associateUsersWithRoles(
     orgUserRolesPayload.resources.concat(spaceRoles)
   );
-
-  const userInfo = await userInfoRes.json();
-  const uaaUsers = resourceKeyedById(userInfo.resources) as UAAUsersById;
 
   return {
     meta: { status: 'success' },

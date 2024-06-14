@@ -1,7 +1,7 @@
 import { RoleType, SpaceObj } from '@/api/cf/cloudfoundry-types';
 
 export interface UAAUser {
-  previousLogonTime: number;
+  previousLogonTime: number | null;
   verified: boolean;
   active: boolean;
   id: string;
