@@ -21,10 +21,11 @@ This convention follows an [MVC](https://en.wikipedia.org/wiki/Model%E2%80%93vie
 - **Where it lives**: `api/[data_source]/[model]`
   - Example: `api/cf/orgs.ts`
 
-#### 2. Business logic / side effects layer
+#### 2. Controller layer
 
-- **Responsibility**: performs all business logic and side effects for a user action
-  - In MVC terms, this is like the Controller
+- **Responsibility**:
+  - Collects needed data for a page to load
+  - Performs all business logic and side effects for a user action
 - **Returns**: any errors that arise from the procedure; otherwise passes on any payload for the UI
 - **Example**: removing a user from an organization requires multiple CF API calls, and will eventually require logging/telemetry
   - This layer may compose data access layer functions in various ways to achieve what it needs to
@@ -37,7 +38,7 @@ _This uses Next.js specific [behavior](https://nextjs.org/docs/app/building-your
 
 - **Responsibility**: Interfaces with the UI; specific to that UI
   - Used by UI components
-  - Calls a business logic layer function (ideally only calls one, but may call multiple)
+  - Calls a controller function (ideally only calls one, but may call multiple)
   - Responsible for evaluating the success/error messages from the BL layer and wordsmithing them for that UI
   - Responsible for munging the returned payload into the format needed for that UI
 - **Returns**: human-readable success/error messages; formatted payload for the UI
