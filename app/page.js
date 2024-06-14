@@ -11,15 +11,18 @@ export default function Home() {
       <h1>Welcome to the cloud.gov dashboard prototype</h1>
 
       <div
-        class="usa-summary-box"
+        className="usa-summary-box"
         role="region"
         aria-labelledby="summary-box-key-information"
       >
-        <div class="usa-summary-box__body">
-          <h4 class="usa-summary-box__heading" id="summary-box-key-information">
+        <div className="usa-summary-box__body">
+          <h4
+            className="usa-summary-box__heading"
+            id="summary-box-key-information"
+          >
             Usability testing
           </h4>
-          <div class="usa-summary-box__text">
+          <div className="usa-summary-box__text">
             {authSession ? <LogoutButton /> : <LoginButton />}
             <p>
               <Link href="/orgs/470bd8ff-ed0e-4d11-95c4-cf765202cebd">

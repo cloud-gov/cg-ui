@@ -34,7 +34,7 @@ describe('UsersListSpaceRoles', () => {
       render(<UsersListSpaceRoles spaces={mockSpaces} roles={mockRoles} />);
       // query
       const extraSpace = screen.queryByText('fooRoleRame5');
-      const overflowNum = screen.queryByText('+ 1');
+      const overflowNum = screen.queryByText('+1');
       // assert
       expect(extraSpace).not.toBeInTheDocument();
       expect(overflowNum).toBeInTheDocument();

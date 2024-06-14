@@ -71,8 +71,11 @@ export function UsersListSpaceRoles({
           </div>
         ))}
         {extra > 0 && (
-          <Link href="/todo" className="usa-button usa-button--unstyled">
-            + {extra}
+          <Link
+            href="/todo"
+            className="usa-button usa-button--unstyled text-no-wrap"
+          >
+            +{extra}
           </Link>
         )}
       </div>
