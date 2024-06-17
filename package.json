@@ -25,7 +25,7 @@
     "node": ">=20"
   },
   "devDependencies": {
-    "@testing-library/jest-dom": "^6.4.5",
+    "@testing-library/jest-dom": "^6.4.6",
     "@testing-library/react": "^16.0.0",
     "eslint": "8.57.0",
     "eslint-config-next": "14.2.3",
