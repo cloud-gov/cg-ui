@@ -1,7 +1,7 @@
 import {
   addOrgRole,
   deleteRole,
-  deleteOrgUser,
+  deleteOrgUserTest,
 } from '@/controllers/controllers';
 import { RoleType } from '@/api/cf/cloudfoundry-types';
 
@@ -46,7 +46,7 @@ export async function removeUser(
   try {
     const orgGuid = formData.get('orgGuid') as string;
     const userGuid = formData.get('userGuid') as string;
-    const res = await deleteOrgUser(orgGuid, userGuid);
+    const res = await deleteOrgUserTest(orgGuid, userGuid);
     return { success: res.success, message: res.message };
   } catch (error: any) {
     return { success: false, message: error.message };

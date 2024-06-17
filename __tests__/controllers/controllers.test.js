@@ -1,7 +1,7 @@
 import nock from 'nock';
 import { describe, it, expect, beforeEach, afterEach } from '@jest/globals';
 import {
-  deleteOrgUser,
+  deleteOrgUserTest,
   getOrgPage,
   getOrgTestPage,
   getSpaceUsers,
@@ -44,7 +44,7 @@ afterEach(() => {
 });
 
 describe('controllers tests', () => {
-  describe('deleteOrgUser', () => {
+  describe('deleteOrgUserTest', () => {
     it('when given a valid org and user, removes all user roles from org', async () => {
       nock(process.env.CF_API_URL)
         .get(
@@ -58,7 +58,7 @@ describe('controllers tests', () => {
         .times(2)
         .reply(202);
 
-      const res = await deleteOrgUser('orgGuid', 'userGuid');
+      const res = await deleteOrgUserTest('orgGuid', 'userGuid');
       expect(res).toEqual({
         success: true,
         status: 'success',

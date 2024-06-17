@@ -145,7 +145,7 @@ async function deleteGroupUser(
   }
 }
 
-export async function deleteOrgUser(
+export async function deleteOrgUserTest(
   orgGuid: string,
   userGuid: string
 ): Promise<Result> {
