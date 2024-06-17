@@ -16,22 +16,34 @@ import { UsersListUsername } from '@/components/UsersList/UsersListUsername';
 import { UsersListOrgRoles } from '@/components/UsersList/UsersListOrgRoles';
 import { UsersListSpaceRoles } from '@/components/UsersList/UsersListSpaceRoles';
 import { UsersListLastLogin } from '@/components/UsersList/UsersListLastLogin';
+import { UsersActionsRemoveFromOrg } from '../UsersActions/UsersActionsRemoveFromOrg';
 
 export function UsersListItem({
   user,
   roles,
   spaces,
   uaaUser,
+  // orgGuid,
+  removeUser,
 }: {
   user: UserObj;
   roles: RolesByUserItem;
   spaces: SpacesBySpaceId;
   uaaUser: UAAUser;
+  // orgGuid: string;
+  removeUser: Function;
 }) {
   return (
     <GridListItem>
       <GridListItemTop>
-        <UsersListUsername username={user.username} />
+        <div className="margin-bottom-2 tablet:margin-bottom-0">
+          <UsersListUsername username={user.username} />
+          <UsersActionsRemoveFromOrg
+            user={user}
+            // orgGuid={orgGuid}
+            formAction={removeUser}
+          />
+        </div>
       </GridListItemTop>
       <GridListItemBottom>
         <GridListItemBottomLeft>

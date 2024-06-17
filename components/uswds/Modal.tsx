@@ -1,4 +1,6 @@
 import React from 'react';
+import Image from 'next/image';
+import closeIcon from '@/public/img/uswds/usa-icons/close.svg';
 
 export function Modal({
   children,
@@ -27,7 +29,13 @@ export function Modal({
               data-close-modal
               onClick={() => close('')}
             >
-              close
+              <Image
+                unoptimized
+                src={closeIcon}
+                alt="close the modal"
+                width="32"
+                height="32"
+              />
             </button>
           </div>
         </div>

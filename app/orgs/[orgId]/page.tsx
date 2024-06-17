@@ -10,6 +10,11 @@ export default async function OrgPage({
   const { payload } = await getOrgPage(params.orgId);
   const { roles, spaces, users, uaaUsers } = payload;
 
+  const formAct = async (data: string) => {
+    'use server';
+    console.log(`hello world: ${data}`);
+  };
+
   return (
     <>
       <PageHeader
@@ -22,6 +27,8 @@ export default async function OrgPage({
         roles={roles}
         spaces={spaces}
         uaaUsers={uaaUsers}
+        // orgGuid={params.orgId}
+        removeUser={formAct}
       />
     </>
   );
