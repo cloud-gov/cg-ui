@@ -5,6 +5,7 @@ import {
   getOrgPage,
   getOrgTestPage,
   getSpaceUsers,
+  removeUserFromOrg,
 } from '@/controllers/controllers';
 import { createFakeUaaUser } from '@/controllers/controller-helpers';
 import { mockOrg } from '@/__tests__/api/mocks/organizations';
@@ -278,6 +279,40 @@ describe('controllers tests', () => {
         expect(result.payload.org).toEqual(mockOrg);
         expect(result.payload.spaces).toEqual(mockSpaces.resources);
         expect(result.payload.users).toBeDefined();
+      });
+    });
+  });
+
+  describe('removeUserFromOrg', () => {
+    const mockSpaceRoleGuids = ['foo', 'bar'];
+    const mockOrgRoleGuids = ['baz', 'far'];
+
+    describe('if all requests succeed', () => {
+      it('returns a success message', async () => {
+        // setup
+        nock(process.env.CF_API_URL).persist().delete(/roles/).reply(200);
+        // act
+        const result = await removeUserFromOrg(
+          mockSpaceRoleGuids,
+          mockOrgRoleGuids
+        );
+        // expect
+        expect(result.meta.status).toEqual('success');
+      });
+    });
+
+    describe('if one request fails', () => {
+      it('returns an error message', async () => {
+        // setup
+        nock(process.env.CF_API_URL).delete(/roles/).reply(430);
+        // act
+        const result = await removeUserFromOrg(
+          mockSpaceRoleGuids,
+          mockOrgRoleGuids
+        );
+        // expect
+        expect(result.meta.status).toEqual('error');
+        expect(result.meta.errors.length).toEqual(1);
       });
     });
   });

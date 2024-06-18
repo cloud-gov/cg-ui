@@ -416,3 +416,48 @@ export async function getOrgTestPage(
     },
   };
 }
+
+export async function removeUserFromOrg(
+  allSpaceRoleGuids: string[],
+  allOrgRoleGuids: string[]
+): Promise<ControllerResult> {
+  try {
+    const spaceRolesResponses = await Promise.all(
+      allSpaceRoleGuids.map((guid) => CF.deleteRole(guid))
+    );
+    spaceRolesResponses.map((response) => {
+      if (!response.ok) {
+        throw new Error(
+          'Unable to remove user from space role. Please try again'
+        );
+      }
+    });
+    const orgRoleResponses = await Promise.all(
+      allOrgRoleGuids.map((guid) => CF.deleteRole(guid))
+    );
+    orgRoleResponses.map((response) => {
+      if (!response.ok) {
+        throw new Error(
+          'Unable to remove user from org role. Please try again'
+        );
+      }
+    });
+    return {
+      meta: {
+        status: 'success',
+      },
+      payload: {},
+    };
+  } catch (e: any) {
+    if (process.env.NODE_ENV == 'development') {
+      console.error('error in removeUserFromOrg: ', e.message);
+    }
+    return {
+      meta: {
+        status: 'error',
+        errors: [e.message],
+      },
+      payload: {},
+    };
+  }
+}

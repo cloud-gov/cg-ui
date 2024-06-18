@@ -77,7 +77,10 @@ export function UsersActionsRemoveFromOrg({
   async function onSubmit() {
     console.log('allSpaceRoleGuids', roles.allSpaceRoleGuids);
     console.log('allOrgRoleGuids', roles.allOrgRoleGuids);
-    const result = (await removeFromOrg()) as ControllerResult;
+    const result = (await removeFromOrg(
+      roles.allSpaceRoleGuids,
+      roles.allOrgRoleGuids
+    )) as ControllerResult;
     if (result?.meta?.status === 'success') {
       setActionStatus('success');
       !!removeUserCallback && removeUserCallback(user);
