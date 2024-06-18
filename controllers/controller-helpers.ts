@@ -25,7 +25,12 @@ export function associateUsersWithRoles(roles: RoleObj[]): RolesByUser {
     const userId = relation.user.data.guid;
     // add a user object if one doesn't exist yet
     if (!userObj[userId]) {
-      userObj[userId] = { org: [], space: {} };
+      userObj[userId] = {
+        org: [],
+        space: {},
+        allSpaceRoleGuids: [],
+        allOrgRoleGuids: [],
+      };
     }
     // if the role is a space role, evaluate space role
     if (relation.space.data?.guid) {
@@ -40,8 +45,13 @@ export function associateUsersWithRoles(roles: RoleObj[]): RolesByUser {
           role: rankedRole as RoleType,
         };
       } else {
-        userObj[userId].space[spaceId] = { guid: spaceId, role: resource.type };
+        userObj[userId].space[spaceId] = {
+          guid: spaceId,
+          role: resource.type,
+        };
       }
+      // collect all space role guids needed for removing a user from an org
+      userObj[userId].allSpaceRoleGuids.push(resource.guid);
     }
     // evaluate org role
     if (relation.organization.data?.guid) {
@@ -50,6 +60,8 @@ export function associateUsersWithRoles(roles: RoleObj[]): RolesByUser {
         role: resource.type,
       };
       userObj[relation.user.data.guid].org.push(orgObj);
+      // collect all org role guids needed for removing a user from an org
+      userObj[userId].allOrgRoleGuids.push(resource.guid);
     }
     return userObj;
   }, {} as RolesByUser);

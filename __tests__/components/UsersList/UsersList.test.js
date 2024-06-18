@@ -1,17 +1,81 @@
 /**
  * @jest-environment jsdom
  */
-import { describe, it } from '@jest/globals';
-// import { render, screen } from '@testing-library/react';
-// import { UsersList } from '@/components/UsersList/UsersList';
+import { describe, expect, it } from '@jest/globals';
+import { render, screen } from '@testing-library/react';
+import { UsersList } from '@/components/UsersList/UsersList';
 
-// TODO: Implement these tests once component is hooked up
-// to real data and has a loading state.
+const mockUsers = [
+  {
+    username: 'c username 1',
+    guid: 'fooUserGuid-1',
+  },
+  {
+    username: 'a username 2',
+    guid: 'fooUserGuid-2',
+  },
+  {
+    username: 'b username 3',
+    guid: 'fooUserGuid-3',
+  },
+];
+
+const mockRoles = {
+  'fooUserGuid-1': {
+    org: [
+      { guid: 'orgGuid-1', role: 'org_manager' },
+      { guid: 'orgGuid-1', role: 'org_auditor' },
+    ],
+    space: { 'spaceGuid-1': { guid: 'spaceGuid-1', role: 'space_manager' } },
+    allSpaceRoleGuids: ['spaceGuid-1'],
+    allOrgRoleGuids: ['orgGuid-1'],
+  },
+  'fooUserGuid-2': {
+    org: [
+      { guid: 'orgGuid-1', role: 'org_manager' },
+      { guid: 'orgGuid-1', role: 'org_auditor' },
+    ],
+    space: { 'spaceGuid-1': { guid: 'spaceGuid-1', role: 'space_developer' } },
+    allSpaceRoleGuids: ['spaceGuid-1'],
+    allOrgRoleGuids: ['orgGuid-1'],
+  },
+  'fooUserGuid-3': {
+    org: [
+      { guid: 'orgGuid-1', role: 'org_manager' },
+      { guid: 'orgGuid-1', role: 'org_auditor' },
+    ],
+    space: { 'spaceGuid-1': { guid: 'spaceGuid-1', role: 'space_auditor' } },
+    allSpaceRoleGuids: ['spaceGuid-1'],
+    allOrgRoleGuids: ['orgGuid-1'],
+  },
+};
+
+const mockSpaces = {
+  'spaceGuid-1': { guid: 'spaceGuild-1', name: 'foo space name' },
+};
+
+const mockUaaUsers = {
+  'fooUserGuid-1': { id: 'fooUserGuid-1', previousLogonTime: new Date() },
+  'fooUserGuid-2': { id: 'fooUserGuid-2', previousLogonTime: new Date() },
+  'fooUserGuid-3': { id: 'fooUserGuid-3', previousLogonTime: new Date() },
+};
+
 describe('UsersList', () => {
-  describe('on initial load', () => {
-    it.todo('loads all given users');
-  });
-  describe('when given a new user', () => {
-    it.todo('adds user to displayed list');
+  it('sorts all users by username in alpha order', () => {
+    // act
+    render(
+      <UsersList
+        users={mockUsers}
+        roles={mockRoles}
+        spaces={mockSpaces}
+        uaaUsers={mockUaaUsers}
+      />
+    );
+    // query
+    const list = screen.getAllByRole('listitem');
+    // expect
+    expect(list[0]).toHaveTextContent(/a username 2/);
+    expect(list[1]).toHaveTextContent(/b username 3/);
+    expect(list[2]).toHaveTextContent(/c username 1/);
   });
 });

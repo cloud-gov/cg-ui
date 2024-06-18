@@ -38,6 +38,8 @@ export interface RankedSpaceRoles {
 export interface RolesByUserItem {
   org: RolesByUserRole[];
   space: RankedSpaceRoles;
+  allSpaceRoleGuids: string[];
+  allOrgRoleGuids: string[];
 }
 
 export interface RolesByUser {
@@ -73,10 +75,18 @@ export interface Result {
 }
 
 // taken from USWDS alert options: https://designsystem.digital.gov/components/uswds/Alert/
-type ResultStatus = 'success' | 'info' | 'warning' | 'error' | 'emergency';
+type ResultStatus =
+  | 'default'
+  | 'pending'
+  | 'success'
+  | 'info'
+  | 'warning'
+  | 'error'
+  | 'emergency';
 
 export interface ControllerMetadata {
   status: ResultStatus;
+  errors?: string[];
 }
 
 export interface ControllerResult {

@@ -3,10 +3,13 @@
 import { UserObj } from '@/api/cf/cloudfoundry-types';
 import { Button } from '@/components/uswds/Button';
 import { Modal } from '@/components/uswds/Modal';
-import { FormEventHandler, MouseEventHandler, useState } from 'react';
+import { MouseEventHandler, useState } from 'react';
 import { Alert } from '../uswds/Alert';
-
-type ActionStatus = 'default' | 'success' | 'error';
+import {
+  ControllerResult,
+  RolesByUserItem,
+} from '@/controllers/controller-types';
+import { removeFromOrg } from '@/app/orgs/[orgId]/actions';
 
 function FormDefault({
   user,
@@ -14,7 +17,7 @@ function FormDefault({
   onCancel,
 }: {
   user: UserObj;
-  onSubmit: FormEventHandler;
+  onSubmit: any;
   onCancel: MouseEventHandler;
 }) {
   return (
@@ -24,10 +27,12 @@ function FormDefault({
         this organization?
       </p>
       <div className="usa-modal__footer">
-        <Button onClick={onSubmit}>Remove</Button>{' '}
-        <Button unstyled onClick={onCancel}>
-          Cancel
-        </Button>
+        <form action={onSubmit}>
+          <Button type="submit">Remove</Button>{' '}
+          <Button unstyled type="button" onClick={onCancel}>
+            Cancel
+          </Button>
+        </form>
       </div>
     </>
   );
@@ -42,32 +47,45 @@ function FormSuccess({ user }: { user: UserObj }) {
   );
 }
 
-function FormError() {
-  return <Alert type="error">Something went wrong:</Alert>;
+function FormError({ errors }: { errors: string[] }) {
+  return <Alert type="error">{errors.join(', ')}</Alert>;
 }
 
 export function UsersActionsRemoveFromOrg({
   user,
-  // orgGuid,
-  formAction,
+  roles,
+  removeUserCallback,
 }: {
   user: UserObj;
-  // orgGuid: string;
-  formAction: any;
+  roles: RolesByUserItem;
+  removeUserCallback?: Function;
 }) {
   const [modalOpen, setModalOpen] = useState(false);
-  const [actionStatus, setActionStatus] = useState('default' as ActionStatus);
 
   function closeModal(): undefined {
     setModalOpen(false);
+    setActionStatus('default');
+    setActionErrors([]);
   }
   function openModal(): undefined {
     setModalOpen(true);
   }
 
-  function submitForm() {
-    formAction('hi');
-    setActionStatus('success');
+  const [actionStatus, setActionStatus] = useState('default');
+  const [actionErrors, setActionErrors] = useState([] as string[]);
+
+  async function onSubmit() {
+    console.log('allSpaceRoleGuids', roles.allSpaceRoleGuids);
+    console.log('allOrgRoleGuids', roles.allOrgRoleGuids);
+    const result = (await removeFromOrg()) as ControllerResult;
+    if (result?.meta?.status === 'success') {
+      setActionStatus('success');
+      !!removeUserCallback && removeUserCallback(user);
+    }
+    if (result?.meta?.status === 'error') {
+      setActionStatus('error');
+      result?.meta?.errors && setActionErrors(result.meta.errors);
+    }
   }
 
   return (
@@ -77,11 +95,11 @@ export function UsersActionsRemoveFromOrg({
       </Button>
       {modalOpen && (
         <Modal id={`remove-from-org-user-${user.guid}`} close={closeModal}>
-          {actionStatus === 'error' && <FormError />}
+          {actionStatus === 'error' && <FormError errors={actionErrors} />}
           {(actionStatus === 'default' || actionStatus === 'error') && (
             <FormDefault
               user={user}
-              onSubmit={submitForm}
+              onSubmit={onSubmit}
               onCancel={closeModal}
             />
           )}

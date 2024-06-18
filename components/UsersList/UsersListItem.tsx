@@ -23,15 +23,13 @@ export function UsersListItem({
   roles,
   spaces,
   uaaUser,
-  // orgGuid,
-  removeUser,
+  removeUserCallback,
 }: {
   user: UserObj;
   roles: RolesByUserItem;
   spaces: SpacesBySpaceId;
   uaaUser: UAAUser;
-  // orgGuid: string;
-  removeUser: Function;
+  removeUserCallback?: Function;
 }) {
   return (
     <GridListItem>
@@ -40,8 +38,8 @@ export function UsersListItem({
           <UsersListUsername username={user.username} />
           <UsersActionsRemoveFromOrg
             user={user}
-            // orgGuid={orgGuid}
-            formAction={removeUser}
+            roles={roles}
+            removeUserCallback={removeUserCallback}
           />
         </div>
       </GridListItemTop>

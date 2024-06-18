@@ -201,6 +201,11 @@ describe('controllers tests', () => {
         expect(result.payload.spaces).toBeDefined();
         expect(result.payload.users).toBeDefined();
         expect(firstUserRoles).toEqual({
+          allOrgRoleGuids: ['fb55574d-6b84-405e-b23c-0984f0a0964a'],
+          allSpaceRoleGuids: [
+            '12ac7aa5-8a8e-48a4-9c90-a3b908c6e702',
+            '1293d5ae-0266-413c-bacf-9f5474be984d',
+          ],
           org: [
             {
               guid: '89c0b2a8-957d-4900-abab-87395efaffdb',
