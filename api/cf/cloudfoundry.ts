@@ -111,6 +111,9 @@ export async function deleteRole(roleGuid: string): Promise<Response> {
   return await cfRequest('/roles/' + roleGuid, 'delete');
 }
 
+// note: filters work as an "and" in the CF list roles API
+// therefore, if you try to filter by both an org and a space GUID you
+// will receive 0 results
 export async function getRoles({
   include,
   orgGuids,
