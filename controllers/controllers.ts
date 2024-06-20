@@ -2,6 +2,7 @@
 /***/
 // Library for translating UI actions to API requests and back
 /***/
+import { revalidatePath } from 'next/cache';
 import * as CF from '@/api/cf/cloudfoundry';
 import * as UAA from '@/api/uaa/uaa';
 import { GetRoleArgs, SpaceObj, UserObj } from '@/api/cf/cloudfoundry-types';
@@ -447,6 +448,11 @@ export async function removeUserFromOrg(
         );
       }
     });
+    // Bust the Nextjs cache for getting the org users:
+    // https://nextjs.org/docs/app/api-reference/functions/revalidatePath
+    if (process.env.NODE_ENV !== 'test') {
+      revalidatePath('/roles');
+    }
     return {
       meta: {
         status: 'success',
