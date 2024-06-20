@@ -11,6 +11,9 @@ import {
   UserObj,
 } from '@/api/cf/cloudfoundry-types';
 import { addDays, randomDate } from '@/helpers/dates';
+import { cfRequestOptions } from '@/api/cf/cloudfoundry';
+import { request } from '@/api/api';
+import { delay } from '@/helpers/timeout';
 
 export function resourceKeyedById(resource: Array<any>): Object {
   return resource.reduce((acc, item) => {
@@ -159,4 +162,30 @@ export function createFakeUaaUser(user: UserObj): UAAUser {
   ];
   const index = Math.floor(Math.random() * cases.length);
   return cases[index];
+}
+
+export async function pollForJobCompletion(
+  jobLocation: string | null
+): Promise<void> {
+  if (!jobLocation) return;
+  try {
+    const options = await cfRequestOptions('get', null);
+    const res = await request(jobLocation, options);
+    const body = await res.json();
+    if (!res.ok) {
+      throw new Error(
+        body.errors[0]?.detail || 'something went wrong with a polling request'
+      );
+    }
+    switch (body.state) {
+      case 'COMPLETE':
+        return;
+      case 'FAILED':
+        throw new Error('a CF job failed');
+    }
+    await delay(500);
+    await pollForJobCompletion(jobLocation);
+  } catch (error: any) {
+    throw new Error(error.message);
+  }
 }

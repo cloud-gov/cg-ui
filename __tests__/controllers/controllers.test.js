@@ -7,7 +7,10 @@ import {
   getSpaceUsers,
   removeUserFromOrg,
 } from '@/controllers/controllers';
-import { createFakeUaaUser } from '@/controllers/controller-helpers';
+import {
+  createFakeUaaUser,
+  pollForJobCompletion,
+} from '@/controllers/controller-helpers';
 import { mockOrg } from '@/__tests__/api/mocks/organizations';
 import {
   mockRolesFilteredByOrgAndUser,
@@ -29,6 +32,7 @@ jest.mock('../../controllers/controller-helpers', () => ({
       previousLogonTime: null,
     };
   }),
+  pollForJobCompletion: jest.fn(),
 }));
 /* eslint no-undef: "error" */
 
@@ -36,6 +40,17 @@ beforeEach(() => {
   if (!nock.isActive()) {
     nock.activate();
   }
+  // jest mocks
+  createFakeUaaUser.mockImplementation(() => {
+    return {
+      id: 'userId',
+      verified: false,
+      active: false,
+      previousLogonTime: null,
+    };
+  });
+
+  pollForJobCompletion.mockImplementation();
 });
 
 afterEach(() => {
@@ -305,6 +320,25 @@ describe('controllers tests', () => {
       it('returns an error message', async () => {
         // setup
         nock(process.env.CF_API_URL).delete(/roles/).reply(430);
+        // act
+        const result = await removeUserFromOrg(
+          mockSpaceRoleGuids,
+          mockOrgRoleGuids
+        );
+        // expect
+        expect(result.meta.status).toEqual('error');
+        expect(result.meta.errors.length).toEqual(1);
+      });
+    });
+
+    describe('if one job polling request fails', () => {
+      it('returns an error message', async () => {
+        // setup
+        nock(process.env.CF_API_URL).persist().delete(/roles/).reply(200);
+
+        pollForJobCompletion.mockImplementation(() => {
+          throw new Error('some polling error');
+        });
         // act
         const result = await removeUserFromOrg(
           mockSpaceRoleGuids,

@@ -37,7 +37,6 @@ export function UsersList({
   }
 
   function removeUserCallback(user: UserObj) {
-    console.log('user removed!');
     setRemovedUserGuids([...removedUserGuids, user.guid]);
     openModal(user);
   }

@@ -19,8 +19,8 @@ import {
   associateUsersWithRolesTest,
   createFakeUaaUser,
   resourceKeyedById,
+  pollForJobCompletion,
 } from './controller-helpers';
-import { delay } from '@/helpers/timeout';
 
 // maps basic cloud foundry fetch response to frontend ready result
 async function mapCfResult(
@@ -427,17 +427,15 @@ export async function removeUserFromOrg(
     const spaceRolesResponses = await Promise.all(
       allSpaceRoleGuids.map((guid) => CF.deleteRole(guid))
     );
-    spaceRolesResponses.map((response) => {
+    const jobLocations = spaceRolesResponses.map((response) => {
       if (!response.ok) {
         throw new Error(
           'Unable to remove user from space role. Please try again'
         );
       }
+      return response.headers.get('Location');
     });
-    if (process.env.NODE_ENV !== 'test') {
-      // Wait for CF backgroud jobs to finish removing spaces
-      await delay(5000);
-    }
+    await Promise.all(jobLocations.map((loc) => pollForJobCompletion(loc)));
     const orgRoleResponses = await Promise.all(
       allOrgRoleGuids.map((guid) => CF.deleteRole(guid))
     );
