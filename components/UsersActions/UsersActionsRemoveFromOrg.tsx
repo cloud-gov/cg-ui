@@ -1,5 +1,6 @@
 'user client';
 
+import React from 'react';
 import { UserObj } from '@/api/cf/cloudfoundry-types';
 import { Button } from '@/components/uswds/Button';
 import { Modal } from '@/components/uswds/Modal';
@@ -11,14 +12,18 @@ import {
 } from '@/controllers/controller-types';
 import { removeFromOrg } from '@/app/orgs/[orgId]/actions';
 
+type ActionStatus = 'default' | 'pending' | 'success' | 'error';
+
 function FormDefault({
   user,
   onSubmit,
   onCancel,
+  actionStatus,
 }: {
   user: UserObj;
   onSubmit: any;
   onCancel: MouseEventHandler;
+  actionStatus: ActionStatus;
 }) {
   return (
     <>
@@ -26,10 +31,18 @@ function FormDefault({
         Are you sure you want to remove <strong>{user.username}</strong> from
         this organization?
       </p>
+      {actionStatus === 'pending' && <p>Removal pending...</p>}
       <div className="usa-modal__footer">
-        <form action={onSubmit}>
-          <Button type="submit">Remove</Button>{' '}
-          <Button unstyled type="button" onClick={onCancel}>
+        <form onSubmit={onSubmit}>
+          <Button type="submit" disabled={actionStatus === 'pending'}>
+            Remove
+          </Button>{' '}
+          <Button
+            unstyled
+            type="button"
+            onClick={onCancel}
+            disabled={actionStatus === 'pending'}
+          >
             Cancel
           </Button>
         </form>
@@ -64,29 +77,29 @@ export function UsersActionsRemoveFromOrg({
 
   function closeModal(): undefined {
     setModalOpen(false);
-    setActionStatus('default');
+    setActionStatus('default' as ActionStatus);
     setActionErrors([]);
   }
   function openModal(): undefined {
     setModalOpen(true);
   }
 
-  const [actionStatus, setActionStatus] = useState('default');
+  const [actionStatus, setActionStatus] = useState('default' as ActionStatus);
   const [actionErrors, setActionErrors] = useState([] as string[]);
 
-  async function onSubmit() {
-    console.log('allSpaceRoleGuids', roles.allSpaceRoleGuids);
-    console.log('allOrgRoleGuids', roles.allOrgRoleGuids);
+  async function onSubmit(e: React.SyntheticEvent<HTMLFormElement>) {
+    e.preventDefault();
+    setActionStatus('pending' as ActionStatus);
     const result = (await removeFromOrg(
       roles.allSpaceRoleGuids,
       roles.allOrgRoleGuids
     )) as ControllerResult;
     if (result?.meta?.status === 'success') {
-      setActionStatus('success');
+      setActionStatus('success' as ActionStatus);
       !!removeUserCallback && removeUserCallback(user);
     }
     if (result?.meta?.status === 'error') {
-      setActionStatus('error');
+      setActionStatus('error' as ActionStatus);
       result?.meta?.errors && setActionErrors(result.meta.errors);
     }
   }
@@ -99,11 +112,14 @@ export function UsersActionsRemoveFromOrg({
       {modalOpen && (
         <Modal id={`remove-from-org-user-${user.guid}`} close={closeModal}>
           {actionStatus === 'error' && <FormError errors={actionErrors} />}
-          {(actionStatus === 'default' || actionStatus === 'error') && (
+          {(actionStatus === 'default' ||
+            actionStatus === 'pending' ||
+            actionStatus === 'error') && (
             <FormDefault
               user={user}
               onSubmit={onSubmit}
               onCancel={closeModal}
+              actionStatus={actionStatus}
             />
           )}
           {actionStatus === 'success' && <FormSuccess user={user} />}

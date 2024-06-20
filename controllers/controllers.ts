@@ -19,6 +19,7 @@ import {
   createFakeUaaUser,
   resourceKeyedById,
 } from './controller-helpers';
+import { delay } from '@/helpers/timeout';
 
 // maps basic cloud foundry fetch response to frontend ready result
 async function mapCfResult(
@@ -432,6 +433,10 @@ export async function removeUserFromOrg(
         );
       }
     });
+    if (process.env.NODE_ENV !== 'test') {
+      // Wait for CF backgroud jobs to finish removing spaces
+      await delay(5000);
+    }
     const orgRoleResponses = await Promise.all(
       allOrgRoleGuids.map((guid) => CF.deleteRole(guid))
     );
