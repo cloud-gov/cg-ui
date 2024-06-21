@@ -22,7 +22,7 @@ export default async function OrgPage({
 
   return (
     <>
-      <Link href="/cloudfoundry">Back to Cloud Foundry home</Link>
+      <Link href="/test/cloudfoundry">Back to Cloud Foundry home</Link>
       <div className="grid-container">
         <h1>{org.name}</h1>
         <ul>

@@ -1,33 +1,52 @@
 'user client';
 
+import React from 'react';
 import { UserObj } from '@/api/cf/cloudfoundry-types';
 import { Button } from '@/components/uswds/Button';
 import { Modal } from '@/components/uswds/Modal';
-import { FormEventHandler, MouseEventHandler, useState } from 'react';
+import { MouseEventHandler, useState } from 'react';
 import { Alert } from '../uswds/Alert';
+import {
+  ControllerResult,
+  RolesByUserItem,
+} from '@/controllers/controller-types';
+import { removeFromOrg } from '@/app/orgs/[orgId]/actions';
 
-type ActionStatus = 'default' | 'success' | 'error';
+type ActionStatus = 'default' | 'pending' | 'success' | 'error';
 
 function FormDefault({
   user,
   onSubmit,
   onCancel,
+  actionStatus,
 }: {
   user: UserObj;
-  onSubmit: FormEventHandler;
+  onSubmit: any;
   onCancel: MouseEventHandler;
+  actionStatus: ActionStatus;
 }) {
+  const isPending = actionStatus === 'pending';
   return (
     <>
       <p>
         Are you sure you want to remove <strong>{user.username}</strong> from
         this organization?
       </p>
+      {isPending && <p>Removal pending...</p>}
       <div className="usa-modal__footer">
-        <Button onClick={onSubmit}>Remove</Button>{' '}
-        <Button unstyled onClick={onCancel}>
-          Cancel
-        </Button>
+        <form onSubmit={onSubmit}>
+          <Button type="submit" disabled={isPending}>
+            Remove
+          </Button>{' '}
+          <Button
+            unstyled
+            type="button"
+            onClick={onCancel}
+            disabled={isPending}
+          >
+            Cancel
+          </Button>
+        </form>
       </div>
     </>
   );
@@ -42,32 +61,48 @@ function FormSuccess({ user }: { user: UserObj }) {
   );
 }
 
-function FormError() {
-  return <Alert type="error">Something went wrong:</Alert>;
+function FormError({ errors }: { errors: string[] }) {
+  return <Alert type="error">{errors.join(', ')}</Alert>;
 }
 
 export function UsersActionsRemoveFromOrg({
   user,
-  // orgGuid,
-  formAction,
+  roles,
+  removeUserCallback,
 }: {
   user: UserObj;
-  // orgGuid: string;
-  formAction: any;
+  roles: RolesByUserItem;
+  removeUserCallback?: Function;
 }) {
   const [modalOpen, setModalOpen] = useState(false);
-  const [actionStatus, setActionStatus] = useState('default' as ActionStatus);
 
   function closeModal(): undefined {
     setModalOpen(false);
+    setActionStatus('default' as ActionStatus);
+    setActionErrors([]);
   }
   function openModal(): undefined {
     setModalOpen(true);
   }
 
-  function submitForm() {
-    formAction('hi');
-    setActionStatus('success');
+  const [actionStatus, setActionStatus] = useState('default' as ActionStatus);
+  const [actionErrors, setActionErrors] = useState([] as string[]);
+
+  async function onSubmit(e: React.SyntheticEvent<HTMLFormElement>) {
+    e.preventDefault();
+    setActionStatus('pending' as ActionStatus);
+    const result = (await removeFromOrg(
+      roles.allSpaceRoleGuids,
+      roles.allOrgRoleGuids
+    )) as ControllerResult;
+    if (result?.meta?.status === 'success') {
+      setActionStatus('success' as ActionStatus);
+      !!removeUserCallback && removeUserCallback(user);
+    }
+    if (result?.meta?.status === 'error') {
+      setActionStatus('error' as ActionStatus);
+      result?.meta?.errors && setActionErrors(result.meta.errors);
+    }
   }
 
   return (
@@ -77,12 +112,13 @@ export function UsersActionsRemoveFromOrg({
       </Button>
       {modalOpen && (
         <Modal id={`remove-from-org-user-${user.guid}`} close={closeModal}>
-          {actionStatus === 'error' && <FormError />}
-          {(actionStatus === 'default' || actionStatus === 'error') && (
+          {actionStatus === 'error' && <FormError errors={actionErrors} />}
+          {actionStatus !== 'success' && (
             <FormDefault
               user={user}
-              onSubmit={submitForm}
+              onSubmit={onSubmit}
               onCancel={closeModal}
+              actionStatus={actionStatus}
             />
           )}
           {actionStatus === 'success' && <FormSuccess user={user} />}

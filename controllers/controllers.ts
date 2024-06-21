@@ -2,6 +2,7 @@
 /***/
 // Library for translating UI actions to API requests and back
 /***/
+import { revalidatePath } from 'next/cache';
 import * as CF from '@/api/cf/cloudfoundry';
 import * as UAA from '@/api/uaa/uaa';
 import { GetRoleArgs, SpaceObj, UserObj } from '@/api/cf/cloudfoundry-types';
@@ -18,6 +19,7 @@ import {
   associateUsersWithRolesTest,
   createFakeUaaUser,
   resourceKeyedById,
+  pollForJobCompletion,
 } from './controller-helpers';
 
 // maps basic cloud foundry fetch response to frontend ready result
@@ -415,4 +417,56 @@ export async function getOrgTestPage(
       spaces: (await spacesRes.json()).resources,
     },
   };
+}
+
+export async function removeUserFromOrg(
+  allSpaceRoleGuids: string[],
+  allOrgRoleGuids: string[]
+): Promise<ControllerResult> {
+  try {
+    const spaceRolesResponses = await Promise.all(
+      allSpaceRoleGuids.map((guid) => CF.deleteRole(guid))
+    );
+    const jobLocations = spaceRolesResponses.map((response) => {
+      if (!response.ok) {
+        throw new Error(
+          'Unable to remove user from space role. Please try again'
+        );
+      }
+      return response.headers.get('Location');
+    });
+    await Promise.all(jobLocations.map((loc) => pollForJobCompletion(loc)));
+    const orgRoleResponses = await Promise.all(
+      allOrgRoleGuids.map((guid) => CF.deleteRole(guid))
+    );
+    orgRoleResponses.map((response) => {
+      if (!response.ok) {
+        throw new Error(
+          'Unable to remove user from org role. Please try again'
+        );
+      }
+    });
+    // Bust the Nextjs cache for getting the org users:
+    // https://nextjs.org/docs/app/api-reference/functions/revalidatePath
+    if (process.env.NODE_ENV !== 'test') {
+      revalidatePath('/roles');
+    }
+    return {
+      meta: {
+        status: 'success',
+      },
+      payload: {},
+    };
+  } catch (e: any) {
+    if (process.env.NODE_ENV == 'development') {
+      console.error('error in removeUserFromOrg: ', e.message);
+    }
+    return {
+      meta: {
+        status: 'error',
+        errors: [e.message],
+      },
+      payload: {},
+    };
+  }
 }

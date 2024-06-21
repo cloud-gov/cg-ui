@@ -38,7 +38,7 @@ export async function cfRequest(
   }
 }
 
-async function cfRequestOptions(
+export async function cfRequestOptions(
   method: MethodType,
   data: any
 ): Promise<ApiRequestOptions> {

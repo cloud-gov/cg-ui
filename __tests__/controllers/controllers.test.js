@@ -5,8 +5,12 @@ import {
   getOrgPage,
   getOrgTestPage,
   getSpaceUsers,
+  removeUserFromOrg,
 } from '@/controllers/controllers';
-import { createFakeUaaUser } from '@/controllers/controller-helpers';
+import {
+  createFakeUaaUser,
+  pollForJobCompletion,
+} from '@/controllers/controller-helpers';
 import { mockOrg } from '@/__tests__/api/mocks/organizations';
 import {
   mockRolesFilteredByOrgAndUser,
@@ -28,6 +32,7 @@ jest.mock('../../controllers/controller-helpers', () => ({
       previousLogonTime: null,
     };
   }),
+  pollForJobCompletion: jest.fn(),
 }));
 /* eslint no-undef: "error" */
 
@@ -35,6 +40,17 @@ beforeEach(() => {
   if (!nock.isActive()) {
     nock.activate();
   }
+  // jest mocks
+  createFakeUaaUser.mockImplementation(() => {
+    return {
+      id: 'userId',
+      verified: false,
+      active: false,
+      previousLogonTime: null,
+    };
+  });
+
+  pollForJobCompletion.mockImplementation();
 });
 
 afterEach(() => {
@@ -201,6 +217,11 @@ describe('controllers tests', () => {
         expect(result.payload.spaces).toBeDefined();
         expect(result.payload.users).toBeDefined();
         expect(firstUserRoles).toEqual({
+          allOrgRoleGuids: ['fb55574d-6b84-405e-b23c-0984f0a0964a'],
+          allSpaceRoleGuids: [
+            '12ac7aa5-8a8e-48a4-9c90-a3b908c6e702',
+            '1293d5ae-0266-413c-bacf-9f5474be984d',
+          ],
           org: [
             {
               guid: '89c0b2a8-957d-4900-abab-87395efaffdb',
@@ -273,6 +294,59 @@ describe('controllers tests', () => {
         expect(result.payload.org).toEqual(mockOrg);
         expect(result.payload.spaces).toEqual(mockSpaces.resources);
         expect(result.payload.users).toBeDefined();
+      });
+    });
+  });
+
+  describe('removeUserFromOrg', () => {
+    const mockSpaceRoleGuids = ['foo', 'bar'];
+    const mockOrgRoleGuids = ['baz', 'far'];
+
+    describe('if all requests succeed', () => {
+      it('returns a success message', async () => {
+        // setup
+        nock(process.env.CF_API_URL).persist().delete(/roles/).reply(200);
+        // act
+        const result = await removeUserFromOrg(
+          mockSpaceRoleGuids,
+          mockOrgRoleGuids
+        );
+        // expect
+        expect(result.meta.status).toEqual('success');
+      });
+    });
+
+    describe('if one request fails', () => {
+      it('returns an error message', async () => {
+        // setup
+        nock(process.env.CF_API_URL).delete(/roles/).reply(430);
+        // act
+        const result = await removeUserFromOrg(
+          mockSpaceRoleGuids,
+          mockOrgRoleGuids
+        );
+        // expect
+        expect(result.meta.status).toEqual('error');
+        expect(result.meta.errors.length).toEqual(1);
+      });
+    });
+
+    describe('if one job polling request fails', () => {
+      it('returns an error message', async () => {
+        // setup
+        nock(process.env.CF_API_URL).persist().delete(/roles/).reply(200);
+
+        pollForJobCompletion.mockImplementation(() => {
+          throw new Error('some polling error');
+        });
+        // act
+        const result = await removeUserFromOrg(
+          mockSpaceRoleGuids,
+          mockOrgRoleGuids
+        );
+        // expect
+        expect(result.meta.status).toEqual('error');
+        expect(result.meta.errors.length).toEqual(1);
       });
     });
   });

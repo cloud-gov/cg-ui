@@ -1,9 +1,23 @@
 /**
  * @jest-environment jsdom
  */
-import { describe, expect, it } from '@jest/globals';
+import { describe, expect, it, xit } from '@jest/globals';
 import { render, screen, fireEvent } from '@testing-library/react';
 import { UsersActionsRemoveFromOrg } from '@/components/UsersActions/UsersActionsRemoveFromOrg';
+// import { removeFromOrg } from '@/app/orgs/[orgId]/actions';
+
+/* eslint no-undef: "off" */
+// jest.mock('../../../app/orgs/[orgId]/actions', () => ({
+//   removeFromOrg: async () => {
+//     return new Promise((resolve) => {
+//       resolve({
+//         meta: { status: 'error', errors: ['foo error message'] },
+//         payload: {},
+//       });
+//     });
+//   },
+// }));
+/* eslint no-undef: "error" */
 
 describe('UsersActionsRemoveFromOrg', () => {
   // prep
@@ -17,11 +31,10 @@ describe('UsersActionsRemoveFromOrg', () => {
     metadata: {},
     links: {},
   };
-  const formAction = () => {};
 
   it('hides modal on initial load', () => {
     // act
-    render(<UsersActionsRemoveFromOrg user={user} formAction={formAction} />);
+    render(<UsersActionsRemoveFromOrg user={user} />);
     // expect
     const content = screen.queryByText(/Are you sure you want to remove/i);
     expect(content).not.toBeInTheDocument();
@@ -29,7 +42,7 @@ describe('UsersActionsRemoveFromOrg', () => {
 
   it('shows modal when remove button is clicked', () => {
     // act
-    render(<UsersActionsRemoveFromOrg user={user} formAction={formAction} />);
+    render(<UsersActionsRemoveFromOrg user={user} />);
     const button = screen.getByText('Remove from org');
     fireEvent.click(button);
     // expect
@@ -40,7 +53,7 @@ describe('UsersActionsRemoveFromOrg', () => {
   describe('when modal is open', () => {
     it('closes modal when cancel button is clicked', () => {
       // render component
-      render(<UsersActionsRemoveFromOrg user={user} formAction={formAction} />);
+      render(<UsersActionsRemoveFromOrg user={user} />);
       // open modal
       const openButton = screen.getByText('Remove from org');
       fireEvent.click(openButton);
@@ -54,7 +67,7 @@ describe('UsersActionsRemoveFromOrg', () => {
 
     it('closes modal when close button is clicked', () => {
       // render component
-      render(<UsersActionsRemoveFromOrg user={user} formAction={formAction} />);
+      render(<UsersActionsRemoveFromOrg user={user} />);
       // open modal
       const openButton = screen.getByText('Remove from org');
       fireEvent.click(openButton);
@@ -64,6 +77,21 @@ describe('UsersActionsRemoveFromOrg', () => {
       // expect
       const content = screen.queryByText(/Are you sure you want to remove/i);
       expect(content).not.toBeInTheDocument();
+    });
+
+    xit('resets form when modal is closed and reopened', async () => {
+      // render component
+      render(<UsersActionsRemoveFromOrg user={user} />);
+      // open modal
+      const openButton = screen.getByText('Remove from org');
+      fireEvent.click(openButton);
+      // cause an error
+      const removeButton = screen.getAllByRole('button')[1]; // remove button in form
+      fireEvent.click(removeButton);
+      // show error
+      // TODO: cannot figure out how to make the error message show up
+      const errMessage = await screen.findByText('foo error message');
+      expect(errMessage).toBeInTheDocument();
     });
   });
 });
