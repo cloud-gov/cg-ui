@@ -25,23 +25,24 @@ function FormDefault({
   onCancel: MouseEventHandler;
   actionStatus: ActionStatus;
 }) {
+  const isPending = actionStatus === 'pending';
   return (
     <>
       <p>
         Are you sure you want to remove <strong>{user.username}</strong> from
         this organization?
       </p>
-      {actionStatus === 'pending' && <p>Removal pending...</p>}
+      {isPending && <p>Removal pending...</p>}
       <div className="usa-modal__footer">
         <form onSubmit={onSubmit}>
-          <Button type="submit" disabled={actionStatus === 'pending'}>
+          <Button type="submit" disabled={isPending}>
             Remove
           </Button>{' '}
           <Button
             unstyled
             type="button"
             onClick={onCancel}
-            disabled={actionStatus === 'pending'}
+            disabled={isPending}
           >
             Cancel
           </Button>
@@ -112,9 +113,7 @@ export function UsersActionsRemoveFromOrg({
       {modalOpen && (
         <Modal id={`remove-from-org-user-${user.guid}`} close={closeModal}>
           {actionStatus === 'error' && <FormError errors={actionErrors} />}
-          {(actionStatus === 'default' ||
-            actionStatus === 'pending' ||
-            actionStatus === 'error') && (
+          {actionStatus !== 'success' && (
             <FormDefault
               user={user}
               onSubmit={onSubmit}
