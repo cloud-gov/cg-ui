@@ -17,11 +17,6 @@ export default async function UserSpacesPage({
 
   return (
     <>
-      {/* <PageHeader
-        heading="Manage users"
-        intro="Add and remove users from a space. Set access levels using role."
-      /> */}
-
       <h4 className="border-bottom border-primary-warm padding-bottom-1 margin-bottom-1">
         Spaces and roles ({spaces.length})
       </h4>
@@ -29,19 +24,20 @@ export default async function UserSpacesPage({
         Edit spaces and roles
       </Link>
       <ul className="padding-left-0 margin-top-4">
-        {spacesSorted.map((space: any) =>
-          roles[space.guid] ? (
-            <li
-              key={space.guid}
-              id={space.guid}
-              className="usa-list--unstyled margin-bottom-3"
-            >
-              <strong>{space.name}</strong>
-              <span className="display-block margin-top-1 text-capitalize">
-                {underscoreToText(roles[space.guid].type)}
-              </span>
-            </li>
-          ) : null
+        {spacesSorted.map(
+          (space: any) =>
+            roles[space.guid] && (
+              <li
+                key={space.guid}
+                id={space.guid}
+                className="usa-list--unstyled margin-bottom-3"
+              >
+                <strong>{space.name}</strong>
+                <span className="display-block margin-top-1 text-capitalize">
+                  {underscoreToText(roles[space.guid].type)}
+                </span>
+              </li>
+            )
         )}
       </ul>
     </>
