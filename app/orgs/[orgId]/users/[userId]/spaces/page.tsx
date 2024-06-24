@@ -1,3 +1,4 @@
+import { RoleObj } from '@/api/cf/cloudfoundry-types';
 import { getOrgUserSpacesPage } from '@/controllers/controllers';
 import { sortObjectsByParam } from '@/helpers/arrays';
 import { underscoreToText } from '@/helpers/text';
@@ -18,7 +19,7 @@ export default async function UserSpacesPage({
   return (
     <>
       <h4 className="border-bottom border-primary-warm padding-bottom-1 margin-bottom-1">
-        Spaces and roles ({spaces.length})
+        Spaces and roles
       </h4>
       <Link href="/todo" className="usa-link">
         Edit spaces and roles
@@ -33,9 +34,16 @@ export default async function UserSpacesPage({
                 className="usa-list--unstyled margin-bottom-3"
               >
                 <strong>{space.name}</strong>
-                <span className="display-block margin-top-1 text-capitalize">
-                  {underscoreToText(roles[space.guid].type)}
-                </span>
+                <ul>
+                  {roles[space.guid].map((role: RoleObj) => (
+                    <li
+                      className="margin-top-1 text-capitalize"
+                      key="{space.guid}-{role.type}"
+                    >
+                      {underscoreToText(role.type)}
+                    </li>
+                  ))}
+                </ul>
               </li>
             )
         )}

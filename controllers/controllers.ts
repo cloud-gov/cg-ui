@@ -470,7 +470,8 @@ export async function getOrgUserSpacesPage(
   const userRolesPayload = await userRolesRes.json();
   const userRolesBySpaceId = userRolesPayload.resources.reduce(
     (acc: any, item: any) => {
-      acc[item.relationships.space.data.guid] = item;
+      const key = item.relationships.space.data.guid;
+      acc[key] = key in acc ? acc[key].concat([item]) : [item];
       return acc;
     },
     {}
