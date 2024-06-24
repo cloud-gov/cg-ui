@@ -357,7 +357,7 @@ export async function getOrgPage(orgGuid: string): Promise<ControllerResult> {
   if (!userInfoRes.ok && userInfoRes.status != 403) {
     if (process.env.NODE_ENV == 'development') {
       console.error(
-        `uaa api error on cf org page with http code ${spaceRolesRes.status} for url: ${spaceRolesRes.url}`
+        `uaa api error on cf org page with http code ${userInfoRes.status} for url: ${userInfoRes.url}`
       );
     }
     throw new Error('something went wrong with the request');
@@ -415,6 +415,72 @@ export async function getOrgTestPage(
       org: await orgRes.json(),
       users: userRoleList,
       spaces: (await spacesRes.json()).resources,
+    },
+  };
+}
+
+export async function getUser(userGuid: string): Promise<Result> {
+  try {
+    const res = await CF.getUser(userGuid);
+    return await mapCfResult(res, {});
+  } catch (error: any) {
+    if (process.env.NODE_ENV == 'development') {
+      console.error(`unable to retrieve user information: ${error.message}`);
+    }
+    return {
+      success: false,
+      status: 'error',
+      message: 'unable to retrieve user information',
+    };
+  }
+}
+
+export async function getOrgUserSpacesPage(
+  orgGuid: string,
+  userGuid: string
+): Promise<ControllerResult> {
+  const spacesRes = await CF.getSpaces([orgGuid]);
+  if (!spacesRes.ok) {
+    if (process.env.NODE_ENV == 'development') {
+      console.error(
+        `api error on cf org page with http code ${spacesRes.status} for url: ${spacesRes.url}`
+      );
+    }
+    throw new Error('something went wrong with the request');
+  }
+  const spacesPayload = (await spacesRes.json()).resources;
+  const spaceGuids = spacesPayload.map(function (space: SpaceObj) {
+    return space.guid;
+  });
+
+  const userRolesRes = await CF.getRoles({
+    spaceGuids: spaceGuids,
+    userGuids: [userGuid],
+  });
+
+  if (!userRolesRes.ok) {
+    if (process.env.NODE_ENV == 'development') {
+      console.error(
+        `api error on cf org page with http code ${userRolesRes.status} for url: ${userRolesRes.url}`
+      );
+    }
+    throw new Error('something went wrong with the request');
+  }
+
+  const userRolesPayload = await userRolesRes.json();
+  const userRolesBySpaceId = userRolesPayload.resources.reduce(
+    (acc: any, item: any) => {
+      acc[item.relationships.space.data.guid] = item;
+      return acc;
+    },
+    {}
+  );
+
+  return {
+    meta: { status: 'success' },
+    payload: {
+      roles: userRolesBySpaceId,
+      spaces: spacesPayload,
     },
   };
 }

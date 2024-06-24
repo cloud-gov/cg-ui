@@ -16,9 +16,13 @@ export function numberExtra(size: number): number {
 export function UsersListSpaceRoles({
   roles,
   spaces,
+  orgGuid,
+  userGuid,
 }: {
   roles: RankedSpaceRoles;
   spaces: SpacesBySpaceId;
+  orgGuid: string;
+  userGuid: string;
 }) {
   // const rolesRes = groupedRoles(roles);
   const rolesKeys = Object.keys(roles);
@@ -41,7 +45,7 @@ export function UsersListSpaceRoles({
         {rolesKeys.length > 0 && (
           <span>
             <Link
-              href="/todo"
+              href={`/orgs/${orgGuid}/users/${userGuid}/spaces`}
               className="usa-button usa-button--unstyled font-body-2xs"
               aria-label="view all spaces and roles for this user"
             >

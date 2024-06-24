@@ -153,12 +153,18 @@ export async function getSpace(guid: string): Promise<Response> {
   return await cfRequest('/spaces/' + guid, 'get');
 }
 
-export async function getSpaces(org_guids?: string[]): Promise<Response> {
-  if (org_guids && org_guids.length > 0) {
+export async function getSpaces(orgGuids?: string[]): Promise<Response> {
+  if (orgGuids && orgGuids.length > 0) {
     const params = new URLSearchParams({
-      organization_guids: org_guids.join(','),
+      organization_guids: orgGuids.join(','),
     });
     return await cfRequest('/spaces?' + params.toString());
   }
   return await cfRequest('/spaces');
+}
+
+// USERS
+
+export async function getUser(guid: string): Promise<Response> {
+  return await cfRequest('/users/' + guid, 'get');
 }
