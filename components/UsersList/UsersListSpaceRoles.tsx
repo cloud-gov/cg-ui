@@ -27,6 +27,7 @@ export function UsersListSpaceRoles({
   // const rolesRes = groupedRoles(roles);
   const rolesKeys = Object.keys(roles);
   const extra = numberExtra(rolesKeys.length);
+  const userLink = `/orgs/${orgGuid}/users/${userGuid}`;
   return (
     <div className="tablet:padding-right-2 tablet:border-right tablet:border-base-light tablet:height-full">
       <div className="display-flex flex-align-center padding-bottom-1">
@@ -35,7 +36,7 @@ export function UsersListSpaceRoles({
         </h4>
         <span>
           <Link
-            href={`/orgs/${orgGuid}/users/${userGuid}/spaces`}
+            href={userLink}
             className="usa-button usa-button--unstyled margin-right-2 font-body-2xs"
             aria-label="edit spaces and roles for this user"
           >
@@ -45,7 +46,7 @@ export function UsersListSpaceRoles({
         {rolesKeys.length > 0 && (
           <span>
             <Link
-              href={`/orgs/${orgGuid}/users/${userGuid}/spaces`}
+              href={userLink}
               className="usa-button usa-button--unstyled font-body-2xs"
               aria-label="view all spaces and roles for this user"
             >
@@ -76,7 +77,7 @@ export function UsersListSpaceRoles({
         ))}
         {extra > 0 && (
           <Link
-            href={`/orgs/${orgGuid}/users/${userGuid}/spaces`}
+            href={userLink}
             className="usa-button usa-button--unstyled text-no-wrap"
           >
             +{extra}

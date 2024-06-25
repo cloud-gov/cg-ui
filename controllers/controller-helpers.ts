@@ -164,6 +164,12 @@ export function createFakeUaaUser(user: UserObj): UAAUser {
   return cases[index];
 }
 
+export async function logDevError(message: string) {
+  if (process.env.NODE_ENV === 'development') {
+    console.error(message);
+  }
+}
+
 export async function pollForJobCompletion(
   jobLocation: string | null
 ): Promise<void> {

@@ -12,18 +12,18 @@ export default async function SpaceLayout({
     userId: string;
   };
 }) {
-  const { payload, success } = await getUser(params.userId);
+  const { payload, meta } = await getUser(params.userId);
 
   return (
     <>
       <div className="desktop:display-flex border-bottom border-accent-warm-light padding-bottom-105">
-        <Link href="/todo" className="usa-link">
+        <Link href={`/orgs/${params.orgId}`} className="usa-link">
           Manage users
         </Link>{' '}
         &nbsp; &gt; Spaces and roles
       </div>
       <h3 className="font-heading-lg text-normal">
-        {success ? payload.username : 'User name not found'}
+        {meta.status === 'success' ? payload.username : 'User name not found'}
       </h3>
       {children}
     </>
