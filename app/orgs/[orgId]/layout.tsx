@@ -16,7 +16,7 @@ export default async function OrgLayout({
       <LayoutHeader>
         {success ? payload.name : 'Org name not found'}
       </LayoutHeader>
-      <main className="padding-4 overflow-y-auto">{children}</main>
+      <main className="padding-4">{children}</main>
     </>
   );
 }
