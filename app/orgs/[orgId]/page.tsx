@@ -22,6 +22,7 @@ export default async function OrgPage({
         roles={roles}
         spaces={spaces}
         uaaUsers={uaaUsers}
+        orgGuid={params.orgId}
       />
     </>
   );

@@ -24,12 +24,14 @@ export function UsersListItem({
   spaces,
   uaaUser,
   removeUserCallback,
+  orgGuid,
 }: {
   user: UserObj;
   roles: RolesByUserItem;
   spaces: SpacesBySpaceId;
   uaaUser: UAAUser;
   removeUserCallback?: Function;
+  orgGuid: string;
 }) {
   return (
     <GridListItem>
@@ -48,7 +50,12 @@ export function UsersListItem({
           <UsersListOrgRoles orgRoles={roles.org} />
         </GridListItemBottomLeft>
         <GridListItemBottomCenter>
-          <UsersListSpaceRoles roles={roles.space} spaces={spaces} />
+          <UsersListSpaceRoles
+            roles={roles.space}
+            spaces={spaces}
+            orgGuid={orgGuid}
+            userGuid={user.guid}
+          />
         </GridListItemBottomCenter>
         <GridListItemBottomRight>
           <UsersListLastLogin timestamp={uaaUser.previousLogonTime} />
