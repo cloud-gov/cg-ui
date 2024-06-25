@@ -42,6 +42,15 @@ jobs:
           service: aws-rds
           plan: micro-psql
 
+      - put: create-s3
+        resource: cf-cli-dev
+        params:
+          command: create-service
+          update_service: true
+          service_instance: cg-ui-storage
+          service: s3
+          plan: basic
+
       - put: cloud-gov-development
         params:
           manifest: cg-ui/manifest.yml
