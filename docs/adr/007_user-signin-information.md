@@ -1,6 +1,6 @@
 # User sign in and expiration information
 
-Status: Proposed
+Status: Accepted
 
 ## Context and problem statement
 
@@ -25,11 +25,11 @@ If this does not work, we will explore option 2: querying the UAA API with a cli
 
 Justification:
 
-The uaa-bot currently writes information about upcoming user expirations to an s3 bucket. The Cloud.gov compliance team is wary of sharing the date and time of user access, but comfortable with information like "access expires in 10 days." This s3 bucket could be made available to our application for use with minimal work on the Cloud.gov platform side.
+The uaa-bot currently writes information about upcoming user expirations to an s3 bucket. This s3 bucket could be made available to our application for use with minimal work on the Cloud.gov platform side.
 
 Consequences:
 
-We will not have the amount of information we original envisioned, but we would be able to accomplish our goal of warning managers when users are expiring and giving them the ability to evaluate how to (re)enable access. There is no development version of the s3 bucket, so we will have to imitate the JSON response for the immediate term. We will not move Cloud.gov towards a shared datastore that could be used for billing information.
+Our application will depend on the uaa-bot to provide up-to-date information about user login and status. This solution does not move Cloud.gov towards a shared datastore that could be used for billing information.
 
 ### Success criteria
 
@@ -61,8 +61,8 @@ Our application is able to pull up-to-date and accurate information about when a
 * `-` Shifts management of access permissions from UAA or CAPI to our application or datastore
 
 ### 5. uaa-bot s3 bucket
-* `+` No changes or minor changes to current uaa-bot behavior and data storage
+* `+` Minor changes to current uaa-bot behavior and data storage
 * `+` Provides app with relatively up-to-date information about user expiration and status
-* `+` Only requires access to s3 bucket to begin using data
+* `+` Only requires access to an s3 bucket to begin using data
 * `-` App will be required to parse JSON searching for user guids
-* `-` No development version of uaa-bot or bucket means we will have to mock data until use in production
+* `-` Data will be slightly out of sync in that uaa-bot runs on a schedule rather than pushing immediate updates when a user signs in
