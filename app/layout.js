@@ -12,18 +12,16 @@ export const metadata = {
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="en" className="height-full">
-      <body className="bg-accent-warm-light height-full">
+    <html lang="en">
+      <body className="bg-accent-warm-light">
         <div className="border-bottom border-white">
           <Banner />
         </div>
-        <div className="grid-container desktop:height-full desktop:display-flex desktop:overflow-hidden">
+        <div className="grid-container desktop:display-flex">
           <div className="desktop:grid-col-2">
             <Sidebar />
           </div>
-          <div className="desktop:grid-col-10 bg-white height-full flex-column display-flex">
-            {children}
-          </div>
+          <div className="desktop:grid-col-10 bg-white">{children}</div>
         </div>
         <Footer />
         <Identifier />
