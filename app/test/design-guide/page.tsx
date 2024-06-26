@@ -3,13 +3,15 @@
 import { Alert } from '@/components/uswds/Alert';
 import { Button } from '@/components/uswds/Button';
 import { Banner } from '@/components/uswds/Banner';
+import Checkbox from '@/components/uswds/Checkbox';
 
 export default function DesignGuidePage() {
   return (
-    <>
-      <Banner />
-
+    <div className="overflow-y-scroll">
       <h1>Design components</h1>
+
+      <h2>USA banner</h2>
+      <Banner />
 
       <h2>Headers in prose:</h2>
 
@@ -125,7 +127,44 @@ export default function DesignGuidePage() {
             </Alert>
           </div>
         </div>
+
+        <h2>Checkboxes</h2>
+        <div className="grid-row grid-gap">
+          <div className="grid-col-6">
+            <Checkbox
+              id="checkbox-1"
+              name="checkboxes"
+              label="Simple checkbox"
+            />
+            <Checkbox
+              id="checkbox-2"
+              name="checkboxes"
+              label="With label description"
+              labelDescription="Optional description"
+            />
+            <Checkbox
+              id="checkbox-3"
+              name="checkboxes"
+              label="Checked and with value"
+              value="value-sent-by-form"
+              defaultChecked={true}
+            />
+          </div>
+          <div className="grid-col-6">
+            <Checkbox
+              id="checkbox-4"
+              name="checkboxes"
+              label="Tiled"
+              tile
+              labelDescription="You can separate checkboxes out and even pass in other React nodes"
+            />
+          </div>
+        </div>
+
+        <div className="margin-bottom-5">
+          {/* placeholder to help with the page scroll */}
+        </div>
       </div>
-    </>
+    </div>
   );
 }
