@@ -31,13 +31,13 @@ export interface RoleRanking {
   [roleType: string]: number;
 }
 
-export interface RankedSpaceRoles {
-  [spaceGuid: string]: RolesByUserRole;
+export interface SpaceRoles {
+  [spaceGuid: string]: RolesByUserRole[];
 }
 
 export interface RolesByUserItem {
   org: RolesByUserRole[];
-  space: RankedSpaceRoles;
+  space: SpaceRoles;
   allSpaceRoleGuids: string[];
   allOrgRoleGuids: string[];
 }
