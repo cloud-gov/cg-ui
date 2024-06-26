@@ -18,11 +18,13 @@ export function UsersList({
   roles,
   spaces,
   uaaUsers,
+  orgGuid,
 }: {
   users: Array<UserObj>;
   roles: RolesByUser;
   spaces: SpacesBySpaceId;
   uaaUsers: UAAUsersById;
+  orgGuid: string;
 }) {
   const [removedUserGuids, setRemovedUserGuids] = useState([] as string[]);
 
@@ -69,6 +71,7 @@ export function UsersList({
               spaces={spaces}
               uaaUser={uaaUsers[user.guid]}
               removeUserCallback={removeUserCallback}
+              orgGuid={orgGuid}
             />
           );
         }

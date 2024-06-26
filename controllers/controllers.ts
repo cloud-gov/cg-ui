@@ -20,6 +20,7 @@ import {
   createFakeUaaUser,
   resourceKeyedById,
   pollForJobCompletion,
+  logDevError,
 } from './controller-helpers';
 
 // maps basic cloud foundry fetch response to frontend ready result
@@ -33,15 +34,14 @@ async function mapCfResult(
       status: 'success',
       message: message ? message.success : undefined,
       // 202 (successful delete) does not return any json
-      payload: apiResponse.status == 202 ? undefined : await apiResponse.json(),
+      payload:
+        apiResponse.status === 202 ? undefined : await apiResponse.json(),
     };
-  } else if (apiResponse.status == 422) {
+  } else if (apiResponse.status === 422) {
     const cfPayload = await apiResponse.json();
-    if (process.env.NODE_ENV == 'development') {
-      console.error(
-        `${message ? message.fail : '422 error with cf request'}: ${JSON.stringify(cfPayload)}`
-      );
-    }
+    logDevError(
+      `${message ? message.fail : '422 error with cf request'}: ${JSON.stringify(cfPayload)}`
+    );
     return {
       success: false,
       status: 'error',
@@ -50,11 +50,9 @@ async function mapCfResult(
     };
   }
 
-  if (process.env.NODE_ENV == 'development') {
-    console.error(
-      `${message ? message.fail : 'error with cf request'}: ${apiResponse.status}`
-    );
-  }
+  logDevError(
+    `${message ? message.fail : 'error with cf request'}: ${apiResponse.status}`
+  );
   return {
     success: false,
     status: 'error',
@@ -121,7 +119,7 @@ async function deleteGroupUser(
     const args: GetRoleArgs = {
       userGuids: [userGuid],
     };
-    groupType == 'org' ? (args.orgGuids = guids) : (args.spaceGuids = guids);
+    groupType === 'org' ? (args.orgGuids = guids) : (args.spaceGuids = guids);
     const roleRes = await CF.getRoles(args);
 
     if (!roleRes.ok) {
@@ -173,9 +171,7 @@ export async function deleteRole(guid: string): Promise<Result> {
     const res = await CF.deleteRole(guid);
     return await mapCfResult(res, message);
   } catch (error: any) {
-    if (process.env.NODE_ENV == 'development') {
-      console.error(`${message.fail}: ${error.message}`);
-    }
+    logDevError(`${message.fail}: ${error.message}`);
     return {
       success: false,
       status: 'error',
@@ -209,9 +205,7 @@ export async function getApps(): Promise<Result> {
     const res = await CF.getApps();
     return await mapCfResult(res, message);
   } catch (error: any) {
-    if (process.env.NODE_ENV == 'development') {
-      console.error(`${message.fail}: ${error.message}`);
-    }
+    logDevError(`${message.fail}: ${error.message}`);
     return {
       success: false,
       status: 'error',
@@ -235,9 +229,7 @@ export async function getOrg(guid: string): Promise<Result> {
     }
     return await mapCfResult(res, message);
   } catch (error: any) {
-    if (process.env.NODE_ENV == 'development') {
-      console.error(`${message.fail}: ${error.message}`);
-    }
+    logDevError(`${message.fail}: ${error.message}`);
     return {
       success: false,
       status: 'error',
@@ -254,9 +246,7 @@ export async function getOrgs(): Promise<Result> {
     const res = await CF.getOrgs();
     return await mapCfResult(res, message);
   } catch (error: any) {
-    if (process.env.NODE_ENV == 'development') {
-      console.error(`${message.fail}: ${error.message}`);
-    }
+    logDevError(`${message.fail}: ${error.message}`);
     return {
       success: false,
       status: 'error',
@@ -273,9 +263,7 @@ export async function getSpace(guid: string): Promise<Result> {
     const res = await CF.getSpace(guid);
     return await mapCfResult(res, message);
   } catch (error: any) {
-    if (process.env.NODE_ENV == 'development') {
-      console.error(`${message.fail}: ${error.message}`);
-    }
+    logDevError(`${message.fail}: ${error.message}`);
     return {
       success: false,
       status: 'error',
@@ -316,11 +304,9 @@ export async function getOrgPage(orgGuid: string): Promise<ControllerResult> {
   ]);
   [orgUserRolesRes, spacesRes].map((res) => {
     if (!res.ok) {
-      if (process.env.NODE_ENV == 'development') {
-        console.error(
-          `api error on cf org page with http code ${res.status} for url: ${res.url}`
-        );
-      }
+      logDevError(
+        `api error on cf org page with http code ${res.status} for url: ${res.url}`
+      );
       throw new Error('something went wrong with the request');
     }
   });
@@ -347,23 +333,19 @@ export async function getOrgPage(orgGuid: string): Promise<ControllerResult> {
   ]);
 
   if (!spaceRolesRes.ok) {
-    if (process.env.NODE_ENV == 'development') {
-      console.error(
-        `api error on cf org page with http code ${spaceRolesRes.status} for url: ${spaceRolesRes.url}`
-      );
-    }
+    logDevError(
+      `api error on cf org page with http code ${spaceRolesRes.status} for url: ${spaceRolesRes.url}`
+    );
     throw new Error('something went wrong with the request');
   }
   if (!userInfoRes.ok && userInfoRes.status != 403) {
-    if (process.env.NODE_ENV == 'development') {
-      console.error(
-        `uaa api error on cf org page with http code ${spaceRolesRes.status} for url: ${spaceRolesRes.url}`
-      );
-    }
+    logDevError(
+      `uaa api error on cf org page with http code ${userInfoRes.status} for url: ${userInfoRes.url}`
+    );
     throw new Error('something went wrong with the request');
   }
   const uaaUsers =
-    userInfoRes.status == 403
+    userInfoRes.status === 403
       ? resourceKeyedById(
           users.map(function (user: UserObj) {
             return createFakeUaaUser(user);
@@ -400,11 +382,9 @@ export async function getOrgTestPage(
   ]);
   [orgRes, usersRes, spacesRes].map((res) => {
     if (!res.ok) {
-      if (process.env.NODE_ENV == 'development') {
-        console.error(
-          `api error on cf org page with http code ${res.status} for url: ${res.url}`
-        );
-      }
+      logDevError(
+        `api error on cf org page with http code ${res.status} for url: ${res.url}`
+      );
       throw new Error('something went wrong with the request');
     }
   });
@@ -415,6 +395,72 @@ export async function getOrgTestPage(
       org: await orgRes.json(),
       users: userRoleList,
       spaces: (await spacesRes.json()).resources,
+    },
+  };
+}
+
+export async function getUser(userGuid: string): Promise<ControllerResult> {
+  const res = await CF.getUser(userGuid);
+  if (!res.ok) {
+    logDevError(`unable to retrieve user information: ${res.status}`);
+    return {
+      payload: null,
+      meta: {
+        status: 'error',
+      },
+    };
+  }
+  return {
+    payload: await res.json(),
+    meta: {
+      status: 'success',
+    },
+  };
+}
+
+export async function getOrgUserSpacesPage(
+  orgGuid: string,
+  userGuid: string
+): Promise<ControllerResult> {
+  const spacesRes = await CF.getSpaces([orgGuid]);
+  if (!spacesRes.ok) {
+    logDevError(
+      `api error on cf org page with http code ${spacesRes.status} for url: ${spacesRes.url}`
+    );
+    throw new Error('something went wrong with the request');
+  }
+  const spacesPayload = (await spacesRes.json()).resources;
+  const spaceGuids = spacesPayload.map(function (space: SpaceObj) {
+    return space.guid;
+  });
+
+  const userRolesRes = await CF.getRoles({
+    spaceGuids: spaceGuids,
+    userGuids: [userGuid],
+  });
+
+  if (!userRolesRes.ok) {
+    logDevError(
+      `api error on cf org page with http code ${userRolesRes.status} for url: ${userRolesRes.url}`
+    );
+    throw new Error('something went wrong with the request');
+  }
+
+  const userRolesPayload = await userRolesRes.json();
+  const userRolesBySpaceId = userRolesPayload.resources.reduce(
+    (acc: any, item: any) => {
+      const key = item.relationships.space.data.guid;
+      acc[key] = key in acc ? acc[key].concat([item]) : [item];
+      return acc;
+    },
+    {}
+  );
+
+  return {
+    meta: { status: 'success' },
+    payload: {
+      roles: userRolesBySpaceId,
+      spaces: spacesPayload,
     },
   };
 }
@@ -458,9 +504,7 @@ export async function removeUserFromOrg(
       payload: {},
     };
   } catch (e: any) {
-    if (process.env.NODE_ENV == 'development') {
-      console.error('error in removeUserFromOrg: ', e.message);
-    }
+    logDevError(`error in removeUserFromOrg: ${e.message}`);
     return {
       meta: {
         status: 'error',
