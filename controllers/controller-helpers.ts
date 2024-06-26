@@ -4,12 +4,7 @@ import {
   RoleRanking,
   UAAUser,
 } from './controller-types';
-import {
-  ListRolesRes,
-  RoleObj,
-  RoleType,
-  UserObj,
-} from '@/api/cf/cloudfoundry-types';
+import { ListRolesRes, RoleObj, UserObj } from '@/api/cf/cloudfoundry-types';
 import { addDays, randomDate } from '@/helpers/dates';
 import { cfRequestOptions } from '@/api/cf/cloudfoundry';
 import { request } from '@/api/api';
@@ -35,23 +30,16 @@ export function associateUsersWithRoles(roles: RoleObj[]): RolesByUser {
         allOrgRoleGuids: [],
       };
     }
-    // if the role is a space role, evaluate space role
+    // if the role is a space role, add to space role lisr
     if (relation.space.data?.guid) {
       const spaceId = relation.space.data.guid;
       if (userObj[userId].space[spaceId]) {
-        const rankedRole = rankRole(
-          userObj[userId].space[spaceId].role,
-          resource.type
-        );
-        userObj[userId].space[spaceId] = {
-          guid: spaceId,
-          role: rankedRole as RoleType,
-        };
-      } else {
-        userObj[userId].space[spaceId] = {
+        userObj[userId].space[spaceId].push({
           guid: spaceId,
           role: resource.type,
-        };
+        });
+      } else {
+        userObj[userId].space[spaceId] = [];
       }
       // collect all space role guids needed for removing a user from an org
       userObj[userId].allSpaceRoleGuids.push(resource.guid);

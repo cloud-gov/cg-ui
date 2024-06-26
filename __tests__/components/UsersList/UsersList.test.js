@@ -26,7 +26,9 @@ const mockRoles = {
       { guid: 'orgGuid-1', role: 'org_manager' },
       { guid: 'orgGuid-1', role: 'org_auditor' },
     ],
-    space: { 'spaceGuid-1': { guid: 'spaceGuid-1', role: 'space_manager' } },
+    space: {
+      'spaceGuid-1': [{ guid: 'spaceGuid-1', role: 'space_manager' }],
+    },
     allSpaceRoleGuids: ['spaceGuid-1'],
     allOrgRoleGuids: ['orgGuid-1'],
   },
@@ -35,7 +37,9 @@ const mockRoles = {
       { guid: 'orgGuid-1', role: 'org_manager' },
       { guid: 'orgGuid-1', role: 'org_auditor' },
     ],
-    space: { 'spaceGuid-1': { guid: 'spaceGuid-1', role: 'space_developer' } },
+    space: {
+      'spaceGuid-1': [{ guid: 'spaceGuid-1', role: 'space_developer' }],
+    },
     allSpaceRoleGuids: ['spaceGuid-1'],
     allOrgRoleGuids: ['orgGuid-1'],
   },
@@ -44,7 +48,9 @@ const mockRoles = {
       { guid: 'orgGuid-1', role: 'org_manager' },
       { guid: 'orgGuid-1', role: 'org_auditor' },
     ],
-    space: { 'spaceGuid-1': { guid: 'spaceGuid-1', role: 'space_auditor' } },
+    space: {
+      'spaceGuid-1': [{ guid: 'spaceGuid-1', role: 'space_auditor' }],
+    },
     allSpaceRoleGuids: ['spaceGuid-1'],
     allOrgRoleGuids: ['orgGuid-1'],
   },

@@ -4,8 +4,10 @@ import Link from 'next/link';
 import { underscoreToText } from '@/helpers/text';
 import {
   SpacesBySpaceId,
-  RankedSpaceRoles,
+  SpaceRoles,
+  RolesByUserRole,
 } from '@/controllers/controller-types';
+import { sortObjectsByParam } from '@/helpers/arrays';
 
 const displaySize = 4;
 
@@ -17,10 +19,9 @@ export function UsersListSpaceRoles({
   roles,
   spaces,
 }: {
-  roles: RankedSpaceRoles;
+  roles: SpaceRoles;
   spaces: SpacesBySpaceId;
 }) {
-  // const rolesRes = groupedRoles(roles);
   const rolesKeys = Object.keys(roles);
   const extra = numberExtra(rolesKeys.length);
   return (
@@ -65,9 +66,16 @@ export function UsersListSpaceRoles({
             <div className="text-bold text-capitalize">
               {spaces[spaceGuid].name}
             </div>
-            <div className="text-capitalize">
-              {underscoreToText(roles[spaceGuid].role)}
-            </div>
+            {sortObjectsByParam(roles[spaceGuid], 'role').map(
+              (roleObj: RolesByUserRole, ri: number) => (
+                <div
+                  key={`UsersListSpaceRoles-spaceRoles-${ri}`}
+                  className="text-capitalize padding-top-1"
+                >
+                  {underscoreToText(roleObj.role)}
+                </div>
+              )
+            )}
           </div>
         ))}
         {extra > 0 && (

@@ -229,10 +229,12 @@ describe('controllers tests', () => {
             },
           ],
           space: {
-            'dedb82bb-9f35-49f4-8ff9-7130ae2e3198': {
-              guid: 'dedb82bb-9f35-49f4-8ff9-7130ae2e3198',
-              role: 'space_manager',
-            },
+            'dedb82bb-9f35-49f4-8ff9-7130ae2e3198': [
+              {
+                guid: 'dedb82bb-9f35-49f4-8ff9-7130ae2e3198',
+                role: 'space_developer',
+              },
+            ],
           },
         });
         expect(
