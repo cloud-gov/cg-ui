@@ -147,12 +147,12 @@ export default function DesignGuidePage() {
               name="checkboxes"
               label="Checked and with value"
               value="value-sent-by-form"
-              defaultChecked={true}
+              checked
             />
           </div>
           <div className="grid-col-6">
             <Checkbox
-              id="checkbox-4"
+              id="checkbox-5"
               name="checkboxes"
               label="Tiled"
               tile
