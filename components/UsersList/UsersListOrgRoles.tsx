@@ -22,8 +22,12 @@ function RoleNamesList({ orgRoles }: { orgRoles: Array<RolesByUserRole> }) {
 
 export function UsersListOrgRoles({
   orgRoles,
+  orgGuid,
+  userGuid,
 }: {
   orgRoles: Array<RolesByUserRole>;
+  orgGuid: string;
+  userGuid: string;
 }) {
   return (
     <div className="margin-bottom-2 tablet:margin-bottom-0 tablet:margin-right-2 tablet:border-right tablet:border-base-light height-full">
@@ -33,7 +37,7 @@ export function UsersListOrgRoles({
         </h4>
         <span>
           <Link
-            href="/todo"
+            href={`/orgs/${orgGuid}/users/${userGuid}/org-roles`}
             className="usa-button usa-button--unstyled font-body-2xs"
             aria-label="Edit organization roles for this user"
           >

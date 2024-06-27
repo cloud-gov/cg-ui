@@ -47,7 +47,11 @@ export function UsersListItem({
       </GridListItemTop>
       <GridListItemBottom>
         <GridListItemBottomLeft>
-          <UsersListOrgRoles orgRoles={roles.org} />
+          <UsersListOrgRoles
+            orgRoles={roles.org}
+            orgGuid={orgGuid}
+            userGuid={user.guid}
+          />
         </GridListItemBottomLeft>
         <GridListItemBottomCenter>
           <UsersListSpaceRoles
