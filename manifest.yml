@@ -5,6 +5,7 @@ applications:
     timeout: 180
     services:
       - cg-ui-datastore
+      - cg-ui-storage
     env:
       AUTH_CALLBACK_PATH: auth/login/callback
       CF_API_URL: ((CF_API_URL))
