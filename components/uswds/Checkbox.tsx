@@ -2,37 +2,31 @@
 // https://github.com/trussworks/react-uswds/ Checkbox component
 
 import React from 'react';
-import { useState } from 'react';
 import classnames from 'classnames';
 
 type CheckboxProps = {
   id: string;
   name: string;
-  checked?: boolean;
+  checked: boolean;
   className?: string;
   label: React.ReactNode;
   labelDescription?: React.ReactNode;
+  onChange: React.ReactEventHandler;
   tile?: boolean;
 };
 
 export const Checkbox = ({
   id,
   name,
-  checked,
+  checked = false,
   className,
   label,
   labelDescription,
+  onChange,
   tile,
   ...inputProps
   // eslint-disable-next-line no-undef
 }: CheckboxProps & JSX.IntrinsicElements['input']): React.ReactElement => {
-  // if checked attribute was passed in, the checkbox should start checked
-  const [isChecked, setIsChecked] = useState(!!checked);
-
-  const checkHandler = () => {
-    return setIsChecked(!isChecked);
-  };
-
   const classes = classnames('usa-checkbox', className);
   const checkboxClasses = classnames('usa-checkbox__input', {
     'usa-checkbox__input--tile': tile,
@@ -42,10 +36,10 @@ export const Checkbox = ({
     <div data-testid="checkbox" className={classes}>
       <input
         id={id}
-        checked={isChecked}
+        checked={checked}
         className={checkboxClasses}
         name={name}
-        onChange={checkHandler}
+        onChange={onChange}
         type="checkbox"
         {...inputProps}
       />

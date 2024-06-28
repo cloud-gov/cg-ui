@@ -1,13 +1,15 @@
 /**
  * @jest-environment jsdom
  */
-import { describe, expect, it } from '@jest/globals';
+import { jest, describe, expect, it } from '@jest/globals';
 import { render, screen, fireEvent } from '@testing-library/react';
 import { Checkbox } from '@/components/uswds/Checkbox';
 
 describe('<Checkbox />', () => {
   it('renders a default unselected checkbox', () => {
-    render(<Checkbox name="checkbox" label="Simple checkbox" />);
+    render(
+      <Checkbox name="checkbox" label="Simple checkbox" onChange={jest.fn()} />
+    );
     const cboxdiv = screen.getByTestId('checkbox');
     const cbox = cboxdiv.querySelector('input');
 
@@ -26,6 +28,7 @@ describe('<Checkbox />', () => {
         label="test"
         labelDescription="Extra description"
         tile
+        onChange={jest.fn()}
       />
     );
     const cboxdiv = screen.getByTestId('checkbox');
@@ -41,27 +44,42 @@ describe('<Checkbox />', () => {
   });
 
   it('renders a checkbox which is already checked', () => {
-    render(<Checkbox name="checkbox" label="Checked" checked />);
+    render(
+      <Checkbox
+        name="checkbox"
+        label="Checked"
+        checked={true}
+        onChange={jest.fn()}
+      />
+    );
     const cboxdiv = screen.getByTestId('checkbox');
     expect(cboxdiv.querySelector('input')).toBeChecked();
   });
 
-  it('when the checkbox is clicked, it becomes checked', () => {
-    render(<Checkbox name="checkbox" label="test" />);
+  it('when the checkbox is clicked, the onChange event is fired', () => {
+    const mockFn = jest.fn();
+    render(
+      <Checkbox
+        name="checkbox"
+        label="test"
+        checked={false}
+        onChange={mockFn}
+      />
+    );
     const cbox = screen.getByTestId('checkbox').querySelector('input');
-    expect(cbox).not.toBeChecked();
     fireEvent.click(cbox);
-    expect(cbox).toBeChecked();
+    expect(mockFn).toHaveBeenCalled();
   });
 
-  it('when the label is clicked, the checkbox with matching id becomes checked', () => {
-    render(<Checkbox id="testId" label="test" />);
+  it('when the label is clicked, the onChange event is fired', () => {
+    const mockFn = jest.fn();
+    render(
+      <Checkbox id="testId" label="test" checked={false} onChange={mockFn} />
+    );
     const cboxdiv = screen.getByTestId('checkbox');
-    const cbox = cboxdiv.querySelector('input');
     const label = cboxdiv.querySelector('label');
 
-    expect(cbox).not.toBeChecked();
     fireEvent.click(label);
-    expect(cbox).toBeChecked();
+    expect(mockFn).toHaveBeenCalled();
   });
 });

@@ -4,8 +4,31 @@ import { Alert } from '@/components/uswds/Alert';
 import { Button } from '@/components/uswds/Button';
 import { Banner } from '@/components/uswds/Banner';
 import Checkbox from '@/components/uswds/Checkbox';
+import { useState } from 'react';
 
 export default function DesignGuidePage() {
+  const initialCheckboxes = {
+    'checkbox-1': false,
+    'checkbox-2': true,
+    'checkbox-3': true,
+    'checkbox-4': false,
+  };
+  const [checkboxValues, setCheckboxValues] = useState(
+    initialCheckboxes as { [id: string]: boolean }
+  );
+
+  function setCheckboxState(value: string) {
+    var newValues = { ...checkboxValues };
+    var newValue = !newValues[value];
+    newValues[value] = newValue;
+    setCheckboxValues(newValues);
+  }
+
+  function handleChange(event: any) {
+    const value = event.target.id;
+    setCheckboxState(value);
+  }
+
   return (
     <div className="overflow-y-scroll">
       <h1>Design components</h1>
@@ -135,28 +158,35 @@ export default function DesignGuidePage() {
               id="checkbox-1"
               name="checkboxes"
               label="Simple checkbox"
+              checked={checkboxValues['checkbox-1']}
+              onChange={handleChange}
             />
             <Checkbox
               id="checkbox-2"
               name="checkboxes"
               label="With label description"
               labelDescription="Optional description"
+              checked={checkboxValues['checkbox-2']}
+              onChange={handleChange}
             />
             <Checkbox
               id="checkbox-3"
               name="checkboxes"
               label="Checked and with value"
               value="value-sent-by-form"
-              checked
+              checked={checkboxValues['checkbox-3']}
+              onChange={handleChange}
             />
           </div>
           <div className="grid-col-6">
             <Checkbox
-              id="checkbox-5"
+              id="checkbox-4"
               name="checkboxes"
               label="Tiled"
               tile
               labelDescription="You can separate checkboxes out and even pass in other React nodes"
+              checked={checkboxValues['checkbox-4']}
+              onChange={handleChange}
             />
           </div>
         </div>
