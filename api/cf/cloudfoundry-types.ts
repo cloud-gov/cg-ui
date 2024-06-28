@@ -14,7 +14,8 @@ export interface AddRoleArgs {
   orgGuid?: string;
   roleType: string;
   spaceGuid?: string;
-  username: string;
+  username?: string;
+  userGuid?: string;
 }
 
 export interface GetRoleArgs {
@@ -102,7 +103,8 @@ export interface AddRoleApiData {
   relationships: {
     user: {
       data: {
-        username: string;
+        username?: string;
+        guid?: string;
       };
     };
     organization?: {

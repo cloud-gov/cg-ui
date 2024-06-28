@@ -83,14 +83,16 @@ export async function addRole({
   roleType,
   spaceGuid,
   username,
+  userGuid,
 }: AddRoleArgs): Promise<Response> {
+  const userData = {} as AddRoleApiData['relationships']['user']['data'];
+  if (username) userData.username = username;
+  if (userGuid) userData.guid = userGuid;
   const data: AddRoleApiData = {
     type: roleType,
     relationships: {
       user: {
-        data: {
-          username: username,
-        },
+        data: userData,
       },
     },
   };
