@@ -1,6 +1,7 @@
 import React from 'react';
 import { getUser } from '@/controllers/controllers';
 import Link from 'next/link';
+import { PageHeader } from '@/components/PageHeader';
 
 export default async function SpaceLayout({
   children,
@@ -20,11 +21,15 @@ export default async function SpaceLayout({
         <Link href={`/orgs/${params.orgId}`} className="usa-link">
           Manage users
         </Link>{' '}
-        &nbsp; &gt; Spaces and roles
+        &nbsp; &gt; Roles
       </div>
-      <h3 className="font-heading-lg text-normal">
-        {meta.status === 'success' ? payload.username : 'User name not found'}
-      </h3>
+      <div className="margin-top-3">
+        <PageHeader
+          heading={
+            meta.status === 'success' ? payload.username : 'User name not found'
+          }
+        />
+      </div>
       {children}
     </>
   );

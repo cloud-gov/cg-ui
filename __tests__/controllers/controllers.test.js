@@ -6,6 +6,7 @@ import {
   getOrgTestPage,
   getSpaceUsers,
   removeUserFromOrg,
+  getEditOrgRoles,
 } from '@/controllers/controllers';
 import {
   createFakeUaaUser,
@@ -350,6 +351,37 @@ describe('controllers tests', () => {
         expect(result.meta.status).toEqual('error');
         expect(result.meta.errors.length).toEqual(1);
       });
+    });
+  });
+
+  describe('getEditOrgRoles', () => {
+    const orgGuid = 'foo';
+    const userGuid = 'bar';
+
+    it('returns payload on success', async () => {
+      // setup
+      nock(process.env.CF_API_URL)
+        .get(/roles/)
+        .reply(200, mockRolesFilteredByOrgAndUser);
+      // act
+      const result = await getEditOrgRoles(orgGuid, userGuid);
+      // assert
+      expect(result).toHaveProperty('meta');
+      expect(result.meta.status).toEqual('success');
+      expect(result).toHaveProperty('payload');
+    });
+
+    it('throws an error on failure', async () => {
+      // setup
+      nock(process.env.CF_API_URL).get(/roles/).reply(403);
+      // act/assert
+      expect(async () => {
+        await getEditOrgRoles(orgGuid, userGuid);
+      }).rejects.toThrow(
+        new Error(
+          'Something went wrong with loading the form. Please try again later.'
+        )
+      );
     });
   });
 });

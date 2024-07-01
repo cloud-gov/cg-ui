@@ -159,7 +159,7 @@ export async function logDevError(message: string) {
 }
 
 export async function pollForJobCompletion(
-  jobLocation: string | null
+  jobLocation: string | null | undefined
 ): Promise<void> {
   if (!jobLocation) return;
   try {
@@ -177,7 +177,7 @@ export async function pollForJobCompletion(
       case 'FAILED':
         throw new Error('a CF job failed');
     }
-    await delay(500);
+    await delay(200);
     await pollForJobCompletion(jobLocation);
   } catch (error: any) {
     throw new Error(error.message);
