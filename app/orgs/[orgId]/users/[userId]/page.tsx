@@ -1,26 +1,32 @@
 import { getOrgUserSpacesPage } from '@/controllers/controllers';
-import { sortObjectsByParam } from '@/helpers/arrays';
+import { GridList } from '@/components/GridList/GridList';
+import { UsersActionsSpaceRoles } from '@/components/UsersActions/UsersActionsSpaceRoles';
 
-export default async function UserSpacesPage({
+export default async function OrgUserSpaceRolesPage({
   params,
 }: {
-  params: {
-    orgId: string;
-    userId: string;
-  };
+  params: { orgId: string; userId: string };
 }) {
-  const { payload } = await getOrgUserSpacesPage(params.orgId, params.userId);
-  /* eslint-disable no-unused-vars */
-  const { roles, spaces } = payload;
-  const spacesSorted = sortObjectsByParam(spaces, 'name');
-  /* eslint-enable no-unused-vars */
+  const res = await getOrgUserSpacesPage(params.orgId, params.userId);
+  const { spaces, roles } = res.payload;
 
   return (
     <>
-      <h4 className="border-bottom border-primary-warm padding-bottom-1 margin-bottom-1">
-        Spaces and roles
-      </h4>
-      <p>To be implemented</p>
+      <h2>Space roles</h2>
+      <p>
+        Optional. By assigning additional roles, you can grant access to space
+        level information and features.
+      </p>
+      <GridList>
+        {spaces.map((space: any) => (
+          <UsersActionsSpaceRoles
+            key={space.guid}
+            space={space}
+            currentRoles={roles[space.guid]}
+            onCancelPath={`/orgs/${params.orgId}/users/${params.userId}`}
+          />
+        ))}
+      </GridList>
     </>
   );
 }

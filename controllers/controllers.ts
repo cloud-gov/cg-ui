@@ -22,6 +22,7 @@ import {
   pollForJobCompletion,
   logDevError,
 } from './controller-helpers';
+import { sortObjectsByParam } from '@/helpers/arrays';
 
 // maps basic cloud foundry fetch response to frontend ready result
 async function mapCfResult(
@@ -460,7 +461,7 @@ export async function getOrgUserSpacesPage(
     meta: { status: 'success' },
     payload: {
       roles: userRolesBySpaceId,
-      spaces: spacesPayload,
+      spaces: sortObjectsByParam(spacesPayload, 'name'),
     },
   };
 }
