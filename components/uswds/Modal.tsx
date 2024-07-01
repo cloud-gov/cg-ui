@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useRef, useEffect } from 'react';
 import Image from 'next/image';
 import closeIcon from '@/public/img/uswds/usa-icons/close.svg';
 
@@ -18,18 +18,49 @@ export function Modal({
   headingId: string;
   descriptionId?: string;
 }) {
+  const modalRef = useRef(null);
+
   useEffect(() => {
+    if (!modalRef) return;
+    const modalElement = modalRef.current;
+    if (!modalElement) return;
+
+    const focusableElements = (modalElement as HTMLElement).querySelectorAll(
+      'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+    );
+    const firstElement = focusableElements[0];
+    const lastElement = focusableElements[focusableElements.length - 1];
+    // Trap tab focus within modal
+    const handleTabKeyPress = (e: KeyboardEvent) => {
+      if (e.key !== 'Tab') return;
+
+      if (e.shiftKey && document.activeElement === firstElement) {
+        e.preventDefault();
+        (lastElement as HTMLElement).focus();
+      } else if (!e.shiftKey && document.activeElement === lastElement) {
+        e.preventDefault();
+        (firstElement as HTMLElement).focus();
+      }
+    };
+    // close modal when Escape key is pressed
     const handleEscapeKeyPress = (e: KeyboardEvent) => {
       if (e.key === 'Escape') {
         close();
-      } // close modal when Escape key is pressed
+      }
     };
+
+    window.addEventListener('keydown', handleTabKeyPress);
     window.addEventListener('keydown', handleEscapeKeyPress);
-    return () => window.removeEventListener('keydown', handleEscapeKeyPress); // remove event listener when component is unmounted
-  }, [close]);
+
+    return () => {
+      // remove event listeners when component is unmounted
+      window.removeEventListener('keydown', handleTabKeyPress);
+      window.removeEventListener('keydown', handleEscapeKeyPress);
+    };
+  }, [close, modalRef]);
 
   return (
-    <div className="usa-modal-wrapper is-visible">
+    <div className="usa-modal-wrapper is-visible" ref={modalRef}>
       <div className="usa-modal-overlay">
         <div
           className="usa-modal"
