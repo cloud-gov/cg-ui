@@ -39,16 +39,62 @@ describe('controller-helpers', () => {
     describe('when receiving a space specific result', () => {
       it('returns an array of RolesByUser objects with only space roles', () => {
         // act
-        const result = associateUsersWithRoles(mockUsersBySpace.resources);
-        const testUser = result['73193f8c-e03b-43c8-aeee-8670908899d2'];
+        const usersBySpaceRes = {
+          resources: [
+            {
+              guid: 'role1',
+              type: 'space_manager',
+              relationships: {
+                user: {
+                  data: {
+                    guid: 'user1',
+                  },
+                },
+                space: {
+                  data: {
+                    guid: 'space1',
+                  },
+                },
+                organization: {
+                  data: null,
+                },
+              },
+            },
+            {
+              guid: 'role2',
+              type: 'space_developer',
+              relationships: {
+                user: {
+                  data: {
+                    guid: 'user1',
+                  },
+                },
+                space: {
+                  data: {
+                    guid: 'space1',
+                  },
+                },
+                organization: {
+                  data: null,
+                },
+              },
+            },
+          ],
+        };
+        const result = associateUsersWithRoles(usersBySpaceRes.resources);
+        const testUser = result['user1'];
         // assert
         expect(testUser.org).toEqual([]);
-        expect(
-          testUser.space['dedb82bb-9f35-49f4-8ff9-7130ae2e3198'][0].guid
-        ).toEqual('dedb82bb-9f35-49f4-8ff9-7130ae2e3198');
-        expect(
-          testUser.space['dedb82bb-9f35-49f4-8ff9-7130ae2e3198'][0].role
-        ).toEqual('space_developer');
+        expect(testUser.space['space1']).toEqual([
+          {
+            guid: 'role1',
+            role: 'space_manager',
+          },
+          {
+            guid: 'role2',
+            role: 'space_developer',
+          },
+        ]);
       });
     });
 
@@ -70,7 +116,11 @@ describe('controller-helpers', () => {
         expect(testUser.space).toEqual({
           'dedb82bb-9f35-49f4-8ff9-7130ae2e3198': [
             {
-              guid: 'dedb82bb-9f35-49f4-8ff9-7130ae2e3198',
+              guid: '12ac7aa5-8a8e-48a4-9c90-a3b908c6e702',
+              role: 'space_manager',
+            },
+            {
+              guid: '1293d5ae-0266-413c-bacf-9f5474be984d',
               role: 'space_developer',
             },
           ],
