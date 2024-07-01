@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import Image from 'next/image';
 import closeIcon from '@/public/img/uswds/usa-icons/close.svg';
 
@@ -18,6 +18,16 @@ export function Modal({
   headingId: string;
   descriptionId?: string;
 }) {
+  useEffect(() => {
+    const handleEscapeKeyPress = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        close();
+      } // close modal when Escape key is pressed
+    };
+    window.addEventListener('keydown', handleEscapeKeyPress);
+    return () => window.removeEventListener('keydown', handleEscapeKeyPress); // remove event listener when component is unmounted
+  }, [close]);
+
   return (
     <div className="usa-modal-wrapper is-visible">
       <div className="usa-modal-overlay">
