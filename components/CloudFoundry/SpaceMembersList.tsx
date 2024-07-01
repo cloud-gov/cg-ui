@@ -57,6 +57,9 @@ export function SpaceMembersList({
     message: '',
   });
 
+  const modalHeadingId = (item: { guid: string }) =>
+    `modal-${item.guid}-heading`;
+
   return (
     <>
       <ul>
@@ -81,17 +84,21 @@ export function SpaceMembersList({
                 <MemberLabel user={user} />
               </strong>
               {confirmUserRemove === user.guid && (
-                <Modal close={() => setConfirmUserRemove('')} id={user.guid}>
+                <Modal
+                  close={() => setConfirmUserRemove('')}
+                  modalId={`modal-user-${user.guid}`}
+                  headingId={modalHeadingId(user)}
+                >
                   {!formStateUserRemove.success &&
                     formStateUserRemove.message && <div>Error</div>}
                   {!formStateUserRemove.success &&
                     !formStateUserRemove.message && (
                       <>
-                        <div>
+                        <p id={modalHeadingId(user)}>
                           are you sure you want to remove the user{' '}
                           <MemberLabel user={user} />
                           from the <strong>{space.name}</strong> space?
-                        </div>
+                        </p>
                         <form action={formActionUserRemove}>
                           <input
                             type="hidden"
@@ -134,21 +141,22 @@ export function SpaceMembersList({
                     {confirmRoleRemove === role.guid && (
                       <Modal
                         close={() => setConfirmRoleRemove('')}
-                        id={role.guid}
+                        modalId={`modal-role-${role.guid}`}
+                        headingId={modalHeadingId(role)}
                       >
                         {!formStateRoleRemove.success &&
                           formStateRoleRemove.message && <div>Error</div>}
                         {!formStateRoleRemove.success &&
                           !formStateRoleRemove.message && (
                             <>
-                              <div>
+                              <p id={modalHeadingId(role)}>
                                 are you sure you want to remove the role{' '}
                                 <strong>{role.type}</strong> for{' '}
                                 <strong>
                                   <MemberLabel user={user} />
                                 </strong>
                                 ?
-                              </div>
+                              </p>
                               <form action={formActionRoleRemove}>
                                 <input
                                   type="hidden"

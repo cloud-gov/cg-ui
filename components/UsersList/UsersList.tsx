@@ -52,11 +52,17 @@ export function UsersList({
     setRemovedUsername(user.username);
   }
 
+  const modalHeadingId = (name: string) => `removeUserSuccess-${name}`;
+
   return (
     <GridList>
       {removedUsername && (
-        <Modal close={closeModal} id="removeUserSuccess">
-          <Alert type="success">
+        <Modal
+          close={closeModal}
+          modalId="removeUserSuccess"
+          headingId={modalHeadingId(removedUsername)}
+        >
+          <Alert type="success" id={modalHeadingId(removedUsername)}>
             <strong>{removedUsername}</strong> has successfully been removed.
           </Alert>
         </Modal>

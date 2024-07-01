@@ -3,7 +3,7 @@
 import React from 'react';
 import { UserObj } from '@/api/cf/cloudfoundry-types';
 import { Button } from '@/components/uswds/Button';
-import { Modal } from '@/components/uswds/Modal';
+import { Modal, modalHeadingId } from '@/components/uswds/Modal';
 import { MouseEventHandler, useState } from 'react';
 import { Alert } from '../uswds/Alert';
 import {
@@ -28,7 +28,7 @@ function FormDefault({
   const isPending = actionStatus === 'pending';
   return (
     <>
-      <p>
+      <p id={modalHeadingId(user)}>
         Are you sure you want to remove <strong>{user.username}</strong> from
         this organization?
       </p>
@@ -111,7 +111,11 @@ export function UsersActionsRemoveFromOrg({
         Remove from org
       </Button>
       {modalOpen && (
-        <Modal id={`remove-from-org-user-${user.guid}`} close={closeModal}>
+        <Modal
+          close={closeModal}
+          modalId={`modal-remove-from-org-user-${user.guid}`}
+          headingId={modalHeadingId(user)}
+        >
           {actionStatus === 'error' && <FormError errors={actionErrors} />}
           {actionStatus !== 'success' && (
             <FormDefault

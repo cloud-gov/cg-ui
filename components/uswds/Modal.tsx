@@ -2,23 +2,30 @@ import React from 'react';
 import Image from 'next/image';
 import closeIcon from '@/public/img/uswds/usa-icons/close.svg';
 
+export const modalHeadingId = (item: { guid: string }) =>
+  `modal-heading-${item.guid}`;
+
 export function Modal({
   children,
   close,
-  id,
+  modalId, // ID responsible for opening/closing the modal from its parent component
+  headingId, // should match the id attribute on element that describes modal action, likely .usa-modal__heading
+  descriptionId, // should match ID of a paragraph or a brief piece of content within the modal
 }: {
   children: React.ReactNode;
   close: Function;
-  id: string;
+  modalId: string;
+  headingId: string;
+  descriptionId?: string;
 }) {
   return (
     <div className="usa-modal-wrapper is-visible">
       <div className="usa-modal-overlay">
         <div
           className="usa-modal"
-          id={`modal-${id}`}
-          aria-labelledby={`modal-${id}-heading`}
-          aria-describedby={`modal-${id}-description`}
+          id={modalId}
+          aria-labelledby={headingId}
+          aria-describedby={descriptionId || ''}
         >
           <div className="usa-modal__content">
             <div className="usa-modal__main">{children}</div>
