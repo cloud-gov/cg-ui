@@ -47,7 +47,6 @@ describe('UsersActionsOrgRoles', () => {
       const checkBox = screen.getByRole('checkbox', {
         name: /Billing manager/,
       });
-      const label = screen.getByTestId('label_organization_billing_manager');
       // expect
       expect(checkBox.checked).toEqual(false);
 
@@ -60,11 +59,6 @@ describe('UsersActionsOrgRoles', () => {
       fireEvent.click(checkBox);
       // expect
       expect(checkBox.checked).toEqual(false);
-
-      // act - it checks when label is clicked
-      fireEvent.click(label);
-      // expect
-      expect(checkBox.checked).toEqual(true);
     });
   });
 

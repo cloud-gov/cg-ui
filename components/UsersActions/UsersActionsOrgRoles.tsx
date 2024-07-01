@@ -8,6 +8,7 @@ import { Alert } from '../uswds/Alert';
 import Link from 'next/link';
 import { updateOrgRolesForUser } from '@/app/orgs/[orgId]/users/[userId]/org-roles/actions';
 import { ControllerResult } from '@/controllers/controller-types';
+import { Checkbox } from '@/components/uswds/Checkbox';
 
 type ActionStatus = 'default' | 'pending' | 'success' | 'error';
 
@@ -109,13 +110,6 @@ export function UsersActionsOrgRoles({
     const value = event.target.id;
     setCheckboxState(value);
   }
-  /* Since USWDS labels are clickable (and hide the actual checkboxes),
-  we need to handle click events on the label as if they were check/uncheck actions. */
-  function handleLabelClick(event: any) {
-    event.preventDefault();
-    const value = event.target.getAttribute('for');
-    setCheckboxState(value);
-  }
 
   async function onSubmit(
     e: React.SyntheticEvent<HTMLFormElement>
@@ -171,27 +165,16 @@ export function UsersActionsOrgRoles({
                 key={`UsersActionsOrgRoles-checkbox-${i}`}
                 className={`usa-checkbox margin-bottom-3 ${role.default ? 'default' : ''}`}
               >
-                <input
-                  className="usa-checkbox__input"
+                <Checkbox
                   id={role.type}
-                  type="checkbox"
                   name={role.type}
-                  checked={role.selected || role.default}
-                  disabled={!!role.default}
-                  onChange={handleChange}
                   data-testid={`checkbox_${role.type}`}
+                  disabled={!!role.default}
+                  checked={role.selected || role.default}
+                  onChange={handleChange}
+                  label={role.name}
+                  labelDescription={role.description}
                 />
-                <label
-                  className="usa-checkbox__label"
-                  htmlFor={role.type}
-                  onClick={handleLabelClick}
-                  data-testid={`label_${role.type}`}
-                >
-                  <strong>{role.name}</strong>
-                  <span className="usa-checkbox__label-description">
-                    {role.description}
-                  </span>
-                </label>
               </div>
             ))}
           </div>
