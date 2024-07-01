@@ -1,9 +1,4 @@
-import {
-  RolesByUser,
-  UserWithRoles,
-  RoleRanking,
-  UAAUser,
-} from './controller-types';
+import { RolesByUser, UserWithRoles, UAAUser } from './controller-types';
 import { ListRolesRes, RoleObj, UserObj } from '@/api/cf/cloudfoundry-types';
 import { addDays, randomDate } from '@/helpers/dates';
 import { cfRequestOptions } from '@/api/cf/cloudfoundry';
@@ -30,16 +25,21 @@ export function associateUsersWithRoles(roles: RoleObj[]): RolesByUser {
         allOrgRoleGuids: [],
       };
     }
-    // if the role is a space role, add to space role lisr
+    // if the role is a space role, add to space role list
     if (relation.space.data?.guid) {
       const spaceId = relation.space.data.guid;
       if (userObj[userId].space[spaceId]) {
         userObj[userId].space[spaceId].push({
-          guid: spaceId,
+          guid: resource.guid, // role guid
           role: resource.type,
         });
       } else {
-        userObj[userId].space[spaceId] = [];
+        userObj[userId].space[spaceId] = [
+          {
+            guid: resource.guid,
+            role: resource.type,
+          },
+        ];
       }
       // collect all space role guids needed for removing a user from an org
       userObj[userId].allSpaceRoleGuids.push(resource.guid);
@@ -56,20 +56,6 @@ export function associateUsersWithRoles(roles: RoleObj[]): RolesByUser {
     }
     return userObj;
   }, {} as RolesByUser);
-}
-
-const role_ranking: RoleRanking = {
-  space_manager: 4,
-  space_developer: 3,
-  space_auditor: 2,
-  space_supporter: 1,
-};
-
-export function rankRole(curRole: string, newRole: string): string {
-  if (role_ranking[newRole] > role_ranking[curRole]) {
-    return newRole;
-  }
-  return curRole;
 }
 
 // TODO delete associateUsersWithRolesTest and

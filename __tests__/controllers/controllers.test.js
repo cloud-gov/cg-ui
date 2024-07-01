@@ -232,7 +232,11 @@ describe('controllers tests', () => {
           space: {
             'dedb82bb-9f35-49f4-8ff9-7130ae2e3198': [
               {
-                guid: 'dedb82bb-9f35-49f4-8ff9-7130ae2e3198',
+                guid: '12ac7aa5-8a8e-48a4-9c90-a3b908c6e702',
+                role: 'space_manager',
+              },
+              {
+                guid: '1293d5ae-0266-413c-bacf-9f5474be984d',
                 role: 'space_developer',
               },
             ],
