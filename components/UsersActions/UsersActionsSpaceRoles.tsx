@@ -48,10 +48,6 @@ const initialRoles = {
   },
 } as RoleMap;
 
-function handleChange() {
-  console.log('clicked');
-}
-
 export function UsersActionsSpaceRoles({
   space,
   currentRoles,
@@ -84,15 +80,19 @@ export function UsersActionsSpaceRoles({
     return newRoles;
   }
 
+  const handleChange = () => {
+    console.log('clicked');
+  };
+
   return (
     <GridListItem>
-      <div className="grid-row">
-        <div className="grid-col-4">
+      <div className="grid-row users-actions-space-role">
+        <div className="tablet:grid-col-4">
           <strong>{space.name}</strong>
         </div>
         {Object.values(roles).map((role: any) => (
           <div
-            className="grid-col-2"
+            className="tablet:grid-col-2"
             key={`space-${space.guid}-role-${role.type}`}
           >
             <Checkbox
