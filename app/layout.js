@@ -21,7 +21,9 @@ export default function RootLayout({ children }) {
           <div className="desktop:grid-col-2">
             <Sidebar />
           </div>
-          <div className="desktop:grid-col-10 bg-white">{children}</div>
+          <div className="desktop:grid-col-10 bg-white minh-viewport">
+            {children}
+          </div>
         </div>
         <Footer />
         <Identifier />

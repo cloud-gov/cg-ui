@@ -44,17 +44,6 @@ export function UsersListSpaceRoles({
             Edit
           </Link>
         </span>
-        {rolesKeys.length > 0 && (
-          <span>
-            <Link
-              href={userLink}
-              className="usa-button usa-button--unstyled font-body-2xs"
-              aria-label="view all spaces and roles for this user"
-            >
-              View All
-            </Link>
-          </span>
-        )}
       </div>
       <div className="tablet:display-flex tablet:flex-row padding-top-1">
         {!rolesKeys.length && (

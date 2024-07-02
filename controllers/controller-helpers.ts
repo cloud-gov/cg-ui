@@ -1,4 +1,9 @@
-import { RolesByUser, UserWithRoles, UAAUser } from './controller-types';
+import {
+  RolesByUser,
+  UserWithRoles,
+  UAAUser,
+  SpaceRoleMap,
+} from './controller-types';
 import { ListRolesRes, RoleObj, UserObj } from '@/api/cf/cloudfoundry-types';
 import { addDays, randomDate } from '@/helpers/dates';
 import { cfRequestOptions } from '@/api/cf/cloudfoundry';
@@ -169,3 +174,33 @@ export async function pollForJobCompletion(
     throw new Error(error.message);
   }
 }
+
+export const defaultSpaceRoles = {
+  space_supporter: {
+    name: 'Supporter',
+    type: 'space_supporter',
+    description: 'TODO',
+    selected: false,
+  },
+  space_auditor: {
+    name: 'Auditor',
+    type: 'space_auditor',
+    description:
+      'Space auditors can view logs, reports, and settings for a space',
+    selected: false,
+  },
+  space_developer: {
+    name: 'Developer',
+    type: 'space_developer',
+    description:
+      'Space developers can do everything space auditors can do, and can create and manage apps and services',
+    selected: false,
+  },
+  space_manager: {
+    name: 'Manager',
+    type: 'space_manager',
+    description:
+      'Space managers can manage users and enable features but do not create and manage apps and services',
+    selected: false,
+  },
+} as SpaceRoleMap;
