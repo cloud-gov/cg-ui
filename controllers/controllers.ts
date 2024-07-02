@@ -4,7 +4,6 @@
 /***/
 import { revalidatePath } from 'next/cache';
 import * as CF from '@/api/cf/cloudfoundry';
-import * as UAA from '@/api/uaa/uaa';
 import { GetRoleArgs, SpaceObj, UserObj } from '@/api/cf/cloudfoundry-types';
 import {
   AddOrgRoleArgs,
@@ -12,18 +11,18 @@ import {
   ControllerResult,
   Result,
   UserMessage,
-  UAAUsersById,
 } from './controller-types';
 import {
   associateUsersWithRoles,
   associateUsersWithRolesTest,
-  createFakeUaaUser,
-  resourceKeyedById,
-  pollForJobCompletion,
-  logDevError,
   defaultSpaceRoles,
+  filterUserLogonInfo,
+  logDevError,
+  pollForJobCompletion,
+  resourceKeyedById,
 } from './controller-helpers';
 import { sortObjectsByParam } from '@/helpers/arrays';
+import { getUserLogonInfo } from '@/api/aws/s3';
 
 // maps basic cloud foundry fetch response to frontend ready result
 async function mapCfResult(
@@ -299,10 +298,11 @@ export async function getSpaceUsers(guid: string): Promise<Result> {
 }
 
 export async function getOrgPage(orgGuid: string): Promise<ControllerResult> {
-  const [orgUserRolesRes, spacesRes] = await Promise.all([
+  const [orgUserRolesRes, spacesRes, userLogonInfoRes] = await Promise.all([
     // use this request to roles to also obtain the organization details and list the org users
     CF.getRoles({ orgGuids: [orgGuid], include: ['organization', 'user'] }),
     CF.getSpaces([orgGuid]),
+    getUserLogonInfo(),
   ]);
   [orgUserRolesRes, spacesRes].map((res) => {
     if (!res.ok) {
@@ -319,43 +319,23 @@ export async function getOrgPage(orgGuid: string): Promise<ControllerResult> {
     return user.guid;
   });
 
+  const userLogonInfo = userLogonInfoRes
+    ? filterUserLogonInfo(userLogonInfoRes.user_summary, userGuids)
+    : undefined;
+
   const spaces = (await spacesRes.json()).resources;
   const spacesBySpaceId = resourceKeyedById(spaces);
   const spaceGuids = spaces.map(function (space: SpaceObj) {
     return space.guid;
   });
 
-  const [spaceRolesRes, userInfoRes] = await Promise.all([
-    await CF.getRoles({ spaceGuids: spaceGuids }),
-    await UAA.getUsers(
-      ['id', 'active', 'verified', 'previousLogonTime'],
-      'id',
-      userGuids
-    ),
-  ]);
-
+  const spaceRolesRes = await CF.getRoles({ spaceGuids: spaceGuids });
   if (!spaceRolesRes.ok) {
     logDevError(
       `api error on cf org page with http code ${spaceRolesRes.status} for url: ${spaceRolesRes.url}`
     );
     throw new Error('something went wrong with the request');
   }
-  if (!userInfoRes.ok && userInfoRes.status != 403) {
-    logDevError(
-      `uaa api error on cf org page with http code ${userInfoRes.status} for url: ${userInfoRes.url}`
-    );
-    throw new Error('something went wrong with the request');
-  }
-  const uaaUsers =
-    userInfoRes.status === 403
-      ? resourceKeyedById(
-          users.map(function (user: UserObj) {
-            return createFakeUaaUser(user);
-          })
-        )
-      : (resourceKeyedById(
-          (await userInfoRes.json()).resources
-        ) as UAAUsersById);
 
   const spaceRoles = (await spaceRolesRes.json()).resources;
   const rolesByUser = associateUsersWithRoles(
@@ -369,7 +349,7 @@ export async function getOrgPage(orgGuid: string): Promise<ControllerResult> {
       roles: rolesByUser,
       spaces: spacesBySpaceId,
       users: users,
-      uaaUsers: uaaUsers,
+      userLogonInfo: userLogonInfo,
     },
   };
 }

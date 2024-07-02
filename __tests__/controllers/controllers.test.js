@@ -8,32 +8,24 @@ import {
   removeUserFromOrg,
   getEditOrgRoles,
 } from '@/controllers/controllers';
-import {
-  createFakeUaaUser,
-  pollForJobCompletion,
-} from '@/controllers/controller-helpers';
+import { pollForJobCompletion } from '@/controllers/controller-helpers';
 import { mockOrg } from '@/__tests__/api/mocks/organizations';
 import {
   mockRolesFilteredByOrgAndUser,
   mockUsersByOrganization,
   mockUsersBySpace,
 } from '@/__tests__/api/mocks/roles';
+import { getUserLogonInfo } from '@/api/aws/s3';
 import { mockSpaces } from '@/__tests__/api/mocks/spaces';
-import { mockUaaUsers } from '@/__tests__/api/mocks/uaa-users';
 
 /* global jest */
 /* eslint no-undef: "off" */
 jest.mock('../../controllers/controller-helpers', () => ({
   ...jest.requireActual('../../controllers/controller-helpers'),
-  createFakeUaaUser: jest.fn(() => {
-    return {
-      id: 'userId',
-      verified: false,
-      active: false,
-      previousLogonTime: null,
-    };
-  }),
   pollForJobCompletion: jest.fn(),
+}));
+jest.mock('../../api/aws/s3', () => ({
+  getUserLogonInfo: jest.fn(),
 }));
 /* eslint no-undef: "error" */
 
@@ -42,15 +34,7 @@ beforeEach(() => {
     nock.activate();
   }
   // jest mocks
-  createFakeUaaUser.mockImplementation(() => {
-    return {
-      id: 'userId',
-      verified: false,
-      active: false,
-      previousLogonTime: null,
-    };
-  });
-
+  getUserLogonInfo.mockImplementation();
   pollForJobCompletion.mockImplementation();
 });
 
@@ -138,8 +122,8 @@ describe('controllers tests', () => {
       });
     });
 
-    describe('if the UAA request fails', () => {
-      it('returns the expected controller result with fake UAA data', async () => {
+    describe('if the s3 request fails', () => {
+      it('returns normal response data with undefined user login info', async () => {
         // setup
         const orgGuid = 'orgGuid';
         const testSpaceGuids = {
@@ -166,12 +150,15 @@ describe('controllers tests', () => {
         nock(process.env.CF_API_URL)
           .get('/roles?per_page=5000&space_guids=space1,space2,space3')
           .reply(200, mockUsersBySpace);
-        nock(process.env.UAA_API_URL).get(/Users/).reply(403);
+        getUserLogonInfo.mockImplementation(() => {
+          return undefined;
+        });
 
-        await getOrgPage(orgGuid);
+        const res = await getOrgPage(orgGuid);
 
-        // assert that two users were created to match the mockUsersByOrganization response
-        expect(createFakeUaaUser).toHaveBeenCalledTimes(2);
+        // assert
+        expect(res.payload.userLogonInfo).toBeUndefined();
+        expect(res.payload.users).toBeDefined();
       });
     });
 
@@ -203,7 +190,20 @@ describe('controllers tests', () => {
         nock(process.env.CF_API_URL)
           .get('/roles?per_page=5000&space_guids=space1,space2,space3')
           .reply(200, mockUsersBySpace);
-        nock(process.env.UAA_API_URL).get(/Users/).reply(200, mockUaaUsers);
+        getUserLogonInfo.mockImplementation(() => {
+          return {
+            user_summary: {
+              '73193f8c-e03b-43c8-aeee-8670908899d2': {
+                lastLogonTime: 1111,
+                active: true,
+              },
+              'some-user-guid-that-is-not-part-of-org': {
+                lastLogonTime: 2222,
+                active: false,
+              },
+            },
+          };
+        });
 
         const result = await getOrgPage(orgGuid);
         const firstUserRoles =
@@ -243,13 +243,14 @@ describe('controllers tests', () => {
           },
         });
         expect(
-          result.payload.uaaUsers['986e21c9-ed0a-480f-9198-23b9a6720518']
+          result.payload.userLogonInfo['73193f8c-e03b-43c8-aeee-8670908899d2']
         ).toEqual({
+          lastLogonTime: 1111,
           active: true,
-          id: '986e21c9-ed0a-480f-9198-23b9a6720518',
-          previousLogonTime: 1717424827664,
-          verified: true,
         });
+        expect(
+          result.payload.userLogonInfo['some-user-guid-that-is-not-part-of-org']
+        ).not.toBeDefined();
       });
     });
   });

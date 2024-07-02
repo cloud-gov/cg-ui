@@ -3,8 +3,8 @@
 import {
   RolesByUserItem,
   SpacesBySpaceId,
-  UAAUser,
 } from '@/controllers/controller-types';
+import { UAAUser } from '@/api/aws/s3-types';
 import { UserObj } from '@/api/cf/cloudfoundry-types';
 import { GridListItem } from '@/components/GridList/GridListItem';
 import { GridListItemTop } from '@/components/GridList/GridListItemTop';
@@ -22,14 +22,14 @@ export function UsersListItem({
   user,
   roles,
   spaces,
-  uaaUser,
+  userLogonInfo,
   removeUserCallback,
   orgGuid,
 }: {
   user: UserObj;
   roles: RolesByUserItem;
   spaces: SpacesBySpaceId;
-  uaaUser: UAAUser;
+  userLogonInfo: UAAUser | undefined;
   removeUserCallback?: Function;
   orgGuid: string;
 }) {
@@ -62,7 +62,13 @@ export function UsersListItem({
           />
         </GridListItemBottomCenter>
         <GridListItemBottomRight>
-          <UsersListLastLogin timestamp={uaaUser.previousLogonTime} />
+          {userLogonInfo ? (
+            <UsersListLastLogin timestamp={userLogonInfo.lastLogonTime} />
+          ) : (
+            <div className="text-right text-base">
+              No access information available
+            </div>
+          )}
         </GridListItemBottomRight>
       </GridListItemBottom>
     </GridListItem>

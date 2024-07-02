@@ -60,10 +60,10 @@ const mockSpaces = {
   'spaceGuid-1': { guid: 'spaceGuild-1', name: 'foo space name' },
 };
 
-const mockUaaUsers = {
-  'fooUserGuid-1': { id: 'fooUserGuid-1', previousLogonTime: new Date() },
-  'fooUserGuid-2': { id: 'fooUserGuid-2', previousLogonTime: new Date() },
-  'fooUserGuid-3': { id: 'fooUserGuid-3', previousLogonTime: new Date() },
+const mockUserLogonTime = {
+  'fooUserGuid-1': { lastLogonTime: new Date() },
+  'fooUserGuid-2': { lastLogonTime: new Date() },
+  'fooUserGuid-3': { lastlogonTime: new Date() },
 };
 
 describe('UsersList', () => {
@@ -74,7 +74,7 @@ describe('UsersList', () => {
         users={mockUsers}
         roles={mockRoles}
         spaces={mockSpaces}
-        uaaUsers={mockUaaUsers}
+        userLoginInfo={mockUserLogonTime}
       />
     );
     // query
