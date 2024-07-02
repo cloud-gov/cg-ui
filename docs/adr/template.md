@@ -14,10 +14,10 @@ Draft | Proposed | Accepted | Rejected | Archived
 
 
 ## Considered options
-* *[option 1]*
-* *[option 2]*
-* *[option 3]*
-* *[...]* <!-- numbers of options can vary -->
+1. *[option 1]*
+1. *[option 2]*
+1. *[option 3]*
+1. *[...]* <!-- numbers of options can vary -->
 
 ## Decision outcome
 * Chosen Option: *[option 1]*
