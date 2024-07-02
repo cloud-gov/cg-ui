@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { useFormState } from 'react-dom';
-import { Modal } from '../uswds/Modal';
+import { Modal, modalHeadingId } from '../uswds/Modal';
 import { RoleType } from '@/api/cf/cloudfoundry-types';
 import {
   removeRole,
@@ -62,17 +62,21 @@ export function OrgMembersList({
               <MemberLabel user={user} />
             </strong>
             {confirmUserRemove === user.guid && (
-              <Modal close={() => setConfirmUserRemove('')} id={user.guid}>
+              <Modal
+                close={() => setConfirmUserRemove('')}
+                modalId={`modal-${user.guid}`}
+                headingId={modalHeadingId(user)}
+              >
                 {!formStateUserRemove.success &&
                   formStateUserRemove.message && <div>Error</div>}
                 {!formStateUserRemove.success &&
                   !formStateUserRemove.message && (
                     <>
-                      <div>
+                      <p id={modalHeadingId(user)}>
                         are you sure you want to remove the user{' '}
                         <MemberLabel user={user} />
                         from the <strong>{org.name}</strong> organization?
-                      </div>
+                      </p>
                       <form action={formActionUserRemove}>
                         <input
                           type="hidden"
@@ -115,21 +119,22 @@ export function OrgMembersList({
                   {confirmRoleRemove === role.guid && (
                     <Modal
                       close={() => setConfirmRoleRemove('')}
-                      id={role.guid}
+                      modalId={`modal-${role.guid}`}
+                      headingId={modalHeadingId(role)}
                     >
                       {!formStateRoleRemove.success &&
                         formStateRoleRemove.message && <div>Error</div>}
                       {!formStateRoleRemove.success &&
                         !formStateRoleRemove.message && (
                           <>
-                            <div>
+                            <p id={modalHeadingId(role)}>
                               are you sure you want to remove the role{' '}
                               <strong>{role.type}</strong> for{' '}
                               <strong>
                                 <MemberLabel user={user} />
                               </strong>
                               ?
-                            </div>
+                            </p>
                             <form action={formActionRoleRemove}>
                               <input
                                 type="hidden"
