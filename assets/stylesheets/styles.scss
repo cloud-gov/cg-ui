@@ -1,30 +1,3 @@
-// 1. Load your project's USWDS settings configuration
-@forward 'uswds-settings.scss';
-
-// 2. Load USWDS source code
+@forward 'uswds-theme';
 @forward 'uswds';
-
-// 3. Load any custom SASS
-
-// text styling
-.text-capitalize {
-  text-transform: capitalize;
-}
-.text-break-all {
-  word-break: break-all;
-}
-
-// UsersActionsSpaceRole
-
-/* This did not work for me */
-// .users-actions-space-role label {
-//   @include at-media('tablet') {
-//     margin-top: 0;
-//   }
-// }
-
-@media (min-width: 640px) { // uswds tablet width
-  .users-actions-space-role label {
-    margin: 0;
-  }
-}
+@forward 'uswds-theme-custom-styles';

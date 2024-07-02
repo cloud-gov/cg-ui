@@ -1,0 +1,16 @@
+@use 'uswds-core' as *;
+
+// text styling
+.text-capitalize {
+  text-transform: capitalize;
+}
+.text-break-all {
+  word-break: break-all;
+}
+
+// UsersActionsSpaceRole
+.users-actions-space-role label {
+  @include at-media('tablet') {
+    margin-top: 0;
+  }
+}
