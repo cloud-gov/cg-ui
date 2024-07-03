@@ -1,5 +1,6 @@
 'use client';
 
+import React from 'react';
 import { getOrgUserSpacesPage } from '@/controllers/controllers';
 import { ControllerResult, RolesState } from '@/controllers/controller-types';
 import { defaultSpaceRoles } from '@/controllers/controller-helpers';
@@ -9,6 +10,7 @@ import { GridList } from '@/components/GridList/GridList';
 import { Button } from '@/components/uswds/Button';
 import { RolesForSpace } from '@/components/UsersActions/UserActionsSpaceRoles/RolesForSpace';
 import { Alert } from '@/components/uswds/Alert';
+import { updateSpaceRolesForUser } from '@/app/orgs/[orgId]/users/[userId]/actions';
 
 type ActionStatus = 'default' | 'pending' | 'success' | 'error';
 
@@ -25,9 +27,14 @@ export function UsersActionsSpaceRoles({
   const [roles, setRoles] = useState({} as RolesState);
   const [dataLoaded, setDataLoaded] = useState(false);
   const [loadingErrorMessage, setloadingErrorMessage] = useState(null);
-  // eslint-disable-next-line no-unused-vars
   const [actionStatus, setActionStatus] = useState('default' as ActionStatus);
   const [formSubmitEnabled, setFormSubmitEnabled] = useState(false);
+  const [actionErrors, setActionErrors] = useState([] as string[]);
+  const isButtonDisabled: boolean =
+    !formSubmitEnabled ||
+    actionStatus === 'pending' ||
+    actionStatus === 'success';
+  const isFieldsetDisabled: boolean = actionStatus === 'pending';
 
   useEffect(() => {
     const fetchData = async () => {
@@ -49,6 +56,7 @@ export function UsersActionsSpaceRoles({
   };
 
   const handleChange = (space: any, role: any) => {
+    setActionStatus('default');
     const newState = JSON.parse(JSON.stringify(roles)); // cheap way to get a deep copy of an object
     if (roles[space.guid] === undefined) {
       newState[space.guid] = JSON.parse(JSON.stringify(defaultSpaceRoles));
@@ -61,6 +69,29 @@ export function UsersActionsSpaceRoles({
     setFormSubmitEnabled(true);
   };
 
+  const submitForm = async (
+    e: React.SyntheticEvent<HTMLFormElement>
+  ): Promise<void> => {
+    e.preventDefault();
+    setActionStatus('pending' as ActionStatus);
+    setActionErrors([]);
+    try {
+      await updateSpaceRolesForUser(userGuid, roles);
+      const { meta, payload } = await getOrgUserSpacesPage(orgGuid, userGuid);
+      if (meta.status === 'success') {
+        setFetchedDataToState(payload);
+        setActionStatus('success' as ActionStatus);
+      }
+      if (meta.status === 'error') {
+        meta?.errors && setActionErrors(meta.errors);
+        setActionStatus('error' as ActionStatus);
+      }
+    } catch (e: any) {
+      setActionStatus('error' as ActionStatus);
+      setActionErrors([e.message]);
+    }
+  };
+
   if (loadingErrorMessage) {
     return <Alert type="error">{loadingErrorMessage}</Alert>;
   }
@@ -69,7 +100,7 @@ export function UsersActionsSpaceRoles({
     return <p>Loading form...</p>;
   }
   return (
-    <form>
+    <form onSubmit={submitForm}>
       {actionStatus === 'pending' && (
         <Alert type="warning">Submission in progress...</Alert>
       )}
@@ -77,9 +108,7 @@ export function UsersActionsSpaceRoles({
         <Alert type="success">Changes saved!</Alert>
       )}
       {actionStatus === 'error' && (
-        <Alert type="error">
-          Something went wrong with the form submission
-        </Alert>
+        <Alert type="error">{actionErrors.join(', ')}</Alert>
       )}
       <div className="tablet:display-flex flex-row flex-justify margin-bottom-3">
         <div className="flex-4 maxw-mobile-lg">
@@ -90,14 +119,18 @@ export function UsersActionsSpaceRoles({
           </p>
         </div>
         <div className="align-self-end margin-top-2 tablet:margin-top-auto">
-          <Button type="submit" disabled={!formSubmitEnabled}>
+          <Button type="submit" disabled={isButtonDisabled}>
             Save changes
           </Button>
         </div>
       </div>
       <GridList>
         {spaces.map((space: any) => (
-          <fieldset key={space.guid} className="usa-fieldset">
+          <fieldset
+            key={space.guid}
+            disabled={isFieldsetDisabled}
+            className="usa-fieldset"
+          >
             <legend className="usa-legend usa-sr-only">
               <strong>Select roles for space: {space.name}</strong>
             </legend>
