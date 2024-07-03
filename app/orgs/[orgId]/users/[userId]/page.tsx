@@ -1,4 +1,4 @@
-import { UsersActionsSpaceRoles } from '@/components/UsersActions/UserActionsSpaceRoles/UserActionsSpaceRoles';
+import { UsersActionsSpaceRoles } from '@/components/UsersActions/UsersActionsSpaceRoles/UsersActionsSpaceRoles';
 
 export default async function OrgUserSpaceRolesPage({
   params,

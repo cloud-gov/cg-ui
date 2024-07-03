@@ -8,7 +8,7 @@ import { SpaceObj } from '@/api/cf/cloudfoundry-types';
 import { useState, useEffect } from 'react';
 import { GridList } from '@/components/GridList/GridList';
 import { Button } from '@/components/uswds/Button';
-import { RolesForSpace } from '@/components/UsersActions/UserActionsSpaceRoles/RolesForSpace';
+import { RolesForSpace } from '@/components/UsersActions/UsersActionsSpaceRoles/RolesForSpace';
 import { Alert } from '@/components/uswds/Alert';
 import { updateSpaceRolesForUser } from '@/app/orgs/[orgId]/users/[userId]/actions';
 

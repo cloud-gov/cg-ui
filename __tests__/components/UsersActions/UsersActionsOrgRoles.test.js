@@ -1,8 +1,7 @@
 /**
  * @jest-environment jsdom
  */
-import nock from 'nock';
-import { describe, expect, it, beforeEach, afterEach } from '@jest/globals';
+import { describe, expect, it } from '@jest/globals';
 import { waitFor, render, screen, fireEvent } from '@testing-library/react';
 import { UsersActionsOrgRoles } from '@/components/UsersActions/UsersActionsOrgRoles';
 import { mockRolesFilteredByOrgAndUser } from '@/__tests__/api/mocks/roles';
@@ -21,18 +20,6 @@ jest.mock('../../../app/orgs/[orgId]/users/[userId]/org-roles/actions');
 /* eslint no-undef: "error" */
 
 describe('UsersActionsOrgRoles', () => {
-  beforeEach(() => {
-    if (!nock.isActive()) {
-      nock.activate();
-    }
-  });
-
-  afterEach(() => {
-    nock.cleanAll();
-    // https://github.com/nock/nock#memory-issues-with-jest
-    nock.restore();
-  });
-
   describe('checkboxes in form', () => {
     it('checkboxes can be checked/unchecked', async () => {
       // setup
