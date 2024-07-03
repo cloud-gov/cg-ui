@@ -12,5 +12,5 @@ export interface UAAUser {
   userName: string;
   active: boolean;
   lastLogonTime: number;
-  idlastLogonTimePretty: string;
+  lastLogonTimePretty: string;
 }

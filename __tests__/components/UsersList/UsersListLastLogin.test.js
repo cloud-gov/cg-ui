@@ -6,6 +6,8 @@ import { render, screen } from '@testing-library/react';
 import { UsersListLastLogin } from '@/components/UsersList/UsersListLastLogin';
 
 describe('UsersListLastLogin', () => {
+  // TODO this situation no longer occurs with info from s3, is there a better way
+  // to make this assumption?
   describe('when timestamp is null', () => {
     it('shows never logged in text', () => {
       render(<UsersListLastLogin timestamp={null} />);
