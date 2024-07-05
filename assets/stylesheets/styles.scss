@@ -1,5 +1,96 @@
 // 1. Load your project's USWDS settings configuration
-@forward 'uswds-settings.scss';
+@use 'uswds-core' as * with (
+  $theme-font-path: '../../../../../../dist/fonts',
+  $theme-image-path: '../../../../../../dist/img',
+  $theme-hero-image: '../img/hero.jpg',
+
+  // base colors
+  $theme-color-base-family: 'gray-cool',
+  $theme-color-base-lightest: 'gray-cool-3',
+  $theme-color-base-lighter: 'gray-cool-10',
+  $theme-color-base-light: 'gray-cool-20',
+  $theme-color-base: 'gray-cool-50',
+  $theme-color-base-dark: 'gray-cool-70',
+  $theme-color-base-darker: 'gray-cool-80',
+  $theme-color-base-darkest: 'gray-warm-90',
+  $theme-color-base-ink: 'gray-warm-90',
+
+  // Primary colors
+  $theme-color-primary-family: 'blue-warm',
+  $theme-color-primary-lightest: false,
+  $theme-color-primary-lighter: 'blue-warm-10',
+  $theme-color-primary-light: 'blue-warm-40v',
+  $theme-color-primary: 'blue-warm-50v',
+  $theme-color-primary-vivid: 'blue-warm-50v',
+  $theme-color-primary-dark: 'blue-warm-60',
+  $theme-color-primary-darker: 'blue-warm-70v',
+  $theme-color-primary-darkest: 'blue-warm-80v',
+
+  // Secondary colors
+  $theme-color-secondary-family: 'red',
+  $theme-color-secondary-lightest: false,
+  $theme-color-secondary-lighter: 'red-10v',
+  $theme-color-secondary-light: 'red-20',
+  $theme-color-secondary: 'red-40v',
+  $theme-color-secondary-vivid: 'red-40v',
+  $theme-color-secondary-dark: 'red-50',
+  $theme-color-secondary-darker: 'red-60v',
+  $theme-color-secondary-darkest: 'red-70',
+
+  // Accent warm colors
+  $theme-color-accent-warm-family: 'grey-warm',
+  $theme-color-accent-warm-lightest: false,
+  $theme-color-accent-warm-lighter: false,
+  $theme-color-accent-warm-light: 'gray-warm-5',
+  $theme-color-accent-warm: 'gray-warm-10',
+  $theme-color-accent-warm-dark: 'gray-warm-20',
+  $theme-color-accent-warm-darker: 'gray-warm-40',
+  $theme-color-accent-warm-darkest: 'gray-warm-60',
+
+  // Accent cool colors
+  $theme-color-accent-cool-family: 'cyan',
+  $theme-color-accent-cool-lightest: 'cyan-5',
+  $theme-color-accent-cool-lighter: 'cyan-10v',
+  $theme-color-accent-cool-light: 'cyan-20',
+  $theme-color-accent-cool: 'cyan-30v',
+  $theme-color-accent-cool-dark: 'cyan-40v',
+  $theme-color-accent-cool-darker: 'cyan-50',
+  $theme-color-accent-cool-darkest: 'cyan-60',
+
+  // body text color
+  $theme-text-color: 'gray-cool-90',
+
+  // layout grid
+  $theme-grid-container-max-width: 'full',
+  $theme-banner-max-width: 'desktop-lg',
+  $theme-header-max-width: 'desktop-lg',
+  $theme-header-min-width: 'none',
+  $theme-identifier-max-width: 'desktop-lg',
+  $theme-footer-max-width: 'desktop-lg',
+
+  // typography
+  $theme-font-role-heading: 'sans',
+
+  // header size
+  $theme-h1-font-size: '3xl',
+  $theme-h2-font-size: '2xl',
+  $theme-h3-font-size: 'xl',
+  $theme-h4-font-size: 'lg',
+  $theme-h5-font-size: 'sm',
+  $theme-h6-font-size: 'xs',
+
+  $display-settings: (
+    responsive: true,
+  ),
+
+  $height-settings: (
+    responsive: true,
+  ),
+
+  $overflow-settings: (
+    responsive: true,
+  )
+);
 
 // 2. Load USWDS source code
 @forward 'uswds';
@@ -15,16 +106,8 @@
 }
 
 // UsersActionsSpaceRole
-
-/* This did not work for me */
-// .users-actions-space-role label {
-//   @include at-media('tablet') {
-//     margin-top: 0;
-//   }
-// }
-
-@media (min-width: 640px) { // uswds tablet width
-  .users-actions-space-role label {
-    margin: 0;
+.users-actions-space-role label {
+  @include at-media('tablet') {
+    margin-top: 0;
   }
 }
