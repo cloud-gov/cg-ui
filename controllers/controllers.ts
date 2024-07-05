@@ -21,7 +21,9 @@ import {
   resourceKeyedById,
   pollForJobCompletion,
   logDevError,
+  defaultSpaceRoles,
 } from './controller-helpers';
+import { sortObjectsByParam } from '@/helpers/arrays';
 
 // maps basic cloud foundry fetch response to frontend ready result
 async function mapCfResult(
@@ -448,9 +450,22 @@ export async function getOrgUserSpacesPage(
 
   const userRolesPayload = await userRolesRes.json();
   const userRolesBySpaceId = userRolesPayload.resources.reduce(
-    (acc: any, item: any) => {
-      const key = item.relationships.space.data.guid;
-      acc[key] = key in acc ? acc[key].concat([item]) : [item];
+    (acc: any, role: any) => {
+      const key = role.relationships.space.data.guid;
+      if (key in acc) {
+        acc[key][role.type] = {
+          ...defaultSpaceRoles[role.type],
+          guid: role.guid,
+          selected: true,
+        };
+      } else {
+        acc[key] = JSON.parse(JSON.stringify(defaultSpaceRoles));
+        acc[key][role.type] = {
+          ...defaultSpaceRoles[role.type],
+          guid: role.guid,
+          selected: true,
+        };
+      }
       return acc;
     },
     {}
@@ -460,7 +475,7 @@ export async function getOrgUserSpacesPage(
     meta: { status: 'success' },
     payload: {
       roles: userRolesBySpaceId,
-      spaces: spacesPayload,
+      spaces: sortObjectsByParam(spacesPayload, 'name'),
     },
   };
 }

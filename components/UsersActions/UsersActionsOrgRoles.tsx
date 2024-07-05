@@ -4,7 +4,7 @@ import React, { useState, useEffect } from 'react';
 import { Button } from '@/components/uswds/Button';
 import { getEditOrgRoles } from '@/controllers/controllers';
 import { RoleObj as ApiRoleObj } from '@/api/cf/cloudfoundry-types';
-import { Alert } from '../uswds/Alert';
+import { Alert } from '@/components/uswds/Alert';
 import Link from 'next/link';
 import { updateOrgRolesForUser } from '@/app/orgs/[orgId]/users/[userId]/org-roles/actions';
 import { ControllerResult } from '@/controllers/controller-types';

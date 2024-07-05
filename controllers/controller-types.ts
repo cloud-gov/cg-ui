@@ -95,3 +95,17 @@ export interface UserMessage {
   success?: string;
   fail?: string;
 }
+
+export interface SpaceRoleMap {
+  [roleType: string]: {
+    name: string;
+    guid?: string;
+    type: string;
+    description: string;
+    selected: boolean;
+  };
+}
+
+export interface RolesState {
+  [spaceGuid: string]: SpaceRoleMap;
+}
