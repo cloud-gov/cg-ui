@@ -27,10 +27,9 @@ To access Cloud Foundry data, you must set the following environment variables:
 ```
 CF_API_URL=[your Cloud foundry api url, including https:// and /v version]
 CF_API_TOKEN=[your Cloud Foundry oauth token, excluding the "bearer" prefix]
-UAA_API_URL=[the UAA api url, starting with `uaa.` instead of `login.`]
 ```
 
-For CAPI and UAA API requests to work, the urls and token must be compatible. For example, you cannot use a development url and a production token together.
+For CAPI requests to work, the url and token must be compatible. For example, you cannot use a development url and a production token together.
 
 Also note that depending on your user's permissions, you may not be able to access all Cloud Foundry endpoints.
 

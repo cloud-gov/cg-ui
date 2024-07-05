@@ -17,7 +17,6 @@ applications:
       OAUTH_CLIENT_ID: cg-ui
       OAUTH_CLIENT_SECRET: ((OAUTH_CLIENT_SECRET))
       ROOT_URL: ((ROOT_URL))
-      UAA_API_URL: ((UAA_API_URL))
       UAA_ROOT_URL: ((UAA_ROOT_URL))
       UAA_AUTH_PATH: /oauth/authorize
       UAA_TOKEN_PATH: /oauth/token
