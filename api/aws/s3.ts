@@ -10,11 +10,10 @@ import {
   GetObjectCommand,
 } from '@aws-sdk/client-s3';
 
-const vcapServices = process.env.VCAP_SERVICES || (null as any);
-
-if (vcapServices) {
+if (process.env.VCAP_SERVICES) {
   // VCAP_SERVICES are only available if the application is deployed to CF,
   // in which case it should use the variables provided by the bound service
+  const vcapServices = JSON.parse(process.env.VCAP_SERVICES);
   const s3creds = vcapServices['s3'][0]['credentials'];
   process.env['AWS_ACCESS_KEY_ID'] = s3creds.access_key_id;
   process.env['AWS_SECRET_ACCESS_KEY'] = s3creds.secret_access_key;
