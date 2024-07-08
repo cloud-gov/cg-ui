@@ -27,10 +27,9 @@ To access Cloud Foundry data, you must set the following environment variables:
 ```
 CF_API_URL=[your Cloud foundry api url, including https:// and /v version]
 CF_API_TOKEN=[your Cloud Foundry oauth token, excluding the "bearer" prefix]
-UAA_API_URL=[the UAA api url, starting with `uaa.` instead of `login.`]
 ```
 
-For CAPI and UAA API requests to work, the urls and token must be compatible. For example, you cannot use a development url and a production token together.
+For CAPI requests to work, the url and token must be compatible. For example, you cannot use a development url and a production token together.
 
 Also note that depending on your user's permissions, you may not be able to access all Cloud Foundry endpoints.
 
@@ -91,6 +90,42 @@ npm run dev
 ```
 
 See results at `http://localhost:3000`
+
+#### Optionally configure s3 access
+
+This application relies on an s3 bucket to pull information about a user's last access date and their account status (active vs inactive). This bucket is populated by the [uaa-bot](https://github.com/cloud-gov/uaa-bot).
+
+If you wish to pull this information for local development, you may optionally set up access to ths s3 bucket.
+
+Create a new service key:
+
+```
+cf create-service-key cg-ui-storage [name-of-your-key]
+```
+
+Pull down the key (this contains sensitive information):
+```
+cf service-key cg-ui-storage [name-of-your-key]
+```
+
+You are interested in these parts of the key:
+
+```
+{
+  "access_key_id": "...",
+  "bucket": "...",
+  "region": "...",
+  "secret_access_key": "..."
+}
+```
+
+Copy the values into your `.env.local` file for the variables `S3_ACCESS_KEY_ID`, `S3_ACCESS_KEY_SECRET`, `S3_BUCKET`, AND `S3_REGION`.
+
+When you finish using your key, make sure to delete it:
+
+```
+cf delete-service-key cg-ui-storage [name-of-your-key]
+```
 
 ### Testing
 
@@ -184,54 +219,9 @@ Because interactivity will be handled through React, USWDS JavaScript will not b
 
 ## Deployment
 
-Log into the cloud.gov environment of your choice. Follow the prompts after the below command to authenticate and select an appropriate environment (likely your sandbox account).
+This application is deployed to the cloud.gov development environment using a concourse pipeline (see the `ci` directory), and is registered as a client for the CF UAA authentication service.
 
-```bash
-# production
-cf login -a api.fr.cloud.gov --sso
-```
-
-### Create a database
-
-If you have already deployed to this space before, you probably already have a database and can skip this step!
-
-```bash
-cf create-service aws-rds micro-psql cg-ui-datastore
-```
-
-Wait several minutes for your database to be created. You will know it is ready when the following shows `cg-ui-datastore` with a last operation of "create succeeded".
-
-```bash
-cf services
-```
-
-Now you will need to make sure that your Cloud.gov space's application security group (ASG) is set up so that your RDS service will be able to talk to your application. Print out all your security groups and look for the ones assigned to your current org and space.
-
-```bash
-cf security-groups
-```
-
-You will need both the `public_networks_egress` (for your application to talk to the internet) and `trusted_local_networks_egress` (for your database to talk to your application).
-P
-If you do not see these security groups active for your space, add them by subbing in your org (probably `sandbox-gsa`) and your space (likely the first part of your email).
-
-```bash
-cf bind-security-group trusted_local_networks_egress [org] --space [space]
-```
-
-You do not need to manually bind the database. This is being done in the `manifest.yml` file.
-
-### Configure
-
-Copy `.env.cloud.example.yml` to `.env.cloud.yml`. This file contains information that will be passed to the `manifest.yml` file. Change the name of the application to something unique, and confirm that the name you selected for the database is correct.
-
-### Push
-
-Now you're ready to deploy your application! From the base of the nextjs application directory:
-
-```bash
-cf push --vars-file=.env.cloud.yml
-```
+As you will not have access to any Cloud Foundry functionality without UAA authentication, we recommend you contact the cloud.gov team to request an additional deployment pipeline be set up for you, rather than using a manual process to deploy.
 
 ## Updating dependencies
 

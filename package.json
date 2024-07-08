@@ -12,6 +12,8 @@
     "format:fix": "prettier --write '**/*.{js,jsx,ts,tsx}'"
   },
   "dependencies": {
+    "@aws-sdk/client-s3": "^3.608.0",
+    "@aws-sdk/credential-providers": "^3.606.0",
     "@uswds/uswds": "3.8.1",
     "classnames": "^2.5.1",
     "husky": "^9.0.11",
@@ -28,6 +30,7 @@
     "@testing-library/jest-dom": "^6.4.6",
     "@testing-library/react": "^16.0.0",
     "@testing-library/user-event": "^14.5.2",
+    "aws-sdk-client-mock": "^4.0.1",
     "eslint-config-next": "14.2.4",
     "eslint-config-prettier": "^9.1.0",
     "eslint-plugin-prettier": "^5.1.3",

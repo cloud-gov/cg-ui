@@ -1,9 +1,11 @@
 import { describe, it, expect, beforeEach, afterEach } from '@jest/globals';
 import {
   associateUsersWithRoles,
+  filterUserLogonInfo,
   pollForJobCompletion,
 } from '@/controllers/controller-helpers';
 import { mockUsersByOrganization, mockUsersBySpace } from '../api/mocks/roles';
+import { mockS3Object } from '../api/mocks/lastlogon-summary';
 import nock from 'nock';
 
 beforeEach(() => {
@@ -126,6 +128,26 @@ describe('controller-helpers', () => {
           ],
         });
       });
+    });
+  });
+
+  describe('filterUserLogonInfo', () => {
+    it('takes the user summary from s3 and filters by requested users', () => {
+      // setup
+      const allUsers = mockS3Object.user_summary;
+      const [guid1, guid2, guid3] = [
+        'fbe925cf-8b14-4b43-9b2d-d15c4e5c66d6',
+        '5536a948-f353-4fdf-b133-76b0324a1a1b',
+        '3b33255a-baec-4b88-965f-1cce958f4fa3',
+      ];
+      // act
+      const filtered = filterUserLogonInfo(allUsers, [guid1, guid3]);
+      // expect
+      expect(Object.keys(filtered)).toHaveLength(2);
+      expect(filtered[guid3].lastLogonTime).toEqual(
+        allUsers[guid3].lastLogonTime
+      );
+      expect(filtered[guid2]).not.toBeDefined();
     });
   });
 

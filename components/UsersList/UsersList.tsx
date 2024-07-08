@@ -3,11 +3,8 @@
 import { useState } from 'react';
 import { GridList } from '@/components/GridList/GridList';
 import { UsersListItem } from '@/components/UsersList/UsersListItem';
-import {
-  RolesByUser,
-  SpacesBySpaceId,
-  UAAUsersById,
-} from '@/controllers/controller-types';
+import { RolesByUser, SpacesBySpaceId } from '@/controllers/controller-types';
+import { UserLogonInfoById } from '@/api/aws/s3-types';
 import { UserObj } from '@/api/cf/cloudfoundry-types';
 import { sortObjectsByParam } from '@/helpers/arrays';
 import { Modal } from '@/components/uswds/Modal';
@@ -17,13 +14,13 @@ export function UsersList({
   users,
   roles,
   spaces,
-  uaaUsers,
+  userLogonInfo,
   orgGuid,
 }: {
   users: Array<UserObj>;
   roles: RolesByUser;
   spaces: SpacesBySpaceId;
-  uaaUsers: UAAUsersById;
+  userLogonInfo: UserLogonInfoById;
   orgGuid: string;
 }) {
   const [removedUserGuids, setRemovedUserGuids] = useState([] as string[]);
@@ -68,19 +65,17 @@ export function UsersList({
         </Modal>
       )}
       {usersSorted(usersFiltered(users)).map((user) => {
-        if (uaaUsers[user.guid]) {
-          return (
-            <UsersListItem
-              key={`UsersListItem-${user.guid}`}
-              user={user}
-              roles={roles[user.guid]}
-              spaces={spaces}
-              uaaUser={uaaUsers[user.guid]}
-              removeUserCallback={removeUserCallback}
-              orgGuid={orgGuid}
-            />
-          );
-        }
+        return (
+          <UsersListItem
+            key={`UsersListItem-${user.guid}`}
+            user={user}
+            roles={roles[user.guid]}
+            spaces={spaces}
+            userLogonInfo={userLogonInfo ? userLogonInfo[user.guid] : undefined}
+            removeUserCallback={removeUserCallback}
+            orgGuid={orgGuid}
+          />
+        );
       })}
     </GridList>
   );

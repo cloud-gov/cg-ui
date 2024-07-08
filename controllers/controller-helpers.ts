@@ -1,11 +1,10 @@
 import {
   RolesByUser,
   UserWithRoles,
-  UAAUser,
   SpaceRoleMap,
 } from './controller-types';
-import { ListRolesRes, RoleObj, UserObj } from '@/api/cf/cloudfoundry-types';
-import { addDays, randomDate } from '@/helpers/dates';
+import { ListRolesRes, RoleObj } from '@/api/cf/cloudfoundry-types';
+import { UserLogonInfoById } from '@/api/aws/s3-types';
 import { cfRequestOptions } from '@/api/cf/cloudfoundry';
 import { request } from '@/api/api';
 import { delay } from '@/helpers/timeout';
@@ -99,48 +98,20 @@ export function associateUsersWithRolesTest(
   return users;
 }
 
-export function createFakeUaaUser(user: UserObj): UAAUser {
-  const cases = [
-    // never logged in
-    {
-      id: user.guid,
-      verified: false,
-      active: false,
-      previousLogonTime: null,
-    },
-    // logged in previously but expired
-    {
-      id: user.guid,
-      verified: true,
-      active: false,
-      previousLogonTime: randomDate(
-        addDays(new Date(), -180),
-        addDays(new Date(), -90)
-      ).getTime(),
-    },
-    // logged in recently
-    {
-      id: user.guid,
-      verified: true,
-      active: true,
-      previousLogonTime: randomDate(
-        addDays(new Date(), -10),
-        addDays(new Date(), -1)
-      ).getTime(),
-    },
-    // logged in previously, not expired
-    {
-      id: user.guid,
-      verified: true,
-      active: true,
-      previousLogonTime: randomDate(
-        addDays(new Date(), -89),
-        addDays(new Date(), -11)
-      ).getTime(),
-    },
-  ];
-  const index = Math.floor(Math.random() * cases.length);
-  return cases[index];
+// We are filtering the user logon info object so that only those
+// users which are available to the particular requesting user in CF
+// are part of this controller response, instead of sending ALL users
+// that are part of the UAA application
+export function filterUserLogonInfo(
+  userInfo: UserLogonInfoById,
+  allowedIds: Array<string>
+): UserLogonInfoById | undefined {
+  return Object.fromEntries(
+    // eslint-disable-next-line no-unused-vars
+    Object.entries(userInfo).filter(function ([key, val]) {
+      return allowedIds.includes(key);
+    })
+  );
 }
 
 export async function logDevError(message: string) {
