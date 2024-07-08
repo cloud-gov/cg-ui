@@ -149,6 +149,24 @@ describe('controller-helpers', () => {
       );
       expect(filtered[guid2]).not.toBeDefined();
     });
+
+    it('if a user is requested that was not in the json, provides null values', () => {
+      // setup
+      const allUsers = mockS3Object.user_summary;
+      const [guid1, guid2] = [
+        'fbe925cf-8b14-4b43-9b2d-d15c4e5c66d6',
+        'user-id-not-in-the-user-summary',
+      ];
+      // act
+      const filtered = filterUserLogonInfo(allUsers, [guid1, guid2]);
+      // expect
+      expect(Object.keys(filtered)).toHaveLength(2);
+      expect(filtered[guid1].lastLogonTime).toEqual(
+        allUsers[guid1].lastLogonTime
+      );
+      expect(filtered[guid2].lastLogonTime).toBeNull();
+      expect(filtered[guid2].active).toBeFalsy();
+    });
   });
 
   describe('pollForJobCompletion', () => {

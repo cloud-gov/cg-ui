@@ -1,16 +1,11 @@
-export interface UserLogonInfo {
+import { UserLogonInfoDisplay } from '@/controllers/controller-types';
+
+export interface UserLogonResponse {
   timestamp: string;
   total_accounts: number;
   user_summary: UserLogonInfoById;
 }
 
 export interface UserLogonInfoById {
-  [userId: string]: UAAUser;
-}
-
-export interface UAAUser {
-  userName: string;
-  active: boolean;
-  lastLogonTime: number;
-  lastLogonTimePretty: string;
+  [userId: string]: UserLogonInfoDisplay;
 }

@@ -53,7 +53,7 @@ export async function listBucketFiles() {
 }
 
 export async function getUserLogonInfo() {
-  if (!process.env.AWS_ACCESS_KEY_ID) {
+  if (process.env.AWS_ACCESS_KEY_ID === undefined) {
     if (process.env.NODE_ENV === 'development') {
       console.log('application is not configured to connect to s3 storage');
     }
@@ -75,6 +75,5 @@ export async function getUserLogonInfo() {
     if (process.env.NODE_ENV === 'development') {
       console.error(`Error reading login info: ${error.message}`);
     }
-    return undefined;
   }
 }
