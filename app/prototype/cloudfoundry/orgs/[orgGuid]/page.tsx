@@ -1,7 +1,7 @@
 'use server';
 
 import Link from 'next/link';
-import { getOrgTestPage } from '@/controllers/controllers';
+import { getOrgPage } from '@/controllers/prototype-controller';
 import { ControllerResult } from '@/controllers/controller-types';
 import { RoleType } from '@/api/cf/cloudfoundry-types';
 import { UserAction } from './form';
@@ -14,15 +14,13 @@ export default async function OrgPage({
     orgGuid: string;
   };
 }) {
-  const controllerRes = (await getOrgTestPage(
-    params.orgGuid
-  )) as ControllerResult;
+  const controllerRes = (await getOrgPage(params.orgGuid)) as ControllerResult;
 
   const { org, users, spaces } = controllerRes.payload;
 
   return (
     <>
-      <Link href="/test/cloudfoundry">Back to Cloud Foundry home</Link>
+      <Link href="/prototype/cloudfoundry">Back to Cloud Foundry home</Link>
       <div className="grid-container">
         <h1>{org.name}</h1>
         <ul>
@@ -36,7 +34,7 @@ export default async function OrgPage({
           {spaces.map((space: any) => (
             <li key={space.guid}>
               <Link
-                href={`/test/cloudfoundry/orgs/${org.guid}/spaces/${space.guid}`}
+                href={`/prototype/cloudfoundry/orgs/${org.guid}/spaces/${space.guid}`}
               >
                 {space.name}
               </Link>

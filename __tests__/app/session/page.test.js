@@ -3,7 +3,7 @@
  */
 import { describe, expect, it } from '@jest/globals';
 import { render, screen } from '@testing-library/react';
-import Page from '@/app/test/session/page';
+import Page from '@/app/prototype/session/page';
 import { getData } from '@/api/api';
 
 /* global jest */

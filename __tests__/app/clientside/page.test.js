@@ -4,7 +4,7 @@
 import { describe, expect, it } from '@jest/globals';
 import '@testing-library/jest-dom';
 import { render, screen } from '@testing-library/react';
-import Clientside from '@/app/test/clientside/page';
+import Clientside from '@/app/prototype/clientside/page';
 import { getUsers } from '@/api/users';
 
 // Initial mock setup:

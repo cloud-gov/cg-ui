@@ -36,32 +36,8 @@ export interface SpacesBySpaceId {
   [spaceGuid: string]: SpaceObj;
 }
 
-export interface UserWithRoles {
-  guid: string;
-  origin: string;
-  orgRoles?: {
-    guid: string;
-    type: RoleType;
-  }[];
-  spaceRoles?: {
-    spaceGuid?: string;
-    spaceName?: string;
-    guid: string;
-    type: RoleType;
-  }[];
-  username: string;
-}
-
-// TODO: remove this Result in favor of the interfaces below
-export interface Result {
-  success: boolean;
-  status?: ResultStatus;
-  message?: string;
-  payload?: any;
-}
-
 // taken from USWDS alert options: https://designsystem.digital.gov/components/uswds/Alert/
-type ResultStatus =
+export type ResultStatus =
   | 'default'
   | 'pending'
   | 'success'

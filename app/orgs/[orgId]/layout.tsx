@@ -9,12 +9,12 @@ export default async function OrgLayout({
   children: React.ReactNode;
   params: { orgId: string };
 }) {
-  const { payload, success } = await getOrg(params.orgId);
+  const { payload, meta } = await getOrg(params.orgId);
 
   return (
     <>
       <LayoutHeader>
-        {success ? payload.name : 'Org name not found'}
+        {meta.status === 'success' ? payload.name : 'Org name not found'}
       </LayoutHeader>
       <main className="padding-4">{children}</main>
     </>

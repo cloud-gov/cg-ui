@@ -36,59 +36,69 @@ export default function Home() {
         </div>
       </div>
 
-      <h2>Test routes</h2>
+      <h2>Experiments</h2>
+      <p>
+        Pages in this portion of the app are proof-of-concepts and are not
+        guaranteed to persist.
+      </p>
       <ul>
         <li>
-          <Link href="/test/authenticated/example">
+          <Link href="/prototype/authenticated/example">
             Example of an authenticated page (you can&apos;t get to it unless
             you&apos;re logged in).
           </Link>
         </li>
         <li>
-          <Link href="/test/clientside">Example of clientside rendering</Link>
+          <Link href="/prototype/clientside">
+            Example of clientside rendering
+          </Link>
         </li>
         <li>
-          <Link href="/test/serverside">Example of serverside rendering</Link>
+          <Link href="/prototype/serverside">
+            Example of serverside rendering
+          </Link>
         </li>
         <li>
-          <Link href="/test/users">
+          <Link href="/prototype/users">
             Example of dynamic rendering (server-side)
           </Link>
         </li>
         <li>
-          <Link href="/test/cloudfoundry">Cloudfoundry home</Link>
+          <Link href="/prototype/cloudfoundry">Cloudfoundry home</Link>
         </li>
         <li>
-          <Link href="/test/design-guide">Design guide</Link>
+          <Link href="/prototype/design-guide">Design guide</Link>
         </li>
       </ul>
 
-      <h2>Database experiment</h2>
+      <h3>Database experiment</h3>
       <ul>
         <li>
-          <Link href="/test/api/table">
+          <Link href="/prototype/api/table">
             Step 1: create a session table via API request
           </Link>
         </li>
         <li>
-          <Link href="/test/session">Step 2: Add your name!</Link>
+          <Link href="/prototype/session">Step 2: Add your name!</Link>
         </li>
       </ul>
 
-      <h3>API endpoints</h3>
+      <h4>Database API endpoints</h4>
       <p>You can also interact with the database via API.</p>
 
       <ul>
-        <li>View sessions: curl http://localhost:3000/test/api/session</li>
+        <li>View sessions: curl http://localhost:3000/prototype/api/session</li>
         <li>
           Add session: curl -X POST -d &apos;&#123;&quot;username&quot;:
           &quot;Your name&quot; &#125;&apos;
-          http://localhost:3000/test/api/session
+          http://localhost:3000/prototype/api/session
         </li>
-        <li>Create session table: curl http://localhost:3000/test/api/table</li>
+        <li>
+          Create session table: curl http://localhost:3000/prototype/api/table
+        </li>
         <li>
           Delete session table: curl -X DELETE
-          http://localhost:3000/test/api/table
+          http://localhost:3000/prototype/api/table
         </li>
       </ul>
     </div>

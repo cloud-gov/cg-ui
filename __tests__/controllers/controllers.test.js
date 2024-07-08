@@ -1,22 +1,17 @@
 import nock from 'nock';
 import { describe, it, expect, beforeEach, afterEach } from '@jest/globals';
 import {
-  deleteOrgUserTest,
   getOrgPage,
-  getOrgTestPage,
-  getSpaceUsers,
   removeUserFromOrg,
   getEditOrgRoles,
 } from '@/controllers/controllers';
 import { pollForJobCompletion } from '@/controllers/controller-helpers';
-import { mockOrg } from '@/__tests__/api/mocks/organizations';
 import {
   mockRolesFilteredByOrgAndUser,
   mockUsersByOrganization,
   mockUsersBySpace,
 } from '@/__tests__/api/mocks/roles';
 import { getUserLogonInfo } from '@/api/aws/s3';
-import { mockSpaces } from '@/__tests__/api/mocks/spaces';
 
 /* global jest */
 /* eslint no-undef: "off" */
@@ -45,62 +40,6 @@ afterEach(() => {
 });
 
 describe('controllers tests', () => {
-  describe('deleteOrgUserTest', () => {
-    it('when given a valid org and user, removes all user roles from org', async () => {
-      nock(process.env.CF_API_URL)
-        .get(
-          '/roles?organization_guids=orgGuid&user_guids=userGuid&per_page=5000'
-        )
-        .reply(200, mockRolesFilteredByOrgAndUser);
-
-      // expects two different requests to delete by guid
-      nock(process.env.CF_API_URL)
-        .delete(/\/roles\/([\d\w]+-)+/)
-        .times(2)
-        .reply(202);
-
-      const res = await deleteOrgUserTest('orgGuid', 'userGuid');
-      expect(res).toEqual({
-        success: true,
-        status: 'success',
-        message: 'removed user from org',
-      });
-    });
-
-    it.todo(
-      'when something goes wrong with a request, we should determine what the user sees'
-    );
-  });
-
-  describe('getSpaceUsers', () => {
-    it('when given a valid space guid, returns associated users', async () => {
-      nock(process.env.CF_API_URL)
-        .get('/roles?space_guids=validGUID&include=user&per_page=5000')
-        .reply(200, mockUsersBySpace);
-      const res = await getSpaceUsers('validGUID');
-
-      // one user with multiple roles should be returned
-      const expected = [
-        {
-          guid: '73193f8c-e03b-43c8-aeee-8670908899d2',
-          origin: 'example.com',
-          roles: [
-            {
-              guid: '12ac7aa5-8a8e-48a4-9c90-a3b908c6e702',
-              type: 'space_manager',
-            },
-            {
-              guid: '1293d5ae-0266-413c-bacf-9f5474be984d',
-              type: 'space_developer',
-            },
-          ],
-          username: 'z_user1@example.com',
-        },
-      ];
-      expect(res.payload).toEqual(expected);
-    });
-  });
-
   describe('getOrgPage', () => {
     describe('if any of the first CF requests fail', () => {
       it('throws an error', async () => {
@@ -251,57 +190,6 @@ describe('controllers tests', () => {
         expect(
           result.payload.userLogonInfo['some-user-guid-that-is-not-part-of-org']
         ).not.toBeDefined();
-      });
-    });
-  });
-
-  // TODO delete getOrgTestPage tests after we no longer need the prototype
-  // test org detail page
-  describe('getOrgTestPage', () => {
-    describe('if any CF requests fail', () => {
-      it('throws an error', async () => {
-        // setup
-        const guid = 'foo';
-        const errMessage = { message: 'failed' };
-        nock(process.env.CF_API_URL)
-          .get(/spaces/)
-          .reply(500, errMessage);
-        nock(process.env.CF_API_URL)
-          .get(/roles/)
-          .reply(200, { message: 'foo success' });
-        nock(process.env.CF_API_URL)
-          .get(/organizations/)
-          .reply(200, { message: 'foo success' });
-        // act and assert
-        expect(async () => {
-          await getOrgTestPage(guid);
-        }).rejects.toThrow(new Error('something went wrong with the request'));
-      });
-    });
-
-    describe('if all requests succeed', () => {
-      it('returns the expected controller result', async () => {
-        // setup
-        const guid = 'foo';
-        nock(process.env.CF_API_URL)
-          .get(/spaces/)
-          .reply(200, mockSpaces);
-        nock(process.env.CF_API_URL)
-          .get(/roles/)
-          .reply(200, mockUsersByOrganization);
-        nock(process.env.CF_API_URL)
-          .get(/organizations/)
-          .reply(200, mockOrg);
-        // sends a second request to get the roles associated with spaces
-        nock(process.env.CF_API_URL).get(/roles/).reply(200, mockUsersBySpace);
-        // act
-        const result = await getOrgTestPage(guid);
-        // assert
-        expect(result).toHaveProperty('meta');
-        expect(result).toHaveProperty('payload');
-        expect(result.payload.org).toEqual(mockOrg);
-        expect(result.payload.spaces).toEqual(mockSpaces.resources);
-        expect(result.payload.users).toBeDefined();
       });
     });
   });
