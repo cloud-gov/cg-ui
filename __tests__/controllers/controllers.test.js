@@ -2,10 +2,12 @@ import nock from 'nock';
 import { describe, it, expect, beforeEach, afterEach } from '@jest/globals';
 import {
   getOrgPage,
+  getOrgAppsPage,
   removeUserFromOrg,
   getEditOrgRoles,
 } from '@/controllers/controllers';
 import { pollForJobCompletion } from '@/controllers/controller-helpers';
+import { mockApps } from '@/__tests__/api/mocks/apps';
 import {
   mockRolesFilteredByOrgAndUser,
   mockUsersByOrganization,
@@ -191,6 +193,26 @@ describe('controllers tests', () => {
           result.payload.userLogonInfo['some-user-guid-that-is-not-part-of-org']
         ).not.toBeDefined();
       });
+    });
+  });
+
+  describe('getOrgAppsPage', () => {
+    it('when requests are successful, returns apps and related spaces info', async () => {
+      // setup
+      nock(process.env.CF_API_URL)
+        .get('/apps?organization_guids=org1&include=space&per_page=5000')
+        .reply(200, mockApps);
+
+      // act
+      const res = await getOrgAppsPage('org1');
+
+      // expect
+      expect(res.meta.status).toEqual('success');
+      expect(res.payload.apps.length).toEqual(2);
+      // check that the spaces have been reorganized by space guid
+      expect(
+        res.payload.spaces['042655eb-6cea-4fd8-ad8b-d03048f95072']
+      ).toBeDefined();
     });
   });
 

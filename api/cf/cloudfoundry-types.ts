@@ -18,6 +18,13 @@ export interface AddRoleArgs {
   userGuid?: string;
 }
 
+export interface GetAppArgs {
+  appGuids?: string[];
+  include?: string[];
+  orgGuids?: string[];
+  spaceGuids?: string[];
+}
+
 export interface GetRoleArgs {
   include?: string[];
   orgGuids?: string[];
@@ -26,6 +33,25 @@ export interface GetRoleArgs {
 }
 
 /* INDIVIDUAL API OBJECTS */
+
+export interface AppObj {
+  guid: string;
+  created_at: string;
+  updated_at: string;
+  name: string;
+  state: 'STOPPED' | 'STARTED';
+  // TODO update once we start using the lifecycle object
+  lifecycle: any;
+  relationships: {
+    space: {
+      data: {
+        guid: string;
+      };
+    };
+  };
+  metadata: any;
+  links: any;
+}
 
 export interface OrgObj {
   guid: string;

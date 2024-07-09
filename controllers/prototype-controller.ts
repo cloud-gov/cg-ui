@@ -125,7 +125,7 @@ export async function getApps(): Promise<Result> {
     fail: 'unable to list your applications',
   };
   try {
-    const res = await CF.getApps();
+    const res = await CF.getApps({});
     return await mapCfResult(res, message);
   } catch (error: any) {
     logDevError(`${message.fail}: ${error.message}`);

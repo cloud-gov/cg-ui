@@ -32,9 +32,9 @@ export function UsersListSpaceRoles({
   return (
     <div className="tablet:padding-right-2 tablet:border-right tablet:border-base-light tablet:height-full">
       <div className="display-flex flex-align-center padding-bottom-1">
-        <h4 className="margin-0 margin-right-2 font-body-2xs text-semibold text-base">
+        <h3 className="margin-0 margin-right-2 font-body-2xs text-semibold text-base font-heading-sm">
           Spaces and roles
-        </h4>
+        </h3>
         <span>
           <Link
             href={userLink}

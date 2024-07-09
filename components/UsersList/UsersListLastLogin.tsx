@@ -1,17 +1,7 @@
 'use client';
 
-import { isDateExpired, daysToExpiration } from '@/helpers/dates';
 import { UserLogonInfoDisplay } from '@/controllers/controller-types';
-
-export function formatDate(timestamp: number | null): string {
-  if (!timestamp) return '';
-
-  return new Date(timestamp).toLocaleDateString('en-US', {
-    year: 'numeric',
-    month: 'short',
-    day: 'numeric',
-  });
-}
+import { isDateExpired, daysToExpiration, formatDate } from '@/helpers/dates';
 
 export function formatTime(timestamp: number | null): string {
   if (!timestamp) return '';

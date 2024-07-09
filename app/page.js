@@ -30,7 +30,7 @@ export default function Home() {
               </Link>
             </p>
             <p>
-              To view a different org page, go to <strong>/orgs/[orgId]</strong>
+              <Link href="/orgs">View all of your organizations</Link>
             </p>
           </div>
         </div>
