@@ -17,7 +17,7 @@ if (process.env.VCAP_SERVICES) {
   const s3creds = vcapServices['s3'][0]['credentials'];
   process.env['AWS_ACCESS_KEY_ID'] = s3creds.access_key_id;
   process.env['AWS_SECRET_ACCESS_KEY'] = s3creds.secret_access_key;
-  process.env['S3_BUCKET'] = s3creds.bucket;
+  process.env['BUCKET'] = s3creds.bucket;
   process.env['AWS_DEFAULT_REGION'] = s3creds.region;
 } else {
   // if this application is not deployed, check to see if local access is set up
