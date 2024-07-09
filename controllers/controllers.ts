@@ -23,7 +23,6 @@ import {
 } from './controller-helpers';
 import { sortObjectsByParam } from '@/helpers/arrays';
 import { getUserLogonInfo } from '@/api/aws/s3';
-import { UserLogonResponse } from '@/api/aws/s3-types';
 
 // maps basic cloud foundry fetch response to frontend ready result
 async function mapCfResult(
@@ -320,7 +319,7 @@ export async function getOrgPage(orgGuid: string): Promise<ControllerResult> {
     return user.guid;
   });
 
-  const userLogonInfo = (userLogonInfoRes as UserLogonResponse)
+  const userLogonInfo = userLogonInfoRes
     ? filterUserLogonInfo(userLogonInfoRes.user_summary, userGuids)
     : undefined;
 
