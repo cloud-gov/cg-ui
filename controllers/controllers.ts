@@ -19,6 +19,33 @@ import {
 import { sortObjectsByParam } from '@/helpers/arrays';
 import { getUserLogonInfo } from '@/api/aws/s3';
 
+/* ------------------- */
+//        READ         //
+/* ------------------- */
+
+export async function getEditOrgRoles(
+  orgGuid: string,
+  userGuid: string
+): Promise<ControllerResult> {
+  const args: GetRoleArgs = {
+    userGuids: [userGuid],
+    orgGuids: [orgGuid],
+  };
+  const response = await CF.getRoles(args);
+  if (!response.ok) {
+    logDevError(
+      `api error on cf edit org page with http code ${response.status} for url: ${response.url}`
+    );
+    throw new Error(
+      'Something went wrong with loading the form. Please try again later.'
+    );
+  }
+  return {
+    meta: { status: 'success' },
+    payload: await response.json(),
+  };
+}
+
 export async function getOrg(guid: string): Promise<ControllerResult> {
   const res = await CF.getOrg(guid);
   if (!res.ok) {
@@ -172,6 +199,10 @@ export async function getOrgUserSpacesPage(
   };
 }
 
+/* ------------------- */
+//       DELETE        //
+/* ------------------- */
+
 export async function removeUserFromOrg(
   allSpaceRoleGuids: string[],
   allOrgRoleGuids: string[]
@@ -220,27 +251,4 @@ export async function removeUserFromOrg(
       payload: {},
     };
   }
-}
-
-export async function getEditOrgRoles(
-  orgGuid: string,
-  userGuid: string
-): Promise<ControllerResult> {
-  const args: GetRoleArgs = {
-    userGuids: [userGuid],
-    orgGuids: [orgGuid],
-  };
-  const response = await CF.getRoles(args);
-  if (!response.ok) {
-    logDevError(
-      `api error on cf edit org page with http code ${response.status} for url: ${response.url}`
-    );
-    throw new Error(
-      'Something went wrong with loading the form. Please try again later.'
-    );
-  }
-  return {
-    meta: { status: 'success' },
-    payload: await response.json(),
-  };
 }

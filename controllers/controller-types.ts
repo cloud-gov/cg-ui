@@ -12,28 +12,14 @@ export interface AddSpaceRoleArgs {
   username: string;
 }
 
-export interface RolesByUserRole {
-  guid: string;
-  role: RoleType;
+export interface ControllerResult {
+  payload: any;
+  meta: ControllerMetadata;
 }
 
-export interface SpaceRoles {
-  [spaceGuid: string]: RolesByUserRole[];
-}
-
-export interface RolesByUserItem {
-  org: RolesByUserRole[];
-  space: SpaceRoles;
-  allSpaceRoleGuids: string[];
-  allOrgRoleGuids: string[];
-}
-
-export interface RolesByUser {
-  [userGuid: string]: RolesByUserItem;
-}
-
-export interface SpacesBySpaceId {
-  [spaceGuid: string]: SpaceObj;
+export interface ControllerMetadata {
+  status: ResultStatus;
+  errors?: string[];
 }
 
 // taken from USWDS alert options: https://designsystem.digital.gov/components/uswds/Alert/
@@ -46,14 +32,42 @@ export type ResultStatus =
   | 'error'
   | 'emergency';
 
-export interface ControllerMetadata {
-  status: ResultStatus;
-  errors?: string[];
+export interface RolesByUser {
+  [userGuid: string]: RolesByUserItem;
 }
 
-export interface ControllerResult {
-  payload: any;
-  meta: ControllerMetadata;
+export interface RolesByUserItem {
+  org: RolesByUserRole[];
+  space: SpaceRoles;
+  allSpaceRoleGuids: string[];
+  allOrgRoleGuids: string[];
+}
+
+export interface RolesByUserRole {
+  guid: string;
+  role: RoleType;
+}
+
+export interface RolesState {
+  [spaceGuid: string]: SpaceRoleMap;
+}
+
+export interface SpacesBySpaceId {
+  [spaceGuid: string]: SpaceObj;
+}
+
+export interface SpaceRoles {
+  [spaceGuid: string]: RolesByUserRole[];
+}
+
+export interface SpaceRoleMap {
+  [roleType: string]: {
+    name: string;
+    guid?: string;
+    type: string;
+    description: string;
+    selected: boolean;
+  };
 }
 
 // this interface is a combination of a user's info we expect from
@@ -69,18 +83,4 @@ export interface UserLogonInfoDisplay {
 export interface UserMessage {
   success?: string;
   fail?: string;
-}
-
-export interface SpaceRoleMap {
-  [roleType: string]: {
-    name: string;
-    guid?: string;
-    type: string;
-    description: string;
-    selected: boolean;
-  };
-}
-
-export interface RolesState {
-  [spaceGuid: string]: SpaceRoleMap;
 }

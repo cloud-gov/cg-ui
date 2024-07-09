@@ -8,13 +8,6 @@ import { cfRequestOptions } from '@/api/cf/cloudfoundry';
 import { request } from '@/api/api';
 import { delay } from '@/helpers/timeout';
 
-export function resourceKeyedById(resource: Array<any>): Object {
-  return resource.reduce((acc, item) => {
-    acc[item.guid || item.id] = item;
-    return acc;
-  }, {});
-}
-
 export function associateUsersWithRoles(roles: RoleObj[]): RolesByUser {
   return roles.reduce((userObj, resource: RoleObj) => {
     const relation = resource.relationships;
@@ -148,3 +141,10 @@ export const defaultSpaceRoles = {
     selected: false,
   },
 } as SpaceRoleMap;
+
+export function resourceKeyedById(resource: Array<any>): Object {
+  return resource.reduce((acc, item) => {
+    acc[item.guid || item.id] = item;
+    return acc;
+  }, {});
+}
