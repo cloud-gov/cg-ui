@@ -80,6 +80,16 @@ export interface ControllerResult {
   meta: ControllerMetadata;
 }
 
+// this interface is a combination of a user's info we expect from
+// the JSON in s3 and the controller's manipulation of the data for
+// UI purposes. null values indicate this user has never logged into cloud
+export interface UserLogonInfoDisplay {
+  userName: string | null;
+  active: boolean;
+  lastLogonTime: number | null;
+  lastLogonTimePretty: string | null;
+}
+
 export interface UserMessage {
   success?: string;
   fail?: string;

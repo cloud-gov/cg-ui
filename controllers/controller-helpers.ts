@@ -1,8 +1,4 @@
-import {
-  RolesByUser,
-  UserWithRoles,
-  SpaceRoleMap,
-} from './controller-types';
+import { RolesByUser, UserWithRoles, SpaceRoleMap } from './controller-types';
 import { ListRolesRes, RoleObj } from '@/api/cf/cloudfoundry-types';
 import { UserLogonInfoById } from '@/api/aws/s3-types';
 import { cfRequestOptions } from '@/api/cf/cloudfoundry';
@@ -105,13 +101,23 @@ export function associateUsersWithRolesTest(
 export function filterUserLogonInfo(
   userInfo: UserLogonInfoById,
   allowedIds: Array<string>
-): UserLogonInfoById | undefined {
-  return Object.fromEntries(
-    // eslint-disable-next-line no-unused-vars
-    Object.entries(userInfo).filter(function ([key, val]) {
-      return allowedIds.includes(key);
-    })
-  );
+): UserLogonInfoById {
+  const allowedUserInfo = {} as UserLogonInfoById;
+  for (const id of allowedIds) {
+    if (id in userInfo) {
+      allowedUserInfo[id] = userInfo[id];
+    } else {
+      // if this user was not found in the dataset, we assume they have never
+      // logged in and we can display that data in the UI
+      allowedUserInfo[id] = {
+        userName: null, // we don't have a way of knowing in this context
+        active: false,
+        lastLogonTime: null,
+        lastLogonTimePretty: null,
+      };
+    }
+  }
+  return allowedUserInfo;
 }
 
 export async function logDevError(message: string) {

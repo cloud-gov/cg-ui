@@ -6,11 +6,15 @@ import { render, screen } from '@testing-library/react';
 import { UsersListLastLogin } from '@/components/UsersList/UsersListLastLogin';
 
 describe('UsersListLastLogin', () => {
-  // TODO this situation no longer occurs with info from s3, is there a better way
-  // to make this assumption?
   describe('when timestamp is null', () => {
     it('shows never logged in text', () => {
-      render(<UsersListLastLogin timestamp={null} />);
+      const info = {
+        userName: null,
+        active: false,
+        lastLogonTime: null,
+        lastLogonTimePretty: null,
+      };
+      render(<UsersListLastLogin userLogonInfo={info} />);
 
       const content = screen.queryByText('Never logged in');
       expect(content).toBeInTheDocument();
@@ -19,7 +23,13 @@ describe('UsersListLastLogin', () => {
 
   describe('when timestamp is expired', () => {
     it('shows expired text', () => {
-      render(<UsersListLastLogin timestamp={1706652770377} />); // Tues, Jan 30 2024
+      const info = {
+        userName: 'foo',
+        active: false,
+        lastLogonTime: 1706652770377,
+        lastLogonTimePretty: 'Tues, Jan 30 2024 22:12 GMT',
+      };
+      render(<UsersListLastLogin userLogonInfo={info} />);
 
       const content = screen.queryByText('Login expired');
       expect(content).toBeInTheDocument();
@@ -31,8 +41,14 @@ describe('UsersListLastLogin', () => {
       // setup
       var now = new Date();
       var ts = new Date(now.setDate(now.getDate() - 2)); // 2 days ago
+      const info = {
+        userName: 'foo',
+        active: true,
+        lastLogonTime: ts,
+        lastLogonTimePretty: 'todo if we start using this field',
+      };
       //act
-      render(<UsersListLastLogin timestamp={ts} />);
+      render(<UsersListLastLogin userLogonInfo={info} />);
       // query
       const time = screen.queryByText(/\d{2}:\d{2} [A|P]M/);
       const date = screen.queryByText(/[a-zA-Z] \d+, \d{4}/);

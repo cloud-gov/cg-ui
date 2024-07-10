@@ -9,6 +9,7 @@ import {
   ListObjectsCommand,
   GetObjectCommand,
 } from '@aws-sdk/client-s3';
+import { UserLogonResponse } from './s3-types';
 
 if (process.env.VCAP_SERVICES) {
   // VCAP_SERVICES are only available if the application is deployed to CF,
@@ -52,8 +53,10 @@ export async function listBucketFiles() {
   }
 }
 
-export async function getUserLogonInfo() {
-  if (!process.env.AWS_ACCESS_KEY_ID) {
+export async function getUserLogonInfo(): Promise<
+  UserLogonResponse | undefined
+> {
+  if (process.env.AWS_ACCESS_KEY_ID === undefined) {
     if (process.env.NODE_ENV === 'development') {
       console.log('application is not configured to connect to s3 storage');
     }
@@ -75,6 +78,5 @@ export async function getUserLogonInfo() {
     if (process.env.NODE_ENV === 'development') {
       console.error(`Error reading login info: ${error.message}`);
     }
-    return undefined;
   }
 }

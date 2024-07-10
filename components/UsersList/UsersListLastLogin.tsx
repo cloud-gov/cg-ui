@@ -1,6 +1,7 @@
 'use client';
 
 import { isDateExpired, daysToExpiration } from '@/helpers/dates';
+import { UserLogonInfoDisplay } from '@/controllers/controller-types';
 
 export function formatDate(timestamp: number | null): string {
   if (!timestamp) return '';
@@ -26,10 +27,11 @@ export function formatTime(timestamp: number | null): string {
 const expirationWindowDays = 90;
 
 export function UsersListLastLogin({
-  timestamp,
+  userLogonInfo,
 }: {
-  timestamp: number | null;
+  userLogonInfo: UserLogonInfoDisplay;
 }) {
+  const timestamp = userLogonInfo.lastLogonTime;
   const isExpired: boolean = timestamp
     ? isDateExpired(timestamp, expirationWindowDays)
     : false;
