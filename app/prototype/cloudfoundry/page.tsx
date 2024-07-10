@@ -6,10 +6,10 @@ export default function CloudFoundryPage() {
       <h1>Cloud Foundry Functions</h1>
       <ul>
         <li>
-          <Link href="/test/cloudfoundry/apps">apps list</Link>
+          <Link href="/prototype/cloudfoundry/apps">apps list</Link>
         </li>
         <li>
-          <Link href="/test/cloudfoundry/orgs">organizations list</Link>
+          <Link href="/prototype/cloudfoundry/orgs">organizations list</Link>
         </li>
       </ul>
     </>

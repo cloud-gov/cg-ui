@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { getApps } from '@/controllers/controllers';
+import { getApps } from '@/controllers/prototype-controller';
 
 export default async function CloudFoundryAppsPage() {
   try {
@@ -9,7 +9,7 @@ export default async function CloudFoundryAppsPage() {
       return (
         <>
           <h1>Your CF Apps</h1>
-          <Link href="/test/cloudfoundry">Back to Cloud Foundry home</Link>
+          <Link href="/prototype/cloudfoundry">Back to Cloud Foundry home</Link>
           <ul>
             {apps.map((app) => (
               <li key={app.guid}>{app.name}</li>

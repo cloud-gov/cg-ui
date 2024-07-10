@@ -1,8 +1,8 @@
 import {
-  addOrgRole,
+  addSpaceRole,
   deleteRole,
-  deleteOrgUserTest,
-} from '@/controllers/controllers';
+  deleteSpaceUser,
+} from '@/controllers/prototype-controller';
 import { RoleType } from '@/api/cf/cloudfoundry-types';
 
 interface FormResponse {
@@ -15,9 +15,9 @@ export async function postData(
   formData: FormData
 ): Promise<FormResponse> {
   try {
-    const res = await addOrgRole({
-      orgGuid: formData.get('guid') as string,
-      roleType: formData.get('org-role') as RoleType,
+    const res = await addSpaceRole({
+      spaceGuid: formData.get('space-guid') as string,
+      roleType: formData.get('space-role') as RoleType,
       username: formData.get('email-username') as string,
     });
     return { success: res.success, message: res.message };
@@ -44,9 +44,9 @@ export async function removeUser(
   formData: FormData
 ): Promise<FormResponse> {
   try {
-    const orgGuid = formData.get('orgGuid') as string;
+    const spaceGuid = formData.get('spaceGuid') as string;
     const userGuid = formData.get('userGuid') as string;
-    const res = await deleteOrgUserTest(orgGuid, userGuid);
+    const res = await deleteSpaceUser(spaceGuid, userGuid);
     return { success: res.success, message: res.message };
   } catch (error: any) {
     return { success: false, message: error.message };

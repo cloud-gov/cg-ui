@@ -4,7 +4,7 @@
 import { describe, expect, it } from '@jest/globals';
 import '@testing-library/jest-dom';
 import { render, screen } from '@testing-library/react';
-import { SessionList } from '@/app/test/session/list';
+import { SessionList } from '@/app/prototype/session/list';
 
 describe('SessionList', () => {
   it('renders an empty list if no sessions are provided', async () => {

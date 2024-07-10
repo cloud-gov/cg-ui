@@ -7,7 +7,7 @@ import { RoleType } from '@/api/cf/cloudfoundry-types';
 import {
   removeRole,
   removeUser,
-} from '@/app/test/cloudfoundry/orgs/[orgGuid]/spaces/[spaceGuid]/actions';
+} from '@/app/prototype/cloudfoundry/orgs/[orgGuid]/spaces/[spaceGuid]/actions';
 
 function MemberLabel({
   user,

@@ -15,7 +15,7 @@ export default async function UsersPage() {
       <ul>
         {users.map((user) => (
           <li key={user.id}>
-            <Link href={`/test/users/${user.id}`}>{user.name}</Link>
+            <Link href={`/prototype/users/${user.id}`}>{user.name}</Link>
           </li>
         ))}
       </ul>

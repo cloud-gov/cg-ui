@@ -12,13 +12,28 @@ export interface AddSpaceRoleArgs {
   username: string;
 }
 
-export interface RolesByUserRole {
-  guid: string;
-  role: RoleType;
+export interface ControllerResult {
+  payload: any;
+  meta: ControllerMetadata;
 }
 
-export interface SpaceRoles {
-  [spaceGuid: string]: RolesByUserRole[];
+export interface ControllerMetadata {
+  status: ResultStatus;
+  errors?: string[];
+}
+
+// taken from USWDS alert options: https://designsystem.digital.gov/components/uswds/Alert/
+export type ResultStatus =
+  | 'default'
+  | 'pending'
+  | 'success'
+  | 'info'
+  | 'warning'
+  | 'error'
+  | 'emergency';
+
+export interface RolesByUser {
+  [userGuid: string]: RolesByUserItem;
 }
 
 export interface RolesByUserItem {
@@ -28,56 +43,31 @@ export interface RolesByUserItem {
   allOrgRoleGuids: string[];
 }
 
-export interface RolesByUser {
-  [userGuid: string]: RolesByUserItem;
+export interface RolesByUserRole {
+  guid: string;
+  role: RoleType;
+}
+
+export interface RolesState {
+  [spaceGuid: string]: SpaceRoleMap;
 }
 
 export interface SpacesBySpaceId {
   [spaceGuid: string]: SpaceObj;
 }
 
-export interface UserWithRoles {
-  guid: string;
-  origin: string;
-  orgRoles?: {
-    guid: string;
-    type: RoleType;
-  }[];
-  spaceRoles?: {
-    spaceGuid?: string;
-    spaceName?: string;
-    guid: string;
-    type: RoleType;
-  }[];
-  username: string;
+export interface SpaceRoles {
+  [spaceGuid: string]: RolesByUserRole[];
 }
 
-// TODO: remove this Result in favor of the interfaces below
-export interface Result {
-  success: boolean;
-  status?: ResultStatus;
-  message?: string;
-  payload?: any;
-}
-
-// taken from USWDS alert options: https://designsystem.digital.gov/components/uswds/Alert/
-type ResultStatus =
-  | 'default'
-  | 'pending'
-  | 'success'
-  | 'info'
-  | 'warning'
-  | 'error'
-  | 'emergency';
-
-export interface ControllerMetadata {
-  status: ResultStatus;
-  errors?: string[];
-}
-
-export interface ControllerResult {
-  payload: any;
-  meta: ControllerMetadata;
+export interface SpaceRoleMap {
+  [roleType: string]: {
+    name: string;
+    guid?: string;
+    type: string;
+    description: string;
+    selected: boolean;
+  };
 }
 
 // this interface is a combination of a user's info we expect from
@@ -93,18 +83,4 @@ export interface UserLogonInfoDisplay {
 export interface UserMessage {
   success?: string;
   fail?: string;
-}
-
-export interface SpaceRoleMap {
-  [roleType: string]: {
-    name: string;
-    guid?: string;
-    type: string;
-    description: string;
-    selected: boolean;
-  };
-}
-
-export interface RolesState {
-  [spaceGuid: string]: SpaceRoleMap;
 }

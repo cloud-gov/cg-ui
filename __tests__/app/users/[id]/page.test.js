@@ -3,7 +3,7 @@
  */
 import { describe, expect, it } from '@jest/globals';
 import { render, screen } from '@testing-library/react';
-import UserPage from '@/app/test/users/[id]/page';
+import UserPage from '@/app/prototype/users/[id]/page';
 import { getUser } from '@/api/users';
 /* global jest */
 /* eslint no-undef: "off" */

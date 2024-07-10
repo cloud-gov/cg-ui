@@ -1,16 +1,12 @@
-import { RolesByUser, UserWithRoles, SpaceRoleMap } from './controller-types';
-import { ListRolesRes, RoleObj } from '@/api/cf/cloudfoundry-types';
+import {
+  RolesByUser,
+  SpaceRoleMap,
+} from './controller-types';
+import { RoleObj } from '@/api/cf/cloudfoundry-types';
 import { UserLogonInfoById } from '@/api/aws/s3-types';
 import { cfRequestOptions } from '@/api/cf/cloudfoundry';
 import { request } from '@/api/api';
 import { delay } from '@/helpers/timeout';
-
-export function resourceKeyedById(resource: Array<any>): Object {
-  return resource.reduce((acc, item) => {
-    acc[item.guid || item.id] = item;
-    return acc;
-  }, {});
-}
 
 export function associateUsersWithRoles(roles: RoleObj[]): RolesByUser {
   return roles.reduce((userObj, resource: RoleObj) => {
@@ -56,42 +52,6 @@ export function associateUsersWithRoles(roles: RoleObj[]): RolesByUser {
     }
     return userObj;
   }, {} as RolesByUser);
-}
-
-// TODO delete associateUsersWithRolesTest and
-// in favor of associateUsersWithRoles
-// once the org / space detail views have been refactored
-
-export function associateUsersWithRolesTest(
-  payload: ListRolesRes
-): UserWithRoles[] {
-  if (!payload.included?.users) {
-    return [];
-  }
-
-  const users = payload.included.users
-    .map(function (userObj) {
-      const user = structuredClone(userObj);
-      const associatedRoles = payload.resources.filter(function (role) {
-        return user.guid == role.relationships.user.data.guid;
-      });
-      return {
-        guid: user.guid,
-        username: user.username,
-        origin: user.origin,
-        roles: associatedRoles.map(function (role) {
-          return {
-            guid: role.guid,
-            type: role.type,
-          };
-        }),
-      };
-    })
-    .sort(function (a, b) {
-      // sort null usernames at the bottom of the list
-      return a.username ? a.username.localeCompare(b.username) : 1;
-    });
-  return users;
 }
 
 // We are filtering the user logon info object so that only those
@@ -181,3 +141,10 @@ export const defaultSpaceRoles = {
     selected: false,
   },
 } as SpaceRoleMap;
+
+export function resourceKeyedById(resource: Array<any>): Object {
+  return resource.reduce((acc, item) => {
+    acc[item.guid || item.id] = item;
+    return acc;
+  }, {});
+}

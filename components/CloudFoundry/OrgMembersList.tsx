@@ -7,7 +7,7 @@ import { RoleType } from '@/api/cf/cloudfoundry-types';
 import {
   removeRole,
   removeUser,
-} from '@/app/test/cloudfoundry/orgs/[orgGuid]/actions';
+} from '@/app/prototype/cloudfoundry/orgs/[orgGuid]/actions';
 
 interface UserWithRoles {
   guid: string;
