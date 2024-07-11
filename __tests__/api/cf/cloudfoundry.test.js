@@ -1,6 +1,13 @@
 import nock from 'nock';
 import { describe, it, expect, beforeEach, afterEach } from '@jest/globals';
-import { getOrg, getOrgs, getSpace, getSpaces } from '@/api/cf/cloudfoundry';
+import {
+  getApps,
+  getOrg,
+  getOrgs,
+  getSpace,
+  getSpaces,
+} from '@/api/cf/cloudfoundry';
+import { mockApps } from '../mocks/apps';
 import { mockOrg, mockOrgs, mockOrgInvalid } from '../mocks/organizations';
 import { mockSpace, mockSpaceInvalid, mockSpaces } from '../mocks/spaces';
 
@@ -15,6 +22,28 @@ describe('cloudfoundry tests', () => {
     nock.cleanAll();
     // https://github.com/nock/nock#memory-issues-with-jest
     nock.restore();
+  });
+
+  describe('app endpoints', () => {
+    describe('getApps', () => {
+      it('when given no arguments, looks for all apps', async () => {
+        nock(process.env.CF_API_URL)
+          .get('/apps?per_page=5000')
+          .reply(200, mockApps);
+
+        const res = await getApps({});
+        expect(res.status).toEqual(200);
+        expect(await res.json()).toEqual(mockApps);
+      });
+      it('when given org and include arguments, sends appropriate request', async () => {
+        nock(process.env.CF_API_URL)
+          .get('/apps?organization_guids=org1&include=space&per_page=5000')
+          .reply(200, {});
+
+        const res = await getApps({ orgGuids: ['org1'], include: ['space'] });
+        expect(res.status).toEqual(200);
+      });
+    });
   });
 
   describe('organization endpoints', () => {

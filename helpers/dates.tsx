@@ -25,6 +25,16 @@ export function daysToExpiration(
   return Math.round((futureDate - now.getTime()) / 1000 / 60 / 60 / 24);
 }
 
+export function formatDate(timestamp: number | string | null): string {
+  if (!timestamp) return '';
+
+  return new Date(timestamp).toLocaleDateString('en-US', {
+    year: 'numeric',
+    month: 'short',
+    day: 'numeric',
+  });
+}
+
 // taken from https://stackoverflow.com/a/60180035
 export function randomDate(from: Date, to: Date) {
   const fromTime = from.getTime();

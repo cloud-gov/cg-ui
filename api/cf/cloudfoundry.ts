@@ -5,7 +5,12 @@
 
 import { request } from '../api';
 import { getToken } from './token';
-import { AddRoleApiData, AddRoleArgs, GetRoleArgs } from './cloudfoundry-types';
+import {
+  AddRoleApiData,
+  AddRoleArgs,
+  GetAppArgs,
+  GetRoleArgs,
+} from './cloudfoundry-types';
 
 const CF_API_URL = process.env.CF_API_URL;
 
@@ -61,8 +66,36 @@ export async function cfRequestOptions(
 
 // APPS
 
-export async function getApps(): Promise<Response> {
-  return await cfRequest('/apps', 'get');
+export async function getApps({
+  appGuids,
+  include,
+  orgGuids,
+  spaceGuids,
+}: GetAppArgs): Promise<Response> {
+  const params: {
+    guids?: string;
+    include?: string;
+    organization_guids?: string;
+    per_page: string;
+    space_guids?: string;
+  } = {
+    // set to max allowed value
+    per_page: '5000',
+  };
+  if (appGuids && appGuids.length > 0) {
+    params['guids'] = appGuids.join(', ');
+  }
+  if (include && include.length > 0) {
+    params['include'] = include.join(', ');
+  }
+  if (orgGuids && orgGuids.length > 0) {
+    params['organization_guids'] = orgGuids.join(', ');
+  }
+  if (spaceGuids && spaceGuids.length > 0) {
+    params['space_guids'] = spaceGuids.join(', ');
+  }
+  const urlParams = new URLSearchParams(params);
+  return await cfRequest('/apps?' + urlParams.toString());
 }
 
 // ORGANIZATIONS

@@ -1,7 +1,4 @@
-import {
-  RolesByUser,
-  SpaceRoleMap,
-} from './controller-types';
+import { RolesByUser, SpaceRoleMap } from './controller-types';
 import { RoleObj } from '@/api/cf/cloudfoundry-types';
 import { UserLogonInfoById } from '@/api/aws/s3-types';
 import { cfRequestOptions } from '@/api/cf/cloudfoundry';

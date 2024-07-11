@@ -5,9 +5,7 @@
 import { revalidatePath } from 'next/cache';
 import * as CF from '@/api/cf/cloudfoundry';
 import { GetRoleArgs, SpaceObj, UserObj } from '@/api/cf/cloudfoundry-types';
-import {
-  ControllerResult,
-} from './controller-types';
+import { ControllerResult } from './controller-types';
 import {
   associateUsersWithRoles,
   defaultSpaceRoles,
@@ -59,6 +57,27 @@ export async function getOrg(guid: string): Promise<ControllerResult> {
   }
   return {
     payload: await res.json(),
+    meta: { status: 'success' },
+  };
+}
+
+export async function getOrgsPage(): Promise<ControllerResult> {
+  const res = await CF.getOrgs();
+  if (!res.ok) {
+    logDevError(
+      `api error on cf orgs with http code ${res.status} for url: ${res.url}`
+    );
+    return {
+      payload: {
+        orgs: [],
+      },
+      meta: { status: 'error' },
+    };
+  }
+  return {
+    payload: {
+      orgs: (await res.json()).resources,
+    },
     meta: { status: 'success' },
   };
 }
@@ -116,6 +135,26 @@ export async function getOrgPage(orgGuid: string): Promise<ControllerResult> {
       spaces: spacesBySpaceId,
       users: users,
       userLogonInfo: userLogonInfo,
+    },
+  };
+}
+
+export async function getOrgAppsPage(
+  orgGuid: string
+): Promise<ControllerResult> {
+  const appsRes = await CF.getApps({ orgGuids: [orgGuid], include: ['space'] });
+  if (!appsRes.ok) {
+    logDevError(`unable to retrieve org apps information: ${appsRes.status}`);
+    throw new Error('something went wrong with the request');
+  }
+  const appsJson = await appsRes.json();
+  const spaces = resourceKeyedById(appsJson.included.spaces);
+
+  return {
+    meta: { status: 'success' },
+    payload: {
+      apps: appsJson.resources,
+      spaces: spaces,
     },
   };
 }
