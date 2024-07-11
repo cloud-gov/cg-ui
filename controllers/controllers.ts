@@ -5,9 +5,7 @@
 import { revalidatePath } from 'next/cache';
 import * as CF from '@/api/cf/cloudfoundry';
 import { GetRoleArgs, SpaceObj, UserObj } from '@/api/cf/cloudfoundry-types';
-import {
-  ControllerResult,
-} from './controller-types';
+import { ControllerResult } from './controller-types';
 import {
   associateUsersWithRoles,
   defaultSpaceRoles,

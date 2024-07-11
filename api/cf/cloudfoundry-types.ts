@@ -1,6 +1,6 @@
 export type RoleType =
   | 'organization_manager'
-  | 'organizion_user'
+  | 'organization_user'
   | 'organization_auditor'
   | 'organization_billing_manager'
   | 'space_manager'
