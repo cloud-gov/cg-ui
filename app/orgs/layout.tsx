@@ -1,5 +1,8 @@
 import React from 'react';
 
+// render routes for each user at request time
+export const dynamic = 'force-dynamic';
+
 export default function OrgsLayout({
   children,
 }: {
