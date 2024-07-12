@@ -7,7 +7,7 @@ import Serverside from '@/app/prototype/serverside/page';
 import { getUsers } from '@/api/users';
 /* global jest */
 /* eslint no-undef: "off" */
-jest.mock('../../../api/users', () => ({
+jest.mock('../../../../api/users', () => ({
   getUsers: jest.fn(),
 }));
 /* eslint no-undef: "error" */
