@@ -14,6 +14,9 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <body className="bg-accent-warm-light">
+        <a className="usa-skipnav" href="#main-content">
+          Skip to main content
+        </a>
         <div className="border-bottom border-white">
           <Banner />
         </div>
@@ -22,7 +25,7 @@ export default function RootLayout({ children }) {
             <Sidebar />
           </div>
           <div className="desktop:grid-col-10 bg-white minh-viewport">
-            {children}
+            <main id="main-content">{children}</main>
           </div>
         </div>
         <Footer />

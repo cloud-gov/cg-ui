@@ -8,5 +8,5 @@ export default function OrgsLayout({
 }: {
   children: React.ReactNode;
 }) {
-  return <main className="padding-4">{children}</main>;
+  return <div className="padding-4">{children}</div>;
 }
