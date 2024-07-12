@@ -23,10 +23,10 @@ export default function Page() {
   }, []);
 
   return (
-    <main>
+    <div>
       <h1>Sessions</h1>
       <SessionForm sessions={sessions} setSessionData={setSessionData} />
       <SessionList sessions={sessions} />
-    </main>
+    </div>
   );
 }
