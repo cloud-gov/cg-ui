@@ -69,4 +69,4 @@ _This uses Next.js specific [behavior](https://nextjs.org/docs/app/building-your
 
 ## Routes
 
-Anything under the `/test/*` route is considered experimental and not ready for production. We will remove these routes as we near production.
+Anything under the `/prototype/*` route is considered experimental and not ready for production. We will remove these routes as we near production.
