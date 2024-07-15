@@ -5,6 +5,7 @@
   "rules": {
     "no-unused-vars": 2,
     "prefer-const": 2,
-    "prettier/prettier": "error"
+    "prettier/prettier": "error",
+    "react/no-unescaped-entities": "off"
   }
 }
