@@ -1,3 +1,10 @@
+export function camelToSnakeCase(input: string): string {
+  function replacer(match: string) {
+    return `_${match.toLowerCase()}`;
+  }
+  return input.replace(/[A-Z]/g, replacer);
+}
+
 export function formatOrgRoleName(input: string): string {
   return underscoreToText(input).replace('organization', 'org');
 }

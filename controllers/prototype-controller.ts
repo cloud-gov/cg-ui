@@ -183,8 +183,8 @@ export async function getOrgs(): Promise<Result> {
 export async function getOrgPage(orgGuid: string): Promise<ControllerResult> {
   const [orgRes, usersRes, spacesRes] = await Promise.all([
     CF.getOrg(orgGuid),
-    CF.getRoles({ orgGuids: [orgGuid], include: ['user'] }),
-    CF.getSpaces([orgGuid]),
+    CF.getRoles({ organizationGuids: [orgGuid], include: ['user'] }),
+    CF.getSpaces({ organizationGuids: [orgGuid] }),
   ]);
   [orgRes, usersRes, spacesRes].map((res) => {
     if (!res.ok) {
@@ -266,7 +266,9 @@ async function deleteGroupUser(
     const args: GetRoleArgs = {
       userGuids: [userGuid],
     };
-    groupType === 'org' ? (args.orgGuids = guids) : (args.spaceGuids = guids);
+    groupType === 'org'
+      ? (args.organizationGuids = guids)
+      : (args.spaceGuids = guids);
     const roleRes = await CF.getRoles(args);
 
     if (!roleRes.ok) {

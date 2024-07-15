@@ -153,7 +153,7 @@ describe('cloudfoundry tests', () => {
         )
         .reply(200, mockRolesFilteredByOrgAndUser);
       const res = await getRoles({
-        orgGuids: ['validOrgGuid'],
+        organizationGuids: ['validOrgGuid'],
         userGuids: ['userGuid'],
       });
       expect(res.status).toEqual(200);

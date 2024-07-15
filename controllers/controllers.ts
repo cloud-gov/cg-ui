@@ -4,7 +4,7 @@
 /***/
 import { revalidatePath } from 'next/cache';
 import * as CF from '@/api/cf/cloudfoundry';
-import { GetRoleArgs, SpaceObj, UserObj } from '@/api/cf/cloudfoundry-types';
+import { SpaceObj, UserObj } from '@/api/cf/cloudfoundry-types';
 import { ControllerResult } from './controller-types';
 import {
   associateUsersWithRoles,
@@ -25,11 +25,10 @@ export async function getEditOrgRoles(
   orgGuid: string,
   userGuid: string
 ): Promise<ControllerResult> {
-  const args: GetRoleArgs = {
+  const response = await CF.getRoles({
     userGuids: [userGuid],
-    orgGuids: [orgGuid],
-  };
-  const response = await CF.getRoles(args);
+    organizationGuids: [orgGuid],
+  });
   if (!response.ok) {
     logDevError(
       `api error on cf edit org page with http code ${response.status} for url: ${response.url}`
@@ -85,8 +84,11 @@ export async function getOrgsPage(): Promise<ControllerResult> {
 export async function getOrgPage(orgGuid: string): Promise<ControllerResult> {
   const [orgUserRolesRes, spacesRes, userLogonInfoRes] = await Promise.all([
     // use this request to roles to also obtain the organization details and list the org users
-    CF.getRoles({ orgGuids: [orgGuid], include: ['organization', 'user'] }),
-    CF.getSpaces([orgGuid]),
+    CF.getRoles({
+      organizationGuids: [orgGuid],
+      include: ['organization', 'user'],
+    }),
+    CF.getSpaces({ organizationGuids: [orgGuid] }),
     getUserLogonInfo(),
   ]);
   [orgUserRolesRes, spacesRes].map((res) => {
@@ -142,7 +144,10 @@ export async function getOrgPage(orgGuid: string): Promise<ControllerResult> {
 export async function getOrgAppsPage(
   orgGuid: string
 ): Promise<ControllerResult> {
-  const appsRes = await CF.getApps({ orgGuids: [orgGuid], include: ['space'] });
+  const appsRes = await CF.getApps({
+    organizationGuids: [orgGuid],
+    include: ['space'],
+  });
   if (!appsRes.ok) {
     logDevError(`unable to retrieve org apps information: ${appsRes.status}`);
     throw new Error('something went wrong with the request');
@@ -182,7 +187,7 @@ export async function getOrgUserSpacesPage(
   orgGuid: string,
   userGuid: string
 ): Promise<ControllerResult> {
-  const spacesRes = await CF.getSpaces([orgGuid]);
+  const spacesRes = await CF.getSpaces({ organizationGuids: [orgGuid] });
   if (!spacesRes.ok) {
     logDevError(
       `api error on cf org page with http code ${spacesRes.status} for url: ${spacesRes.url}`
