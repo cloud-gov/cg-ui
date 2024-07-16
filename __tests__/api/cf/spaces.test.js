@@ -40,7 +40,7 @@ describe('cloudfoundry tests', () => {
   describe('getSpaces', () => {
     it('returns spaces available to the user', async () => {
       nock(process.env.CF_API_URL).get('/spaces').reply(200, mockSpaces);
-      const res = await getSpaces({});
+      const res = await getSpaces();
       expect(res.status).toEqual(200);
       expect(await res.json()).toEqual(mockSpaces);
     });

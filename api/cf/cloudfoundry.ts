@@ -19,7 +19,7 @@ import {
 
 // APPS
 
-export async function getApps({ ...args }: GetAppArgs): Promise<Response> {
+export async function getApps({ ...args }: GetAppArgs = {}): Promise<Response> {
   // set per_page to maximum allowed value
   const pathParams = await prepPathParams({ ...args, per_page: '5000' });
   return await cfRequest('/apps' + pathParams);
@@ -76,7 +76,9 @@ export async function deleteRole(roleGuid: string): Promise<Response> {
 // note: filters work as an "and" in the CF list roles API
 // therefore, if you try to filter by both an org and a space GUID you
 // will receive 0 results
-export async function getRoles({ ...args }: GetRoleArgs): Promise<Response> {
+export async function getRoles({
+  ...args
+}: GetRoleArgs = {}): Promise<Response> {
   // params are all comma separated lists
   const pathParams = await prepPathParams({ ...args, per_page: '5000' });
   return await cfRequest('/roles' + pathParams);
@@ -88,7 +90,9 @@ export async function getSpace(guid: string): Promise<Response> {
   return await cfRequest('/spaces/' + guid, 'get');
 }
 
-export async function getSpaces({ ...args }: GetSpaceArgs): Promise<Response> {
+export async function getSpaces({
+  ...args
+}: GetSpaceArgs = {}): Promise<Response> {
   const pathParams = await prepPathParams(args);
   return await cfRequest('/spaces' + pathParams);
 }
