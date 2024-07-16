@@ -184,7 +184,13 @@ USWDS theme settings can be configured in [assets/stylesheets/uswds-settings.scs
 
 The global SASS entrypoint is [assets/stylesheets/styles.scss](./assets/stylesheets/styles.scss)
 
-Our aim is to import only what we need from USWDS. Individual USWDS packages will be listed in `styles.scss` after the `uswds-core` import.
+Our team keeps custom CSS/SASS to a minimum and takes a [utilities-first](https://designsystem.digital.gov/utilities/) approach.
+
+When adding styles, work through this order:
+1. Can [USWDS utilities](https://designsystem.digital.gov/utilities/) be used?
+1. If not, can [USWDS Design Tokens](https://designsystem.digital.gov/design-tokens/) be used?
+1. If not, then add custom CSS/SASS
+
 
 ### Images
 
