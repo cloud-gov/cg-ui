@@ -40,7 +40,10 @@ describe('cloudfoundry tests', () => {
           .get('/apps?organization_guids=org1&include=space&per_page=5000')
           .reply(200, {});
 
-        const res = await getApps({ orgGuids: ['org1'], include: ['space'] });
+        const res = await getApps({
+          organizationGuids: ['org1'],
+          include: ['space'],
+        });
         expect(res.status).toEqual(200);
       });
     });
@@ -111,9 +114,11 @@ describe('cloudfoundry tests', () => {
     });
 
     describe('getSpaces', () => {
-      it('returns spaces available to the user', async () => {
-        nock(process.env.CF_API_URL).get('/spaces').reply(200, mockSpaces);
-        const res = await getSpaces();
+      it('when filtered by org guid, returns relevant spaces available to the user', async () => {
+        nock(process.env.CF_API_URL)
+          .get('/spaces?organization_guids=org1')
+          .reply(200, mockSpaces);
+        const res = await getSpaces({ organizationGuids: ['org1'] });
 
         expect(res.status).toEqual(200);
         expect(await res.json()).toEqual(mockSpaces);

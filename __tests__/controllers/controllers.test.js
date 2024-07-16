@@ -66,7 +66,7 @@ describe('controllers tests', () => {
     describe('if the s3 request fails', () => {
       it('returns normal response data with undefined user login info', async () => {
         // setup
-        const orgGuid = 'orgGuid';
+        const orgGuid = 'orgGuidS3Fails';
         const testSpaceGuids = {
           resources: [
             {
@@ -106,7 +106,7 @@ describe('controllers tests', () => {
     describe('if the CF requests succeed', () => {
       it('returns the expected controller result', async () => {
         // setup
-        const orgGuid = 'orgGuid';
+        const orgGuid = 'orgGuidSucceeded';
         const testSpaceGuids = {
           resources: [
             {

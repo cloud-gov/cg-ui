@@ -1,7 +1,7 @@
 import { RolesByUser, SpaceRoleMap } from './controller-types';
 import { RoleObj } from '@/api/cf/cloudfoundry-types';
 import { UserLogonInfoById } from '@/api/aws/s3-types';
-import { cfRequestOptions } from '@/api/cf/cloudfoundry';
+import { cfRequestOptions } from '@/api/cf/cloudfoundry-helpers';
 import { request } from '@/api/api';
 import { delay } from '@/helpers/timeout';
 

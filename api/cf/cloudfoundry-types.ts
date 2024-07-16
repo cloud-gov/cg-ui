@@ -19,20 +19,36 @@ export interface AddRoleArgs {
 }
 
 export interface GetAppArgs {
-  appGuids?: string[];
-  include?: string[];
-  orgGuids?: string[];
+  // guids refers to application guids
+  guids?: string[];
+  names?: string[];
+  include?: Array<'space' | 'space.organization'>;
+  organizationGuids?: string[];
+  perPage?: string;
   spaceGuids?: string[];
 }
 
 export interface GetRoleArgs {
-  include?: string[];
-  orgGuids?: string[];
+  // guids refers to role guids
+  guids?: string[];
+  types?: RoleType[];
+  include?: Array<'user' | 'space' | 'organization'>;
+  organizationGuids?: string[];
+  perPage?: string;
   spaceGuids?: string[];
   userGuids?: string[];
 }
 
-/* INDIVIDUAL API OBJECTS */
+export interface GetSpaceArgs {
+  // guids refers to space guids
+  guids?: string[];
+  include?: Array<'organization'>;
+  names?: string[];
+  organizationGuids?: string[];
+  perPage?: string;
+}
+
+/* INDIVIDUAL API RESPONSE OBJECTS */
 
 export interface AppObj {
   guid: string;

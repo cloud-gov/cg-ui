@@ -49,7 +49,7 @@ describe('cloudfoundry tests', () => {
       nock(process.env.CF_API_URL)
         .get('/spaces?organization_guids=org1')
         .reply(200, mockSpaces);
-      const res = await getSpaces(['org1']);
+      const res = await getSpaces({ organizationGuids: ['org1'] });
       expect(res.status).toEqual(200);
       expect(await res.json()).toEqual(mockSpaces);
     });
@@ -58,7 +58,7 @@ describe('cloudfoundry tests', () => {
       nock(process.env.CF_API_URL)
         .get('/spaces?organization_guids=org1,org2')
         .reply(200, mockSpaces);
-      const res = await getSpaces(['org1', 'org2']);
+      const res = await getSpaces({ organizationGuids: ['org1', 'org2'] });
       expect(res.status).toEqual(200);
       expect(await res.json()).toEqual(mockSpaces);
     });
