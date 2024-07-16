@@ -51,6 +51,4 @@ describe('session page', () => {
     const list = document.querySelector('listitem');
     expect(list).toBeNull;
   });
-
-  it.todo('updates the list when the form is submitted');
 });
