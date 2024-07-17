@@ -9,7 +9,10 @@ import {
   AddRoleApiData,
   AddRoleArgs,
   GetAppArgs,
+  GetOrgQuotasArgs,
   GetRoleArgs,
+  GetServiceInstancesArgs,
+  GetServicePlansArgs,
   GetSpaceArgs,
 } from './cloudfoundry-types';
 
@@ -29,6 +32,18 @@ export async function getApps({ ...args }: GetAppArgs = {}): Promise<Response> {
 
 export async function getOrg(guid: string): Promise<Response> {
   return await cfRequest('/organizations/' + guid, 'get');
+}
+
+// 1 org has 1 quota; 1 quota may apply to many orgs
+export async function getOrgQuotas({
+  ...args
+}: GetOrgQuotasArgs = {}): Promise<Response> {
+  const pathParams = await prepPathParams(args);
+  return await cfRequest('/organization_quotas' + pathParams);
+}
+
+export async function getOrgUsageSummary(guid: string): Promise<Response> {
+  return await cfRequest(`/organizations/${guid}/usage_summary`);
 }
 
 export async function getOrgs(): Promise<Response> {
@@ -79,9 +94,26 @@ export async function deleteRole(roleGuid: string): Promise<Response> {
 export async function getRoles({
   ...args
 }: GetRoleArgs = {}): Promise<Response> {
-  // params are all comma separated lists
   const pathParams = await prepPathParams({ ...args, per_page: '5000' });
   return await cfRequest('/roles' + pathParams);
+}
+
+// SERVICES AND SERVICE RELATED
+
+// note: there are several other query arguments available for this endpoint which
+// have not been implemented involving subfields, labels, and time ranges
+export async function getServiceInstances({
+  ...args
+}: GetServiceInstancesArgs = {}): Promise<Response> {
+  const pathParams = await prepPathParams(args);
+  return await cfRequest('/service_instances' + pathParams);
+}
+
+export async function getServicePlans({
+  ...args
+}: GetServicePlansArgs = {}): Promise<Response> {
+  const pathParams = await prepPathParams(args);
+  return await cfRequest('/service_plans' + pathParams);
 }
 
 // SPACES

@@ -55,7 +55,7 @@ export async function cfRequestOptions(
 // converts arguments such as `organizationGuids=['org1', 'org2']`
 // to the format expected by CF API: '?organization_guids=org1, org2'
 export async function prepPathParams(options: {
-  [key: string]: Array<string> | string;
+  [key: string]: Array<string> | string | boolean;
 }): Promise<string> {
   const params = {} as any;
 

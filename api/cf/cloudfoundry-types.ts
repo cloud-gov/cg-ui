@@ -28,6 +28,13 @@ export interface GetAppArgs {
   spaceGuids?: string[];
 }
 
+export interface GetOrgQuotasArgs {
+  // guids and names refer to quota guids
+  guids?: string[];
+  names?: string[];
+  organizationGuids?: string[];
+}
+
 export interface GetRoleArgs {
   // guids refers to role guids
   guids?: string[];
@@ -37,6 +44,45 @@ export interface GetRoleArgs {
   perPage?: string;
   spaceGuids?: string[];
   userGuids?: string[];
+}
+
+export interface GetServiceInstancesArgs {
+  // guids and names refer to the service instances
+  guids?: string[];
+  names?: string[];
+  organizationGuids?: string[];
+  perPage?: string;
+  servicePlanGuids?: string[];
+  servicePlanNames?: string[];
+  spaceGuids?: string[];
+  type?: Array<'managed' | 'user-provided'>;
+  // other arguments not yet implemented
+  //   fields (https://v3-apidocs.cloudfoundry.org/version/3.169.0/index.html#fields-parameter)
+  //   labelSelector (https://v3-apidocs.cloudfoundry.org/version/3.169.0/index.html#labels-and-selectors)
+  //   createdAts (timestamps and relational operators)
+  //   updatedAts (timestamps and relational operators)
+}
+
+// space and org filters do not filter out plans that are public, only those restricted to an organization
+export interface GetServicePlansArgs {
+  // guids and names refer to the service plans
+  guids?: string[];
+  names?: string[];
+  available?: boolean;
+  brokerCatalogIds?: string[];
+  organizationGuids?: string[];
+  serviceBrokerGuids?: string[];
+  serviceBrokerNames?: string[];
+  serviceOfferingGuids?: string[];
+  serviceOfferingNames?: string[];
+  serviceInstanceGuids?: string[];
+  spaceGuids?: string[];
+  include?: Array<'space.organization' | 'service_offering'>;
+  // other arguments not yet implemented
+  //   fields (https://v3-apidocs.cloudfoundry.org/version/3.169.0/index.html#fields-parameter)
+  //   labelSelector (https://v3-apidocs.cloudfoundry.org/version/3.169.0/index.html#labels-and-selectors)
+  //   createdAts (timestamps and relational operators)
+  //   updatedAts (timestamps and relational operators)
 }
 
 export interface GetSpaceArgs {

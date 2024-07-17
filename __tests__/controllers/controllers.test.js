@@ -1,10 +1,11 @@
 import nock from 'nock';
 import { describe, it, expect, beforeEach, afterEach } from '@jest/globals';
 import {
+  getEditOrgRoles,
   getOrgPage,
   getOrgAppsPage,
+  getOrgUsagePage,
   removeUserFromOrg,
-  getEditOrgRoles,
 } from '@/controllers/controllers';
 import { pollForJobCompletion } from '@/controllers/controller-helpers';
 import { mockApps } from '@/__tests__/api/mocks/apps';
@@ -213,6 +214,75 @@ describe('controllers tests', () => {
       expect(
         res.payload.spaces['042655eb-6cea-4fd8-ad8b-d03048f95072']
       ).toBeDefined();
+    });
+  });
+
+  describe('getOrgUsagePage', () => {
+    it('when requests are successful, returns quota, usage, and service info', async () => {
+      // setup
+      // note, using incomplete json mocks for brevity
+      const orgGuid = 'org1';
+      const quotaGuid = 'quota1';
+      const svcPlanGuid1 = 'servicePlan1';
+      const svcPlanGuid2 = 'servicePlan2';
+      const mockQuota = {
+        resources: [
+          {
+            guid: quotaGuid,
+            relationships: { organizations: { data: [{ guid: orgGuid }] } },
+          },
+        ],
+      };
+      const mockUsage = { usage_summary: { routes: 3, memory_in_mb: 3072 } };
+      const mockSvcInstances = {
+        resources: [
+          {
+            guid: 'svcinstance1',
+            type: 'managed',
+            relationships: { service_plan: { data: { guid: svcPlanGuid1 } } },
+          },
+          {
+            guid: 'svcinstance2',
+            type: 'managed',
+            relationships: { service_plan: { data: { guid: svcPlanGuid2 } } },
+          },
+        ],
+      };
+      const mockSvcPlans = {
+        resources: [
+          { guid: svcPlanGuid1, name: 'micro-psql', free: true },
+          { guid: svcPlanGuid2, name: 'mega-psql', free: false },
+        ],
+      };
+
+      nock(process.env.CF_API_URL)
+        .get(`/organization_quotas?organization_guids=${orgGuid}`)
+        .reply(200, mockQuota);
+      nock(process.env.CF_API_URL)
+        .get(`/organizations/${orgGuid}/usage_summary`)
+        .reply(200, mockUsage);
+      nock(process.env.CF_API_URL)
+        .get(`/service_instances?organization_guids=${orgGuid}`)
+        .reply(200, mockSvcInstances);
+      nock(process.env.CF_API_URL)
+        .get(`/service_plans?guids=${svcPlanGuid1},${svcPlanGuid2}`)
+        .reply(200, mockSvcPlans);
+
+      // act
+      const result = await getOrgUsagePage(orgGuid);
+
+      // expect
+      // quota and usage should be single object, instances an array, and plans reorganized by guid
+      expect(result.meta.status).toEqual('success');
+      expect(result.payload.quota.guid).toEqual(quotaGuid);
+      expect(result.payload.usage).toEqual(mockUsage);
+      expect(result.payload.services.instances).toEqual(
+        mockSvcInstances.resources
+      );
+      expect(result.payload.services.plans[svcPlanGuid1].name).toEqual(
+        'micro-psql'
+      );
+      expect(result.payload.services.plans[svcPlanGuid2]).toBeDefined();
     });
   });
 

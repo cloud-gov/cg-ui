@@ -164,6 +164,55 @@ export async function getOrgAppsPage(
   };
 }
 
+export async function getOrgUsagePage(
+  orgGuid: string
+): Promise<ControllerResult> {
+  const [orgQuotasRes, orgUsageRes, svcInstancesRes] = await Promise.all([
+    CF.getOrgQuotas({ organizationGuids: [orgGuid] }),
+    CF.getOrgUsageSummary(orgGuid),
+    CF.getServiceInstances({ organizationGuids: [orgGuid] }),
+  ]);
+  [orgQuotasRes, orgUsageRes, svcInstancesRes].map((res) => {
+    if (!res.ok) {
+      logDevError(
+        `api error on cf org usage page with http code ${res.status} for url: ${res.url}`
+      );
+      throw new Error('something went wrong with the request');
+    }
+  });
+
+  const quotas = await orgQuotasRes.json();
+  const svcInstances = await svcInstancesRes.json();
+  const svcPlanGuids = svcInstances.resources.map(function (instance: any) {
+    // Note: some instances do not appear to have associated plans
+    if (instance.relationships.service_plan) {
+      return instance.relationships.service_plan.data.guid;
+    }
+  });
+
+  const svcPlansRes = await CF.getServicePlans({ guids: svcPlanGuids });
+  if (!svcPlansRes.ok) {
+    logDevError(
+      `api error on cf org usage page with http code ${svcPlansRes.status} for url: ${svcPlansRes.url}`
+    );
+    throw new Error('could not retrieve service plans');
+  }
+  const svcPlans = await svcPlansRes.json();
+  const svcPlansById = resourceKeyedById(svcPlans.resources);
+  return {
+    meta: { status: 'success' },
+    payload: {
+      // there must be exactly one quota per organization
+      quota: quotas.resources[0],
+      usage: await orgUsageRes.json(),
+      services: {
+        instances: svcInstances.resources,
+        plans: svcPlansById,
+      },
+    },
+  };
+}
+
 export async function getUser(userGuid: string): Promise<ControllerResult> {
   const res = await CF.getUser(userGuid);
   if (!res.ok) {
