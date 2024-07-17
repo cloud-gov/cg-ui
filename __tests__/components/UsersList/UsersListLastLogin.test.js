@@ -16,7 +16,7 @@ describe('UsersListLastLogin', () => {
       };
       render(<UsersListLastLogin userLogonInfo={info} />);
 
-      const content = screen.queryByText('Never logged in');
+      const content = screen.queryByText('Never');
       expect(content).toBeInTheDocument();
     });
   });
@@ -50,11 +50,9 @@ describe('UsersListLastLogin', () => {
       //act
       render(<UsersListLastLogin userLogonInfo={info} />);
       // query
-      const time = screen.queryByText(/\d{2}:\d{2} [A|P]M/);
       const date = screen.queryByText(/[a-zA-Z] \d+, \d{4}/);
       const expiryText = screen.queryByText('Login expires in 88 days');
       // assert
-      expect(time).toBeInTheDocument();
       expect(date).toBeInTheDocument();
       expect(expiryText).toBeInTheDocument();
     });

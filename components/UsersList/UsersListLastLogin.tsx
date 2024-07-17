@@ -32,13 +32,16 @@ export function UsersListLastLogin({
   return (
     <div className="text-right text-base" aria-label="last login time">
       <div>
-        {!timestamp && 'Never logged in'}
+        <h3 className="margin-0 font-body-2xs text-semibold text-base font-heading-sm">
+          Last logged in
+        </h3>
+        <br />
+        {!timestamp && 'Never'}
         {timestamp && isExpired && 'Login expired'}
-        {showTimestamp && formatTime(timestamp)}
       </div>
       <div aria-label="last login date">
         {(!timestamp || (timestamp && isExpired)) && (
-          <button className="usa-button usa-button--unstyled">
+          <button className="usa-button usa-button--unstyled padding-top-1">
             Resend invite
           </button>
         )}

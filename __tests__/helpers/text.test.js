@@ -1,5 +1,9 @@
 import { describe, expect, it } from '@jest/globals';
-import { camelToSnakeCase, emailIsValid, underscoreToText } from '@/helpers/text';
+import {
+  camelToSnakeCase,
+  emailIsValid,
+  underscoreToText,
+} from '@/helpers/text';
 
 describe('text helpers', () => {
   describe('camelToSnakeCase', () => {
