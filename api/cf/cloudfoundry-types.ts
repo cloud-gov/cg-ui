@@ -39,6 +39,24 @@ export interface GetRoleArgs {
   userGuids?: string[];
 }
 
+export interface GetServiceCredentialBindingsArgs {
+  // API docs say guids refers to service route bindings, but suspect
+  // it actually refers to service credential bindings
+  guids?: string[];
+  appGuids?: string[];
+  appNames?: string[];
+  include?: Array<'app' | 'service_instance'>;
+  // names of service credential bindings
+  names?: string[];
+  serviceInstanceGuids?: string[];
+  serviceInstanceNames?: string[];
+  serviceOfferingGuids?: string[];
+  serviceOfferingNames?: string[];
+  servicePlanGuids?: string[];
+  servicePlanNames?: string[];
+  type?: Array<'app' | 'key'>;
+}
+
 export interface GetSpaceArgs {
   // guids refers to space guids
   guids?: string[];

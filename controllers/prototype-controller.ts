@@ -120,6 +120,35 @@ export interface UserWithRoles {
 
 // APPLICATIONS
 
+export async function getAppPage(appGuid: string): Promise<ControllerResult> {
+  const [appRes, processesRes, svcBindingsRes] = await Promise.all([
+    CF.getApp(appGuid),
+    CF.getAppProcesses(appGuid),
+    CF.getServiceCredentialBindings({
+      appGuids: [appGuid],
+      include: ['service_instance'],
+    }),
+  ]);
+  [appRes, processesRes, svcBindingsRes].map((res) => {
+    if (!res.ok) {
+      logDevError(
+        `api error on cf org page with http code ${res.status} for url: ${res.url}`
+      );
+      throw new Error('something went wrong with the request');
+    }
+  });
+  const bindings = await svcBindingsRes.json();
+
+  return {
+    meta: { status: 'success' },
+    payload: {
+      app: await appRes.json(),
+      processes: (await processesRes.json()).resources(),
+      services: bindings.included.service_instances,
+    },
+  };
+}
+
 export async function getApps(): Promise<Result> {
   const message = {
     fail: 'unable to list your applications',

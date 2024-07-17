@@ -10,6 +10,7 @@ import {
   AddRoleArgs,
   GetAppArgs,
   GetRoleArgs,
+  GetServiceCredentialBindingsArgs,
   GetSpaceArgs,
 } from './cloudfoundry-types';
 
@@ -18,6 +19,14 @@ import {
 /***/
 
 // APPS
+
+export async function getApp(guid: string): Promise<Response> {
+  return await cfRequest('/apps/' + guid, 'get');
+}
+
+export async function getAppProcesses(guid: string): Promise<Response> {
+  return await cfRequest(`/apps/${guid}/processes`, 'get');
+}
 
 export async function getApps({ ...args }: GetAppArgs = {}): Promise<Response> {
   // set per_page to maximum allowed value
@@ -82,6 +91,15 @@ export async function getRoles({
   // params are all comma separated lists
   const pathParams = await prepPathParams({ ...args, per_page: '5000' });
   return await cfRequest('/roles' + pathParams);
+}
+
+// SERVICES
+
+export async function getServiceCredentialBindings({
+  ...args
+}: GetServiceCredentialBindingsArgs): Promise<Response> {
+  const pathParams = await prepPathParams(args);
+  return await cfRequest('/service_credential_bindings' + pathParams);
 }
 
 // SPACES
