@@ -97,7 +97,7 @@ This application relies on an s3 bucket to pull information about a user's last 
 
 If you wish to pull this information for local development, you may optionally set up access to ths s3 bucket.
 
-Create a new service key:
+Create a new service key for your targeted org and environment:
 
 ```
 cf create-service-key cg-ui-storage [name-of-your-key]
@@ -121,7 +121,7 @@ You are interested in these parts of the key:
 
 Copy the values into your `.env.local` file for the variables `S3_ACCESS_KEY_ID`, `S3_ACCESS_KEY_SECRET`, `S3_BUCKET`, AND `S3_REGION`.
 
-When you finish using your key, make sure to delete it:
+When you finish doing what you need to do locally, make sure to delete the service:
 
 ```
 cf delete-service-key cg-ui-storage [name-of-your-key]
