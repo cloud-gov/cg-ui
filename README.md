@@ -121,7 +121,7 @@ You are interested in these parts of the key:
 
 Copy the values into your `.env.local` file for the variables `S3_ACCESS_KEY_ID`, `S3_ACCESS_KEY_SECRET`, `S3_BUCKET`, AND `S3_REGION`.
 
-When you finish doing what you need to do locally, make sure to delete the service:
+When you finish doing what you need to do locally, make sure to delete the service key:
 
 ```
 cf delete-service-key cg-ui-storage [name-of-your-key]
