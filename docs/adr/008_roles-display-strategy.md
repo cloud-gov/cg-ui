@@ -29,6 +29,7 @@ The current dashboard, Stratos, was created by the Cloud Foundry community and i
 * `+` Allows for a less complex user interface that is more intuitive
 * `-` Creates opportunities for expected roles/permissions to become out of sync when changes are made using other methods like the API or CLI
 * `-` Simplified UI may not be able to support all combinations of roles/permissions provided by the API or CLI
+* `-` Backwards compatibility challenges for cloud users who may already have roles configured in specific ways
 
 ### *Display roles as they appear in Cloud Foundry*
 * `+` Conforms with Cloud Foundry and cloud.gov's documentation
