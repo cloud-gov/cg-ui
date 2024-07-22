@@ -72,7 +72,9 @@ export async function getUserLogonInfo(): Promise<
     const res = await s3.send(command);
     const bodyString = await res.Body?.transformToString();
     if (bodyString) {
-      return JSON.parse(bodyString);
+      const json = JSON.parse(bodyString);
+      console.log(`user logon info last updated ${json.timestamp}`);
+      return json;
     }
   } catch (error: any) {
     if (process.env.NODE_ENV === 'development') {
