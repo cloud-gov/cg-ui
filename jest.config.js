@@ -8,7 +8,20 @@ const createJestConfig = nextJest({
 
 // Add any custom config to be passed to Jest
 const config = {
-  coverageProvider: 'v8',
+  // CODE COVERAGE
+  collectCoverage: true,
+  collectCoverageFrom: ['**/*.{ts,tsx}', '!next-env.d.ts'],
+  coverageDirectory: './coverage',
+  coveragePathIgnorePatterns: ['/node_modules/', '/app/prototype/', '/.next/'],
+  coverageProvider: 'babel',
+  coverageThreshold: {
+    global: {
+      branches: 45,
+      functions: 60,
+      lines: 60,
+    },
+  },
+
   // testEnvironment: node works for api testing, but to test anything needing a browser, like React components, set @jest-environment to jsdom in the file: https://jestjs.io/docs/configuration#testenvironment-string
   testEnvironment: 'node',
   // Add more setup options before each test is run
