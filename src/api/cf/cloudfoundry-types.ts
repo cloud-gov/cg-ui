@@ -38,12 +38,32 @@ export interface GetOrgQuotasArgs {
 export interface GetRoleArgs {
   // guids refers to role guids
   guids?: string[];
-  types?: RoleType[];
   include?: Array<'user' | 'space' | 'organization'>;
   organizationGuids?: string[];
   perPage?: string;
   spaceGuids?: string[];
+  types?: RoleType[];
   userGuids?: string[];
+}
+
+export interface GetServiceCredentialBindingsArgs {
+  // guids and names refers to the credential bindings
+  guids?: string[];
+  names?: string[];
+  serviceInstanceGuids?: string[];
+  serviceInstanceNames?: string[];
+  appGuids?: string[];
+  appNames?: string[];
+  servicePlanGuids?: string[];
+  servicePlanNames?: string[];
+  serviceOfferingGuids?: string[];
+  serviceOfferingNames?: string[];
+  type?: 'app' | 'key';
+  include?: Array<'app' | 'service_instance'>;
+  // other arguments not yet implemented
+  // createdAts
+  // updatedAts
+  // labelSelector
 }
 
 export interface GetServiceInstancesArgs {
@@ -148,6 +168,37 @@ export interface RoleObj {
     space: {
       data: {
         guid: string | undefined;
+      };
+    };
+  };
+  links: any;
+}
+
+export interface ServiceCredentialBindingObj {
+  guid: string;
+  name: string;
+  type: 'key' | 'app';
+  last_operation: {
+    // almost identical to last_operation for svc instance but type field differs
+    type: 'create' | 'delete';
+    state: 'initial' | 'in progress' | 'succeeded' | 'failed';
+    description: string;
+    created_at: string;
+    updated_at: string;
+  };
+  created_at: string;
+  updated_at: string;
+  metadata: any;
+  relationships: {
+    service_instance: {
+      data: {
+        guid: string;
+      };
+    };
+    // only for app bindings
+    app?: {
+      data: {
+        guid: string;
       };
     };
   };

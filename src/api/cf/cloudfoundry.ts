@@ -11,6 +11,7 @@ import {
   GetAppArgs,
   GetOrgQuotasArgs,
   GetRoleArgs,
+  GetServiceCredentialBindingsArgs,
   GetServiceInstancesArgs,
   GetServicePlansArgs,
   GetSpaceArgs,
@@ -99,6 +100,13 @@ export async function getRoles({
 }
 
 // SERVICES AND SERVICE RELATED
+
+export async function getServiceCredentialBindings({
+  ...args
+}: GetServiceCredentialBindingsArgs = {}): Promise<Response> {
+  const pathParams = await prepPathParams(args);
+  return await cfRequest('/service_credential_bindings' + pathParams);
+}
 
 // note: there are several other query arguments available for this endpoint which
 // have not been implemented involving subfields, labels, and time ranges

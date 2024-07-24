@@ -2,6 +2,7 @@ import React from 'react';
 import { getUser } from '@/controllers/controllers';
 import Link from 'next/link';
 import { PageHeader } from '@/components/PageHeader';
+import { Username } from '@/components/Username';
 
 export default async function SpaceLayout({
   children,
@@ -13,8 +14,8 @@ export default async function SpaceLayout({
     userId: string;
   };
 }) {
-  const { payload, meta } = await getUser(params.userId);
-
+  const { payload } = await getUser(params.userId);
+  const { user, serviceAccount } = payload;
   return (
     <>
       <div className="desktop:display-flex border-bottom border-accent-warm-light padding-bottom-105">
@@ -25,9 +26,7 @@ export default async function SpaceLayout({
       </div>
       <div className="margin-top-3">
         <PageHeader
-          heading={
-            meta.status === 'success' ? payload.username : 'User name not found'
-          }
+          heading={<Username user={user} serviceAccount={serviceAccount} />}
         />
       </div>
       {children}

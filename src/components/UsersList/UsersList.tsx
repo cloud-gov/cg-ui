@@ -5,7 +5,10 @@ import { GridList } from '@/components/GridList/GridList';
 import { UsersListItem } from '@/components/UsersList/UsersListItem';
 import { RolesByUser, SpacesBySpaceId } from '@/controllers/controller-types';
 import { UserLogonInfoById } from '@/api/aws/s3-types';
-import { UserObj } from '@/api/cf/cloudfoundry-types';
+import {
+  ServiceCredentialBindingObj,
+  UserObj,
+} from '@/api/cf/cloudfoundry-types';
 import { sortObjectsByParam, filterObjectsByParams } from '@/helpers/arrays';
 import { Modal } from '@/components/uswds/Modal';
 import { Alert } from '@/components/uswds/Alert';
@@ -14,12 +17,14 @@ import { ListSearchInput } from '@/components/ListSearchInput';
 export function UsersList({
   users,
   roles,
+  serviceAccounts,
   spaces,
   userLogonInfo,
   orgGuid,
 }: {
   users: Array<UserObj>;
   roles: RolesByUser;
+  serviceAccounts: { [id: string]: ServiceCredentialBindingObj };
   spaces: SpacesBySpaceId;
   userLogonInfo: UserLogonInfoById;
   orgGuid: string;
@@ -109,6 +114,7 @@ export function UsersList({
               key={`UsersListItem-${user.guid}`}
               user={user}
               roles={roles[user.guid]}
+              serviceAccount={serviceAccounts[user.username]}
               spaces={spaces}
               userLogonInfo={
                 userLogonInfo ? userLogonInfo[user.guid] : undefined

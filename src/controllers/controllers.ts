@@ -5,6 +5,7 @@
 import { revalidatePath } from 'next/cache';
 import * as CF from '@/api/cf/cloudfoundry';
 import {
+  ServiceCredentialBindingObj,
   ServiceInstanceObj,
   SpaceObj,
   UserObj,
@@ -14,6 +15,7 @@ import {
   associateUsersWithRoles,
   defaultSpaceRoles,
   filterUserLogonInfo,
+  likelyNonHumanUser,
   logDevError,
   pollForJobCompletion,
   resourceKeyedById,
@@ -106,10 +108,16 @@ export async function getOrgPage(orgGuid: string): Promise<ControllerResult> {
 
   const orgUserRolesPayload = await orgUserRolesRes.json();
   const users = orgUserRolesPayload.included.users;
-  const userGuids = users.map(function (user: UserObj) {
-    return user.guid;
+  const userGuids = [] as Array<string>;
+  const suspectedNonHumans = [] as Array<string>;
+  users.forEach(function (user: UserObj) {
+    userGuids.push(user.guid);
+    if (likelyNonHumanUser(user)) {
+      suspectedNonHumans.push(user.username);
+    }
   });
 
+  // only pass info about users available to this org to the UI
   const userLogonInfo = userLogonInfoRes
     ? filterUserLogonInfo(userLogonInfoRes.user_summary, userGuids)
     : undefined;
@@ -120,24 +128,41 @@ export async function getOrgPage(orgGuid: string): Promise<ControllerResult> {
     return space.guid;
   });
 
-  const spaceRolesRes = await CF.getRoles({ spaceGuids: spaceGuids });
-  if (!spaceRolesRes.ok) {
-    logDevError(
-      `api error on cf org page with http code ${spaceRolesRes.status} for url: ${spaceRolesRes.url}`
+  const additionalQueries = [CF.getRoles({ spaceGuids: spaceGuids })];
+  // attempt to find service credential bindings for any users suspected of being non-human
+  if (suspectedNonHumans.length > 0) {
+    additionalQueries.push(
+      CF.getServiceCredentialBindings({ guids: suspectedNonHumans })
     );
-    throw new Error('something went wrong with the request');
   }
+  const [spaceRolesRes, svcCredsRes] = await Promise.all(additionalQueries);
+  [spaceRolesRes, svcCredsRes].map((res) => {
+    if (res && !res.ok) {
+      logDevError(
+        `api error on cf org page with http code ${res.status} for url: ${res.url}`
+      );
+      throw new Error('something went wrong with the request');
+    }
+  });
 
   const spaceRoles = (await spaceRolesRes.json()).resources;
   const rolesByUser = associateUsersWithRoles(
     orgUserRolesPayload.resources.concat(spaceRoles)
   );
 
+  // if there are any service credential bindings returned, format them for easier lookup
+  let svcAccounts = {};
+  if (svcCredsRes) {
+    const svcCreds = (await svcCredsRes.json()).resources;
+    svcAccounts = resourceKeyedById(svcCreds);
+  }
+
   return {
     meta: { status: 'success' },
     payload: {
       org: orgUserRolesPayload.included.organizations[0],
       roles: rolesByUser,
+      serviceAccounts: svcAccounts,
       spaces: spacesBySpaceId,
       users: users,
       userLogonInfo: userLogonInfo,
@@ -220,18 +245,35 @@ export async function getOrgUsagePage(
 }
 
 export async function getUser(userGuid: string): Promise<ControllerResult> {
-  const res = await CF.getUser(userGuid);
-  if (!res.ok) {
-    logDevError(`unable to retrieve user information: ${res.status}`);
-    return {
-      payload: null,
-      meta: {
-        status: 'error',
-      },
-    };
+  const userRes = await CF.getUser(userGuid);
+  if (!userRes.ok) {
+    logDevError(`unable to retrieve user information: ${userRes.status}`);
+    throw new Error('something went wrong with the request');
+  }
+
+  const userObj = (await userRes.json()) as UserObj;
+  let svcCred = undefined as ServiceCredentialBindingObj | undefined;
+
+  if (likelyNonHumanUser(userObj)) {
+    const svcCredRes = await CF.getServiceCredentialBindings({
+      guids: [userObj.username],
+    });
+    if (!svcCredRes.ok) {
+      logDevError(
+        `unable to retrieve service credential information: ${svcCredRes.status}`
+      );
+      // don't throw an error, because we can still display some information about the user
+      // even if user isn't actually a service account or something happened to go wrong with the req
+    } else {
+      // should only be one service cred result
+      svcCred = (await svcCredRes.json()).resources[0];
+    }
   }
   return {
-    payload: await res.json(),
+    payload: {
+      user: userObj,
+      serviceAccount: svcCred,
+    },
     meta: {
       status: 'success',
     },
