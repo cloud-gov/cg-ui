@@ -7,9 +7,11 @@ import { SyntheticEvent } from 'react';
 export function ListSearchInput({
   onSubmit,
   btnText = 'Search',
+  labelText,
 }: {
   onSubmit: Function;
   btnText?: string;
+  labelText?: string;
 }) {
   const action = (e: SyntheticEvent) => {
     e.preventDefault();
@@ -26,7 +28,7 @@ export function ListSearchInput({
         onSubmit={action}
       >
         <label className="usa-sr-only" htmlFor="list-search-field">
-          {btnText}
+          {labelText || btnText}
         </label>
         <TextInput type="search" id="list-search-field" />
         <Button type="submit">{btnText}</Button>

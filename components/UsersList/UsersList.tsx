@@ -72,9 +72,12 @@ export function UsersList({
 
   return (
     <>
-      <ListSearchInput onSubmit={onSearchAction} />
+      <ListSearchInput
+        onSubmit={onSearchAction}
+        labelText="search the list of users by username"
+      />
       {searchValue && (
-        <div className="margin-bottom-2">
+        <div className="margin-bottom-2" role="region" aria-live="polite">
           <strong>
             {currentUsers.length} user{currentUsers.length === 1 ? '' : 's'}{' '}
             found for "{searchValue}"
