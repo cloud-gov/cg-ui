@@ -24,8 +24,4 @@ describe('SessionForm', () => {
     const input = await screen.getByRole('textbox', { name: 'username' });
     expect(input).toHaveAttribute('required', '');
   });
-
-  // TODO try moving function addSession outside of the component
-  // so it can be more effectively tested
-  it.todo('updates the sessions prop on form submission');
 });

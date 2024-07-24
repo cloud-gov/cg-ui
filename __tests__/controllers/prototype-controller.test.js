@@ -47,10 +47,6 @@ describe('prototype-controller tests', () => {
         message: 'removed user from org',
       });
     });
-
-    it.todo(
-      'when something goes wrong with a request, we should determine what the user sees'
-    );
   });
 
   describe('getOrgPage', () => {
