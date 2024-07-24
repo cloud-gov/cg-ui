@@ -1,5 +1,5 @@
 import { describe, expect, it } from '@jest/globals';
-import { sortObjectsByParam } from '@/helpers/arrays';
+import { sortObjectsByParam, filterObjectsByParams } from '@/helpers/arrays';
 
 describe('sortObjectsByParam', () => {
   // setup
@@ -30,5 +30,24 @@ describe('sortObjectsByParam', () => {
     expect(result[2].username).toEqual('alpha foo');
     expect(result[3].username).toEqual(null);
     expect(result[4].username).toEqual(undefined);
+  });
+});
+
+describe('filterObjectsByParams', () => {
+  it('filters expected objects from given array', () => {
+    // setup
+    const ary = [
+      { name: 'abcdef', email: 'abc@example.com' }, // name but not email
+      { name: 'ghijk', email: 'def@example.com' }, // email but not name
+      { name: 'lmnop', email: 'lmnop@example.com' },
+    ];
+    const searchTerm = 'def';
+    const params = { name: searchTerm, email: searchTerm };
+    // act
+    const result = filterObjectsByParams(ary, params);
+    // expect
+    expect(result.length).toEqual(2);
+    expect(result[0]).toBe(ary[0]);
+    expect(result[1]).toBe(ary[1]);
   });
 });
