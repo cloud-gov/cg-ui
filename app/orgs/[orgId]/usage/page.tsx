@@ -1,8 +1,16 @@
+import {
+  ServiceInstanceObj,
+  ServicePlanObj,
+} from '@/api/cf/cloudfoundry-types';
 import { PageHeader } from '@/components/PageHeader';
 import { getOrgUsagePage } from '@/controllers/controllers';
 import { formatDate } from '@/helpers/dates';
 
-function formatCost(plan: any): string {
+interface ServicePlanLookup {
+  [index: string]: ServicePlanObj;
+}
+
+function formatCost(plan: ServicePlanObj): string {
   const firstCost = plan.costs[0];
   if (plan.free === true) {
     return 'Free';
@@ -21,7 +29,13 @@ function formatLimits(limit: string | null) {
   return limit;
 }
 
-function Service({ service, plans }: { service: any; plans: any }) {
+function Service({
+  service,
+  plans,
+}: {
+  service: ServiceInstanceObj;
+  plans: ServicePlanLookup;
+}) {
   if (service.relationships.service_plan) {
     const plan = plans[service.relationships.service_plan.data.guid];
     return (
@@ -58,8 +72,8 @@ export default async function OrgUsagePage({
   const { payload } = await getOrgUsagePage(params.orgId);
   const quota = payload.quota;
   const usage = payload.usage.usage_summary;
-  const svcInstances = payload.services.instances;
-  const svcPlans = payload.services.plans;
+  const svcInstances = payload.services.instances as Array<ServiceInstanceObj>;
+  const svcPlans = payload.services.plans as ServicePlanLookup;
 
   return (
     <>
@@ -108,7 +122,7 @@ export default async function OrgUsagePage({
       for more information about quota limits that we may want to reveal to users of an organization */}
 
       <h2>Services overview</h2>
-      {svcInstances.map((svc: any) => {
+      {svcInstances.map((svc: ServiceInstanceObj) => {
         return (
           <>
             <Service service={svc} plans={svcPlans} key={svc.guid} />

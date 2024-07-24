@@ -4,7 +4,11 @@
 /***/
 import { revalidatePath } from 'next/cache';
 import * as CF from '@/api/cf/cloudfoundry';
-import { SpaceObj, UserObj } from '@/api/cf/cloudfoundry-types';
+import {
+  ServiceInstanceObj,
+  SpaceObj,
+  UserObj,
+} from '@/api/cf/cloudfoundry-types';
 import { ControllerResult } from './controller-types';
 import {
   associateUsersWithRoles,
@@ -183,7 +187,9 @@ export async function getOrgUsagePage(
 
   const quotas = await orgQuotasRes.json();
   const svcInstances = await svcInstancesRes.json();
-  const svcPlanGuids = svcInstances.resources.map(function (instance: any) {
+  const svcPlanGuids = svcInstances.resources.map(function (
+    instance: ServiceInstanceObj
+  ) {
     // Note: some instances do not appear to have associated plans
     if (instance.relationships.service_plan) {
       return instance.relationships.service_plan.data.guid;

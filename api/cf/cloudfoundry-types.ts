@@ -154,6 +154,74 @@ export interface RoleObj {
   links: any;
 }
 
+export interface ServiceInstanceObj {
+  guid: string;
+  created_at: string;
+  updated_at: string;
+  name: string;
+  type: 'managed' | 'user-provided';
+  tags: string[];
+  last_operation: {
+    type: 'create' | 'update' | 'delete';
+    state: 'initial' | 'in progress' | 'succeeded' | 'failed';
+    description: string;
+    created_at: string;
+    updated_at: string;
+  };
+  relationships: {
+    // service plan only shown if type managed
+    service_plan?: {
+      data: {
+        guid: string;
+      };
+    };
+    space: {
+      data: {
+        guid: string;
+      };
+    };
+  };
+  metadata: any;
+  links: any;
+  // syslog and route only if type user-provided
+  syslog_drain_url?: string;
+  route_service_url?: string;
+  // following only if type managed
+  maintenance_info?: any;
+  upgrade_available?: boolean;
+  dashboard_url?: string;
+}
+
+export interface ServicePlanObj {
+  guid: string;
+  created_at: string;
+  updated_at: string;
+  name: string;
+  visibility_type: 'public' | 'admin' | 'organization' | 'space';
+  available: boolean;
+  free: boolean;
+  description: string;
+  relationships: {
+    service_offering: {
+      data: {
+        guid: string;
+      };
+    };
+    space: {
+      data: {
+        guid: string;
+      };
+    };
+  };
+  // TODO update if we start using the below
+  costs: any;
+  maintenance_info: any;
+  broker_catalog: any;
+  schemas: any;
+  metadata: any;
+  links: any;
+}
+
 export interface SpaceObj {
   guid: string;
   created_at: string;
