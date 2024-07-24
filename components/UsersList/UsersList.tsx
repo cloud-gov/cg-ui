@@ -69,6 +69,7 @@ export function UsersList({
 
   const modalHeadingId = (name: string) => `removeUserSuccess-${name}`;
   const currentUsers = usersSorted(usersFiltered(users));
+  const usersResultsText = currentUsers.length === 1 ? 'user' : 'users';
 
   return (
     <>
@@ -76,14 +77,20 @@ export function UsersList({
         onSubmit={onSearchAction}
         labelText="search the list of users by username"
       />
-      {searchValue && (
-        <div className="margin-bottom-2" role="region" aria-live="polite">
-          <strong>
-            {currentUsers.length} user{currentUsers.length === 1 ? '' : 's'}{' '}
-            found for "{searchValue}"
-          </strong>
-        </div>
-      )}
+      {/*
+      aria-live region needs to show up on initial page render.
+      More info: https://tetralogical.com/blog/2024/05/01/why-are-my-live-regions-not-working/
+      */}
+      <div role="region" aria-live="polite">
+        {searchValue && (
+          <div className="margin-bottom-2">
+            <strong>
+              {currentUsers.length} {usersResultsText} found for{' '}
+              {`"${searchValue}"`}
+            </strong>
+          </div>
+        )}
+      </div>
       <GridList>
         {removedUsername && (
           <Modal

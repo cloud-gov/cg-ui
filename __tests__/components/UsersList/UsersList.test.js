@@ -100,7 +100,9 @@ describe('UsersList', () => {
         />
       );
       // act
-      const input = screen.getByLabelText('Search');
+      const input = screen.getByLabelText(
+        'search the list of users by username'
+      );
       input.focus();
       await user.keyboard('c us');
       await user.keyboard('{enter}');
