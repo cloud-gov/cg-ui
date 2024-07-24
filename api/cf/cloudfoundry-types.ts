@@ -28,6 +28,13 @@ export interface GetAppArgs {
   spaceGuids?: string[];
 }
 
+export interface GetOrgQuotasArgs {
+  // guids and names refer to quota guids
+  guids?: string[];
+  names?: string[];
+  organizationGuids?: string[];
+}
+
 export interface GetRoleArgs {
   // guids refers to role guids
   guids?: string[];
@@ -37,6 +44,45 @@ export interface GetRoleArgs {
   perPage?: string;
   spaceGuids?: string[];
   userGuids?: string[];
+}
+
+export interface GetServiceInstancesArgs {
+  // guids and names refer to the service instances
+  guids?: string[];
+  names?: string[];
+  organizationGuids?: string[];
+  perPage?: string;
+  servicePlanGuids?: string[];
+  servicePlanNames?: string[];
+  spaceGuids?: string[];
+  type?: Array<'managed' | 'user-provided'>;
+  // other arguments not yet implemented
+  //   fields (https://v3-apidocs.cloudfoundry.org/version/3.169.0/index.html#fields-parameter)
+  //   labelSelector (https://v3-apidocs.cloudfoundry.org/version/3.169.0/index.html#labels-and-selectors)
+  //   createdAts (timestamps and relational operators)
+  //   updatedAts (timestamps and relational operators)
+}
+
+// space and org filters do not filter out plans that are public, only those restricted to an organization
+export interface GetServicePlansArgs {
+  // guids and names refer to the service plans
+  guids?: string[];
+  names?: string[];
+  available?: boolean;
+  brokerCatalogIds?: string[];
+  organizationGuids?: string[];
+  serviceBrokerGuids?: string[];
+  serviceBrokerNames?: string[];
+  serviceOfferingGuids?: string[];
+  serviceOfferingNames?: string[];
+  serviceInstanceGuids?: string[];
+  spaceGuids?: string[];
+  include?: Array<'space.organization' | 'service_offering'>;
+  // other arguments not yet implemented
+  //   fields (https://v3-apidocs.cloudfoundry.org/version/3.169.0/index.html#fields-parameter)
+  //   labelSelector (https://v3-apidocs.cloudfoundry.org/version/3.169.0/index.html#labels-and-selectors)
+  //   createdAts (timestamps and relational operators)
+  //   updatedAts (timestamps and relational operators)
 }
 
 export interface GetSpaceArgs {
@@ -105,6 +151,74 @@ export interface RoleObj {
       };
     };
   };
+  links: any;
+}
+
+export interface ServiceInstanceObj {
+  guid: string;
+  created_at: string;
+  updated_at: string;
+  name: string;
+  type: 'managed' | 'user-provided';
+  tags: string[];
+  last_operation: {
+    type: 'create' | 'update' | 'delete';
+    state: 'initial' | 'in progress' | 'succeeded' | 'failed';
+    description: string;
+    created_at: string;
+    updated_at: string;
+  };
+  relationships: {
+    // service plan only shown if type managed
+    service_plan?: {
+      data: {
+        guid: string;
+      };
+    };
+    space: {
+      data: {
+        guid: string;
+      };
+    };
+  };
+  metadata: any;
+  links: any;
+  // syslog and route only if type user-provided
+  syslog_drain_url?: string;
+  route_service_url?: string;
+  // following only if type managed
+  maintenance_info?: any;
+  upgrade_available?: boolean;
+  dashboard_url?: string;
+}
+
+export interface ServicePlanObj {
+  guid: string;
+  created_at: string;
+  updated_at: string;
+  name: string;
+  visibility_type: 'public' | 'admin' | 'organization' | 'space';
+  available: boolean;
+  free: boolean;
+  description: string;
+  relationships: {
+    service_offering: {
+      data: {
+        guid: string;
+      };
+    };
+    space: {
+      data: {
+        guid: string;
+      };
+    };
+  };
+  // TODO update if we start using the below
+  costs: any;
+  maintenance_info: any;
+  broker_catalog: any;
+  schemas: any;
+  metadata: any;
   links: any;
 }
 

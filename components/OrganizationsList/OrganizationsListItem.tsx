@@ -34,6 +34,11 @@ export function OrganizationsListItem({ org }: { org: OrgObj }) {
                     View applications
                   </Link>
                 </li>
+                <li>
+                  <Link href={`/orgs/${org.guid}/usage`} className="usa-link">
+                    View usage
+                  </Link>
+                </li>
               </ul>
             </div>
           </GridListItemBottomCenter>

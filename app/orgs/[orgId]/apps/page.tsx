@@ -2,7 +2,7 @@ import { PageHeader } from '@/components/PageHeader';
 import { getOrgAppsPage } from '@/controllers/controllers';
 import { AppsList } from '@/components/AppsList/AppsList';
 
-export default async function OrgPage({
+export default async function OrgAppsPage({
   params,
 }: {
   params: { orgId: string };
