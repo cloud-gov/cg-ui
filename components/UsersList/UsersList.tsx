@@ -60,7 +60,7 @@ export function UsersList({
   }
 
   const onSearchAction = (value: string) => {
-    if (!value.trim().length) {
+    if (value.trim().length <= 0) {
       setSearchValue('');
     } else {
       setSearchValue(value.trim());

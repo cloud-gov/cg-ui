@@ -27,7 +27,7 @@ export function filterObjectsByParams(
     // find any params that match the search terms
     return (
       Object.keys(params).filter((key) =>
-        new RegExp(params[key]).test(obj[key])
+        new RegExp(params[key], 'i').test(obj[key])
       ).length > 0
     );
   });

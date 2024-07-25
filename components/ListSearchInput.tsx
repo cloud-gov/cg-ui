@@ -17,7 +17,7 @@ export function ListSearchInput({
     e.preventDefault();
     const formData = new FormData(e.target as HTMLFormElement);
     const inputValue = formData.get('list-search-field');
-    onSubmit(inputValue);
+    onSubmit(inputValue || '');
   };
   return (
     <div className="margin-bottom-2">

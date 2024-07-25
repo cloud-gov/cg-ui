@@ -50,4 +50,21 @@ describe('filterObjectsByParams', () => {
     expect(result[0]).toBe(ary[0]);
     expect(result[1]).toBe(ary[1]);
   });
+
+  it('filter is case insensitive', () => {
+    // setup
+    const ary = [
+      { name: 'abcdef', email: 'abc@example.com' }, // name but not email
+      { name: 'ghijk', email: 'def@example.com' }, // email but not name
+      { name: 'lmnop', email: 'lmnop@example.com' },
+    ];
+    const searchTerm = 'Def';
+    const params = { name: searchTerm, email: searchTerm };
+    // act
+    const result = filterObjectsByParams(ary, params);
+    // expect
+    expect(result.length).toEqual(2);
+    expect(result[0]).toBe(ary[0]);
+    expect(result[1]).toBe(ary[1]);
+  });
 });
