@@ -18,3 +18,17 @@ export function sortObjectsByParam(
     return a[param] < b[param] ? -1 : 1;
   });
 }
+
+export function filterObjectsByParams(
+  ary: Array<any>,
+  params: { [key: string]: string }
+): Array<any> {
+  return ary.filter(function (obj: any) {
+    // find any params that match the search terms
+    return (
+      Object.keys(params).filter((key) =>
+        new RegExp(params[key], 'i').test(obj[key])
+      ).length > 0
+    );
+  });
+}

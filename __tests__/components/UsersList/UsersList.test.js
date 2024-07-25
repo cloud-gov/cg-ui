@@ -3,6 +3,7 @@
  */
 import { describe, expect, it } from '@jest/globals';
 import { render, screen } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import { UsersList } from '@/components/UsersList/UsersList';
 
 const mockUsers = [
@@ -83,5 +84,39 @@ describe('UsersList', () => {
     expect(list[0]).toHaveTextContent(/a username 2/);
     expect(list[1]).toHaveTextContent(/b username 3/);
     expect(list[2]).toHaveTextContent(/c username 1/);
+  });
+
+  describe('filtering users', () => {
+    it('filters the expected users when search term is submitted', async () => {
+      // setup
+      const user = userEvent.setup();
+      // act
+      render(
+        <UsersList
+          users={mockUsers}
+          roles={mockRoles}
+          spaces={mockSpaces}
+          userLoginInfo={mockUserLogonTime}
+        />
+      );
+      // act
+      const input = screen.getByLabelText(
+        'search the list of users by username'
+      );
+      input.focus();
+      await user.keyboard('c us');
+      await user.keyboard('{enter}');
+      // query
+      const list = screen.getAllByRole('listitem');
+      // expect list to be filtered
+      expect(list.length).toEqual(1);
+      expect(list[0]).toHaveTextContent(/c username 1/);
+      // expect list to be unfiltered when search term is removed
+      await user.keyboard('{backspace}{backspace}{backspace}{backspace}');
+      await user.keyboard('{enter}');
+      // get same list again
+      const listUpdated = screen.getAllByRole('listitem');
+      expect(listUpdated.length).toEqual(3);
+    });
   });
 });

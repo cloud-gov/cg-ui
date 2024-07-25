@@ -6,9 +6,10 @@ import { UsersListItem } from '@/components/UsersList/UsersListItem';
 import { RolesByUser, SpacesBySpaceId } from '@/controllers/controller-types';
 import { UserLogonInfoById } from '@/api/aws/s3-types';
 import { UserObj } from '@/api/cf/cloudfoundry-types';
-import { sortObjectsByParam } from '@/helpers/arrays';
+import { sortObjectsByParam, filterObjectsByParams } from '@/helpers/arrays';
 import { Modal } from '@/components/uswds/Modal';
 import { Alert } from '@/components/uswds/Alert';
+import { ListSearchInput } from '@/components/ListSearchInput';
 
 export function UsersList({
   users,
@@ -24,15 +25,24 @@ export function UsersList({
   orgGuid: string;
 }) {
   const [removedUserGuids, setRemovedUserGuids] = useState([] as string[]);
+  const [searchValue, setSearchValue] = useState('' as string);
 
   function usersSorted(usersList: Array<UserObj>): Array<UserObj> {
     return sortObjectsByParam(usersList, 'username');
   }
 
   function usersFiltered(usersList: Array<UserObj>): Array<UserObj> {
-    return usersList.filter(
+    const filteredForRemoval = usersList.filter(
       (user: UserObj) => !removedUserGuids.find((guid) => guid === user.guid)
     );
+    if (searchValue) {
+      return filterObjectsByParams(filteredForRemoval, {
+        username: searchValue,
+        presentation_name: searchValue,
+      });
+    } else {
+      return filteredForRemoval;
+    }
   }
 
   function removeUserCallback(user: UserObj) {
@@ -49,34 +59,66 @@ export function UsersList({
     setRemovedUsername(user.username);
   }
 
+  const onSearchAction = (value: string) => {
+    if (value.trim().length <= 0) {
+      setSearchValue('');
+    } else {
+      setSearchValue(value.trim());
+    }
+  };
+
   const modalHeadingId = (name: string) => `removeUserSuccess-${name}`;
+  const currentUsers = usersSorted(usersFiltered(users));
+  const usersResultsText = currentUsers.length === 1 ? 'user' : 'users';
 
   return (
-    <GridList>
-      {removedUsername && (
-        <Modal
-          close={closeModal}
-          modalId="removeUserSuccess"
-          headingId={modalHeadingId(removedUsername)}
-        >
-          <Alert type="success" id={modalHeadingId(removedUsername)}>
-            <strong>{removedUsername}</strong> has successfully been removed.
-          </Alert>
-        </Modal>
-      )}
-      {usersSorted(usersFiltered(users)).map((user) => {
-        return (
-          <UsersListItem
-            key={`UsersListItem-${user.guid}`}
-            user={user}
-            roles={roles[user.guid]}
-            spaces={spaces}
-            userLogonInfo={userLogonInfo ? userLogonInfo[user.guid] : undefined}
-            removeUserCallback={removeUserCallback}
-            orgGuid={orgGuid}
-          />
-        );
-      })}
-    </GridList>
+    <>
+      <ListSearchInput
+        onSubmit={onSearchAction}
+        labelText="search the list of users by username"
+      />
+      {/*
+      aria-live region needs to show up on initial page render.
+      More info: https://tetralogical.com/blog/2024/05/01/why-are-my-live-regions-not-working/
+      */}
+      <div role="region" aria-live="polite">
+        {searchValue && (
+          <div className="margin-bottom-2">
+            <strong>
+              {currentUsers.length} {usersResultsText} found for{' '}
+              {`"${searchValue}"`}
+            </strong>
+          </div>
+        )}
+      </div>
+      <GridList>
+        {removedUsername && (
+          <Modal
+            close={closeModal}
+            modalId="removeUserSuccess"
+            headingId={modalHeadingId(removedUsername)}
+          >
+            <Alert type="success" id={modalHeadingId(removedUsername)}>
+              <strong>{removedUsername}</strong> has successfully been removed.
+            </Alert>
+          </Modal>
+        )}
+        {currentUsers.map((user) => {
+          return (
+            <UsersListItem
+              key={`UsersListItem-${user.guid}`}
+              user={user}
+              roles={roles[user.guid]}
+              spaces={spaces}
+              userLogonInfo={
+                userLogonInfo ? userLogonInfo[user.guid] : undefined
+              }
+              removeUserCallback={removeUserCallback}
+              orgGuid={orgGuid}
+            />
+          );
+        })}
+      </GridList>
+    </>
   );
 }
