@@ -180,9 +180,7 @@ By default, NextJS has a way of compiling SASS, as well as Autoprefixer. This el
 
 SASS compilation configs can be found in [next.config.js](./next.config.js)
 
-USWDS theme settings can be configured in [assets/stylesheets/uswds-settings.scss](./assets/stylesheets/uswds-settings.scss).
-
-The global SASS entrypoint is [assets/stylesheets/styles.scss](./assets/stylesheets/styles.scss)
+The global SASS entrypoint is [assets/stylesheets/styles.scss](./assets/stylesheets/styles.scss). USWDS theme settings are configured at the top of that file.
 
 Our team keeps custom CSS/SASS to a minimum and takes a [utilities-first](https://designsystem.digital.gov/utilities/) approach.
 
