@@ -13,6 +13,8 @@ Cloud Foundry provides users several ways to interact with resources outside of 
   - CLI 7 -- not deprecated but lacks some features of CLI 8
   - CLI 8 -- introduces async operations, updates to commands
 
+Our application uses the /v3 API endpoints. We have no plans to use /v2 unless if functionality we require is not yet available in /v3.
+
 ### Context
 
 The CLI tool often bundles multiple API calls together for user convenience. For example, let's compare removing a user's org role in the CLI and the API.
