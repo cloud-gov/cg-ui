@@ -7,13 +7,13 @@ Cloud Foundry provides users several ways to interact with resources outside of 
 ### The versions you may come across
 
 - API
-  - /v2 -- deprecated, still in use by older software such as Stratos
-  - /v3 -- same database as /v2 but very different patterns of access
+  - /v2 -- DO NOT USE! Deprecated, still in use by older software such as Stratos
+  - /v3 -- uses same database as /v2 but different patterns of access
 - CLI
   - CLI 7 -- not deprecated but lacks some features of CLI 8
   - CLI 8 -- introduces async operations, updates to commands
 
-Our application uses the /v3 API endpoints. We have no plans to use /v2 unless if functionality we require is not yet available in /v3.
+Our application uses the /v3 API endpoints. [Both the v7 and v8 CLI are backed by the /v3 API](https://github.com/cloudfoundry/cli?tab=readme-ov-file#getting-started), as well.
 
 ### Context
 
@@ -38,6 +38,6 @@ In the above example, the outcome is the same: a user is no longer a billing man
 Add links to documentation or repositories with implementations that might be valuable for someone seeking further information.
 
 * [API v3 latest documentation](https://v3-apidocs.cloudfoundry.org/)
-* [API v2 documentation](https://v2-apidocs.cloudfoundry.org/) (largely deprecated)
+* [API v2 documentation](https://v2-apidocs.cloudfoundry.org/) (deprecated)
 * [Command line interface overview](https://docs.cloudfoundry.org/cf-cli/)
 * [Command line interface documentation](https://cli.cloudfoundry.org/en-US/v8/)
