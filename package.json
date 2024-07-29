@@ -13,7 +13,7 @@
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.620.0",
-    "@aws-sdk/credential-providers": "^3.616.0",
+    "@aws-sdk/credential-providers": "^3.620.0",
     "@uswds/uswds": "3.8.1",
     "classnames": "^2.5.1",
     "husky": "^9.1.3",
