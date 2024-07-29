@@ -1,10 +1,10 @@
 {
   "private": true,
   "scripts": {
-    "build": "next build",
+    "build": "npx next build",
     "dev": "next dev",
     "dev-cf": "./token-refresh.sh; next dev",
-    "start": "next start",
+    "start": "npx next start",
     "test": "jest",
     "lint": "next lint",
     "prepare": "husky",
@@ -24,7 +24,8 @@
     "react-dom": "18.3.1"
   },
   "engines": {
-    "node": ">=20"
+    "node": ">=20.15.1 <21",
+    "npm": ">=10.7.0"
   },
   "devDependencies": {
     "@testing-library/jest-dom": "^6.4.8",
