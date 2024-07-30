@@ -17,7 +17,7 @@
     // baseUrl required to use path aliases
     "baseUrl": ".",
     "paths": {
-      "@/*": ["./*"]
+      "@/*": ["./src/*"]
     },
     "plugins": [
       {

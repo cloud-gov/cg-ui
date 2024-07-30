@@ -1,6 +1,6 @@
 import React, { useRef, useEffect } from 'react';
 import Image from 'next/image';
-import closeIcon from '@/public/img/uswds/usa-icons/close.svg';
+import closeIcon from '@/../public/img/uswds/usa-icons/close.svg';
 
 export const modalHeadingId = (item: { guid: string }) =>
   `modal-heading-${item.guid}`;
