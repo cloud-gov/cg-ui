@@ -4,7 +4,7 @@
 import { describe, expect, it } from '@jest/globals';
 import { waitFor, render, screen, fireEvent } from '@testing-library/react';
 import { UsersActionsOrgRoles } from '@/components/UsersActions/UsersActionsOrgRoles';
-import { mockRolesFilteredByOrgAndUser } from '@/__tests__/api/mocks/roles';
+import { mockRolesFilteredByOrgAndUser } from '../../api/mocks/roles';
 import { getEditOrgRoles } from '@/controllers/controllers';
 import { updateOrgRolesForUser } from '@/app/orgs/[orgId]/users/[userId]/org-roles/actions';
 
@@ -15,8 +15,8 @@ const controllerSuccessResponse = {
 
 /* global jest */
 /* eslint no-undef: "off" */
-jest.mock('../../../controllers/controllers');
-jest.mock('../../../app/orgs/[orgId]/users/[userId]/org-roles/actions');
+jest.mock('../../../src/controllers/controllers');
+jest.mock('../../../src/app/orgs/[orgId]/users/[userId]/org-roles/actions');
 /* eslint no-undef: "error" */
 
 describe('UsersActionsOrgRoles', () => {

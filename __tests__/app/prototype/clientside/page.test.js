@@ -13,7 +13,7 @@ import { getUsers } from '@/api/users';
 // because defining the jest global import breaks the mock.
 /* global jest */
 /* eslint no-undef: "off" */
-jest.mock('../../../../api/users', () => ({
+jest.mock('../../../../src/api/users', () => ({
   getUsers: jest.fn(),
 }));
 /* eslint no-undef: "error" */

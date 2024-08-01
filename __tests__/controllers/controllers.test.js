@@ -8,21 +8,21 @@ import {
   removeUserFromOrg,
 } from '@/controllers/controllers';
 import { pollForJobCompletion } from '@/controllers/controller-helpers';
-import { mockApps } from '@/__tests__/api/mocks/apps';
+import { mockApps } from '../api/mocks/apps';
 import {
   mockRolesFilteredByOrgAndUser,
   mockUsersByOrganization,
   mockUsersBySpace,
-} from '@/__tests__/api/mocks/roles';
+} from '../api/mocks/roles';
 import { getUserLogonInfo } from '@/api/aws/s3';
 
 /* global jest */
 /* eslint no-undef: "off" */
-jest.mock('../../controllers/controller-helpers', () => ({
-  ...jest.requireActual('../../controllers/controller-helpers'),
+jest.mock('../../src/controllers/controller-helpers', () => ({
+  ...jest.requireActual('../../src/controllers/controller-helpers'),
   pollForJobCompletion: jest.fn(),
 }));
-jest.mock('../../api/aws/s3', () => ({
+jest.mock('../../src/api/aws/s3', () => ({
   getUserLogonInfo: jest.fn(),
 }));
 /* eslint no-undef: "error" */

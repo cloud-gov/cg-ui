@@ -5,8 +5,8 @@ import { pollForJobCompletion } from '@/controllers/controller-helpers';
 
 /* global jest */
 /* eslint no-undef: "off" */
-jest.mock('../../../../../../../api/cf/cloudfoundry');
-jest.mock('../../../../../../../controllers/controller-helpers');
+jest.mock('../../../../../../../src/api/cf/cloudfoundry');
+jest.mock('../../../../../../../src/controllers/controller-helpers');
 /* eslint no-undef: "error" */
 
 const userGuid = 'fooUserGuid';
