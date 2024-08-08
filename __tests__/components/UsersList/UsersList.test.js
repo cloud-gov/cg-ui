@@ -74,6 +74,7 @@ describe('UsersList', () => {
       <UsersList
         users={mockUsers}
         roles={mockRoles}
+        serviceAccounts={{}}
         spaces={mockSpaces}
         userLoginInfo={mockUserLogonTime}
       />
@@ -95,6 +96,7 @@ describe('UsersList', () => {
         <UsersList
           users={mockUsers}
           roles={mockRoles}
+          serviceAccounts={{}}
           spaces={mockSpaces}
           userLoginInfo={mockUserLogonTime}
         />

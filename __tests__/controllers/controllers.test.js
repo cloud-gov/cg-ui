@@ -5,6 +5,7 @@ import {
   getOrgPage,
   getOrgAppsPage,
   getOrgUsagePage,
+  getUser,
   removeUserFromOrg,
 } from '@/controllers/controllers';
 import { pollForJobCompletion } from '@/controllers/controller-helpers';
@@ -194,6 +195,86 @@ describe('controllers tests', () => {
           result.payload.userLogonInfo['some-user-guid-that-is-not-part-of-org']
         ).not.toBeDefined();
       });
+      it('returns service credential binding information for non human users', async () => {
+        // setup
+        const orgGuid = 'orgGuidSucceeded';
+        const testSpaceGuids = {
+          resources: [
+            {
+              guid: 'space1',
+            },
+            {
+              guid: 'space2',
+            },
+            {
+              guid: 'space3',
+            },
+          ],
+        };
+        // insert a service account user into the mock users object
+        mockUsersByOrganization.resources.push({
+          guid: '630a474a-3a10-487e-8913-c86765bfa56e',
+          created_at: '2024-01-17T19:10:53Z',
+          updated_at: '2024-01-17T19:10:53Z',
+          type: 'organization_auditor',
+          relationships: {
+            user: {
+              data: {
+                guid: '6d9f5e19-3437-4de4-a565-3a34bccb8cf9',
+              },
+            },
+            organization: {
+              data: {
+                guid: '89c0b2a8-957d-4900-abab-87395efaffdb',
+              },
+            },
+            space: {
+              data: null,
+            },
+          },
+        });
+        mockUsersByOrganization.included.users.push({
+          guid: '6d9f5e19-3437-4de4-a565-3a34bccb8cf9',
+          username: '107a159b-6bc6-4ad8-989d-0c65433f351d',
+          origin: 'uaa',
+        });
+
+        const mockServiceBindings = {
+          resources: [
+            {
+              guid: '107a159b-6bc6-4ad8-989d-0c65433f351d',
+              name: 'service account example',
+            },
+          ],
+        };
+        nock(process.env.CF_API_URL)
+          .get(
+            `/roles?organization_guids=${orgGuid}&per_page=5000&include=organization,user`
+          )
+          .reply(200, mockUsersByOrganization);
+        nock(process.env.CF_API_URL)
+          .get(`/spaces?organization_guids=${orgGuid}`)
+          .reply(200, testSpaceGuids);
+        nock(process.env.CF_API_URL)
+          .get('/roles?per_page=5000&space_guids=space1,space2,space3')
+          .reply(200, mockUsersBySpace);
+        nock(process.env.CF_API_URL)
+          .get(
+            '/service_credential_bindings?guids=107a159b-6bc6-4ad8-989d-0c65433f351d'
+          )
+          .reply(200, mockServiceBindings);
+
+        // act
+        const result = await getOrgPage(orgGuid);
+
+        // assert
+        expect(result).toHaveProperty('meta');
+        expect(result).toHaveProperty('payload');
+        expect(result.payload.serviceAccounts).toEqual({
+          '107a159b-6bc6-4ad8-989d-0c65433f351d':
+            mockServiceBindings.resources[0],
+        });
+      });
     });
   });
 
@@ -283,6 +364,84 @@ describe('controllers tests', () => {
         'micro-psql'
       );
       expect(result.payload.services.plans[svcPlanGuid2]).toBeDefined();
+    });
+  });
+
+  describe('getUser', () => {
+    const userGuid = 'userGuid';
+    describe('if the user is a human account', () => {
+      const humanUserRes = {
+        guid: userGuid,
+        username: 'User 1',
+        origin: 'example.com',
+      };
+      it('should only send one API call and return a user object', async () => {
+        // setup
+        nock(process.env.CF_API_URL)
+          .get(`/users/${userGuid}`)
+          .reply(200, humanUserRes);
+        // act
+        const res = await getUser(userGuid);
+        // expect
+        expect(res.meta.status).toEqual('success');
+        expect(res.payload.user).toEqual(humanUserRes);
+        expect(res.payload.serviceAccount).toBeUndefined();
+      });
+      it('failing requests throw an error', async () => {
+        // setup
+        nock(process.env.CF_API_URL).get(`/users/${userGuid}`).reply(500);
+        // act and expect
+        expect(async () => {
+          await getUser(userGuid);
+        }).rejects.toThrow(new Error('something went wrong with the request'));
+      });
+    });
+
+    describe('if this is a service account user', () => {
+      const identifier = '4d9edb29-94d9-41ff-b2f2-e44b8f7eb73c';
+      const nonHumanUserRes = {
+        guid: userGuid,
+        username: identifier,
+        origin: 'uaa',
+      };
+      const credBindRes = {
+        resources: [
+          {
+            guid: identifier,
+            username: 'service account 1',
+          },
+        ],
+      };
+      it('should send two requests and return an object with the credential binding', async () => {
+        // setup
+        nock(process.env.CF_API_URL)
+          .get(`/users/${userGuid}`)
+          .reply(200, nonHumanUserRes);
+        nock(process.env.CF_API_URL)
+          .get(`/service_credential_bindings?guids=${identifier}`)
+          .reply(200, credBindRes);
+        // act
+        const res = await getUser(userGuid);
+        // expect
+        expect(res.meta.status).toEqual('success');
+        expect(res.payload.user).toEqual(nonHumanUserRes);
+        expect(res.payload.serviceAccount).toEqual(credBindRes.resources[0]);
+      });
+      it('sends two requests and if the cred lookup fails, returns a user object', async () => {
+        // setup
+        nock(process.env.CF_API_URL)
+          .get(`/users/${userGuid}`)
+          .reply(200, nonHumanUserRes);
+        nock(process.env.CF_API_URL)
+          .get(`/service_credential_bindings?guids=${identifier}`)
+          .reply(500);
+        // act
+        const res = await getUser(userGuid);
+        // expect
+        expect(res.meta.status).toEqual('success');
+        expect(res.payload.user).toEqual(nonHumanUserRes);
+        expect(res.payload.serviceAccount).toBeUndefined();
+      });
     });
   });
 
