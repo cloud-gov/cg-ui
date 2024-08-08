@@ -5,7 +5,7 @@ import {
   createSessionTable,
   deleteSessionTable,
   viewSessions,
-} from '../../db/session';
+} from '../../src/db/session';
 
 describe('With a valid database connection', () => {
   let pool;

@@ -1,6 +1,6 @@
 import Image from 'next/image';
 
-import cloudGovIcon from '@/public/img/cloud-gov-logo.svg';
+import cloudGovIcon from '@/../public/img/cloud-gov-logo.svg';
 
 export function Sidebar() {
   return (

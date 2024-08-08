@@ -5,13 +5,13 @@ import {
   getOrgPage,
   getSpaceUsers,
 } from '@/controllers/prototype-controller';
-import { mockOrg } from '@/__tests__/api/mocks/organizations';
+import { mockOrg } from '../api/mocks/organizations';
 import {
   mockRolesFilteredByOrgAndUser,
   mockUsersByOrganization,
   mockUsersBySpace,
-} from '@/__tests__/api/mocks/roles';
-import { mockSpaces } from '@/__tests__/api/mocks/spaces';
+} from '../api/mocks/roles';
+import { mockSpaces } from '../api/mocks/spaces';
 
 beforeEach(() => {
   if (!nock.isActive()) {

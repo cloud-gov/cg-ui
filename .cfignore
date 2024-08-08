@@ -1,15 +1,20 @@
+ci/
 docs/
 .github/
 
 # configuration files
 .env.local
+.env.example.local
+.env.test
 .env.cloud.example.yml
 
 # generated files
 node_modules/
 .next/
+coverage/
 
 # local development tools
 cgui-db-docker/
+scripts/
+src/__tests__/
 uaa-docker/
-__tests__/
