@@ -62,12 +62,14 @@
 
   // layout grid
   $theme-grid-container-max-width: 'full',
-  $theme-banner-background-color: 'blue-warm-80v',
   $theme-banner-max-width: 'desktop-lg',
   $theme-header-max-width: 'desktop-lg',
   $theme-header-min-width: 'none',
   $theme-identifier-max-width: 'desktop-lg',
   $theme-footer-max-width: 'desktop-lg',
+
+  // usa banner
+  $theme-banner-background-color: 'blue-warm-80',
 
   // typography
   $theme-font-role-heading: 'sans',
