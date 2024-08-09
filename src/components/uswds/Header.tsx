@@ -20,7 +20,7 @@ export function Header() {
           </div>
           <nav
             aria-label="Primary navigation"
-            className={`usa-nav border-bottom border-base-light ${isVisible ? 'is-visible' : ''}`}
+            className={`usa-nav border-bottom border-primary ${isVisible ? 'is-visible' : ''}`}
           >
             <button
               type="button"

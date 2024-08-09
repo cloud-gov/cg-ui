@@ -63,6 +63,7 @@
   // layout grid
   $theme-grid-container-max-width: 'full',
   $theme-banner-max-width: 'desktop-lg',
+  $theme-header-max-width: 'desktop-lg',
   $theme-identifier-max-width: 'desktop-lg',
   $theme-footer-max-width: 'desktop-lg',
 
@@ -138,6 +139,7 @@ input[type='search']::-webkit-search-results-decoration {
       padding-right: 0;
 
       &.usa-current {
+        @include u-text('primary');
         font-weight: 700;
       }
     }
