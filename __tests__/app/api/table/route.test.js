@@ -1,13 +1,10 @@
 import { describe, expect, it } from '@jest/globals';
-import {
-  createSessionTable,
-  deleteSessionTable,
-} from '../../../../src/db/session';
+import { createSessionTable, deleteSessionTable } from '@/db/session';
 import { GET, DELETE } from '@/app/prototype/api/table/route';
 
 /* global jest */
 /* eslint no-undef: "off" */
-jest.mock('../../../../src/db/session', () => ({
+jest.mock('@/db/session', () => ({
   createSessionTable: jest.fn(),
   deleteSessionTable: jest.fn(),
 }));

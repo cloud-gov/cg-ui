@@ -21,7 +21,9 @@ const config = {
       lines: 60,
     },
   },
-
+  moduleNameMapper: {
+    '@/(.*)': ['<rootDir>/src/$1'],
+  },
   // testEnvironment: node works for api testing, but to test anything needing a browser, like React components, set @jest-environment to jsdom in the file: https://jestjs.io/docs/configuration#testenvironment-string
   testEnvironment: 'node',
   // Add more setup options before each test is run

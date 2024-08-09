@@ -7,7 +7,7 @@ import UsersPage from '@/app/prototype/users/page';
 import { getUsers } from '@/api/users';
 /* global jest */
 /* eslint no-undef: "off" */
-jest.mock('../../../../src/api/users', () => ({
+jest.mock('@/api/users', () => ({
   getUsers: jest.fn(),
 }));
 /* eslint no-undef: "error" */

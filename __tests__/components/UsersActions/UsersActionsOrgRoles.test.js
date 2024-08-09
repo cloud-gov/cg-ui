@@ -15,8 +15,8 @@ const controllerSuccessResponse = {
 
 /* global jest */
 /* eslint no-undef: "off" */
-jest.mock('../../../src/controllers/controllers');
-jest.mock('../../../src/app/orgs/[orgId]/users/[userId]/org-roles/actions');
+jest.mock('@/controllers/controllers');
+jest.mock('@/app/orgs/[orgId]/users/[userId]/org-roles/actions');
 /* eslint no-undef: "error" */
 
 describe('UsersActionsOrgRoles', () => {
