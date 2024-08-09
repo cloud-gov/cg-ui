@@ -6,7 +6,7 @@ import { useState } from 'react';
 function BannerContent() {
   return (
     <div
-      className="usa-banner__content usa-accordion__content"
+      className="usa-banner__content usa-accordion__content text-white"
       id="gov-banner-default"
     >
       <div className="grid-row grid-gap-lg">
@@ -83,11 +83,11 @@ export function Banner() {
   return (
     <>
       <section
-        className="usa-banner"
+        className="usa-banner bg-primary-darkest"
         aria-label="Official website of the United States government"
       >
-        <div className="usa-accordion">
-          <header className="usa-banner__header">
+        <div className="usa-accordion text-white">
+          <header className="usa-banner__header text-white">
             <div className="usa-banner__inner">
               <div className="grid-col-auto">
                 <Image
@@ -115,7 +115,7 @@ export function Banner() {
                 aria-controls="gov-banner-default"
                 onClick={toggleBanner}
               >
-                <span className="usa-banner__button-text">
+                <span className="usa-banner__button-text text-white">
                   Here’s how you know
                 </span>
               </button>

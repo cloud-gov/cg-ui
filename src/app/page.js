@@ -7,7 +7,7 @@ export default function Home() {
   const cookieStore = cookies();
   const authSession = cookieStore.get('authsession');
   return (
-    <div className="margin-x-3">
+    <div>
       <h1>Welcome to the cloud.gov dashboard prototype</h1>
 
       <div

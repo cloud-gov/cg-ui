@@ -41,7 +41,7 @@
   $theme-color-accent-warm-family: 'grey-warm',
   $theme-color-accent-warm-lightest: false,
   $theme-color-accent-warm-lighter: false,
-  $theme-color-accent-warm-light: 'gray-warm-5',
+  $theme-color-accent-warm-light: 'gray-warm-4',
   $theme-color-accent-warm: 'gray-warm-10',
   $theme-color-accent-warm-dark: 'gray-warm-20',
   $theme-color-accent-warm-darker: 'gray-warm-40',
@@ -96,6 +96,14 @@
 @forward 'uswds';
 
 // 3. Load any custom SASS
+
+// USA banner styling for arrow
+.usa-banner__button::after,
+.usa-banner__button:hover::after,
+.usa-banner__button[aria-expanded=true]::after,
+.usa-banner__button[aria-expanded=true]:hover::after  {
+  background-color: white;
+}
 
 // text styling
 .text-capitalize {
