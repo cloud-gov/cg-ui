@@ -62,6 +62,7 @@
 
   // layout grid
   $theme-grid-container-max-width: 'full',
+  $theme-banner-background-color: 'blue-warm-80v',
   $theme-banner-max-width: 'desktop-lg',
   $theme-header-max-width: 'desktop-lg',
   $theme-header-min-width: 'none',
@@ -96,14 +97,6 @@
 @forward 'uswds';
 
 // 3. Load any custom SASS
-
-// USA banner styling for arrow
-.usa-banner__button::after,
-.usa-banner__button:hover::after,
-.usa-banner__button[aria-expanded=true]::after,
-.usa-banner__button[aria-expanded=true]:hover::after  {
-  background-color: white;
-}
 
 // text styling
 .text-capitalize {
