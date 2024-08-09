@@ -17,7 +17,7 @@ export default function RootLayout({ children }) {
           Skip to main content
         </a>
         <Banner />
-        <div className="minh-viewport tablet:margin-x-4 margin-x-1">
+        <div className="tablet:margin-x-4 margin-x-1">
           <main id="main-content">{children}</main>
         </div>
         <Footer />
