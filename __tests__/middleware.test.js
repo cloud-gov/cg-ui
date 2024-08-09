@@ -19,7 +19,7 @@ const mockAuthResponse = {
 
 /* global jest */
 /* eslint no-undef: "off" */
-jest.mock('../src/api/auth', () => ({
+jest.mock('@/api/auth', () => ({
   postToAuthTokenUrl: jest.fn(() => mockAuthResponse),
 }));
 /* eslint no-undef: "error" */

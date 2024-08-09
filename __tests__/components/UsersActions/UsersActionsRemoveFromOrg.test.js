@@ -7,7 +7,7 @@ import { UsersActionsRemoveFromOrg } from '@/components/UsersActions/UsersAction
 // import { removeFromOrg } from '@/app/orgs/[orgId]/actions';
 
 /* eslint no-undef: "off" */
-// jest.mock('../../../src/app/orgs/[orgId]/actions', () => ({
+// jest.mock('@/app/orgs/[orgId]/actions', () => ({
 //   removeFromOrg: async () => {
 //     return new Promise((resolve) => {
 //       resolve({
