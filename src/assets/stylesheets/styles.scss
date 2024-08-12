@@ -108,6 +108,60 @@
   word-break: break-all;
 }
 
+// NavGlobal
+#nav-global {
+  // TODO should be blue-60
+  background-color: #2C608A;
+  // TODO should be gray-1
+  color: #FFFFFF;
+
+  // TODO should we control size here or in SVG?
+  // #cloud-gov-logo {
+  //   height: 29px;
+  //   width: 130px;
+  // }
+
+  & > div {
+    background: linear-gradient(0deg, rgba(0, 0, 0, 0) 25%, rgba(0, 0, 0, 0.2) 100%);
+    height: 100%;
+  }
+  .nav-global-inner {
+    align-items: center;
+    display: flex;
+    margin-left: auto;
+    margin-right: auto;
+    max-width: 75rem;
+    padding-left: 1rem;
+    padding-right: 1rem;
+    @include u-font('body', 'xs');
+    @include at-media('desktop') {
+      padding-left: 2rem;
+      padding-right: 2rem;
+    }
+
+    a {
+      @include u-text('white');
+      @include u-text('no-underline');
+    }
+  }
+
+  .nav-product {
+    align-items: center;
+    display: flex;
+    gap: 0.5rem;
+    @include u-border(0);
+    @include u-border-bottom('05');
+    @include u-border('transparent');
+    @include u-height(8);
+    @include u-margin-bottom('05');
+    @include u-margin-right('205');
+
+    &.active {
+      @include u-border('white');
+    }
+  }
+}
+
 // UsersActionsSpaceRole
 .users-actions-space-role label {
   @include at-media('tablet') {
