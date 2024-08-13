@@ -117,21 +117,8 @@
     background: linear-gradient(0deg, rgba(0, 0, 0, 0) 25%, rgba(0, 0, 0, 0.2) 100%);
   }
 
-  .cloud-logo {
-    @include u-margin-right(6);
-    @include at-media('mobile-lg') {
-      @include u-margin-right(7);
-    }
-  }
-
-  // .cloud-logo {
-  //   max-width: 24px;
-  // }
-
   #cloud-gov-logo {
     width: 130px;
-    clip-path: rect(24px 24px 100px 100px);
-
     @include at-media('mobile-lg') {
       #cloud-gov-text {
         display: inline;
@@ -162,6 +149,18 @@
     
     a.cloud-logo, a.nav-product {
       @include u-text('no-underline');
+    }
+
+    .cloud-logo {
+      display: block;
+      @include u-margin-right(6);
+      width: 28px;
+      overflow: hidden;
+      @include at-media('mobile-lg') {
+        width: inherit;
+        overflow: visible;
+        @include u-margin-right(7);
+      }
     }
   }
 
