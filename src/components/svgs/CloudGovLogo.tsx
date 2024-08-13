@@ -8,12 +8,15 @@ export default function CloudGovLogo({
   return (
     <svg
       id="cloud-gov-logo"
+      role="img"
+      aria-label="cloud.gov"
       width="130"
       height="29"
       viewBox="0 0 130 29"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
     >
+      <title>Cloud.gov</title>
       <rect
         id="cloud-gov-star"
         fill="white"

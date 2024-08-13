@@ -110,13 +110,10 @@
 
 // NavGlobal
 #nav-global {
-  background-color: color('blue-60');
+  background: color('blue-60') linear-gradient(0deg, rgba(0, 0, 0, 0) 25%, rgba(0, 0, 0, 0.2) 100%);
   color: #FFFFFF;
 
-  & > div {
-    background: linear-gradient(0deg, rgba(0, 0, 0, 0) 25%, rgba(0, 0, 0, 0.2) 100%);
-  }
-
+  // SVG logo
   #cloud-gov-logo {
     width: 130px;
     @include at-media('mobile-lg') {
@@ -141,33 +138,47 @@
       align-items: center;
       display: flex;
       gap: 0.5rem;
-      @include u-border(0);
-      @include u-border-bottom('05');
+      padding: units(1.5) 0 units(1);
+      border-width: 0 0 units(0.5) 0;
       @include u-border('transparent');
       @include u-text('white');
+      @include at-media('desktop') {
+        padding: units(2.5) 0 units(2);
+      }
     }
     
-    a.cloud-logo, a.nav-product {
+    a.nav-product {
+      @include u-text('no-underline');
+      -webkit-transition: border 200ms ease-out;
+      -moz-transition: border 200ms ease-out;
+      -o-transition: border 200ms ease-out;
+      transition: border 200ms ease-out;
+
+      &:hover, &:focus {
+        border-bottom-color: color('blue-30v');
+      }
+    }
+
+    a.cloud-logo {
       @include u-text('no-underline');
     }
 
     .cloud-logo {
       display: block;
-      @include u-margin-right(6);
-      width: 28px;
+      margin-right: units(2.5);
       overflow: hidden;
+      width: 28px;
       @include at-media('mobile-lg') {
-        width: inherit;
+        margin-right: units(7);
         overflow: visible;
-        @include u-margin-right(7);
+        width: inherit;
       }
     }
   }
 
   .nav-product {
-    @include u-height(8);
-    @include u-margin-bottom('05');
-    @include u-margin-right('205');
+    margin-bottom: 2px;
+    margin-right: units(2.5);
 
     &.active {
       @include u-border('white');
