@@ -8,7 +8,7 @@ import { getData } from '@/api/api';
 
 /* global jest */
 /* eslint no-undef: "off" */
-jest.mock('../../../../src/api/api', () => ({
+jest.mock('@/api/api', () => ({
   addData: jest.fn(),
   getData: jest.fn(),
 }));

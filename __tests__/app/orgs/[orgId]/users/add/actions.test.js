@@ -4,7 +4,7 @@ import { addRole } from '@/api/cf/cloudfoundry';
 
 /* global jest */
 /* eslint no-undef: "off" */
-jest.mock('../../../../../../src/api/cf/cloudfoundry');
+jest.mock('@/api/cf/cloudfoundry');
 /* eslint no-undef: "error" */
 
 describe('addUserToOrg', () => {

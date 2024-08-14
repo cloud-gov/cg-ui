@@ -9,7 +9,7 @@ import { addUserToOrg } from '@/app/orgs/[orgId]/users/add/actions';
 
 /* global jest */
 /* eslint no-undef: "off" */
-jest.mock('../../../src/app/orgs/[orgId]/users/add/actions');
+jest.mock('@/app/orgs/[orgId]/users/add/actions');
 /* eslint no-undef: "error" */
 
 describe('<OrgActionsAddUser />', () => {

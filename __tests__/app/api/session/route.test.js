@@ -1,12 +1,12 @@
 import { describe, expect, it } from '@jest/globals';
-import { addSession, viewSessions } from '../../../../src/db/session';
+import { addSession, viewSessions } from '@/db/session';
 import { GET, POST } from '@/app/prototype/api/session/route';
 
 /* global jest */
 /* global Promise */
 
 /* eslint no-undef: "off" */
-jest.mock('../../../../src/db/session', () => ({
+jest.mock('@/db/session', () => ({
   addSession: jest.fn(),
   viewSessions: jest.fn(),
 }));
