@@ -113,16 +113,6 @@
   background: color('blue-60') linear-gradient(0deg, rgba(0, 0, 0, 0) 25%, rgba(0, 0, 0, 0.2) 100%);
   color: #FFFFFF;
 
-  // SVG logo
-  #cloud-gov-logo {
-    width: 130px;
-    @include at-media('mobile-lg') {
-      #cloud-gov-text {
-        display: inline;
-      }
-    }
-  }
-
   .nav-global-inner {
     align-items: center;
     display: flex;
