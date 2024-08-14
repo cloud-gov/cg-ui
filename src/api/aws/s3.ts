@@ -73,7 +73,9 @@ export async function getUserLogonInfo(): Promise<
     const bodyString = await res.Body?.transformToString();
     if (bodyString) {
       const json = JSON.parse(bodyString);
-      console.log(`user logon info last updated ${json.timestamp}`);
+      if (process.env.NODE_ENV !== 'test') {
+        console.log(`user logon info last updated ${json.timestamp}`);
+      }
       return json;
     }
   } catch (error: any) {
