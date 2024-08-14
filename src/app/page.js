@@ -1,11 +1,6 @@
 import Link from 'next/link';
-import { cookies } from 'next/headers';
-import { LoginButton } from '@/components/auth/LoginButton';
-import { LogoutButton } from '@/components/auth/LogoutButton';
 
 export default function Home() {
-  const cookieStore = cookies();
-  const authSession = cookieStore.get('authsession');
   return (
     <>
       <h1>Welcome to the cloud.gov dashboard prototype</h1>
@@ -23,7 +18,6 @@ export default function Home() {
             Usability testing
           </h4>
           <div className="usa-summary-box__text">
-            {authSession ? <LogoutButton /> : <LoginButton />}
             <p>
               <Link href="/orgs/470bd8ff-ed0e-4d11-95c4-cf765202cebd">
                 18f-stratos-rebuild org page
