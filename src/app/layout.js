@@ -1,6 +1,7 @@
 import { Banner } from '@/components/uswds/Banner';
-import { Identifier } from '@/components/uswds/Identifier';
 import { Footer } from '@/components/uswds/Footer';
+import { Identifier } from '@/components/uswds/Identifier';
+import { NavGlobal } from '@/components/NavGlobal';
 
 import '@/assets/stylesheets/styles.scss';
 
@@ -17,6 +18,7 @@ export default function RootLayout({ children }) {
           Skip to main content
         </a>
         <Banner />
+        <NavGlobal />
         <div className="tablet:margin-x-4 margin-x-1">
           <main id="main-content">{children}</main>
         </div>

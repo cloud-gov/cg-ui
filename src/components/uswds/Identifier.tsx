@@ -43,7 +43,7 @@ export function Identifier() {
             <a href="" className="usa-identifier__logo">
               <Image
                 className="usa-identifier__logo-img"
-                src="/img/gsa-logo.png"
+                src="/img/logos/gsa-logo.png"
                 role="img"
                 alt="GSA logo"
                 height="48"

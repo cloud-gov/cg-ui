@@ -20,3 +20,12 @@ function getCFToken(): string {
 function getLocalToken(): string | undefined {
   return process.env.CF_API_TOKEN;
 }
+
+export function isLoggedIn(): boolean {
+  try {
+    const token = getToken();
+    return !!token;
+  } catch (error: any) {
+    return false;
+  }
+}
