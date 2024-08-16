@@ -1,5 +1,5 @@
 import { RolesByUser, SpaceRoleMap } from './controller-types';
-import { RoleObj } from '@/api/cf/cloudfoundry-types';
+import { RoleObj, UserObj } from '@/api/cf/cloudfoundry-types';
 import { UserLogonInfoById } from '@/api/aws/s3-types';
 import { cfRequestOptions } from '@/api/cf/cloudfoundry-helpers';
 import { request } from '@/api/api';
@@ -75,6 +75,16 @@ export function filterUserLogonInfo(
     }
   }
   return allowedUserInfo;
+}
+
+// this function makes an assumption about a user based on a number of factors,
+// but we can't actually programmatically tell if this is a non-human without checking
+// against serviceCredentialBindings for the user's guid matching against a credential guid
+export function likelyNonHumanUser(user: UserObj): boolean {
+  const guidRegex = new RegExp(
+    '[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[89ab][0-9a-f]{3}-[0-9a-f]{12}'
+  );
+  return !!(user.origin === 'uaa' && guidRegex.test(user.username));
 }
 
 export async function logDevError(message: string) {
