@@ -3,6 +3,7 @@
 import { Alert } from '@/components/uswds/Alert';
 import { Button } from '@/components/uswds/Button';
 import { Banner } from '@/components/uswds/Banner';
+import { Header } from '@/components/uswds/Header';
 import Checkbox from '@/components/uswds/Checkbox';
 import { useState } from 'react';
 
@@ -190,6 +191,9 @@ export default function DesignGuidePage() {
             />
           </div>
         </div>
+
+        <h2>Header</h2>
+        <Header />
 
         <div className="margin-bottom-5">
           {/* placeholder to help with the page scroll */}

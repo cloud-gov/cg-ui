@@ -20,7 +20,7 @@
   $theme-color-primary-lightest: false,
   $theme-color-primary-lighter: 'blue-warm-10',
   $theme-color-primary-light: 'blue-warm-40v',
-  $theme-color-primary: 'blue-warm-50v',
+  $theme-color-primary: 'blue-60',
   $theme-color-primary-vivid: 'blue-warm-50v',
   $theme-color-primary-dark: 'blue-warm-60',
   $theme-color-primary-darker: 'blue-warm-70v',
@@ -64,7 +64,6 @@
   $theme-grid-container-max-width: 'full',
   $theme-banner-max-width: 'desktop-lg',
   $theme-header-max-width: 'desktop-lg',
-  $theme-header-min-width: 'none',
   $theme-identifier-max-width: 'desktop-lg',
   $theme-footer-max-width: 'desktop-lg',
 
@@ -185,7 +184,43 @@
 }
 
 // Removes the 'X' from Chrome search inputs
-input[type="search"]::-webkit-search-decoration,
-input[type="search"]::-webkit-search-cancel-button,
-input[type="search"]::-webkit-search-results-button,
-input[type="search"]::-webkit-search-results-decoration { display: none; }
+input[type='search']::-webkit-search-decoration,
+input[type='search']::-webkit-search-cancel-button,
+input[type='search']::-webkit-search-results-button,
+input[type='search']::-webkit-search-results-decoration {
+  display: none;
+}
+
+@include at-media('desktop') {
+  .usa-header--basic {
+    .usa-nav,
+    .usa-nav-container {
+      display: block;
+      margin: 0;
+      padding: 0;
+    }
+
+    .usa-navbar {
+      display: none;
+    }
+
+    .usa-nav__primary > .usa-nav__primary-item > a {
+      font-weight: 400;
+      margin-right: 2rem;
+      padding-left: 0;
+      padding-right: 0;
+
+      &.usa-current {
+        @include u-text('primary');
+        font-weight: 700;
+      }
+    }
+
+    .usa-nav__primary-item > .usa-current::after,
+    .usa-nav__link:hover::after {
+      bottom: 0;
+      left: 0;
+      right: 0;
+    }
+  }
+}
