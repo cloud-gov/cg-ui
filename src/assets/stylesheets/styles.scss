@@ -111,34 +111,12 @@
 // NavGlobal
 #nav-global {
   background: color('blue-60') linear-gradient(0deg, rgba(0, 0, 0, 0) 25%, rgba(0, 0, 0, 0.2) 100%);
-  color: #FFFFFF;
 
-  .nav-global-inner {
-    align-items: center;
-    display: flex;
-    @include u-maxw('desktop-lg');
-    @include u-padding-x(2);
-    @include u-margin-x('auto');
-    @include u-font('body', 'xs');
-    @include at-media('desktop') {
-      @include u-padding-x(4);
-    }
+  a {
+    color: white; // sets login / logout link color
+    gap: 0.5rem;
 
-    a {
-      align-items: center;
-      display: flex;
-      gap: 0.5rem;
-      padding: units(1.5) 0 units(1);
-      border-width: 0 0 units(0.5) 0;
-      @include u-border('transparent');
-      @include u-text('white');
-      @include at-media('desktop') {
-        padding: units(2.5) 0 units(2);
-      }
-    }
-    
-    a.nav-product {
-      @include u-text('no-underline');
+    &.nav-product {
       -webkit-transition: border 200ms ease-out;
       -moz-transition: border 200ms ease-out;
       -o-transition: border 200ms ease-out;
@@ -148,31 +126,12 @@
         border-bottom-color: color('blue-30v');
       }
     }
-
-    a.cloud-logo {
-      @include u-text('no-underline');
-    }
-
-    .cloud-logo {
-      display: block;
-      margin-right: units(2.5);
-      overflow: hidden;
-      width: 28px;
-      @include at-media('mobile-lg') {
-        margin-right: units(7);
-        overflow: visible;
-        width: inherit;
-      }
-    }
   }
 
-  .nav-product {
-    margin-bottom: 2px;
-    margin-right: units(2.5);
-
-    &.active {
-      @include u-border('white');
-      @include u-text('bold');
+  .cloud-logo {
+    width: 28px;
+    @include at-media('mobile-lg') {
+      width: inherit;
     }
   }
 }
