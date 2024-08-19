@@ -1,7 +1,7 @@
 import { Banner } from '@/components/uswds/Banner';
 import { Footer } from '@/components/uswds/Footer';
 import { Identifier } from '@/components/uswds/Identifier';
-import { NavGlobal } from '@/components/NavGlobal';
+import { NavGlobal } from '@/components/NavGlobal/NavGlobal';
 
 import '@/assets/stylesheets/styles.scss';
 

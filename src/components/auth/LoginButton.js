@@ -5,7 +5,9 @@ export function LoginButton() {
 
   return (
     <>
-      <a href={'/login?state=' + randomString}>Log In</a>
+      <a href={'/login?state=' + randomString} className="text-white">
+        Log In
+      </a>
     </>
   );
 }
