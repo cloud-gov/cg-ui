@@ -156,37 +156,65 @@ input[type="search"]::-webkit-search-results-decoration { display: none; }
 $table-border: 1px solid color('gray-20');
 
 .usa-table {
+  // Let’s make our tables expand to fill their container
+  width: 100%;
   thead th {
     background: color('gray-warm-4');
-    border: 0;
+    border: none;
+    border-bottom: $table-border;
+    padding: units( 0.5 ) units( 1 );
   }
-
+  // Applying default background and font sizing to the tbody element. (This could be moved down into child elements if need be.)
   tbody {
-    border-left: $table-border;
-    border-right: $table-border;
+    background: white;
+    @include u-font('sans', '2xs');
   }
-
+  // Default padding for table headings/cells.
+  tbody th,
+  td {
+    padding: units(0.5) units(1);
+  }
+  // Borders for our in-tbody table headers.
+  tbody th {
+    border-bottom: $table-border;
+    border-right: $table-border;
+    border-left: $table-border;
+    border-top: none;
+  }
+  // Table cells (td) only need a bottom border.
   td {
     border: 0;
-    border-top: $table-border;
     border-bottom: $table-border;
   }
-
-  tr td:first-child {
+  // …unless they’re the last cell in the row.
+  td:last-child {
     border-right: $table-border;
+    text-align: center;
+  }
+  // We don’t need a full-width button, especially on smaller screens.
+  .usa-button {
+    width: initial;
   }
 }
 
 table.usa-table--stacked {
   border-collapse: separate;
   border-spacing: 0 2em;
-
-  tr:nth-child(odd) td, .usa-table--stacked tr:nth-child(odd) th {
-    background-color: white;
-  }
-
   @include at-media('mobile-lg') {
     border-collapse: initial;
     border-spacing: initial;
+  }
+  // On smaller screens, we can undo most of the border/padding rules above.
+  @include at-media-max('mobile-lg') {
+    tbody th,
+    td {
+      border-left: $table-border;
+      border-right: $table-border;
+      padding: units(1);
+    }
+    tbody th,
+    td:not(:last-child) {
+      border-bottom: none;
+    }
   }
 }

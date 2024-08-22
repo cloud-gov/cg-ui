@@ -91,9 +91,9 @@ export default function TablePage() {
         <tbody>
           {mockUsers.map((user, index) => (
             <tr key={`table-row-${index}`}>
-              <td className="width-mobile">
+              <th>
                 <span className="text-bold">{user.email}</span>
-              </td>
+              </th>
               <td>
                 <Link href="/">{user.orgRoles}</Link>
               </td>
