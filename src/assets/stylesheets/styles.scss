@@ -151,23 +151,18 @@ input[type="search"]::-webkit-search-cancel-button,
 input[type="search"]::-webkit-search-results-button,
 input[type="search"]::-webkit-search-results-decoration { display: none; }
 
-// usa-table
+// USWDS Table Components
 
 $table-border: 1px solid color('gray-20');
-
+$table-sort-active-color: color('blue-cool-5v');
+// Can't override these styles with utility classes
 .usa-table {
   // Let’s make our tables expand to fill their container
-  width: 100%;
   thead th {
-    background: color('gray-warm-4');
-    border: none;
+    background: color('gray-warm-4'); // .bg-accent-warm-light
+    border: none; // .border-0
     border-bottom: $table-border;
     padding: units( 0.5 ) units( 1 );
-  }
-  // Applying default background and font sizing to the tbody element. (This could be moved down into child elements if need be.)
-  tbody {
-    background: white;
-    @include u-font('sans', '2xs');
   }
   // Default padding for table headings/cells.
   tbody th,
@@ -175,7 +170,8 @@ $table-border: 1px solid color('gray-20');
     padding: units(0.5) units(1);
   }
   // Borders for our in-tbody table headers.
-  tbody th {
+  tbody th,
+  tbody tr td:first-child {
     border-bottom: $table-border;
     border-right: $table-border;
     border-left: $table-border;
@@ -191,21 +187,30 @@ $table-border: 1px solid color('gray-20');
     border-right: $table-border;
     text-align: center;
   }
-  // We don’t need a full-width button, especially on smaller screens.
-  .usa-button {
-    width: initial;
+  // when actively sorted
+  @include at-media('mobile-lg') {
+    td.active {
+      background-color: $table-sort-active-color;
+    }
+    // Actively sorted
+    thead th.active {
+      background-color: $table-sort-active-color;
+    }
   }
 }
 
-table.usa-table--stacked {
-  border-collapse: separate;
-  border-spacing: 0 2em;
-  @include at-media('mobile-lg') {
-    border-collapse: initial;
-    border-spacing: initial;
-  }
+.usa-table--stacked {
   // On smaller screens, we can undo most of the border/padding rules above.
   @include at-media-max('mobile-lg') {
+    border-collapse: separate;
+    border-spacing: 0 2em;
+
+    tr th,
+    tbody tr td:first-child {
+      border-top: units(0.5) solid color('gray-cool-20') !important;
+      border-bottom: 0;
+    }
+
     tbody th,
     td {
       border-left: $table-border;

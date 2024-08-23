@@ -1,6 +1,12 @@
 import { Button } from '@/components/uswds/Button';
 import Link from 'next/link';
 import classnames from 'classnames';
+import { Table } from '@/components/uswds/Table/Table';
+import { TableHead } from '@/components/uswds/Table/TableHead';
+import { TableHeadCell } from '@/components/uswds/Table/TableHeadCell';
+import { TableBody } from '@/components/uswds/Table/TableBody';
+import { TableRow } from '@/components/uswds/Table/TableRow';
+import { TableCell } from '@/components/uswds/Table/TableCell';
 
 export default function TablePage() {
   // active color: bg-accent-cool-lightest
@@ -49,18 +55,60 @@ export default function TablePage() {
   );
 
   const MobileLabel = ({ label }: { label: string }) => (
-    <div className="tablet:display-none text-bold">{label}</div>
+    <div className="mobile-lg:display-none text-bold text-capitalize">
+      {label}
+    </div>
   );
 
   return (
     <div className="grid-container padding-bottom-5">
-      <h2>Using Table</h2>
+      <h2>Table - reusable React components</h2>
 
-      <table className="usa-table usa-table--stacked">
+      <Table caption="users for this organization">
+        <TableHead>
+          <TableHeadCell data="account name" sortDir="desc" />
+          <TableHeadCell data="organization roles" />
+          <TableHeadCell data="access permissions" />
+          <TableHeadCell data="expires" />
+          <TableHeadCell data="last login" />
+          <TableHeadCell />
+        </TableHead>
+        <TableBody>
+          {mockUsers.map((user, index) => (
+            <TableRow key={`table-row-${index}`}>
+              <TableCell colName="account name" sort={true}>
+                <span className="text-bold">{user.email}</span>
+              </TableCell>
+
+              <TableCell colName="organization roles">
+                <Link href="/">{user.orgRoles}</Link>
+              </TableCell>
+
+              <TableCell colName="access permissions">
+                <Link href="/">{user.spaceRoles}</Link>
+              </TableCell>
+
+              <TableCell colName="expires">{user.expires}</TableCell>
+
+              <TableCell colName="last login">{user.lastLogin}</TableCell>
+
+              <TableCell>
+                <Button className="usa-button--outline width-auto">
+                  Remove
+                </Button>
+              </TableCell>
+            </TableRow>
+          ))}
+        </TableBody>
+      </Table>
+
+      <h2>Table original markup</h2>
+
+      <table className="usa-table usa-table--stacked width-full">
         <caption className="usa-sr-only">Users for this organization</caption>
         <thead>
           <tr>
-            <th scope="col text-uppercase">
+            <th scope="col">
               <div className="display-flex flex-align-center font-sans-3xs text-normal text-uppercase">
                 account name <SortArrow />
               </div>
@@ -88,22 +136,33 @@ export default function TablePage() {
             <th scope="col"></th>
           </tr>
         </thead>
-        <tbody>
+        <tbody className="bg-white mobile-lg:font-ui-2xs">
           {mockUsers.map((user, index) => (
             <tr key={`table-row-${index}`}>
               <th>
+                <MobileLabel label="account name" />
                 <span className="text-bold">{user.email}</span>
               </th>
               <td>
+                <MobileLabel label="organization roles" />
                 <Link href="/">{user.orgRoles}</Link>
               </td>
               <td>
+                <MobileLabel label="access permissions" />
                 <Link href="/">{user.spaceRoles}</Link>
               </td>
-              <td>{user.expires}</td>
-              <td>{user.lastLogin}</td>
               <td>
-                <Button className="usa-button--outline">Remove</Button>
+                <MobileLabel label="expires" />
+                {user.expires}
+              </td>
+              <td>
+                <MobileLabel label="last login" />
+                {user.lastLogin}
+              </td>
+              <td>
+                <Button className="usa-button--outline width-auto margin-right-0">
+                  Remove
+                </Button>
               </td>
             </tr>
           ))}
@@ -112,40 +171,37 @@ export default function TablePage() {
 
       <h2>Using Layout Grid</h2>
 
-      <div aria-role="table" aria-describedby="users-table" aria-row-count="2">
-        <div
-          className="display-none tablet:display-flex grid-row"
-          aria-role="row"
-        >
+      <div role="table" aria-describedby="users-table" aria-rowcount={2}>
+        <div className="display-none tablet:display-flex grid-row" role="row">
           <div className="usa-sr-only" id="users-table">
             Users list
           </div>
           <div
-            aria-role="columnheader"
+            role="columnheader"
             className="grid-col grid-col-3 display-flex flex-align-center padding-x-2 padding-y-1 font-sans-3xs text-uppercase"
           >
             account name <SortArrow />
           </div>
           <div
-            aria-role="columnheader"
+            role="columnheader"
             className="grid-col grid-col-2 display-flex flex-align-center padding-x-2 padding-y-1 font-sans-3xs text-uppercase"
           >
             organization roles <SortArrow />
           </div>
           <div
-            aria-role="columnheader"
+            role="columnheader"
             className="grid-col grid-col-2 display-flex flex-align-center padding-x-2 padding-y-1 font-sans-3xs text-uppercase"
           >
             access permissions <SortArrow />
           </div>
           <div
-            aria-role="columnheader"
+            role="columnheader"
             className="grid-col grid-col-1 display-flex flex-align-center padding-x-2 padding-y-1 font-sans-3xs text-uppercase"
           >
             expires <SortArrow />
           </div>
           <div
-            aria-role="columnheader"
+            role="columnheader"
             className="grid-col grid-col-2 display-flex flex-align-center padding-x-2 padding-y-1 font-sans-3xs text-uppercase"
           >
             last login <SortArrow />
@@ -154,8 +210,8 @@ export default function TablePage() {
         {mockUsers.map((u, i) => (
           <div
             key={`layout-grid-row-${i}`}
-            aria-role="row"
-            aria-row-index={i}
+            role="row"
+            aria-rowindex={i}
             className={classnames(
               'grid-row',
               'margin-top-4',
@@ -169,64 +225,53 @@ export default function TablePage() {
               'border-bottom-1px',
               i == mockUsers.length - 1
                 ? 'tablet:border-bottom-1px'
-                : 'tablet:border-bottom-0'
+                : 'tablet:border-bottom-0',
+              'font-ui-2xs'
             )}
           >
             <div
-              aria-role="cell"
+              role="cell"
               className="tablet:grid-col tablet:grid-col-3 tablet:display-flex flex-align-center tablet:border-right tablet:border-base-light padding-2 tablet:text-bold"
             >
               <MobileLabel label="Account name" />
               {u.email}
             </div>
             <div
-              aria-role="cell"
+              role="cell"
               className="tablet:grid-col tablet:grid-col-2 tablet:display-flex flex-align-center padding-2"
             >
               <MobileLabel label="Organization roles" />
               <Link href="/">{u.orgRoles}</Link>
             </div>
             <div
-              aria-role="cell"
+              role="cell"
               className="tablet:grid-col tablet:grid-col-2 tablet:display-flex flex-align-center padding-2"
             >
               <MobileLabel label="Access permissions" />
               <Link href="/">{u.spaceRoles}</Link>
             </div>
             <div
-              aria-role="cell"
+              role="cell"
               className="tablet:grid-col tablet:grid-col-1 tablet:display-flex flex-align-center padding-2"
             >
               <MobileLabel label="Expires" />
               {u.expires}
             </div>
             <div
-              aria-role="cell"
+              role="cell"
               className="tablet:grid-col tablet:grid-col-2 tablet:display-flex flex-align-center padding-2"
             >
               <MobileLabel label="Last login" />
               {u.lastLogin}
             </div>
             <div
-              aria-role="cell"
-              className="tablet:grid-col tablet:display-flex flex-align-center padding-1 text-center"
+              role="cell"
+              className="tablet:grid-col tablet:display-flex flex-align-center flex-justify-end padding-1 text-center"
             >
-              <Button className="usa-button--outline">Remove</Button>
+              <Button className="usa-button--outline width-auto">Remove</Button>
             </div>
           </div>
         ))}
-      </div>
-
-      <h2>Modeling a Table with ARIA roles</h2>
-      <div aria-role="table">
-        <div aria-role="row">
-          <div aria-role="columnheader">first name</div>
-          <div aria-role="columnheader">last name</div>
-        </div>
-        <div aria-role="row">
-          <div aria-role="cell">eleni</div>
-          <div aria-role="cell">chappen</div>
-        </div>
       </div>
     </div>
   );
