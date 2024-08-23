@@ -187,6 +187,8 @@ npm test -- serverside
 
 ### Step 7: Committing
 
+#### Preparing your code
+
 We have several utilities for linting and prettifying code which run when you commit your code. You may run them manually, if you wish:
 
 ```bash
@@ -208,6 +210,10 @@ Eslint configurations are found in [.eslintrc.json](.eslintrc.json).
 Prettier configurations are found in [.prettierrc.json](.prettierrc.json).
 
 We are using [husky](https://typicode.github.io/husky/) to manage the linting pre-commit hook, as well as to manage which files are run through the linter. To change which directories are included in linting, go to [.lintstagedrc.js](.lintstagedrc.js).
+
+#### Signing your commits
+
+Cloud.gov requires any commits to this repo to be signed with a GPG key. [You will need to set up commit signing before the first time you contribute](https://docs.google.com/document/d/11UDxvfkhncyLEs-NUCniw2u54j4uQBqsR2SBiLYPUZc/edit) :closed_lock_with_key:.
 
 ## Step 8: Deploying
 
