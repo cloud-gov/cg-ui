@@ -79,7 +79,7 @@ export default function TablePage() {
             <TableRow key={`table-row-${index}`}>
               <TableCell colName="account name" sort={true}>
                 <div className="display-flex flex-justify">
-                  <span className="text-bold maxw-card-lg text-ellipsis">
+                  <span className="mobile-lg:text-bold maxw-card-lg text-ellipsis">
                     {user.email}
                   </span>
                   {index === 1 && (
