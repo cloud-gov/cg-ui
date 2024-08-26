@@ -3,9 +3,11 @@ import React from 'react';
 export function Table({
   caption = 'data table',
   children,
+  sortText,
 }: {
-  caption?: String;
+  caption?: string;
   children: React.ReactNode;
+  sortText: string;
 }) {
   return (
     <div className="usa-table-container--scrollable" tabIndex={0}>
@@ -13,6 +15,12 @@ export function Table({
         <caption className="usa-sr-only">{caption}</caption>
         {children}
       </table>
+      <div
+        className="usa-sr-only usa-table__announcement-region"
+        aria-live="polite"
+      >
+        {sortText}
+      </div>
     </div>
   );
 }

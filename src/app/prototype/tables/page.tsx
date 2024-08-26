@@ -65,7 +65,10 @@ export default function TablePage() {
     <div className="grid-container padding-bottom-5">
       <h2>Table</h2>
 
-      <Table caption="users for this organization">
+      <Table
+        caption="users for this organization"
+        sortText="This table is now sorted by Account Name in descending order."
+      >
         <TableHead>
           <TableHeadCell data="account name" sortDir="desc" />
           <TableHeadCell data="organization roles" />

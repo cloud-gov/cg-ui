@@ -11,9 +11,9 @@ import { TableRow } from '@/components/uswds/Table/TableRow';
 import { TableCell } from '@/components/uswds/Table/TableCell';
 
 describe('<Table />', () => {
-  it('has a caption', () => {
+  it('has a caption and aria-live region', () => {
     render(
-      <Table>
+      <Table sortText="this table is currently unsorted">
         <TableHead>
           <TableHeadCell data="foo header 1" />
           <TableHeadCell data="foo header 2" />
@@ -28,12 +28,16 @@ describe('<Table />', () => {
     );
     const caption = screen.getByRole('caption');
     expect(caption).toBeInTheDocument();
+
+    // this is the closest selector I could find for the aria-live region
+    const liveRegion = screen.getByText(/this table is currently unsorted/);
+    expect(liveRegion).toBeInTheDocument();
   });
 
   describe('when sorting', () => {
     it('reads columns as sorted/unsorted with active styling', () => {
       render(
-        <Table>
+        <Table sortText="this table is currently unsorted">
           <TableHead>
             <TableHeadCell data="foo header 1" sortDir="asc" />
             <TableHeadCell data="foo header 2" />
@@ -68,7 +72,7 @@ describe('<Table />', () => {
   describe('with a rowheader', () => {
     it('returns a th with rowheader role', () => {
       render(
-        <Table>
+        <Table sortText="this table is currently unsorted">
           <TableBody>
             <TableRow>
               <TableCell rowheader={true}>foo cell 1</TableCell>
