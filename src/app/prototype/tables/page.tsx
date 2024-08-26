@@ -8,6 +8,7 @@ import { TableBody } from '@/components/uswds/Table/TableBody';
 import { TableRow } from '@/components/uswds/Table/TableRow';
 import { TableCell } from '@/components/uswds/Table/TableCell';
 import { ServiceTag } from '@/components/ServiceTag';
+import { SortButton } from '@/components/SortButton';
 
 export default function TablePage() {
   // active color: bg-accent-cool-lightest
@@ -28,32 +29,6 @@ export default function TablePage() {
       lastLogin: 'Unknown — resend invite',
     },
   ];
-
-  const SortArrow = ({
-    direction = 'unsorted',
-  }: {
-    direction?: 'unsorted' | 'asc' | 'desc';
-  }) => (
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      viewBox="0 0 24 24"
-      width="24"
-      height="24"
-    >
-      {direction === 'desc' && (
-        <path d="M17 17L15.59 15.59L12.9999 18.17V2H10.9999V18.17L8.41 15.58L7 17L11.9999 22L17 17Z"></path>
-      )}
-      {direction === 'asc' && (
-        <path
-          transform="rotate(180, 12, 12)"
-          d="M17 17L15.59 15.59L12.9999 18.17V2H10.9999V18.17L8.41 15.58L7 17L11.9999 22L17 17Z"
-        ></path>
-      )}
-      {direction === 'unsorted' && (
-        <polygon points="15.17 15 13 17.17 13 6.83 15.17 9 16.58 7.59 12 3 7.41 7.59 8.83 9 11 6.83 11 17.17 8.83 15 7.42 16.41 12 21 16.59 16.41 15.17 15"></polygon>
-      )}
-    </svg>
-  );
 
   const MobileLabel = ({ label }: { label: string }) => (
     <div className="mobile-lg:display-none text-bold text-capitalize">
@@ -129,31 +104,31 @@ export default function TablePage() {
             role="columnheader"
             className="grid-col grid-col-3 display-flex flex-align-center padding-x-2 padding-y-1 font-sans-3xs text-uppercase"
           >
-            account name <SortArrow />
+            account name <SortButton colName="account name" />
           </div>
           <div
             role="columnheader"
             className="grid-col grid-col-2 display-flex flex-align-center padding-x-2 padding-y-1 font-sans-3xs text-uppercase"
           >
-            organization roles <SortArrow />
+            organization roles <SortButton colName="organization roles" />
           </div>
           <div
             role="columnheader"
             className="grid-col grid-col-2 display-flex flex-align-center padding-x-2 padding-y-1 font-sans-3xs text-uppercase"
           >
-            access permissions <SortArrow />
+            access permissions <SortButton colName="access permissions" />
           </div>
           <div
             role="columnheader"
             className="grid-col grid-col-1 display-flex flex-align-center padding-x-2 padding-y-1 font-sans-3xs text-uppercase"
           >
-            expires <SortArrow />
+            expires <SortButton colName="expires" />
           </div>
           <div
             role="columnheader"
             className="grid-col grid-col-2 display-flex flex-align-center padding-x-2 padding-y-1 font-sans-3xs text-uppercase"
           >
-            last login <SortArrow />
+            last login <SortButton colName="last login" />
           </div>
         </div>
         {mockUsers.map((u, i) => (
