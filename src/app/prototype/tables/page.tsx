@@ -89,7 +89,12 @@ export default function TablePage() {
               </TableCell>
 
               <TableCell colName="organization roles">
-                <Link href="/">{user.orgRoles}</Link>
+                {index === 0 && <Link href="/">{user.orgRoles}</Link>}
+                {index === 1 && (
+                  <>
+                    None yet — <Link href="/">edit roles</Link>
+                  </>
+                )}
               </TableCell>
 
               <TableCell colName="access permissions">
