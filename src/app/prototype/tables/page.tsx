@@ -70,7 +70,10 @@ export default function TablePage() {
                 {index === 0 && <Link href="/">{user.orgRoles}</Link>}
                 {index === 1 && (
                   <>
-                    None yet — <Link href="/">edit roles</Link>
+                    None yet —{' '}
+                    <Link href="/" className="text-bold">
+                      edit roles
+                    </Link>
                   </>
                 )}
               </TableCell>
