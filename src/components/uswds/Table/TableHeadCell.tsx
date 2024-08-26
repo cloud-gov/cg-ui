@@ -23,7 +23,7 @@ export function TableHeadCell({
   return (
     <th className={classes} scope="col" aria-label={ariaLabel}>
       {data && (
-        <div className="display-flex flex-align-center font-sans-3xs text-normal text-uppercase">
+        <div className="display-flex flex-justify flex-align-center font-sans-3xs text-normal text-uppercase">
           {data} <SortButton colName={data} direction={sortDir} />
         </div>
       )}
