@@ -139,12 +139,12 @@ cf delete-service-key cg-ui-storage [name-of-your-key]
 
 Follow the steps in the [cgui-db-docker README](cgui-db-docker/README.md) to set up a postgres db in docker. This database is only a proof-of-concept for our application at the moment, but is needed if you will be running the full test suite.
 
-Start the container:
+Start the container (note, the command may be `docker-compose` on older installs):
 
 ```bash
 cd cgui-db-docker
-docker-compose build
-docker-compose up
+docker compose build
+docker compose up
 ```
 
 #### Local user accounts and authentication (UAA)
@@ -158,7 +158,7 @@ Start the container:
 ```bash
 cd uaa-docker
 # follow instructions to build before running up
-docker-compose up
+docker compose up
 ```
 
 In order to try out UAA, you will need to comment out your CF_API_TOKEN and then use credentials found in the `uaa-docker/uaa.yml` file.
@@ -170,7 +170,7 @@ To run the entire test suite, you will need to start the docker database contain
 
 ```bash
 cd cgui-db-docker
-docker-compose up
+docker compose up
 ```
 
 To run the entire test suite:
