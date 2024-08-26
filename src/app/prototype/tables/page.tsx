@@ -100,8 +100,10 @@ export default function TablePage() {
 
               <TableCell colName="last login">{user.lastLogin}</TableCell>
 
-              <TableCell>
-                <Button className="usa-button--outline width-auto">
+              <TableCell className="text-center mobile-lg:text-right">
+                {' '}
+                {/* TODO: Can't get text-right to work on desktop */}
+                <Button className="usa-button--outline width-auto margin-0 mobile-lg:padding-y-1 mobile-lg:padding-x-105 mobile-lg:font-sans-xs">
                   Remove
                 </Button>
               </TableCell>

@@ -192,7 +192,6 @@ $table-sort-active-color: color('blue-cool-5v');
   // …unless they’re the last cell in the row.
   td:last-child {
     border-right: $table-border;
-    text-align: center;
   }
   // when actively sorted
   @include at-media('mobile-lg') {
