@@ -100,6 +100,7 @@
 
 // 3. Load any custom SASS
 
+/* Custom utilities classes */
 // text styling
 .text-capitalize {
   text-transform: capitalize;
@@ -107,10 +108,20 @@
 .text-break-all {
   word-break: break-all;
 }
+.text-ellipsis {
+  @include u-overflow('hidden');
+  @include u-text('no-wrap');
+  @include u-display('block');
+  text-overflow: clip;
+  text-overflow: ellipsis;
+}
+
+/* Custom selector styles */
 
 // NavGlobal
 #nav-global {
-  background: color('blue-60') linear-gradient(0deg, rgba(0, 0, 0, 0) 25%, rgba(0, 0, 0, 0.2) 100%);
+  background: color('blue-60')
+    linear-gradient(0deg, rgba(0, 0, 0, 0) 25%, rgba(0, 0, 0, 0.2) 100%);
 
   a {
     gap: 0.5rem;
@@ -121,7 +132,8 @@
       -o-transition: border 200ms ease-out;
       transition: border 200ms ease-out;
 
-      &:hover, &:focus {
+      &:hover,
+      &:focus {
         border-bottom-color: color('blue-30v');
       }
     }
@@ -143,7 +155,9 @@
 }
 
 // Removes the 'X' from Chrome search inputs
-input[type="search"]::-webkit-search-decoration,
-input[type="search"]::-webkit-search-cancel-button,
-input[type="search"]::-webkit-search-results-button,
-input[type="search"]::-webkit-search-results-decoration { display: none; }
+input[type='search']::-webkit-search-decoration,
+input[type='search']::-webkit-search-cancel-button,
+input[type='search']::-webkit-search-results-button,
+input[type='search']::-webkit-search-results-decoration {
+  display: none;
+}
