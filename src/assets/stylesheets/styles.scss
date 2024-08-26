@@ -111,6 +111,13 @@
   word-break: break-all;
 }
 
+.text-ellipsis {
+  // This overflow and whitespace are needed for ellipsis to work
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
 // NavGlobal
 #nav-global {
   background: color('blue-60') linear-gradient(0deg, rgba(0, 0, 0, 0) 25%, rgba(0, 0, 0, 0.2) 100%);

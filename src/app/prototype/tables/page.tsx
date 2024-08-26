@@ -7,6 +7,7 @@ import { TableHeadCell } from '@/components/uswds/Table/TableHeadCell';
 import { TableBody } from '@/components/uswds/Table/TableBody';
 import { TableRow } from '@/components/uswds/Table/TableRow';
 import { TableCell } from '@/components/uswds/Table/TableCell';
+import { ServiceTag } from '@/components/ServiceTag';
 
 export default function TablePage() {
   // active color: bg-accent-cool-lightest
@@ -20,7 +21,7 @@ export default function TablePage() {
       lastLogin: 'Oct. 24, 2023',
     },
     {
-      email: 'longerfirstname.lastname@gsa.gov',
+      email: 'longerfirstname+service-account12345678.lastname@gsa.gov',
       orgRoles: 'None yet — edit roles',
       spaceRoles: 'None yet — edit permissions',
       expires: '90 days',
@@ -62,7 +63,7 @@ export default function TablePage() {
 
   return (
     <div className="grid-container padding-bottom-5">
-      <h2>Table - reusable React components</h2>
+      <h2>Table</h2>
 
       <Table caption="users for this organization">
         <TableHead>
@@ -77,7 +78,14 @@ export default function TablePage() {
           {mockUsers.map((user, index) => (
             <TableRow key={`table-row-${index}`}>
               <TableCell colName="account name" sort={true}>
-                <span className="text-bold">{user.email}</span>
+                <div className="display-flex flex-justify">
+                  <span className="text-bold maxw-card-lg text-ellipsis">
+                    {user.email}
+                  </span>
+                  {index === 1 && (
+                    <ServiceTag className="margin-left-1 margin-right-0" />
+                  )}
+                </div>
               </TableCell>
 
               <TableCell colName="organization roles">
@@ -102,74 +110,7 @@ export default function TablePage() {
         </TableBody>
       </Table>
 
-      <h2>Table original markup</h2>
-
-      <table className="usa-table usa-table--stacked width-full">
-        <caption className="usa-sr-only">Users for this organization</caption>
-        <thead>
-          <tr>
-            <th scope="col">
-              <div className="display-flex flex-align-center font-sans-3xs text-normal text-uppercase">
-                account name <SortArrow />
-              </div>
-            </th>
-            <th scope="col">
-              <div className="display-flex flex-align-center font-sans-3xs text-normal text-uppercase">
-                organization roles <SortArrow />
-              </div>
-            </th>
-            <th scope="col">
-              <div className="display-flex flex-align-center font-sans-3xs text-normal text-uppercase">
-                access permissions <SortArrow />
-              </div>
-            </th>
-            <th scope="col">
-              <div className="display-flex flex-align-center font-sans-3xs text-normal text-uppercase">
-                expires <SortArrow />
-              </div>
-            </th>
-            <th scope="col">
-              <div className="display-flex flex-align-center font-sans-3xs text-normal text-uppercase">
-                last login <SortArrow />
-              </div>
-            </th>
-            <th scope="col"></th>
-          </tr>
-        </thead>
-        <tbody className="bg-white mobile-lg:font-ui-2xs">
-          {mockUsers.map((user, index) => (
-            <tr key={`table-row-${index}`}>
-              <th>
-                <MobileLabel label="account name" />
-                <span className="text-bold">{user.email}</span>
-              </th>
-              <td>
-                <MobileLabel label="organization roles" />
-                <Link href="/">{user.orgRoles}</Link>
-              </td>
-              <td>
-                <MobileLabel label="access permissions" />
-                <Link href="/">{user.spaceRoles}</Link>
-              </td>
-              <td>
-                <MobileLabel label="expires" />
-                {user.expires}
-              </td>
-              <td>
-                <MobileLabel label="last login" />
-                {user.lastLogin}
-              </td>
-              <td>
-                <Button className="usa-button--outline width-auto margin-right-0">
-                  Remove
-                </Button>
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-
-      <h2>Using Layout Grid</h2>
+      <h2>Layout Grid</h2>
 
       <div role="table" aria-describedby="users-table" aria-rowcount={2}>
         <div className="display-none tablet:display-flex grid-row" role="row">
