@@ -204,7 +204,7 @@ $table-sort-active-color: color('blue-cool-5v');
       background-color: $table-sort-active-color;
     }
     // Actively sorted
-    thead th.active {
+    th.active {
       background-color: $table-sort-active-color;
     }
   }
