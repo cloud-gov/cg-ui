@@ -21,18 +21,19 @@ flowchart TB
 
   %% Databases
   database[(Database <br/> *AWS RDS Postgres)]:::dbStyle
+  api[(API <br /> *cloud.gov Cloud Controller)]:::dbStyle
   s3_bucket[(Object storage<br/> *AWS S3 Bucket)]:::dbStyle
 
   %% Flow
-  auth_provider -- All Users <br/> HTTPS Port 443--> dashboard_app
+  auth_provider -- All Users <br/> HTTPS Port 443 --> dashboard_app
 
   user_unprivleged -- Request Content <br/> HTTPS Port 443 --> auth_provider
   user_unprivleged -- Reports Usage <br/> HTTPS Port 443 --> dap
 
 
   dashboard_app -- Read/Write Application Data <br /> Authenticated TLS Port 5432  --> database
-  dashboard_app -- Read/Write UAA Bot Storage <br /> Authenticated TLS Port 6379  --> s3_bucket
-
+  dashboard_app -- Read/Write UAA Bot Storage <br /> Authenticated TLS Port 443  --> s3_bucket
+  dashboard_app -- Read/Write Cloud Controller API <br /> Authenticated TLS Port 443 --> api
 
   %% Layout
   subgraph GSA Authorized SaaS Monitoring
@@ -49,6 +50,7 @@ flowchart TB
           s3_bucket
         end
       end
+      api
     end
   end
 
