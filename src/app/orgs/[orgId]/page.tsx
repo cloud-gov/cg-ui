@@ -25,8 +25,8 @@ export default async function OrgPage({
         <div className="tablet:display-flex">
           <div className="flex-fill usa-prose">
             <p className="tablet:margin-0">
-              Add and remove users from an org. Add users to spaces and set
-              access levels using role.
+              Add and remove users from this organization. Add users to spaces,
+              and set their access levels by using roles.
             </p>
           </div>
           <div className="flex-align-self-end">
