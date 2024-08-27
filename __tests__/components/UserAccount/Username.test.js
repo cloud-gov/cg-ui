@@ -4,7 +4,7 @@
 
 import { describe, expect, it } from '@jest/globals';
 import { render, screen } from '@testing-library/react';
-import { Username } from '@/components/Username';
+import { Username } from '@/components/UserAccount/Username';
 
 describe('Username', () => {
   it('when given a user, displays the user name', () => {
@@ -34,7 +34,7 @@ describe('Username', () => {
     // act
     render(<Username user={mockUser} serviceAccount={mockAccount} />);
     const auditor = screen.getByText(/Auditor 1/);
-    const svcAcct = screen.getByText(/\[service account\]/);
+    const svcAcct = screen.getByText(/service/);
     const username = screen.queryByText(guid);
     // assert
     expect(auditor).toBeInTheDocument();

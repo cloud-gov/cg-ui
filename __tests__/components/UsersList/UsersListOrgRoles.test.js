@@ -6,7 +6,7 @@ import { render, screen } from '@testing-library/react';
 import { UsersListOrgRoles } from '@/components/UsersList/UsersListOrgRoles';
 
 describe('UsersListOrgRoles', () => {
-  it('lists all given org roles', () => {
+  it('lists the number of active org roles for the user', () => {
     // setup
     const mockRoles = [
       { guid: 'guid1', role: 'organization_user' },
@@ -16,12 +16,17 @@ describe('UsersListOrgRoles', () => {
     // act
     render(<UsersListOrgRoles orgRoles={mockRoles} />);
     // query
-    const billingManagerText = screen.getByText('billing manager');
-    const auditorText = screen.getByText('org auditor');
-    const userText = screen.queryByText('org user');
+    const rolesText = screen.getByText(/3 roles/);
     // expect
-    expect(billingManagerText).toBeInTheDocument();
-    expect(auditorText).toBeInTheDocument();
-    expect(userText).toBeInTheDocument();
+    expect(rolesText).toBeInTheDocument();
+  });
+
+  it('shows correct empty text when no active roles', () => {
+    // setup
+    render(<UsersListOrgRoles orgRoles={[]} />);
+    // query
+    const rolesText = screen.getByText(/None yet/);
+    // expect
+    expect(rolesText).toBeInTheDocument();
   });
 });

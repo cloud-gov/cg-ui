@@ -39,44 +39,14 @@ const multipleRolesForSpace = {
 };
 
 describe('UsersListSpaceRoles', () => {
-  it('shows all roles for each space', () => {
+  it('shows the rollup number of active spaces roles with total number of available spaces', () => {
     // act
     render(
       <UsersListSpaceRoles spaces={mockSpaces} roles={multipleRolesForSpace} />
     );
     // query
-    const spaceGuid1Role1 = screen.queryByText('fooRoleName1');
-    const spaceGuid1Role2 = screen.queryByText('fooRoleName2');
-    const spaceGuid2Role1 = screen.queryByText('fooRoleName3');
-    const spaceGuid2Role2 = screen.queryByText('fooRoleName4');
+    const spacesText = screen.queryByText(/2 of 5 spaces/);
     // assert
-    expect(spaceGuid1Role1).toBeInTheDocument();
-    expect(spaceGuid1Role2).toBeInTheDocument();
-    expect(spaceGuid2Role1).toBeInTheDocument();
-    expect(spaceGuid2Role2).toBeInTheDocument();
-  });
-
-  describe('when there are more spaces than we can show', () => {
-    it('hides extra spaces and shows overflow number instead', () => {
-      // act
-      render(<UsersListSpaceRoles spaces={mockSpaces} roles={mockRoles} />);
-      // query
-      const extraSpace = screen.queryByText('fooRoleName5');
-      const overflowNum = screen.queryByText('+1');
-      // assert
-      expect(extraSpace).not.toBeInTheDocument();
-      expect(overflowNum).toBeInTheDocument();
-    });
-  });
-
-  describe('when there is no overflow', () => {
-    it('does not show overflow amount', () => {
-      // act
-      render(<UsersListSpaceRoles spaces={mockSpaces} roles={fewerRoles} />);
-      // query
-      const overflow = screen.queryByText('+');
-      // assert
-      expect(overflow).not.toBeInTheDocument();
-    });
+    expect(spacesText).toBeInTheDocument();
   });
 });

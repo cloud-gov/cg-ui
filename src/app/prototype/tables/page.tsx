@@ -55,7 +55,7 @@ export default function TablePage() {
         <TableBody>
           {mockUsers.map((user, index) => (
             <TableRow key={`table-row-${index}`}>
-              <TableCell colName="account name" rowheader={true} sort={true}>
+              <TableCell colName="account name" rowheader={true}>
                 <div className="display-flex flex-justify">
                   <span className="mobile-lg:text-bold maxw-card-lg text-ellipsis">
                     {user.email}

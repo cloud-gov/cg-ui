@@ -1,8 +1,6 @@
 'use client';
 
 import { useState } from 'react';
-import { GridList } from '@/components/GridList/GridList';
-import { UsersListItem } from '@/components/UsersList/UsersListItem';
 import { RolesByUser, SpacesBySpaceId } from '@/controllers/controller-types';
 import { UserLogonInfoById } from '@/api/aws/s3-types';
 import {
@@ -13,6 +11,18 @@ import { sortObjectsByParam, filterObjectsByParams } from '@/helpers/arrays';
 import { Modal } from '@/components/uswds/Modal';
 import { Alert } from '@/components/uswds/Alert';
 import { ListSearchInput } from '@/components/ListSearchInput';
+import { Table } from '@/components/uswds/Table/Table';
+import { TableHead } from '@/components/uswds/Table/TableHead';
+import { TableHeadCell } from '@/components/uswds/Table/TableHeadCell';
+import { TableBody } from '@/components/uswds/Table/TableBody';
+import { TableRow } from '@/components/uswds/Table/TableRow';
+import { TableCell } from '@/components/uswds/Table/TableCell';
+import { Username } from '@/components/UserAccount/Username';
+import { UsersListOrgRoles } from '@/components/UsersList/UsersListOrgRoles';
+import { UsersListSpaceRoles } from '@/components/UsersList/UsersListSpaceRoles';
+import { UserAccountExpires } from '@/components/UserAccount/UserAccountExpires';
+import { UserAccountLastLogin } from '@/components/UserAccount/UserAccountLastLogin';
+import { UsersActionsRemoveFromOrg } from '@/components/UsersActions/UsersActionsRemoveFromOrg';
 
 export function UsersList({
   users,
@@ -96,35 +106,89 @@ export function UsersList({
           </div>
         )}
       </div>
-      <GridList>
-        {removedUsername && (
-          <Modal
-            close={closeModal}
-            modalId="removeUserSuccess"
-            headingId={modalHeadingId(removedUsername)}
-          >
-            <Alert type="success" id={modalHeadingId(removedUsername)}>
-              <strong>{removedUsername}</strong> has successfully been removed.
-            </Alert>
-          </Modal>
-        )}
-        {currentUsers.map((user) => {
-          return (
-            <UsersListItem
-              key={`UsersListItem-${user.guid}`}
-              user={user}
-              roles={roles[user.guid]}
-              serviceAccount={serviceAccounts[user.username]}
-              spaces={spaces}
-              userLogonInfo={
-                userLogonInfo ? userLogonInfo[user.guid] : undefined
-              }
-              removeUserCallback={removeUserCallback}
-              orgGuid={orgGuid}
-            />
-          );
-        })}
-      </GridList>
+      {removedUsername && (
+        <Modal
+          close={closeModal}
+          modalId="removeUserSuccess"
+          headingId={modalHeadingId(removedUsername)}
+        >
+          <Alert type="success" id={modalHeadingId(removedUsername)}>
+            <strong>{removedUsername}</strong> has successfully been removed.
+          </Alert>
+        </Modal>
+      )}
+
+      <Table
+        caption="users for this organization"
+        sortText="This table is now sorted by Account Name in descending order."
+      >
+        <TableHead>
+          <TableHeadCell data="account name" />
+          <TableHeadCell data="organization roles" />
+          <TableHeadCell data="access permissions" />
+          <TableHeadCell data="expires" />
+          <TableHeadCell data="last login" />
+          <TableHeadCell />
+        </TableHead>
+
+        <TableBody>
+          {currentUsers.map((user, index) => (
+            <TableRow key={`table-row-${index}`}>
+              <TableCell colName="account name" rowheader={true}>
+                <div className="display-flex flex-justify">
+                  <span className="mobile-lg:text-bold maxw-card-lg text-ellipsis">
+                    <Username
+                      user={user}
+                      serviceAccount={serviceAccounts[user.username]}
+                    />
+                  </span>
+                </div>
+              </TableCell>
+
+              <TableCell colName="organization roles">
+                <UsersListOrgRoles
+                  orgRoles={roles[user.guid]?.org || []}
+                  orgGuid={orgGuid}
+                  userGuid={user.guid}
+                />
+              </TableCell>
+
+              <TableCell colName="access permissions">
+                <UsersListSpaceRoles
+                  roles={roles[user.guid]?.space || []}
+                  spaces={spaces}
+                  orgGuid={orgGuid}
+                  userGuid={user.guid}
+                />
+              </TableCell>
+
+              <TableCell colName="expires">
+                <UserAccountExpires
+                  userLogonInfo={
+                    userLogonInfo ? userLogonInfo[user.guid] : undefined
+                  }
+                />
+              </TableCell>
+
+              <TableCell colName="last login">
+                <UserAccountLastLogin
+                  userLogonInfo={
+                    userLogonInfo ? userLogonInfo[user.guid] : undefined
+                  }
+                />
+              </TableCell>
+
+              <TableCell className="text-center mobile-lg:text-right">
+                <UsersActionsRemoveFromOrg
+                  user={user}
+                  roles={roles[user.guid]}
+                  removeUserCallback={removeUserCallback}
+                />
+              </TableCell>
+            </TableRow>
+          ))}
+        </TableBody>
+      </Table>
     </>
   );
 }

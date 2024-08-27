@@ -107,8 +107,11 @@ export function UsersActionsRemoveFromOrg({
 
   return (
     <>
-      <Button unstyled className="font-body-2xs" onClick={openModal}>
-        Remove from org
+      <Button
+        className="usa-button--outline width-auto margin-0 mobile-lg:padding-y-1 mobile-lg:padding-x-105 mobile-lg:font-sans-xs"
+        onClick={openModal}
+      >
+        Remove
       </Button>
       {modalOpen && (
         <Modal

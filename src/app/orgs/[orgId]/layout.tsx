@@ -17,12 +17,10 @@ export default async function OrgLayout({
       <LayoutHeader>
         {meta.status === 'success' ? payload.name : 'Org name not found'}
       </LayoutHeader>
-      <div className="padding-4">
-        <div className="display-block padding-bottom-2">
-          <Link href="/orgs">Back to all organizations</Link>
-        </div>
-        {children}
+      <div className="display-block padding-bottom-2">
+        <Link href="/orgs">Back to all organizations</Link>
       </div>
+      {children}
     </>
   );
 }

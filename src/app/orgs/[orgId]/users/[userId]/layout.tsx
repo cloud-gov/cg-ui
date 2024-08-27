@@ -2,7 +2,7 @@ import React from 'react';
 import { getUser } from '@/controllers/controllers';
 import Link from 'next/link';
 import { PageHeader } from '@/components/PageHeader';
-import { Username } from '@/components/Username';
+import { Username } from '@/components/UserAccount/Username';
 
 export default async function SpaceLayout({
   children,
