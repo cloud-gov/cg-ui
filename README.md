@@ -189,7 +189,7 @@ npm test -- serverside
 
 #### Preparing your code
 
-We have several utilities for linting and prettifying code which run when you commit your code. You may run them manually, if you wish:
+We have several utilities for linting and prettifying code which you may run manually:
 
 ```bash
 npm run lint
@@ -208,8 +208,6 @@ npm run build
 Eslint configurations are found in [.eslintrc.json](.eslintrc.json).
 
 Prettier configurations are found in [.prettierrc.json](.prettierrc.json).
-
-We are using [husky](https://typicode.github.io/husky/) to manage the linting pre-commit hook, as well as to manage which files are run through the linter. To change which directories are included in linting, go to [.lintstagedrc.js](.lintstagedrc.js).
 
 #### Signing your commits
 
