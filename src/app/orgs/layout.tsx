@@ -8,5 +8,5 @@ export default function OrgsLayout({
 }: {
   children: React.ReactNode;
 }) {
-  return <div className="grid-container">{children}</div>;
+  return <div className="grid-container minh-viewport">{children}</div>;
 }

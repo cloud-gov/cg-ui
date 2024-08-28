@@ -103,6 +103,9 @@ export async function getOrgPage(orgGuid: string): Promise<ControllerResult> {
       logDevError(
         `api error on cf org page with http code ${res.status} for url: ${res.url}`
       );
+      if (res.status === 401) {
+        throw new Error('please log in to view this page');
+      }
       throw new Error('something went wrong with the request');
     }
   });
@@ -142,6 +145,9 @@ export async function getOrgPage(orgGuid: string): Promise<ControllerResult> {
       logDevError(
         `api error on cf org page with http code ${res.status} for url: ${res.url}`
       );
+      if (res.status === 401) {
+        throw new Error('please log in to view this page');
+      }
       throw new Error('something went wrong with the request');
     }
   });
