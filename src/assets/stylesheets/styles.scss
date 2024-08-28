@@ -120,13 +120,6 @@
 
 /* Custom selector styles */
 
-.text-ellipsis {
-  // This overflow and whitespace are needed for ellipsis to work
-  overflow: hidden;
-  white-space: nowrap;
-  text-overflow: ellipsis;
-}
-
 // NavGlobal
 #nav-global {
   background: color('blue-60')
