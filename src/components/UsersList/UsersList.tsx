@@ -120,7 +120,7 @@ export function UsersList({
     <>
       <ListSearchInput
         onSubmit={onSearchAction}
-        labelText="search the list of users by username"
+        labelText="Find account names that match:"
       />
       {/*
       aria-live region needs to show up on initial page render.

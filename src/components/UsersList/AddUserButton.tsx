@@ -12,7 +12,7 @@ export function AddUserButton({ orgId }: { orgId: string }) {
         router.push(`/orgs/${orgId}/users/add`);
       }}
     >
-      Add a user
+      Add new user
     </Button>
   );
 }

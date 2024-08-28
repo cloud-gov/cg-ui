@@ -102,9 +102,7 @@ describe('UsersList', () => {
         />
       );
       // act
-      const input = screen.getByLabelText(
-        'search the list of users by username'
-      );
+      const input = screen.getByLabelText(/Find account names that match:/);
       input.focus();
       await user.keyboard('c us');
       await user.keyboard('{enter}');

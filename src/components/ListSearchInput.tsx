@@ -21,6 +21,7 @@ export function ListSearchInput({
   };
   return (
     <div className="margin-bottom-2">
+      <p className="margin-bottom-1 text-bold">{labelText}</p>
       <form
         name="list-search-form"
         className="usa-search usa-search--small"
