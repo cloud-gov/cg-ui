@@ -239,6 +239,7 @@ export function UsersList({
                   user={user}
                   roles={roles[user.guid]}
                   removeUserCallback={removeUserCallback}
+                  closeOnSuccess={true}
                 />
               </TableCell>
             </TableRow>

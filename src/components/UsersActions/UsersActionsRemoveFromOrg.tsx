@@ -28,15 +28,18 @@ function FormDefault({
   const isPending = actionStatus === 'pending';
   return (
     <>
-      <p id={modalHeadingId(user)}>
-        Are you sure you want to remove <strong>{user.username}</strong> from
-        this organization?
+      <p id={modalHeadingId(user)} className="font-sans-md text-bold">
+        Are you sure you want to remove {user.username} from this organization?
+      </p>
+      <p>
+        If you remove this account, you’ll have to add it back to this
+        organization in order to restore its access.
       </p>
       {isPending && <p>Removal pending...</p>}
       <div className="usa-modal__footer">
         <form onSubmit={onSubmit}>
           <Button type="submit" disabled={isPending}>
-            Remove
+            Yes, remove the account
           </Button>{' '}
           <Button
             unstyled
@@ -44,7 +47,7 @@ function FormDefault({
             onClick={onCancel}
             disabled={isPending}
           >
-            Cancel
+            Go back
           </Button>
         </form>
       </div>
@@ -69,10 +72,12 @@ export function UsersActionsRemoveFromOrg({
   user,
   roles,
   removeUserCallback,
+  closeOnSuccess = false,
 }: {
   user: UserObj;
   roles: RolesByUserItem;
   removeUserCallback?: Function;
+  closeOnSuccess?: boolean;
 }) {
   const [modalOpen, setModalOpen] = useState(false);
 
@@ -97,6 +102,7 @@ export function UsersActionsRemoveFromOrg({
     )) as ControllerResult;
     if (result?.meta?.status === 'success') {
       setActionStatus('success' as ActionStatus);
+      closeOnSuccess && closeModal();
       !!removeUserCallback && removeUserCallback(user);
     }
     if (result?.meta?.status === 'error') {

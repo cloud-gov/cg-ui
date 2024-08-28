@@ -58,7 +58,7 @@ describe('UsersActionsRemoveFromOrg', () => {
       const openButton = screen.getByText(/Remove/);
       fireEvent.click(openButton);
       // act
-      const cancelButton = screen.getByText('Cancel');
+      const cancelButton = screen.getByText('Go back');
       fireEvent.click(cancelButton);
       // expect
       const content = screen.queryByText(/Are you sure you want to remove/i);

@@ -68,7 +68,7 @@ export function Modal({
           aria-labelledby={headingId}
           aria-describedby={descriptionId || ''}
         >
-          <div className="usa-modal__content">
+          <div className="usa-modal__content text-pre-wrap">
             <div className="usa-modal__main">{children}</div>
             <button
               type="button"
