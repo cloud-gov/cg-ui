@@ -7,7 +7,7 @@ export function AddUserButton({ orgId }: { orgId: string }) {
   const router = useRouter();
   return (
     <Button
-      className="margin-right-0"
+      className="margin-right-0 bg-mint-40"
       onClick={() => {
         router.push(`/orgs/${orgId}/users/add`);
       }}

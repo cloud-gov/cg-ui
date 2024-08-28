@@ -92,7 +92,11 @@
   // utilities settings
   $text-align-settings: (
     responsive: true
-  )
+  ),
+
+  $background-color-palettes: (
+    'palette-color-system-mint-medium' // no trailing comma
+  ),
 );
 
 // 2. Load USWDS source code
