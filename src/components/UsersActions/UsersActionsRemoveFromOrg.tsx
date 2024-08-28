@@ -29,7 +29,7 @@ function FormDefault({
   return (
     <>
       <p id={modalHeadingId(user)} className="font-sans-md text-bold">
-        Are you sure you want to remove {user.username} from this organization?
+        Are you sure you want to remove {user.username || 'this account'} from this organization?
       </p>
       <p>
         If you remove this account, you’ll have to add it back to this
