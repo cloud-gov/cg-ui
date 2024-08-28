@@ -9,7 +9,7 @@ describe('<UserAccountExpires />', () => {
   describe('when no account info', () => {
     it('shows n/a text', () => {
       // render
-      render(<UserAccountExpires userLogonInfo={undefined} />);
+      render(<UserAccountExpires daysToExpiration={null} />);
       // query
       const text = screen.queryByText(/Not available/);
       // assert
@@ -19,17 +19,8 @@ describe('<UserAccountExpires />', () => {
 
   describe('when account is active', () => {
     it('shows number of days to expiration', () => {
-      // setup
-      var now = new Date();
-      var ts = new Date(now.setDate(now.getDate() - 2)); // 2 days ago
-      const info = {
-        userName: 'foo',
-        active: true,
-        lastLogonTime: ts,
-        lastLogonTimePretty: 'todo if we start using this field',
-      };
       // render
-      render(<UserAccountExpires userLogonInfo={info} />);
+      render(<UserAccountExpires daysToExpiration={88} />);
       // query
       const text = screen.queryByText('88 days');
       // assert
@@ -39,15 +30,8 @@ describe('<UserAccountExpires />', () => {
 
   describe('when account is expired', () => {
     it('shows expired text', () => {
-      // setup
-      const info = {
-        userName: 'foo',
-        active: false,
-        lastLogonTime: 1706652770377,
-        lastLogonTimePretty: 'Tues, Jan 30 2024 22:12 GMT',
-      };
       // render
-      render(<UserAccountExpires userLogonInfo={info} />);
+      render(<UserAccountExpires daysToExpiration={0} />);
       // query
       const text = screen.queryByText(/Expired/);
       // assert

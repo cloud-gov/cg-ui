@@ -8,13 +8,9 @@ import { UsersListOrgRoles } from '@/components/UsersList/UsersListOrgRoles';
 describe('UsersListOrgRoles', () => {
   it('lists the number of active org roles for the user', () => {
     // setup
-    const mockRoles = [
-      { guid: 'guid1', role: 'organization_user' },
-      { guid: 'guid2', role: 'billing_manager' },
-      { guid: 'guid3', role: 'organization_auditor' },
-    ];
+    const mockRolesCount = 3;
     // act
-    render(<UsersListOrgRoles orgRoles={mockRoles} />);
+    render(<UsersListOrgRoles orgRolesCount={mockRolesCount} href="foo" />);
     // query
     const rolesText = screen.getByText(/3 roles/);
     // expect
@@ -23,7 +19,7 @@ describe('UsersListOrgRoles', () => {
 
   it('shows correct empty text when no active roles', () => {
     // setup
-    render(<UsersListOrgRoles orgRoles={[]} />);
+    render(<UsersListOrgRoles orgRolesCount={0} href="foo" />);
     // query
     const rolesText = screen.getByText(/None yet/);
     // expect

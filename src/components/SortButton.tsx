@@ -1,11 +1,15 @@
+'use client';
+
 type sortOption = 'unsorted' | 'asc' | 'desc';
 
 export function SortButton({
   colName,
   direction = 'unsorted' as sortOption,
+  onSortClick,
 }: {
   colName: string;
   direction?: sortOption;
+  onSortClick: Function;
 }) {
   const title =
     direction === 'asc'
@@ -17,6 +21,9 @@ export function SortButton({
       className="border-0 bg-transparent padding-0 cursor-pointer"
       tabIndex={0}
       title={title}
+      onClick={() => {
+        onSortClick(colName);
+      }}
     >
       <svg
         xmlns="http://www.w3.org/2000/svg"

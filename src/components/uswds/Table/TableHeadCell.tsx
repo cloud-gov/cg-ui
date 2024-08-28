@@ -6,11 +6,13 @@ type sortOption = 'unsorted' | 'asc' | 'desc';
 export function TableHeadCell({
   className = '',
   data,
+  onSortClick = () => {},
   sortable = true,
   sortDir = 'unsorted' as sortOption,
 }: {
   className?: string;
   data?: string;
+  onSortClick?: Function;
   sortable?: boolean;
   sortDir?: sortOption;
 }) {
@@ -30,7 +32,14 @@ export function TableHeadCell({
     >
       {data && (
         <div className="display-flex flex-justify flex-align-center font-sans-3xs text-normal text-uppercase">
-          {data} {sortable && <SortButton colName={data} direction={sortDir} />}
+          {data}{' '}
+          {sortable && (
+            <SortButton
+              colName={data}
+              direction={sortDir}
+              onSortClick={onSortClick}
+            />
+          )}
         </div>
       )}
     </th>

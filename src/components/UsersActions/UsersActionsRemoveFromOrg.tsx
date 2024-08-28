@@ -1,4 +1,4 @@
-'user client';
+'use client';
 
 import React from 'react';
 import { UserObj } from '@/api/cf/cloudfoundry-types';

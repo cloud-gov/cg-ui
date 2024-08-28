@@ -9,7 +9,9 @@ describe('<UserAccountLastLogin />', () => {
   describe('when no account info', () => {
     it('shows n/a text', () => {
       // render
-      render(<UserAccountLastLogin userLogonInfo={undefined} />);
+      render(
+        <UserAccountLastLogin lastLogonTime={undefined} hrefInvite="foo" />
+      );
       // query
       const text = screen.queryByText(/Not available/);
       // assert
@@ -19,15 +21,8 @@ describe('<UserAccountLastLogin />', () => {
 
   describe('when never logged in', () => {
     it('shows never logged in text', () => {
-      // setup
-      const info = {
-        userName: null,
-        active: false,
-        lastLogonTime: null,
-        lastLogonTimePretty: null,
-      };
       // render
-      render(<UserAccountLastLogin userLogonInfo={info} />);
+      render(<UserAccountLastLogin lastLogonTime={null} hrefInvite="foo" />);
       // query
       const text = screen.queryByText(/None/);
       // assert
@@ -37,15 +32,10 @@ describe('<UserAccountLastLogin />', () => {
 
   describe('when user has logged in', () => {
     it('shows a timestamp', () => {
-      // setup
-      const info = {
-        userName: null,
-        active: false,
-        lastLogonTime: 1706652770377,
-        lastLogonTimePretty: 'Tues, Jan 30 2024 22:12 GMT',
-      };
       // render
-      render(<UserAccountLastLogin userLogonInfo={info} />);
+      render(
+        <UserAccountLastLogin lastLogonTime={1706652770377} hrefInvite="foo" />
+      ); // Tues, Jan 30 2024
       // query
       const text = screen.getByText(/Jan 30, 2024/);
       // assert

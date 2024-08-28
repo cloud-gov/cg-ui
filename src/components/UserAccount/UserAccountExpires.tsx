@@ -1,34 +1,27 @@
 import Link from 'next/link';
-import { daysToExpiration } from '@/helpers/dates';
-import { UserLogonInfoDisplay } from '@/controllers/controller-types';
-
-const expirationWindowDays = 90;
 
 export function UserAccountExpires({
-  userLogonInfo,
+  daysToExpiration,
+  hrefInvite = process.env.NEXT_PUBLIC_USER_INVITE_URL || '/',
 }: {
-  userLogonInfo: UserLogonInfoDisplay | undefined;
+  daysToExpiration: number | null;
+  hrefInvite?: string;
 }) {
-  const timestamp = userLogonInfo?.lastLogonTime;
-  const expiresInDays: number = timestamp
-    ? daysToExpiration(timestamp, expirationWindowDays)
-    : 0;
-
-  if (!userLogonInfo) {
+  if (daysToExpiration === null) {
     return <>Not available</>;
   }
-  if (expiresInDays > 0) {
+  if (daysToExpiration > 0) {
     return (
       <>
-        {expiresInDays} day{expiresInDays != 1 && 's'}
+        {daysToExpiration} day{daysToExpiration != 1 && 's'}
       </>
     );
   }
-  if (expiresInDays <= 0) {
+  if (daysToExpiration <= 0) {
     return (
       <>
         Expired —{' '}
-        <Link href="/" className="usa-button--unstyled text-bold">
+        <Link href={hrefInvite} className="usa-button--unstyled text-bold">
           resend invite
         </Link>
       </>

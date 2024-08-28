@@ -10,7 +10,7 @@ import {
   SpaceObj,
   UserObj,
 } from '@/api/cf/cloudfoundry-types';
-import { ControllerResult } from './controller-types';
+import { ControllerResult, UserOrgPage } from './controller-types';
 import {
   associateUsersWithRoles,
   defaultSpaceRoles,
@@ -21,6 +21,7 @@ import {
   resourceKeyedById,
 } from './controller-helpers';
 import { sortObjectsByParam } from '@/helpers/arrays';
+import { daysToExpiration } from '@/helpers/dates';
 import { getUserLogonInfo } from '@/api/aws/s3';
 
 /* ------------------- */
@@ -107,7 +108,7 @@ export async function getOrgPage(orgGuid: string): Promise<ControllerResult> {
   });
 
   const orgUserRolesPayload = await orgUserRolesRes.json();
-  const users = orgUserRolesPayload.included.users;
+  let users = orgUserRolesPayload.included.users;
   const userGuids = [] as Array<string>;
   const suspectedNonHumans = [] as Array<string>;
   users.forEach(function (user: UserObj) {
@@ -156,6 +157,20 @@ export async function getOrgPage(orgGuid: string): Promise<ControllerResult> {
     const svcCreds = (await svcCredsRes.json()).resources;
     svcAccounts = resourceKeyedById(svcCreds);
   }
+
+  // collect rollup numbers for table sorting
+  users = users.map((user: UserObj) => ({
+    ...user,
+    orgRolesCount: rolesByUser[user.guid]?.org?.length || 0,
+    spaceRolesCount: Object.keys(rolesByUser[user.guid]?.space)?.length || 0,
+    daysToExpiration:
+      userLogonInfo && userLogonInfo[user.guid]
+        ? daysToExpiration(userLogonInfo[user.guid].lastLogonTime || 0)
+        : null,
+    lastLogonTime: userLogonInfo
+      ? userLogonInfo[user.guid]?.lastLogonTime
+      : undefined,
+  })) as UserOrgPage;
 
   return {
     meta: { status: 'success' },
