@@ -529,11 +529,7 @@ describe('controllers tests', () => {
       // act/assert
       expect(async () => {
         await getEditOrgRoles(orgGuid, userGuid);
-      }).rejects.toThrow(
-        new Error(
-          'Something went wrong with loading the form. Please try again later.'
-        )
-      );
+      }).rejects.toThrow(new Error('something went wrong with the request'));
     });
   });
 });

@@ -93,6 +93,13 @@ export async function logDevError(message: string) {
   }
 }
 
+export function apiErrorMessage(resStatus: number, customMsg = ''): string {
+  if (resStatus === 401) {
+    return 'You are logged out. Please log in.';
+  }
+  return customMsg || 'something went wrong with the request';
+}
+
 export async function pollForJobCompletion(
   jobLocation: string | null | undefined
 ): Promise<void> {
