@@ -7,7 +7,6 @@
     "start": "next start",
     "test": "jest",
     "lint": "next lint",
-    "prepare": "husky",
     "format": "prettier --check '**/*.{js,jsx,ts,tsx}'",
     "format:fix": "prettier --write '**/*.{js,jsx,ts,tsx}'"
   },
@@ -16,7 +15,6 @@
     "@aws-sdk/credential-providers": "^3.637.0",
     "@uswds/uswds": "3.8.2",
     "classnames": "^2.5.1",
-    "husky": "^9.1.5",
     "jose": "^5.7.0",
     "next": "~14.2.6",
     "pg": "^8.12.0",
@@ -38,7 +36,6 @@
     "jest": "^29.7.0",
     "jest-environment-jsdom": "^29.7.0",
     "jsonwebtoken": "^9.0.2",
-    "lint-staged": "^15.2.9",
     "nock": "^14.0.0-beta.7",
     "sass": "^1.77.8"
   }

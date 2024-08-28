@@ -104,6 +104,7 @@ cf create-service-key cg-ui-storage [name-of-your-key]
 ```
 
 Pull down the key (this contains sensitive information):
+
 ```
 cf service-key cg-ui-storage [name-of-your-key]
 ```
@@ -160,8 +161,6 @@ Eslint configurations are found in [.eslintrc.json](./.eslintrc.json).
 
 Prettier configurations are found in [.prettierrc.json](./.prettierrc.json).
 
-We are using [husky](https://typicode.github.io/husky/) to manage the linting pre-commit hook, as well as to manage which files are run through the linter. To change which directories are included in linting, go to [.lintstagedrc.js](./.lintstagedrc.js).
-
 ### Authentication (development)
 
 Authentication functionality relies on the app talking to a UAA server. See the [README](../../uaa-docker/README.md) in the `uaa-docker` directory for instructions on how to run this server locally with Docker.
@@ -185,10 +184,10 @@ The global SASS entrypoint is [assets/stylesheets/styles.scss](./assets/styleshe
 Our team keeps custom CSS/SASS to a minimum and takes a [utilities-first](https://designsystem.digital.gov/utilities/) approach.
 
 When adding styles, work through this order:
+
 1. Can [USWDS utilities](https://designsystem.digital.gov/utilities/) be used?
 1. If not, can [USWDS Design Tokens](https://designsystem.digital.gov/design-tokens/) be used?
 1. If not, then add custom CSS/SASS
-
 
 ### Images
 

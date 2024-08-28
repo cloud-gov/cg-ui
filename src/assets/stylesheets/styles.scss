@@ -5,13 +5,13 @@
   $theme-hero-image: '../img/hero.jpg',
 
   // base colors
-  $theme-color-base-family: 'gray-cool',
-  $theme-color-base-lightest: 'gray-cool-3',
-  $theme-color-base-lighter: 'gray-cool-10',
-  $theme-color-base-light: 'gray-cool-20',
-  $theme-color-base: 'gray-cool-50',
-  $theme-color-base-dark: 'gray-cool-70',
-  $theme-color-base-darker: 'gray-cool-80',
+  $theme-color-base-family: 'gray',
+  $theme-color-base-lightest: 'gray-3',
+  $theme-color-base-lighter: 'gray-10',
+  $theme-color-base-light: 'gray-20',
+  $theme-color-base: 'gray-50',
+  $theme-color-base-dark: 'gray-70',
+  $theme-color-base-darker: 'gray-80',
   $theme-color-base-darkest: 'gray-warm-90',
   $theme-color-base-ink: 'gray-warm-90',
 
@@ -48,20 +48,20 @@
   $theme-color-accent-warm-darkest: 'gray-warm-60',
 
   // Accent cool colors
-  $theme-color-accent-cool-family: 'cyan',
-  $theme-color-accent-cool-lightest: 'cyan-5',
-  $theme-color-accent-cool-lighter: 'cyan-10v',
-  $theme-color-accent-cool-light: 'cyan-20',
-  $theme-color-accent-cool: 'cyan-30v',
-  $theme-color-accent-cool-dark: 'cyan-40v',
-  $theme-color-accent-cool-darker: 'cyan-50',
-  $theme-color-accent-cool-darkest: 'cyan-60',
+  $theme-color-accent-cool-family: 'blue-cool-vivid',
+  $theme-color-accent-cool-lightest: 'blue-cool-5v',
+  $theme-color-accent-cool-lighter: 'blue-cool-10v',
+  $theme-color-accent-cool-light: 'blue-cool-20',
+  $theme-color-accent-cool: 'blue-cool-30v',
+  $theme-color-accent-cool-dark: 'blue-cool-40v',
+  $theme-color-accent-cool-darker: 'blue-cool-50v',
+  $theme-color-accent-cool-darkest: 'blue-cool-60v',
 
   // body text color
   $theme-text-color: 'gray-cool-90',
 
   // layout grid
-  $theme-grid-container-max-width: 'full',
+  $theme-grid-container-max-width: 'desktop-lg',
   $theme-banner-max-width: 'desktop-lg',
   $theme-header-max-width: 'desktop-lg',
   $theme-header-min-width: 'none',
@@ -82,6 +82,9 @@
   $theme-h5-font-size: 'sm',
   $theme-h6-font-size: 'xs',
 
+  // sizing
+  $theme-site-margins-width: 2,
+
   $display-settings: (
     responsive: true,
   ),
@@ -92,6 +95,11 @@
 
   $overflow-settings: (
     responsive: true,
+  ),
+
+  // utilities settings
+  $text-align-settings: (
+    responsive: true
   )
 );
 
@@ -119,6 +127,13 @@
 }
 
 /* Custom selector styles */
+
+.text-ellipsis {
+  // This overflow and whitespace are needed for ellipsis to work
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
 
 // NavGlobal
 #nav-global {
@@ -162,4 +177,76 @@ input[type='search']::-webkit-search-cancel-button,
 input[type='search']::-webkit-search-results-button,
 input[type='search']::-webkit-search-results-decoration {
   display: none;
+}
+
+// USWDS Table Components
+
+$table-border: 1px solid color('gray-20');
+$table-sort-active-color: color('blue-cool-5v');
+// Can't override these styles with utility classes
+.usa-table {
+  // Let’s make our tables expand to fill their container
+  thead th {
+    background: color('gray-warm-4'); // .bg-accent-warm-light
+    border: none; // .border-0
+    border-bottom: $table-border;
+    padding: units( 0.5 ) units( 1 );
+  }
+  // Default padding for table headings/cells.
+  tbody th,
+  td {
+    padding: units(0.5) units(1);
+  }
+  // Borders for our in-tbody table headers.
+  tbody th,
+  tbody tr td:first-child {
+    border-bottom: $table-border;
+    border-right: $table-border;
+    border-left: $table-border;
+    border-top: none;
+  }
+  // Table cells (td) only need a bottom border.
+  td {
+    border: 0;
+    border-bottom: $table-border;
+  }
+  // …unless they’re the last cell in the row.
+  td:last-child {
+    border-right: $table-border;
+  }
+  // when actively sorted
+  @include at-media('mobile-lg') {
+    td.active {
+      background-color: $table-sort-active-color;
+    }
+    // Actively sorted
+    th.active {
+      background-color: $table-sort-active-color;
+    }
+  }
+}
+
+.usa-table--stacked {
+  // On smaller screens, we can undo most of the border/padding rules above.
+  @include at-media-max('mobile-lg') {
+    border-collapse: separate;
+    border-spacing: 0 2em;
+
+    tr th,
+    tbody tr td:first-child {
+      border-top: units(0.5) solid color('gray-cool-20') !important;
+      border-bottom: 0;
+    }
+
+    tbody th,
+    td {
+      border-left: $table-border;
+      border-right: $table-border;
+      padding: units(1);
+    }
+    tbody th,
+    td:not(:last-child) {
+      border-bottom: none;
+    }
+  }
 }
