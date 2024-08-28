@@ -1,0 +1,3 @@
+# this file needs to be located in the .git/hooks directory to function correctly
+
+npx lint-staged

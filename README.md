@@ -189,7 +189,13 @@ npm test -- serverside
 
 #### Preparing your code
 
-We have several utilities for linting and prettifying code which you may run manually:
+You can optionally set up the repository with a pre-commit hook to scan files you have just staged for linting / prettifying:
+
+```bash
+npm run setup-precommit
+```
+
+If you prefer, you may run these utilities manually instead:
 
 ```bash
 npm run lint
@@ -205,13 +211,15 @@ You may also wish to test that the next application is building before you commi
 npm run build
 ```
 
-Eslint configurations are found in [.eslintrc.json](.eslintrc.json).
-
-Prettier configurations are found in [.prettierrc.json](.prettierrc.json).
+Eslint configurations are found in [.eslintrc.json](.eslintrc.json). Prettier configurations are found in [.prettierrc.json](.prettierrc.json).
 
 #### Signing your commits
 
 Cloud.gov requires any commits to this repo to be signed with a GPG key. [You will need to set up commit signing before the first time you contribute](https://docs.google.com/document/d/11UDxvfkhncyLEs-NUCniw2u54j4uQBqsR2SBiLYPUZc/edit) :closed_lock_with_key:.
+
+#### Scanning for secrets
+
+Cloud.gov requires that contributors have the [caulking tool](https://github.com/cloud-gov/caulking) installed and running on their machines. Follow the instructions to install caulking and confirm that `make audit` passes all checks.
 
 ## Step 8: Deploying
 

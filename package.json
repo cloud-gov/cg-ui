@@ -8,7 +8,8 @@
     "test": "jest",
     "lint": "next lint",
     "format": "prettier --check '**/*.{js,jsx,ts,tsx}'",
-    "format:fix": "prettier --write '**/*.{js,jsx,ts,tsx}'"
+    "format:fix": "prettier --write '**/*.{js,jsx,ts,tsx}'",
+    "setup-precommit": "cp ./scripts/pre-commit .git/hooks"
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.637.0",
@@ -36,6 +37,7 @@
     "jest": "^29.7.0",
     "jest-environment-jsdom": "^29.7.0",
     "jsonwebtoken": "^9.0.2",
+    "lint-staged": "^15.2.9",
     "nock": "^14.0.0-beta.7",
     "sass": "^1.77.8"
   }
