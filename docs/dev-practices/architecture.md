@@ -1,10 +1,8 @@
-# For developers
+# Architecture
 
-## Architecture and directory structure
+Next.js has few opinions on how to structure application code. Our team has chosen the following conventions:
 
-Next.js has few opinions on how to structure application code, so our team has chosen the following conventions:
-
-### Data-to-UI Application Layers
+## Data-to-UI Application Layers
 
 This convention follows an [MVC](https://en.wikipedia.org/wiki/Model%E2%80%93view%E2%80%93controller)-like pattern, with some Next.js specificities. Our priorities are:
 
@@ -12,7 +10,7 @@ This convention follows an [MVC](https://en.wikipedia.org/wiki/Model%E2%80%93vie
 - Each layer has [one responsibility](https://en.wikipedia.org/wiki/Single-responsibility_principle)
 - Each layer is easy to test
 
-#### 1. Data Access Layer
+### 1. Data Access Layer
 
 - **Responsibility**: Talks to other data sources
   - In MVC terms, this is like the Model
@@ -21,7 +19,7 @@ This convention follows an [MVC](https://en.wikipedia.org/wiki/Model%E2%80%93vie
 - **Where it lives**: `api/[data_source]/[model]`
   - Example: `api/cf/orgs.ts`
 
-#### 2. Controller layer
+### 2. Controller layer
 
 - **Responsibility**:
   - Collects needed data for a page to load
@@ -32,7 +30,7 @@ This convention follows an [MVC](https://en.wikipedia.org/wiki/Model%E2%80%93vie
   - this layer Is modular and UI agnostic: it is built to be reused for various UI forms
 - **Where it lives**: `/controllers`
 
-#### 3. Form Actions layer
+### 3. Form Actions layer
 
 _This uses Next.js specific [behavior](https://nextjs.org/docs/app/building-your-application/data-fetching/server-actions-and-mutations#behavior) where a form element invokes a server-side action. While the action function is server-side, it can be invoked from either a server or client component._
 
@@ -46,7 +44,7 @@ _This uses Next.js specific [behavior](https://nextjs.org/docs/app/building-your
 - **Where it lives**: inside `/app` routes, next to page files
   - Example: `app/orgs/[org_id]/actions.ts`
 
-#### 4. UI Components
+### 4. UI Components
 
 - **Responsibility**: UI visuals and interactive logic
   - In MVC terms, this is the View
@@ -56,16 +54,6 @@ _This uses Next.js specific [behavior](https://nextjs.org/docs/app/building-your
 - **Where they live**:
   - Page-level components: inside `/app` routes
   - Lower-level, modular components: `/components`
-
-### Component files
-- For modular component files, we will use a [Direct File Naming approach](https://www.codevertiser.com/react-components-folder-structure-naming-patterns/#2-direct-file-naming-approach)
-  - Example file path: `/components/OrgMembersList/OrgMembersList.tsx`
-- For consistency throughout the codebase, we will prioritize [Named Imports](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/import#named_import) over Default Imports
-- Any sub-components specific to that component will be under the same directory
-  - Example file path for OrgMembersList sub-component: `/components/OrgMembersList/OrgMember.tsx`
-- We will use [Pascal Case](https://en.wiktionary.org/wiki/Pascal_case) for component names and any directories named after components:
-  - Incorrect: `orgMembersList`
-  - Correct: `OrgMembersList`
 
 ## Routes
 

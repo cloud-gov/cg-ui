@@ -2,110 +2,117 @@
 
 This is a prototype for a future Cloud.gov user interface.
 
-The repository is based on a starter template for [Learn Next.js](https://nextjs.org/learn).
+## Getting started with local development
 
-It requires Node version 20 or higher.
+### Step 1: Prepare your environment
 
-## Development
+#### Node
 
-### A note on zscaler
+[Install node 20.x](https://nodejs.org/en/download/) on your machine. Check [`.nvmrc`](.nvmrc) for the app's current version.
 
-If zscaler is active in your environment, you must make Node aware of your zscaler certificate by setting the `NODE_EXTRA_CA_CERTS` variable. This only needs to be done once.
+#### ZScaler
 
-First output the zscaler certificate in pem format:
+If your environment uses ZScaler, you must make Node aware of your ZScaler certificate so you can install packages via npm. If ZScaler is not active in your environment, you may skip this part.
 
-```
-security find-certificate -a -c zscaler -p > zscaler_root_ca.pem
-```
+Output the certificate in pem format. Place the pem in a stable location you can refer to repeatedly.
 
-After exporting that .pem, add `export NODE_EXTRA_CA_CERTS=path/to/zscaler_root_ca.pem` to your .zshrc / .bashrc / whatever. That will fix SSL issues during npm install.
-
-### Prerequisites
-
-To access Cloud Foundry data, you must set the following environment variables:
-
-```
-CF_API_URL=[your Cloud foundry api url, including https:// and /v version]
-CF_API_TOKEN=[your Cloud Foundry oauth token, excluding the "bearer" prefix]
+```bash
+security find-certificate -a -c zscaler -p > [path_to_cert]/zscaler_root_ca.pem
 ```
 
-For CAPI requests to work, the url and token must be compatible. For example, you cannot use a development url and a production token together.
+Edit a file that will execute when you open a new terminal session. For example, `~./zshrc` or `~./bashrc` or similar. Load the pem as a variable that Node will read:
 
-Also note that depending on your user's permissions, you may not be able to access all Cloud Foundry endpoints.
+```bash
+export NODE_EXTRA_CA_CERTS=[path_to_cert]/zscaler_root_ca.pem
+```
 
-For storing local environment variables, create a `.env.local` file in the project root. Do not check this file into source control. For more info, see [NextJS docs: Environment Variables](https://nextjs.org/docs/app/building-your-application/configuring/environment-variables).
+#### Dependencies
 
-### Running locally
-
-In this directory, run this to install dependencies:
+Open a new shell, clone this repository, and install the dependencies:
 
 ```bash
 npm install
 ```
 
-#### Configure your CF API access
-
-Copy `.env.example.local` to `.env.local`. Adjust or fill in values as needed.
-
-To obtain your token, first log into the correct environment in your CLI:
-
-```
-cf login -a [your cf domain] --sso
-```
-
-You can view your token at `cf oauth-token` and manually copy everything after "bearer" into `CF_API_TOKEN`, or you can run a script to do this for you:
-
-```
-./token-refresh.sh
-```
-
-This command will be run automatically when you start your application if you use `npm run dev-cf`.
-
-Note that oauth tokens expire frequently. To obtain a new token, just run `cf oauth-token` again and replace your previous variable value with the new one.
-
-Start the database Docker container:
+Next, [install the Cloud Foundry command line tool](https://docs.cloudfoundry.org/cf-cli/install-go-cli.html). On mac, you can run:
 
 ```bash
-cd cgui-db-docker
-docker-compose build
-docker-compose up
+brew install cloudfoundry/tap/cf-cli@8
 ```
 
-Start the user accounts and authentication (UAA) container. Follow the README in `uaa-docker` if this is the first time you're starting it.
+### Step 2: Log into your Cloud.gov account
+
+Ask a member of the Cloud.gov team to grant your user access to the cloud development environment. You may choose instead to use your regular (production) cloud.gov account, but be aware that __any actions you take in the app, such as deleting spaces or apps, will affect your cloud.gov applications and services.__
+
+Once you have a development account, log into the CF CLI. Follow the prompts to authenticate:
 
 ```bash
-cd uaa-docker
-# follow instructions to build before running up
-docker-compose up
+# log into development
+cf login -a api.dev.us-gov-west-1.aws-us-gov.cloud.gov --sso
+
+# log into production (not recommended)
+cf login -a api.fr.cloud.gov --sso
 ```
 
-Then run the dev server:
+You do not need to target an organization or space.
+
+### Step 3: Configure the application
+
+Copy the example `.env.example.local` file. Do not check `.env.local` into source control.
 
 ```bash
-# to run with a valid cloud foundry token
+cp .env.example.local .env.local
+```
+
+You do not need to change anything about this file for local development unless if you logged into your production cloud.gov account during the previous step.
+
+```bash
+# change this line if you are using production
+CF_API_URL=https://api.fr.cloud.gov/v3
+```
+
+Note: the variable `CF_API_TOKEN` is not yet populated. That's okay! Continue to the next step to set it.
+
+### Step 4: Run the app!
+
+Start the app with the `dev-cf` command:
+
+```bash
 npm run dev-cf
-
-# to run without accessing cloud foundry resources
-npm run dev
 ```
 
-See results at `http://localhost:3000`
+This will fetch your local cloud foundry token from the CF CLI tool and use it to start the app, giving your user permission to access and manipulate cloud foundry resources through the UI.
 
-#### Optionally configure s3 access
+Visit `localhost:3000` to check it out!
 
-This application relies on an s3 bucket to pull information about a user's last access date and their account status (active vs inactive). This bucket is populated by the [uaa-bot](https://github.com/cloud-gov/uaa-bot).
+#### Troubleshooting and dev eccentricities
 
-If you wish to pull this information for local development, you may optionally set up access to ths s3 bucket.
+Due to developing locally against a "real" environment, we have to play by the rules of the CF CLI. This means that our token expires every 15 minutes or so, and we also need to reauthenticate every 24 hours.
 
-Create a new service key for your targeted org and environment:
+If you start getting 401 errors, restart your application to get a new token. If you haven't logged into the CF CLI on a given day, make sure to reauthenticate following Step 2 above.
 
-```
+### Step 5: Optional stretch goals
+
+The above steps are enough to get most people up and running, but our app has more bells and whistles! Consider yourself good to go unless if you plan to do any of the following:
+
+- running the test suite
+- working on the logging in flow
+- developing something related to user access information
+- in need of a database
+
+#### S3 user information
+
+This application relies on an s3 bucket to pull information about a user's last access date and their account status (active vs inactive). This bucket is populated by the [uaa-bot](https://github.com/cloud-gov/uaa-bot) and is only available in the development environment. If access is not hooked up, you will simply see "no user information" in the UI.
+
+Create a new service key for your targeted org and environment. Name the key something descriptive enough that you can identify it again. For example, `cg-ui-storage-key`.
+
+```bash
 cf create-service-key cg-ui-storage [name-of-your-key]
 ```
 
 Pull down the key (this contains sensitive information):
 
-```
+```bash
 cf service-key cg-ui-storage [name-of-your-key]
 ```
 
@@ -122,109 +129,119 @@ You are interested in these parts of the key:
 
 Copy the values into your `.env.local` file for the variables `S3_ACCESS_KEY_ID`, `S3_ACCESS_KEY_SECRET`, `S3_BUCKET`, AND `S3_REGION`.
 
-When you finish doing what you need to do locally, make sure to delete the service key:
+You can keep the key around between development sessions, but you may wish to rotate it or delete it when you are no longer using it:
 
-```
+```bash
 cf delete-service-key cg-ui-storage [name-of-your-key]
 ```
 
-### Testing
+#### The database
 
-Start your docker database container. You will need this running for tests which manipulate the database:
+Follow the steps in the [cgui-db-docker README](cgui-db-docker/README.md) to set up a postgres db in docker. This database is only a proof-of-concept for our application at the moment, but is needed if you will be running the full test suite.
 
-```
+Start the container (note, the command may be `docker-compose` on older installs):
+
+```bash
 cd cgui-db-docker
-docker-compose up
+docker compose build
+docker compose up
+```
+
+#### Local user accounts and authentication (UAA)
+
+Our local version of the app uses a CF token to access the CF API. However, the deployed version of the application authenticates with the CF User Accounts and Authentication (UAA) service. We have a local version of UAA available if you wish to test or develop around the user experience of logging in.
+
+See the [uaa-docker README](uaa-docker/README.md) for set up instructions.
+
+Start the container:
+
+```bash
+cd uaa-docker
+# follow instructions to build before running up
+docker compose up
+```
+
+In order to try out UAA, you will need to comment out your CF_API_TOKEN and then use credentials found in the `uaa-docker/uaa.yml` file.
+
+
+### Step 6: Testing
+
+To run the entire test suite, you will need to start the docker database container:
+
+```bash
+cd cgui-db-docker
+docker compose up
 ```
 
 To run the entire test suite:
 
-```
+```bash
 npm test
 ```
 
 To run test files matching certain text (one example):
 
-```
+```bash
 npm test -- serverside
 ```
 
-### Linting
+### Step 7: Committing
 
-To run eslint and prettier:
+#### Preparing your code
 
-```
+We have several utilities for linting and prettifying code which you may run manually:
+
+```bash
 npm run lint
+
+npm run format
+# to alter files automatically
+npm run format:fix
 ```
 
-Eslint configurations are found in [.eslintrc.json](./.eslintrc.json).
+You may also wish to test that the next application is building before you commit and push:
 
-Prettier configurations are found in [.prettierrc.json](./.prettierrc.json).
+```bash
+npm run build
+```
 
-### Authentication (development)
+Eslint configurations are found in [.eslintrc.json](.eslintrc.json).
 
-Authentication functionality relies on the app talking to a UAA server. See the [README](../../uaa-docker/README.md) in the `uaa-docker` directory for instructions on how to run this server locally with Docker.
+Prettier configurations are found in [.prettierrc.json](.prettierrc.json).
 
-Authentication also relies on certain environment variables. Locally, these will be set in your `.env.local` file. Examples can be found in [.env.test](./.env.test), or talk to a team member to obtain them.
+#### Signing your commits
 
-Authentication business logic is found in NextJS [middleware](./middleware.js).
+Cloud.gov requires any commits to this repo to be signed with a GPG key. [You will need to set up commit signing before the first time you contribute](https://docs.google.com/document/d/11UDxvfkhncyLEs-NUCniw2u54j4uQBqsR2SBiLYPUZc/edit) :closed_lock_with_key:.
 
-## Working with USWDS
+## Step 8: Deploying
 
-In order to control when we upgrade USWDS, the `@uswds/uswds` npm package has been installed using the `--save-exact` flag.
+This application is deployed to the cloud.gov development environment automatically when changes are merged into the main branch. Deployment is managed via Concourse CI (see the `ci` directory).
 
-### SASS
+See the developer documentation for instructions to [manually deploy the application](docs/dev-practices/manual-deploy.md).
 
-By default, NextJS has a way of compiling SASS, as well as Autoprefixer. This eliminates the need to use tools like uswds-compile or Gulp.
+## Team practices
 
-SASS compilation configs can be found in [next.config.js](./next.config.js)
-
-The global SASS entrypoint is [assets/stylesheets/styles.scss](./assets/stylesheets/styles.scss). USWDS theme settings are configured at the top of that file.
+### Working with USWDS
 
 Our team keeps custom CSS/SASS to a minimum and takes a [utilities-first](https://designsystem.digital.gov/utilities/) approach.
 
-When adding styles, work through this order:
+Please see our [developer guidelines](docs/dev-practices/USWDS.md) about this approach, how USWDS is integrated into our application, and steps to take when upgrading.
 
-1. Can [USWDS utilities](https://designsystem.digital.gov/utilities/) be used?
-1. If not, can [USWDS Design Tokens](https://designsystem.digital.gov/design-tokens/) be used?
-1. If not, then add custom CSS/SASS
+### File conventions
 
-### Images
+We prioritize named imports, TypeScript, and Pascal Case component names throughout our application. Read more about our [file conventions](docs/dev-practices/file-conventions.md).
 
-Nextjs has a top-level [public folder](https://nextjs.org/docs/app/building-your-application/optimizing/static-assets) where static assets can be stored. Assets stored here can be used as `src` urls by removing the `/public` prefix.
+### Application structure
 
-#### Examples:
+Next.js has few opinions about how to structure applications. We have chosen to use an MVC (Model View Controller)-like pattern. 
 
-```
-// Folder: /public/img/uswds/icon.png
+See our [architecture](docs/dev-practices/architecture.md) documentation for information about each of the layers and how we are using them.
 
-<img src="/img/uswds/icon.png" />
+### Architectural decision records and explainers
 
-// Folder: /public/js/uswds/uswds.min.js
+We keep Architectural Decision Records (ADRs) to explain decisions we have made and alternatives we considered. You may find them in the [adrs](docs/adr/README.md) directory.
 
-<Script src="/js/uswds/uswds.min.js" />
-```
-
-After a USWDS npm package update, copy the following files from `node_modules/@uswds/uswds/dist/` to `/public`:
-
-```
-/public
-  /img
-    /uswds
-      - [any images from uswds that you need]
-```
-
-For ease of updating, use the same file names. (This process could be converted to a script down the road.)
-
-### JavaScript
-
-Because interactivity will be handled through React, USWDS JavaScript will not be used.
-
-## Deployment
-
-This application is deployed to the cloud.gov development environment using a concourse pipeline (see the `ci` directory), and is registered as a client for the CF UAA authentication service.
-
-As you will not have access to any Cloud Foundry functionality without UAA authentication, we recommend you contact the cloud.gov team to request an additional deployment pipeline be set up for you, rather than using a manual process to deploy.
+When we come across concepts that are initially confusing or required significant time to understand, we have created [explainers](docs/explainers/README.md) to capture our newly acquired knowledge.
 
 ## Updating dependencies
 
@@ -232,12 +249,11 @@ As you will not have access to any Cloud Foundry functionality without UAA authe
 
 The Node version should be updated in the following places:
 
-1. [.nvmrc](./.nvmrc) which controls the version for cloud builds
-1. [Github workflow containers](./.github/workflows/pull-request.yml) `NODE_VERSION` which controls the version in Github action containers
-1. [package.json](./package.json) under `engines` to specify which version(s) our app works with
-1. [Concourse docker-compose](./ci/docker/docker-compose.yml) and [pipeline](./ci/pipeline.yml)
+1. [.nvmrc](.nvmrc) which controls the version for cloud builds
+1. [Github workflow containers](.github/workflows/pull-request.yml) `NODE_VERSION` which controls the version in Github action containers
+1. [package.json](package.json) under `engines` to specify which version(s) our app works with
+1. [Concourse docker-compose](ci/docker/docker-compose.yml) and [pipeline](ci/pipeline.yml)
 
-## Further reading
+### Updating USWDS
 
-- [More developer documentation](./docs/for-developers.md)
-- [Architecture decision records](./docs/adr)
+See the [USWDS](docs/dev-practices/USWDS.md) documentation for more information about how to update USWDS and its assets.

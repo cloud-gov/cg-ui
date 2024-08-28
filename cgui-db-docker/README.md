@@ -8,16 +8,16 @@ Make sure that docker is installed and running.
 
 Navigate to the `cgui-db-docker` subdirectory.
 
-Build the postgresql image. You may skip this step if you have already done this before.
+Build the postgresql image. You may skip this step if you have already done this before. Note, the command may be `docker-compose` for older versions.
 
 ```bash
-docker-compose build
+docker compose build
 ```
 
 Now create or relaunch the containers.
 
 ```bash
-docker-compose up
+docker compose up
 ```
 
 Your database will be available on
@@ -27,7 +27,7 @@ postgresql://postgres:password@localhost:5434/cgui-test
 ```
 ## Interacting with your DB via CLI
 
-Make sure your database is running with `docker-compose up`. Then double check the name of your container:
+Make sure your database is running with `docker compose up`. Then double check the name of your container:
 
 ```bash
 docker ps

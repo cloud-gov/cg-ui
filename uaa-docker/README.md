@@ -23,10 +23,10 @@ Disable zscaler. It will only need to be off for a few minutes.
 sudo launchctl unload /Library/LaunchDaemons/com.zscaler.service.plist /Library/LaunchDaemons/com.zscaler.tunnel.plist
 ```
 
-Navigate to the `uaa-docker` subdirectory and build the images. Zscaler to be disabled while `Dockerfile-uaa` runs `wget` commands to obtain Tomcat and UAA.
+Navigate to the `uaa-docker` subdirectory and build the images. Zscaler to be disabled while `Dockerfile-uaa` runs `wget` commands to obtain Tomcat and UAA. Note, the command may be `docker-compose` for older versions.
 
 ```bash
-docker-compose build
+docker compose build
 ```
 
 You may now reenable Zscaler.
@@ -38,7 +38,7 @@ sudo launchctl load /Library/LaunchDaemons/com.zscaler.service.plist /Library/La
 ### Use UAA with an application
 
 ```bash
-docker-compose up
+docker compose up
 ```
 
 Give it just a minute, then check `localhost:9001` for your brand new UAA server.
@@ -62,10 +62,10 @@ Some endpoints that might be useful (see the UAA documentation for more informat
 When you're done, you can stop the containers with ctrl + C and remove them with:
 
 ```bash
-docker-compose down
+docker compose down
 ```
 
-Simply run `docker-compose up` when you'd like to restart UAA.
+Simply run `docker compose up` when you'd like to restart UAA.
 
 ### Changing the UAA server configuration
 
@@ -76,7 +76,7 @@ docker rmi uaa-docker-uaa
 docker rmi uaa-docker-db
 ```
 
-Once the images are removed, use `docker-compose build` and `docker-compose up` to restart the UAA server.
+Once the images are removed, use `docker compose build` and `docker compose up` to restart the UAA server.
 
 ## Debugging
 
