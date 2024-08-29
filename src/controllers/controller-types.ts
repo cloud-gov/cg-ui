@@ -89,5 +89,5 @@ export interface UserOrgPage extends UserObj {
   orgRolesCount: number;
   spaceRolesCount: number;
   daysToExpiration: number | null;
-  lastLogonTime: number | null;
+  lastLogonTime: number | null | undefined;
 }
