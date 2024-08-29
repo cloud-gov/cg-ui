@@ -115,6 +115,7 @@ export function UsersList({
   // Helpers
   const currentUsers = usersSorted(usersFiltered(users));
   const usersResultsText = currentUsers.length === 1 ? 'user' : 'users';
+  const spacesCount = Object.keys(spaces).length;
 
   return (
     <>
@@ -216,7 +217,7 @@ export function UsersList({
                 <UsersListSpaceRoles
                   href={`/orgs/${orgGuid}/users/${user.guid}`}
                   spaceRolesCount={user.spaceRolesCount}
-                  spacesCount={Object.keys(spaces).length}
+                  spacesCount={spacesCount}
                 />
               </TableCell>
 
