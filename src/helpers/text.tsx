@@ -21,3 +21,7 @@ export function emailIsValid(text: string): boolean {
   );
   return rgx.test(text);
 }
+
+export function pluralize(text: string, count: number): string {
+  return `${text}${count != 1 && count != -1 ? 's' : ''}`;
+}

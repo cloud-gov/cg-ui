@@ -2,6 +2,7 @@
 
 import React from 'react';
 import Link from 'next/link';
+import { pluralize } from '@/helpers/text';
 
 export function UsersListOrgRoles({
   orgRolesCount,
@@ -22,7 +23,7 @@ export function UsersListOrgRoles({
   }
   return (
     <Link href={href} className="usa-button--unstyled">
-      {`${orgRolesCount} role${orgRolesCount != 1 ? 's' : ''}`}
+      {`${orgRolesCount} ${pluralize('role', orgRolesCount)}`}
     </Link>
   );
 }

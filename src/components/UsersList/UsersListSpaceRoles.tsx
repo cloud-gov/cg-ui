@@ -1,6 +1,7 @@
 'use client';
 
 import Link from 'next/link';
+import { pluralize } from '@/helpers/text';
 
 export function UsersListSpaceRoles({
   spacesCount,
@@ -23,7 +24,7 @@ export function UsersListSpaceRoles({
   }
   return (
     <Link href={href} className="usa-button--unstyled">
-      {`${spaceRolesCount} of ${spacesCount} space${spacesCount != 1 ? 's' : ''}`}
+      {`${spaceRolesCount} of ${spacesCount} ${pluralize('space', spacesCount)}`}
     </Link>
   );
 }
