@@ -2,13 +2,14 @@
 
 import Link from 'next/link';
 import { formatDate } from '@/helpers/dates';
+import { UserOrgPage } from '@/controllers/controller-types';
 
 export function UserAccountLastLogin({
   hrefInvite = process.env.NEXT_PUBLIC_USER_INVITE_URL || '/',
   lastLogonTime,
 }: {
   hrefInvite?: string;
-  lastLogonTime: number | null | undefined;
+  lastLogonTime: UserOrgPage['lastLogonTime'];
 }) {
   if (lastLogonTime === undefined) {
     return <>Not available</>;
