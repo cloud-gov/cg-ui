@@ -166,14 +166,14 @@ In order to try out UAA, you will need to comment out your CF_API_TOKEN and then
 
 ### Step 6: Testing
 
-To run the entire test suite, you will need to start the docker database container:
+To run the entire unit test suite, you will need to start the docker database container:
 
 ```bash
 cd cgui-db-docker
 docker compose up
 ```
 
-To run the entire test suite:
+Run the suite:
 
 ```bash
 npm test
@@ -183,6 +183,20 @@ To run test files matching certain text (one example):
 
 ```bash
 npm test -- serverside
+```
+
+#### Integration testing
+
+We have one test that runs against the s3 bucket to test that updates to the AWS libraries have not broken the connection. This test runs locally and is not part of the CI pipeline. To run this test, set up a local-only test environment file. This file should not be tracked in version control:
+
+```bash
+cp .env.test.example.local .env.test.local
+```
+
+Then, if you have not already, set up a [s3 service key](#s3-user-information). Copy the values into `.env.test.local`.  To run the test:
+
+```bash
+npm run test:integration
 ```
 
 ### Step 7: Committing
