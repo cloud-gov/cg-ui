@@ -4,6 +4,7 @@ import {
   ServiceCredentialBindingObj,
   UserObj,
 } from '@/api/cf/cloudfoundry-types';
+import { ServiceTag } from '@/components/ServiceTag';
 
 export function Username({
   user,
@@ -13,7 +14,12 @@ export function Username({
   serviceAccount?: ServiceCredentialBindingObj | undefined;
 }) {
   if (serviceAccount) {
-    return <>{serviceAccount.name} [service account]</>;
+    return (
+      <>
+        {serviceAccount.name}{' '}
+        <ServiceTag className="margin-left-1 margin-right-0" />
+      </>
+    );
   } else {
     return <>{user.username ? user.username : 'Unnamed user'}</>;
   }

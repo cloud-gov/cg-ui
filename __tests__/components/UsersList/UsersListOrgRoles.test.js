@@ -6,22 +6,23 @@ import { render, screen } from '@testing-library/react';
 import { UsersListOrgRoles } from '@/components/UsersList/UsersListOrgRoles';
 
 describe('UsersListOrgRoles', () => {
-  it('lists all given org roles', () => {
+  it('lists the number of active org roles for the user', () => {
     // setup
-    const mockRoles = [
-      { guid: 'guid1', role: 'organization_user' },
-      { guid: 'guid2', role: 'billing_manager' },
-      { guid: 'guid3', role: 'organization_auditor' },
-    ];
+    const mockRolesCount = 3;
     // act
-    render(<UsersListOrgRoles orgRoles={mockRoles} />);
+    render(<UsersListOrgRoles orgRolesCount={mockRolesCount} href="foo" />);
     // query
-    const billingManagerText = screen.getByText('billing manager');
-    const auditorText = screen.getByText('org auditor');
-    const userText = screen.queryByText('org user');
+    const rolesText = screen.getByText(/3 roles/);
     // expect
-    expect(billingManagerText).toBeInTheDocument();
-    expect(auditorText).toBeInTheDocument();
-    expect(userText).toBeInTheDocument();
+    expect(rolesText).toBeInTheDocument();
+  });
+
+  it('shows correct empty text when no active roles', () => {
+    // setup
+    render(<UsersListOrgRoles orgRolesCount={0} href="foo" />);
+    // query
+    const rolesText = screen.getByText(/None yet/);
+    // expect
+    expect(rolesText).toBeInTheDocument();
   });
 });

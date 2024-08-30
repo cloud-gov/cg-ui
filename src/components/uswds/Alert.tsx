@@ -50,7 +50,8 @@ export function Alert({
           (validation ? (
             children
           ) : (
-            <p className="usa-alert__text">{children}</p>
+            // extra padding-left is needed here due to a bug with the $theme-site-margins-width setting
+            <p className="usa-alert__text padding-left-2">{children}</p>
           ))}
       </div>
     </div>

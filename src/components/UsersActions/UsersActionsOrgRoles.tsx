@@ -156,10 +156,10 @@ export function UsersActionsOrgRoles({
       )}
       <form onSubmit={onSubmit} name="edit-org-roles-form">
         <fieldset className="usa-fieldset">
-          <legend className="usa-legend">
+          <legend className="usa-legend margin-bottom-2">
             <strong>Select org roles</strong>
           </legend>
-          <div className="margin-3">
+          <div className="padding-3 bg-white">
             {Object.values(roles).map((role, i) => (
               <div
                 key={`UsersActionsOrgRoles-checkbox-${i}`}
@@ -178,7 +178,7 @@ export function UsersActionsOrgRoles({
               </div>
             ))}
           </div>
-          <div className="padding-top-3 border-top-1px">
+          <div className="padding-top-3">
             {onCancelPath && (
               <Link
                 href={onCancelPath}

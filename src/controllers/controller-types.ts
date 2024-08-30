@@ -1,4 +1,4 @@
-import { RoleType, SpaceObj } from '@/api/cf/cloudfoundry-types';
+import { RoleType, SpaceObj, UserObj } from '@/api/cf/cloudfoundry-types';
 
 export interface AddOrgRoleArgs {
   orgGuid: string;
@@ -83,4 +83,11 @@ export interface UserLogonInfoDisplay {
 export interface UserMessage {
   success?: string;
   fail?: string;
+}
+
+export interface UserOrgPage extends UserObj {
+  orgRolesCount: number;
+  spaceRolesCount: number;
+  daysToExpiration: number | null;
+  lastLogonTime: number | null | undefined;
 }

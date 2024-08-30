@@ -3,6 +3,7 @@ import {
   camelToSnakeCase,
   emailIsValid,
   underscoreToText,
+  pluralize,
 } from '@/helpers/text';
 
 describe('text helpers', () => {
@@ -32,6 +33,18 @@ describe('text helpers', () => {
       const result = underscoreToText(input);
 
       expect(result).toEqual('foo bar baz');
+    });
+  });
+
+  describe('pluralize', () => {
+    it('adds an s when plural or 0', () => {
+      expect(pluralize('role', 2)).toBe('roles');
+      expect(pluralize('role', -2)).toBe('roles');
+      expect(pluralize('role', 0)).toBe('roles');
+    });
+    it('keeps s off when not plural', () => {
+      expect(pluralize('role', 1)).toBe('role');
+      expect(pluralize('role', -1)).toBe('role');
     });
   });
 });

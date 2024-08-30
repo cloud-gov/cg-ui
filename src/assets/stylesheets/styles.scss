@@ -16,15 +16,15 @@
   $theme-color-base-ink: 'gray-warm-90',
 
   // Primary colors
-  $theme-color-primary-family: 'blue-warm',
+  $theme-color-primary-family: 'blue',
   $theme-color-primary-lightest: false,
-  $theme-color-primary-lighter: 'blue-warm-10',
-  $theme-color-primary-light: 'blue-warm-40v',
-  $theme-color-primary: 'blue-warm-50v',
-  $theme-color-primary-vivid: 'blue-warm-50v',
-  $theme-color-primary-dark: 'blue-warm-60',
-  $theme-color-primary-darker: 'blue-warm-70v',
-  $theme-color-primary-darkest: 'blue-warm-80v',
+  $theme-color-primary-lighter: 'blue-10',
+  $theme-color-primary-light: 'blue-40',
+  $theme-color-primary: 'blue-60',
+  $theme-color-primary-vivid: 'blue-50v',
+  $theme-color-primary-dark: 'blue-70',
+  $theme-color-primary-darker: 'blue-80',
+  $theme-color-primary-darkest: 'blue-90',
 
   // Secondary colors
   $theme-color-secondary-family: 'red',
@@ -74,14 +74,6 @@
   // typography
   $theme-font-role-heading: 'sans',
 
-  // header size
-  $theme-h1-font-size: '3xl',
-  $theme-h2-font-size: '2xl',
-  $theme-h3-font-size: 'xl',
-  $theme-h4-font-size: 'lg',
-  $theme-h5-font-size: 'sm',
-  $theme-h6-font-size: 'xs',
-
   // sizing
   $theme-site-margins-width: 2,
 
@@ -100,7 +92,11 @@
   // utilities settings
   $text-align-settings: (
     responsive: true
-  )
+  ),
+
+  $background-color-palettes: (
+    'palette-color-system-mint-medium' // no trailing comma
+  ),
 );
 
 // 2. Load USWDS source code
@@ -127,13 +123,6 @@
 }
 
 /* Custom selector styles */
-
-.text-ellipsis {
-  // This overflow and whitespace are needed for ellipsis to work
-  overflow: hidden;
-  white-space: nowrap;
-  text-overflow: ellipsis;
-}
 
 // NavGlobal
 #nav-global {

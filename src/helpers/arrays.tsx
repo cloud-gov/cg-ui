@@ -8,8 +8,9 @@ export function sortObjectsByParam(
     if (a[param] === b[param]) return 0;
 
     // emptys sort after anything else
-    if (!a[param]) return 1;
-    if (!b[param]) return -1;
+    // (but still treat the number 0 as sortable)
+    if (!a[param] && a[param] != 0) return 1;
+    if (!b[param] && b[param] != 0) return -1;
 
     if (order === 'desc') {
       return a[param] < b[param] ? 1 : -1;

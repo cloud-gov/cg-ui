@@ -1,3 +1,5 @@
+'use client';
+
 import { Button } from '@/components/uswds/Button';
 import Link from 'next/link';
 import classnames from 'classnames';
@@ -55,7 +57,7 @@ export default function TablePage() {
         <TableBody>
           {mockUsers.map((user, index) => (
             <TableRow key={`table-row-${index}`}>
-              <TableCell colName="account name" rowheader={true} sort={true}>
+              <TableCell colName="account name" rowheader={true}>
                 <div className="display-flex flex-justify">
                   <span className="mobile-lg:text-bold maxw-card-lg text-ellipsis">
                     {user.email}
@@ -107,31 +109,35 @@ export default function TablePage() {
             role="columnheader"
             className="grid-col grid-col-3 display-flex flex-align-center padding-x-2 padding-y-1 font-sans-3xs text-uppercase"
           >
-            account name <SortButton colName="account name" />
+            account name{' '}
+            <SortButton colName="account name" onSortClick={() => {}} />
           </div>
           <div
             role="columnheader"
             className="grid-col grid-col-2 display-flex flex-align-center padding-x-2 padding-y-1 font-sans-3xs text-uppercase"
           >
-            organization roles <SortButton colName="organization roles" />
+            organization roles{' '}
+            <SortButton colName="organization roles" onSortClick={() => {}} />
           </div>
           <div
             role="columnheader"
             className="grid-col grid-col-2 display-flex flex-align-center padding-x-2 padding-y-1 font-sans-3xs text-uppercase"
           >
-            access permissions <SortButton colName="access permissions" />
+            access permissions{' '}
+            <SortButton colName="access permissions" onSortClick={() => {}} />
           </div>
           <div
             role="columnheader"
             className="grid-col grid-col-1 display-flex flex-align-center padding-x-2 padding-y-1 font-sans-3xs text-uppercase"
           >
-            expires <SortButton colName="expires" />
+            expires <SortButton colName="expires" onSortClick={() => {}} />
           </div>
           <div
             role="columnheader"
             className="grid-col grid-col-2 display-flex flex-align-center padding-x-2 padding-y-1 font-sans-3xs text-uppercase"
           >
-            last login <SortButton colName="last login" />
+            last login{' '}
+            <SortButton colName="last login" onSortClick={() => {}} />
           </div>
         </div>
         {mockUsers.map((u, i) => (

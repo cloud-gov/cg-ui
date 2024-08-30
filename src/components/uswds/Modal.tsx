@@ -23,7 +23,9 @@ export function Modal({
   useEffect(() => {
     if (!modalRef) return;
     const modalElement = modalRef.current;
-    if (!modalElement) return;
+    if (!modalElement) return; // modal is closed
+    // Form here on, modal is open
+    const lastFocusedElement = document.activeElement as HTMLElement;
 
     const focusableElements = (modalElement as HTMLElement).querySelectorAll(
       'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
@@ -56,6 +58,8 @@ export function Modal({
       // remove event listeners when component is unmounted
       window.removeEventListener('keydown', handleTabKeyPress);
       window.removeEventListener('keydown', handleEscapeKeyPress);
+      // return focus to last focused element before modal was opened
+      lastFocusedElement?.focus();
     };
   }, [close, modalRef]);
 
@@ -68,7 +72,7 @@ export function Modal({
           aria-labelledby={headingId}
           aria-describedby={descriptionId || ''}
         >
-          <div className="usa-modal__content">
+          <div className="usa-modal__content text-pre-wrap">
             <div className="usa-modal__main">{children}</div>
             <button
               type="button"

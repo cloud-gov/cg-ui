@@ -21,15 +21,15 @@ export function ListSearchInput({
   };
   return (
     <div className="margin-bottom-2">
+      <label className="text-bold" htmlFor="list-search-field">
+        {labelText || btnText}
+      </label>
       <form
         name="list-search-form"
-        className="usa-search usa-search--small"
+        className="usa-search usa-search--small margin-top-1"
         role="search"
         onSubmit={action}
       >
-        <label className="usa-sr-only" htmlFor="list-search-field">
-          {labelText || btnText}
-        </label>
         <TextInput type="search" id="list-search-field" />
         <Button type="submit">{btnText}</Button>
       </form>

@@ -151,6 +151,7 @@ describe('controllers tests', () => {
         const result = await getOrgPage(orgGuid);
         const firstUserRoles =
           result.payload.roles['73193f8c-e03b-43c8-aeee-8670908899d2'];
+        const firstUser = result.payload.users[0];
 
         // assert
         expect(result).toHaveProperty('meta');
@@ -194,7 +195,14 @@ describe('controllers tests', () => {
         expect(
           result.payload.userLogonInfo['some-user-guid-that-is-not-part-of-org']
         ).not.toBeDefined();
+
+        // rollup numbers
+        expect(firstUser.orgRolesCount).toEqual(1);
+        expect(firstUser.spaceRolesCount).toEqual(1);
+        expect(firstUser.daysToExpiration).toBeLessThan(0);
+        expect(firstUser.lastLogonTime).toEqual(1111);
       });
+
       it('returns service credential binding information for non human users', async () => {
         // setup
         const orgGuid = 'orgGuidSucceeded';
@@ -521,11 +529,7 @@ describe('controllers tests', () => {
       // act/assert
       expect(async () => {
         await getEditOrgRoles(orgGuid, userGuid);
-      }).rejects.toThrow(
-        new Error(
-          'Something went wrong with loading the form. Please try again later.'
-        )
-      );
+      }).rejects.toThrow(new Error('something went wrong with the request'));
     });
   });
 });

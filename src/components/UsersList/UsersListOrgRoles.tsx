@@ -2,50 +2,28 @@
 
 import React from 'react';
 import Link from 'next/link';
-import { formatOrgRoleName } from '@/helpers/text';
-import { sortObjectsByParam } from '@/helpers/arrays';
-import { RolesByUserRole } from '@/controllers/controller-types';
-
-function OrgRoleName({ children }: { children: React.ReactNode }) {
-  return <div className="padding-top-1 text-capitalize">{children}</div>;
-}
-
-function RoleNamesList({ orgRoles }: { orgRoles: Array<RolesByUserRole> }) {
-  return sortObjectsByParam(orgRoles, 'role').map((role, i) => {
-    return (
-      <OrgRoleName key={`UsersListOrgRoles-roles-${i}`}>
-        {formatOrgRoleName(role.role)}
-      </OrgRoleName>
-    );
-  });
-}
+import { pluralize } from '@/helpers/text';
 
 export function UsersListOrgRoles({
-  orgRoles,
-  orgGuid,
-  userGuid,
+  orgRolesCount,
+  href,
 }: {
-  orgRoles: Array<RolesByUserRole>;
-  orgGuid: string;
-  userGuid: string;
+  orgRolesCount: number;
+  href: string;
 }) {
+  if (orgRolesCount <= 0) {
+    return (
+      <>
+        None yet —{' '}
+        <Link href={href} className="usa-button--unstyled text-bold">
+          edit roles
+        </Link>
+      </>
+    );
+  }
   return (
-    <div className="margin-bottom-2 tablet:margin-bottom-0 tablet:margin-right-2 tablet:border-right tablet:border-base-light height-full">
-      <div className="display-flex flex-align-center padding-bottom-1">
-        <h4 className="margin-0 padding-right-1 font-body-2xs text-semibold text-base">
-          Org roles
-        </h4>
-        <span>
-          <Link
-            href={`/orgs/${orgGuid}/users/${userGuid}/org-roles`}
-            className="usa-button usa-button--unstyled font-body-2xs"
-            aria-label="Edit organization roles for this user"
-          >
-            Edit
-          </Link>
-        </span>
-      </div>
-      <RoleNamesList orgRoles={orgRoles} />
-    </div>
+    <Link href={href} className="usa-button--unstyled">
+      {`${orgRolesCount} ${pluralize('role', orgRolesCount)}`}
+    </Link>
   );
 }

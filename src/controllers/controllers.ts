@@ -10,7 +10,7 @@ import {
   SpaceObj,
   UserObj,
 } from '@/api/cf/cloudfoundry-types';
-import { ControllerResult } from './controller-types';
+import { ControllerResult, UserOrgPage } from './controller-types';
 import {
   associateUsersWithRoles,
   defaultSpaceRoles,
@@ -19,8 +19,10 @@ import {
   logDevError,
   pollForJobCompletion,
   resourceKeyedById,
+  apiErrorMessage,
 } from './controller-helpers';
 import { sortObjectsByParam } from '@/helpers/arrays';
+import { daysToExpiration } from '@/helpers/dates';
 import { getUserLogonInfo } from '@/api/aws/s3';
 
 /* ------------------- */
@@ -39,9 +41,7 @@ export async function getEditOrgRoles(
     logDevError(
       `api error on cf edit org page with http code ${response.status} for url: ${response.url}`
     );
-    throw new Error(
-      'Something went wrong with loading the form. Please try again later.'
-    );
+    throw new Error(apiErrorMessage(response.status));
   }
   return {
     meta: { status: 'success' },
@@ -102,12 +102,12 @@ export async function getOrgPage(orgGuid: string): Promise<ControllerResult> {
       logDevError(
         `api error on cf org page with http code ${res.status} for url: ${res.url}`
       );
-      throw new Error('something went wrong with the request');
+      throw new Error(apiErrorMessage(res.status));
     }
   });
 
   const orgUserRolesPayload = await orgUserRolesRes.json();
-  const users = orgUserRolesPayload.included.users;
+  let users = orgUserRolesPayload.included.users;
   const userGuids = [] as Array<string>;
   const suspectedNonHumans = [] as Array<string>;
   users.forEach(function (user: UserObj) {
@@ -141,7 +141,7 @@ export async function getOrgPage(orgGuid: string): Promise<ControllerResult> {
       logDevError(
         `api error on cf org page with http code ${res.status} for url: ${res.url}`
       );
-      throw new Error('something went wrong with the request');
+      throw new Error(apiErrorMessage(res.status));
     }
   });
 
@@ -156,6 +156,20 @@ export async function getOrgPage(orgGuid: string): Promise<ControllerResult> {
     const svcCreds = (await svcCredsRes.json()).resources;
     svcAccounts = resourceKeyedById(svcCreds);
   }
+
+  // collect rollup numbers for table sorting
+  users = users.map((user: UserObj) => ({
+    ...user,
+    orgRolesCount: rolesByUser[user.guid]?.org?.length || 0,
+    spaceRolesCount: Object.keys(rolesByUser[user.guid]?.space)?.length || 0,
+    daysToExpiration:
+      userLogonInfo && userLogonInfo[user.guid]
+        ? daysToExpiration(userLogonInfo[user.guid].lastLogonTime || 0)
+        : null,
+    lastLogonTime: userLogonInfo
+      ? userLogonInfo[user.guid]?.lastLogonTime
+      : undefined,
+  })) as UserOrgPage;
 
   return {
     meta: { status: 'success' },
@@ -179,7 +193,7 @@ export async function getOrgAppsPage(
   });
   if (!appsRes.ok) {
     logDevError(`unable to retrieve org apps information: ${appsRes.status}`);
-    throw new Error('something went wrong with the request');
+    throw new Error(apiErrorMessage(appsRes.status));
   }
   const appsJson = await appsRes.json();
   const spaces = resourceKeyedById(appsJson.included.spaces);
@@ -206,7 +220,7 @@ export async function getOrgUsagePage(
       logDevError(
         `api error on cf org usage page with http code ${res.status} for url: ${res.url}`
       );
-      throw new Error('something went wrong with the request');
+      throw new Error(apiErrorMessage(res.status));
     }
   });
 
@@ -226,7 +240,9 @@ export async function getOrgUsagePage(
     logDevError(
       `api error on cf org usage page with http code ${svcPlansRes.status} for url: ${svcPlansRes.url}`
     );
-    throw new Error('could not retrieve service plans');
+    throw new Error(
+      apiErrorMessage(svcPlansRes.status, 'could not retrieve service plans')
+    );
   }
   const svcPlans = await svcPlansRes.json();
   const svcPlansById = resourceKeyedById(svcPlans.resources);
@@ -248,7 +264,7 @@ export async function getUser(userGuid: string): Promise<ControllerResult> {
   const userRes = await CF.getUser(userGuid);
   if (!userRes.ok) {
     logDevError(`unable to retrieve user information: ${userRes.status}`);
-    throw new Error('something went wrong with the request');
+    throw new Error(apiErrorMessage(userRes.status));
   }
 
   const userObj = (await userRes.json()) as UserObj;
@@ -289,7 +305,7 @@ export async function getOrgUserSpacesPage(
     logDevError(
       `api error on cf org page with http code ${spacesRes.status} for url: ${spacesRes.url}`
     );
-    throw new Error('something went wrong with the request');
+    throw new Error(apiErrorMessage(spacesRes.status));
   }
   const spacesPayload = (await spacesRes.json()).resources;
   const spaceGuids = spacesPayload.map(function (space: SpaceObj) {
@@ -305,7 +321,7 @@ export async function getOrgUserSpacesPage(
     logDevError(
       `api error on cf org page with http code ${userRolesRes.status} for url: ${userRolesRes.url}`
     );
-    throw new Error('something went wrong with the request');
+    throw new Error(apiErrorMessage(userRolesRes.status));
   }
 
   const userRolesPayload = await userRolesRes.json();
@@ -367,7 +383,10 @@ export async function removeUserFromOrg(
     orgRoleResponses.map((response) => {
       if (!response.ok) {
         throw new Error(
-          'Unable to remove user from org role. Please try again'
+          apiErrorMessage(
+            response.status,
+            'Unable to remove user from org role. Please try again'
+          )
         );
       }
     });

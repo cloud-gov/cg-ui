@@ -1,10 +1,12 @@
+export const expirationWindowDays = 90;
+
 export function addDays(date: Date, days: number): Date {
   return new Date(date.setDate(date.getDate() + days));
 }
 
 export function isDateExpired(
   timestamp: number,
-  daysToExpiry: number
+  daysToExpiry: number = expirationWindowDays
 ): boolean {
   const timestampDate = new Date(timestamp);
   const expirationDate = addDays(timestampDate, daysToExpiry);
@@ -15,7 +17,7 @@ export function isDateExpired(
 
 export function daysToExpiration(
   timestamp: number,
-  daysToExpiry: number
+  daysToExpiry: number = expirationWindowDays
 ): number {
   const timestampDate = new Date(timestamp);
   const futureDate = timestampDate.setDate(

@@ -43,7 +43,7 @@ describe('UsersActionsRemoveFromOrg', () => {
   it('shows modal when remove button is clicked', () => {
     // act
     render(<UsersActionsRemoveFromOrg user={user} />);
-    const button = screen.getByText('Remove from org');
+    const button = screen.getByText(/Remove/);
     fireEvent.click(button);
     // expect
     const content = screen.getByText(/Are you sure you want to remove/i);
@@ -55,10 +55,10 @@ describe('UsersActionsRemoveFromOrg', () => {
       // render component
       render(<UsersActionsRemoveFromOrg user={user} />);
       // open modal
-      const openButton = screen.getByText('Remove from org');
+      const openButton = screen.getByText(/Remove/);
       fireEvent.click(openButton);
       // act
-      const cancelButton = screen.getByText('Cancel');
+      const cancelButton = screen.getByText('Go back');
       fireEvent.click(cancelButton);
       // expect
       const content = screen.queryByText(/Are you sure you want to remove/i);
@@ -69,7 +69,7 @@ describe('UsersActionsRemoveFromOrg', () => {
       // render component
       render(<UsersActionsRemoveFromOrg user={user} />);
       // open modal
-      const openButton = screen.getByText('Remove from org');
+      const openButton = screen.getByText(/Remove/);
       fireEvent.click(openButton);
       // act
       const closeButton = screen.getByLabelText('Close this window');

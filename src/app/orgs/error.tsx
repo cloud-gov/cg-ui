@@ -16,7 +16,7 @@ export default function Error({
   }, [error]);
 
   return (
-    <div>
+    <div className="padding-top-4">
       <Alert type="error">Error: {error.message}</Alert>
     </div>
   );
