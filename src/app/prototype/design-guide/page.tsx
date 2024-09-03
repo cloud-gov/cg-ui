@@ -36,6 +36,65 @@ export default function DesignGuidePage() {
       <h2>USA banner</h2>
       <Banner />
 
+      <h2>Org selector</h2>
+      <div className="display-block desktop:display-flex flex-justify-end width-full">
+        <label className="usa-label" htmlFor="orgs">
+          Current organization:
+        </label>
+        <nav className="orgs-selector width-mobile usa-list usa-list--unstyled border border-base-light shadow-2 font-sans-sm margin-2 padding-x-105">
+          <header className="display-flex padding-y-105 border-bottom border-base-light">
+            <strong className="orgs-selector__current text-bold text-gray-cool-80 text-ellipsis">
+              sandbox-gsa-much-longer-name-goes-here-and-is-very-very-long
+            </strong>
+            <button>toggle</button>
+          </header>
+          <ul
+            className="orgs-selector__list usa-list usa-list--unstyled maxh-card maxw-mobile overflow-x-hidden overflow-y-scroll"
+            tabIndex={0}
+          >
+            <li className="padding-y-05">
+              <a href="/" className="text-primary-dark text-ellipsis">
+                another-organization-name-goes-here
+              </a>
+            </li>
+            <li className="padding-y-05">
+              <a href="/" className="text-primary-dark text-ellipsis">
+                significantly-shorter-name
+              </a>
+            </li>
+            <li className="padding-y-05">
+              <a href="/" className="text-primary-dark text-ellipsis">
+                another-organization-name-goes-here
+              </a>
+            </li>
+            <li className="padding-y-05">
+              <a href="/" className="text-primary-dark text-ellipsis">
+                what-happens-when-an-organization-name-is-really-long
+              </a>
+            </li>
+            <li className="padding-y-05">
+              <a href="/" className="text-primary-dark text-ellipsis">
+                significantly-shorter-name
+              </a>
+            </li>
+            <li className="padding-y-05">
+              <a href="/" className="text-primary-dark text-ellipsis">
+                another-shorter-name
+              </a>
+            </li>
+            <li className="padding-y-05">
+              <a href="/" className="text-primary-dark text-ellipsis">
+                hey-that-is-a-really-long-name-for-an-organization
+              </a>
+            </li>
+          </ul>
+          <footer className="text-right text-bold font-sans-2xs text-primary-dark padding-y-105 border-top border-base-light">
+            <a href="/" className='text-primary-dark sr-ignore'>View all organizations</a>
+            <span className='padding-left-05' aria-hidden="true">&raquo;</span>
+          </footer>
+        </nav>
+      </div>
+
       <h2>Headers in prose:</h2>
 
       <div className="usa-prose">
