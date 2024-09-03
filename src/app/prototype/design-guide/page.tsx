@@ -7,6 +7,7 @@ import Checkbox from '@/components/uswds/Checkbox';
 import { useState } from 'react';
 import Image from 'next/image';
 import expandIcon from '@/../public/img/uswds/usa-icons/expand_less.svg';
+import collapseIcon from '@/../public/img/uswds/usa-icons/expand_more.svg';
 
 export default function DesignGuidePage() {
   const initialCheckboxes = {
@@ -18,6 +19,7 @@ export default function DesignGuidePage() {
   const [checkboxValues, setCheckboxValues] = useState(
     initialCheckboxes as { [id: string]: boolean }
   );
+  const [toggle, setToggle] = useState(true);
 
   function setCheckboxState(value: string) {
     var newValues = { ...checkboxValues };
@@ -48,11 +50,11 @@ export default function DesignGuidePage() {
             <strong className="orgs-selector__current text-bold text-gray-cool-80 text-ellipsis margin-right-1 padding-right-1 border-right border-base-light">
               sandbox-gsa-much-longer-name-goes-here-and-is-very-very-long
             </strong>
-            <Button unstyled className="width-6" onClick={() => alert('You collapsed me!')}
+            <Button unstyled className="width-6" onClick={() => setToggle(!toggle)}
             >
               <Image
                 unoptimized
-                src={expandIcon}
+                src={toggle ? expandIcon : collapseIcon}
                 alt="collapse"
                 width={24}
                 height={24}
@@ -60,50 +62,52 @@ export default function DesignGuidePage() {
             </Button>
 
           </header>
-          <ul
-            className="orgs-selector__list usa-list usa-list--unstyled maxh-card overflow-x-hidden overflow-y-scroll"
-            tabIndex={0}
-          >
-            <li className="padding-y-05">
-              <a href="/" className="text-primary-dark text-ellipsis">
-                another-organization-name-goes-here
-              </a>
-            </li>
-            <li className="padding-y-05">
-              <a href="/" className="text-primary-dark text-ellipsis">
-                significantly-shorter-name
-              </a>
-            </li>
-            <li className="padding-y-05">
-              <a href="/" className="text-primary-dark text-ellipsis">
-                another-organization-name-goes-here
-              </a>
-            </li>
-            <li className="padding-y-05">
-              <a href="/" className="text-primary-dark text-ellipsis">
-                what-happens-when-an-organization-name-is-really-long
-              </a>
-            </li>
-            <li className="padding-y-05">
-              <a href="/" className="text-primary-dark text-ellipsis">
-                significantly-shorter-name
-              </a>
-            </li>
-            <li className="padding-y-05">
-              <a href="/" className="text-primary-dark text-ellipsis">
-                another-shorter-name
-              </a>
-            </li>
-            <li className="padding-y-05">
-              <a href="/" className="text-primary-dark text-ellipsis">
-                hey-that-is-a-really-long-name-for-an-organization
-              </a>
-            </li>
-          </ul>
-          <footer className="text-right text-bold font-sans-2xs text-primary-dark padding-y-105 border-top border-base-light">
-            <a href="/" className='text-primary-dark sr-ignore'>View all organizations</a>
-            <span className='padding-left-05' aria-hidden="true">&raquo;</span>
-          </footer>
+          {toggle && (<div>
+            <ul
+              className="orgs-selector__list usa-list usa-list--unstyled maxh-card overflow-x-hidden overflow-y-scroll"
+              tabIndex={0}
+            >
+              <li className="padding-y-05">
+                <a href="/" className="text-primary-dark text-ellipsis">
+                  another-organization-name-goes-here
+                </a>
+              </li>
+              <li className="padding-y-05">
+                <a href="/" className="text-primary-dark text-ellipsis">
+                  significantly-shorter-name
+                </a>
+              </li>
+              <li className="padding-y-05">
+                <a href="/" className="text-primary-dark text-ellipsis">
+                  another-organization-name-goes-here
+                </a>
+              </li>
+              <li className="padding-y-05">
+                <a href="/" className="text-primary-dark text-ellipsis">
+                  what-happens-when-an-organization-name-is-really-long
+                </a>
+              </li>
+              <li className="padding-y-05">
+                <a href="/" className="text-primary-dark text-ellipsis">
+                  significantly-shorter-name
+                </a>
+              </li>
+              <li className="padding-y-05">
+                <a href="/" className="text-primary-dark text-ellipsis">
+                  another-shorter-name
+                </a>
+              </li>
+              <li className="padding-y-05">
+                <a href="/" className="text-primary-dark text-ellipsis">
+                  hey-that-is-a-really-long-name-for-an-organization
+                </a>
+              </li>
+            </ul>
+            <footer className="text-right text-bold font-sans-2xs text-primary-dark padding-y-105 border-top border-base-light">
+              <a href="/" className='text-primary-dark sr-ignore'>View all organizations</a>
+              <span className='padding-left-05' aria-hidden="true">&raquo;</span>
+            </footer>
+          </div>)}
         </nav>
       </div>
 
