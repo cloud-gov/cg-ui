@@ -43,23 +43,25 @@ export default function DesignGuidePage() {
         <label className="usa-label" htmlFor="orgs">
           Current organization:
         </label>
-        <nav className="orgs-selector width-mobile usa-list usa-list--unstyled border border-base-light shadow-2 font-sans-sm margin-2 padding-x-105">
+        <nav className="orgs-selector width-mobile border border-base-light shadow-2 font-sans-xs margin-2 padding-x-105">
           <header className="display-flex padding-y-105 border-bottom border-base-light">
             <strong className="orgs-selector__current text-bold text-gray-cool-80 text-ellipsis margin-right-1 padding-right-1 border-right border-base-light">
               sandbox-gsa-much-longer-name-goes-here-and-is-very-very-long
             </strong>
-            <Image
-              unoptimized
-              src={expandIcon}
-              alt="collapse"
-              width={24}
-              height={24}
-              onClick={() => alert('You collapsed me!')}
-              className='cursor-pointer'
-            />
+            <Button unstyled className="width-6" onClick={() => alert('You collapsed me!')}
+            >
+              <Image
+                unoptimized
+                src={expandIcon}
+                alt="collapse"
+                width={24}
+                height={24}
+              />
+            </Button>
+
           </header>
           <ul
-            className="orgs-selector__list usa-list usa-list--unstyled maxh-card maxw-mobile overflow-x-hidden overflow-y-scroll"
+            className="orgs-selector__list usa-list usa-list--unstyled maxh-card overflow-x-hidden overflow-y-scroll"
             tabIndex={0}
           >
             <li className="padding-y-05">
