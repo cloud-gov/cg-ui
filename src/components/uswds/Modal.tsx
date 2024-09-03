@@ -50,14 +50,23 @@ export function Modal({
         close();
       }
     };
+    // close modal when clicking outside the modal
+    const clicked = (e: MouseEvent) => {
+      const target = e.target as HTMLElement;
+      if (target?.className?.match('usa-modal-overlay')) {
+        close();
+      }
+    };
 
     window.addEventListener('keydown', handleTabKeyPress);
     window.addEventListener('keydown', handleEscapeKeyPress);
+    window.addEventListener('click', clicked);
 
     return () => {
       // remove event listeners when component is unmounted
       window.removeEventListener('keydown', handleTabKeyPress);
       window.removeEventListener('keydown', handleEscapeKeyPress);
+      window.removeEventListener('click', clicked);
       // return focus to last focused element before modal was opened
       lastFocusedElement?.focus();
     };
@@ -65,7 +74,7 @@ export function Modal({
 
   return (
     <div className="usa-modal-wrapper is-visible" ref={modalRef}>
-      <div className="usa-modal-overlay">
+      <div className="usa-modal-overlay" data-testid="usa-modal-overlay">
         <div
           className="usa-modal"
           id={modalId}
