@@ -46,7 +46,7 @@ export default function DesignGuidePage() {
           Current organization:
         </label>
         <nav className="orgs-selector width-mobile border border-base-light shadow-2 font-sans-xs margin-2 padding-x-105">
-          <header className="display-flex padding-y-105 border-bottom border-base-light">
+          <header className="display-flex padding-y-105">
             <strong className="orgs-selector__current text-bold text-gray-cool-80 text-ellipsis margin-right-1 padding-right-1 border-right border-base-light">
               sandbox-gsa-much-longer-name-goes-here-and-is-very-very-long
             </strong>
@@ -67,7 +67,7 @@ export default function DesignGuidePage() {
           {toggle && (
             <div>
               <ul
-                className="orgs-selector__list usa-list usa-list--unstyled maxh-card overflow-x-hidden overflow-y-scroll"
+                className="orgs-selector__list usa-list usa-list--unstyled maxh-card overflow-x-hidden overflow-y-scroll border-bottom border-top border-base-light"
                 tabIndex={0}
               >
                 <li className="padding-y-05">
@@ -106,7 +106,7 @@ export default function DesignGuidePage() {
                   </a>
                 </li>
               </ul>
-              <footer className="text-right text-bold font-sans-2xs text-primary-dark padding-y-105 border-top border-base-light">
+              <footer className="text-right text-bold font-sans-2xs text-primary-dark padding-y-105">
                 <a href="/" className="text-primary-dark sr-ignore">
                   View all organizations
                 </a>
