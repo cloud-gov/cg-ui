@@ -90,13 +90,14 @@
   ),
 
   // utilities settings
-  $text-align-settings: (
-    responsive: true
-  ),
+  $text-align-settings:
+    (
+      responsive: true,
+    ),
 
   $background-color-palettes: (
-    'palette-color-system-mint-medium' // no trailing comma
-  ),
+    'palette-color-system-mint-medium' // no trailing comma,
+  )
 );
 
 // 2. Load USWDS source code
@@ -179,7 +180,7 @@ $table-sort-active-color: color('blue-cool-5v');
     background: color('gray-warm-4'); // .bg-accent-warm-light
     border: none; // .border-0
     border-bottom: $table-border;
-    padding: units( 0.5 ) units( 1 );
+    padding: units(0.5) units(1);
   }
   // Default padding for table headings/cells.
   tbody th,
@@ -238,4 +239,9 @@ $table-sort-active-color: color('blue-cool-5v');
       border-bottom: none;
     }
   }
+}
+
+// Org selector component
+.orgs-selector__list {
+  scrollbar-width: thin;
 }

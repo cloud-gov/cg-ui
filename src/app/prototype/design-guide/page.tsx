@@ -5,6 +5,8 @@ import { Button } from '@/components/uswds/Button';
 import { Banner } from '@/components/uswds/Banner';
 import Checkbox from '@/components/uswds/Checkbox';
 import { useState } from 'react';
+import Image from 'next/image';
+import expandIcon from '@/../public/img/uswds/usa-icons/expand_less.svg';
 
 export default function DesignGuidePage() {
   const initialCheckboxes = {
@@ -43,10 +45,18 @@ export default function DesignGuidePage() {
         </label>
         <nav className="orgs-selector width-mobile usa-list usa-list--unstyled border border-base-light shadow-2 font-sans-sm margin-2 padding-x-105">
           <header className="display-flex padding-y-105 border-bottom border-base-light">
-            <strong className="orgs-selector__current text-bold text-gray-cool-80 text-ellipsis">
+            <strong className="orgs-selector__current text-bold text-gray-cool-80 text-ellipsis margin-right-1 padding-right-1 border-right border-base-light">
               sandbox-gsa-much-longer-name-goes-here-and-is-very-very-long
             </strong>
-            <button>toggle</button>
+            <Image
+              unoptimized
+              src={expandIcon}
+              alt="collapse"
+              width={24}
+              height={24}
+              onClick={() => alert('You collapsed me!')}
+              className='cursor-pointer'
+            />
           </header>
           <ul
             className="orgs-selector__list usa-list usa-list--unstyled maxh-card maxw-mobile overflow-x-hidden overflow-y-scroll"
