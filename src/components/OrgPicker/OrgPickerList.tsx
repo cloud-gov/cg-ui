@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import { OrgPickerListItem } from './OrgPickerListItem';
 
 export function OrgPickerList() {
   return (
@@ -7,41 +8,13 @@ export function OrgPickerList() {
       tabIndex={0}
       aria-label="Organizations list"
     >
-      <li className="padding-y-05">
-        <Link href="/" className="text-primary text-ellipsis">
-          another-organization-name-goes-here
-        </Link>
-      </li>
-      <li className="padding-y-05">
-        <Link href="/" className="text-primary text-ellipsis">
-          significantly-shorter-name
-        </Link>
-      </li>
-      <li className="padding-y-05">
-        <Link href="/" className="text-primary text-ellipsis">
-          another-organization-name-goes-here
-        </Link>
-      </li>
-      <li className="padding-y-05">
-        <Link href="/" className="text-primary text-ellipsis">
-          what-happens-when-an-organization-name-is-really-long
-        </Link>
-      </li>
-      <li className="padding-y-05">
-        <Link href="/" className="text-primary text-ellipsis">
-          significantly-shorter-name
-        </Link>
-      </li>
-      <li className="padding-y-05">
-        <Link href="/" className="text-primary text-ellipsis">
-          another-shorter-name
-        </Link>
-      </li>
-      <li className="padding-y-05">
-        <Link href="/" className="text-primary text-ellipsis">
-          hey-that-is-a-really-long-name-for-an-organization
-        </Link>
-      </li>
+      <OrgPickerListItem>another-organization-name-goes-here</OrgPickerListItem>
+      <OrgPickerListItem>significantly-shorter-name</OrgPickerListItem>
+      <OrgPickerListItem>another-organization-name-goes-here</OrgPickerListItem>
+      <OrgPickerListItem>what-happens-when-an-organization-name-is-really-long</OrgPickerListItem>
+      <OrgPickerListItem>significantly-shorter-name</OrgPickerListItem>
+      <OrgPickerListItem>another-shorter-name</OrgPickerListItem>
+      <OrgPickerListItem>hey-that-is-a-really-long-name-for-an-organization</OrgPickerListItem>
     </ul>
   );
 }
