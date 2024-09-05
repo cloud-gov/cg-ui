@@ -1,4 +1,4 @@
-import Link from "next/link";
+import Link from 'next/link';
 
 export function OrgPickerList() {
   return (
@@ -43,5 +43,5 @@ export function OrgPickerList() {
         </Link>
       </li>
     </ul>
-  )
+  );
 }

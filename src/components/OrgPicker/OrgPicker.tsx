@@ -1,6 +1,6 @@
 /*
-* While visually similar to the USWDS Combo box component, this expandable element presents a scrollable list of links. The link at the bottom of the menu directs the user to a page listing all the organizations they can access.
-*/
+ * While visually similar to the USWDS Combo box component, this expandable element presents a scrollable list of links. The link at the bottom of the menu directs the user to a page listing all the organizations they can access.
+ */
 import React from 'react';
 // import { OrgObj } from '@/api/cf/cloudfoundry-types';
 import { Button } from '@/components/uswds/Button';
