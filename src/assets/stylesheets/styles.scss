@@ -77,6 +77,8 @@
   // sizing
   $theme-site-margins-width: 2,
 
+  // utilities settings
+
   $display-settings: (
     responsive: true,
   ),
@@ -89,13 +91,24 @@
     responsive: true,
   ),
 
-  // utilities settings
   $text-align-settings: (
     responsive: true
   ),
 
   $background-color-palettes: (
     'palette-color-system-mint-medium' // no trailing comma
+  ),
+
+  $top-palettes: (
+    'palette-units-system-positive'
+  ),
+
+  $right-palettes: (
+    'palette-units-system-positive'
+  ),
+
+  $theme-utility-breakpoints: (
+    'tablet-lg': true,
   ),
 );
 
@@ -237,5 +250,40 @@ $table-sort-active-color: color('blue-cool-5v');
     td:not(:last-child) {
       border-bottom: none;
     }
+  }
+}
+
+// OverlayDrawer
+
+$timing-dialog: 0.2s;
+
+body:has(dialog.overlayDrawer[open]) {
+  overflow: hidden; // prevents scrolling outside of dialog
+}
+
+dialog.overlayDrawer[open] {
+  left: initial;
+  animation: dialog-slide $timing-dialog ease forwards;
+}
+
+dialog.overlayDrawer::backdrop {
+  animation: dialog-backdrop-fade $timing-dialog ease forwards;
+}
+
+@keyframes dialog-backdrop-fade {
+  from {
+    background: transparent;
+  }
+  to{
+    background: rgba(0, 0, 0, 0.70);
+  }
+}
+
+@keyframes dialog-slide {
+  from {
+    right: -100%;
+  }
+  to {
+    right: 0%;
   }
 }

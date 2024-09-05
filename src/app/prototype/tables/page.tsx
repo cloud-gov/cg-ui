@@ -1,5 +1,6 @@
 'use client';
 
+import { useState } from 'react';
 import { Button } from '@/components/uswds/Button';
 import Link from 'next/link';
 import classnames from 'classnames';
@@ -11,9 +12,10 @@ import { TableRow } from '@/components/uswds/Table/TableRow';
 import { TableCell } from '@/components/uswds/Table/TableCell';
 import { ServiceTag } from '@/components/ServiceTag';
 import { SortButton } from '@/components/SortButton';
+import { OverlayDrawer } from '@/components/OverlayDrawer';
 
 export default function TablePage() {
-  // active color: bg-accent-cool-lightest
+  const [dialogOpen, setDialogOpen] = useState(false);
 
   const mockUsers = [
     {
@@ -40,6 +42,25 @@ export default function TablePage() {
 
   return (
     <div className="grid-container padding-bottom-5">
+      <OverlayDrawer
+        id="overlay-drawer-1"
+        isOpen={dialogOpen}
+        close={() => setDialogOpen(false)}
+      >
+        <>
+          This is the drawer content. Lorem ipsum dolor sit amet, consectetur
+          adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore
+          magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation
+          ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute
+          irure dolor in reprehenderit in voluptate velit esse cillum dolore eu
+          fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident,
+          sunt in culpa qui officia deserunt mollit anim id est laborum.
+          <button>trapped 1</button> <button>trapped 2</button>
+        </>
+      </OverlayDrawer>
+
+      <button onClick={() => setDialogOpen(true)}>open dialog</button>
+
       <h2>Table</h2>
 
       <Table
