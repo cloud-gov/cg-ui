@@ -1,4 +1,3 @@
-import Link from 'next/link';
 import { OrgPickerListItem } from './OrgPickerListItem';
 
 export function OrgPickerList() {
@@ -11,10 +10,14 @@ export function OrgPickerList() {
       <OrgPickerListItem>another-organization-name-goes-here</OrgPickerListItem>
       <OrgPickerListItem>significantly-shorter-name</OrgPickerListItem>
       <OrgPickerListItem>another-organization-name-goes-here</OrgPickerListItem>
-      <OrgPickerListItem>what-happens-when-an-organization-name-is-really-long</OrgPickerListItem>
+      <OrgPickerListItem>
+        what-happens-when-an-organization-name-is-really-long
+      </OrgPickerListItem>
       <OrgPickerListItem>significantly-shorter-name</OrgPickerListItem>
       <OrgPickerListItem>another-shorter-name</OrgPickerListItem>
-      <OrgPickerListItem>hey-that-is-a-really-long-name-for-an-organization</OrgPickerListItem>
+      <OrgPickerListItem>
+        hey-that-is-a-really-long-name-for-an-organization
+      </OrgPickerListItem>
     </ul>
   );
 }
