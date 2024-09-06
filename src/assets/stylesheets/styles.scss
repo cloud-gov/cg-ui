@@ -255,35 +255,58 @@ $table-sort-active-color: color('blue-cool-5v');
 
 // OverlayDrawer
 
-$timing-dialog: 0.2s;
-
 body:has(dialog.overlayDrawer[open]) {
   overflow: hidden; // prevents scrolling outside of dialog
 }
 
-dialog.overlayDrawer[open] {
+// OverlayDrawer Animations
+// From MDN - Animating Dialogs: https://developer.mozilla.org/en-US/docs/Web/HTML/Element/dialog#animating_dialogs
+
+$timing-dialog: 0.2s;
+
+// Open state of the dialog
+dialog[open] {
   left: initial;
-  animation: dialog-slide $timing-dialog ease forwards;
+  opacity: 1;
+  transform: translateX( 0 );
 }
 
-dialog.overlayDrawer::backdrop {
-  animation: dialog-backdrop-fade $timing-dialog ease forwards;
+// Closed state of the dialog
+dialog {
+  left: initial;
+  opacity: 0;
+  transform: translateX( 100% );
+  transition:
+    opacity $timing-dialog ease-out,
+    transform $timing-dialog ease-out,
+    overlay $timing-dialog ease-out allow-discrete,
+    display $timing-dialog ease-out allow-discrete;
 }
 
-@keyframes dialog-backdrop-fade {
-  from {
-    background: transparent;
-  }
-  to{
-    background: rgba(0, 0, 0, 0.70);
+// Before-open state
+// Needs to be after the previous dialog[open] rule to take effect,
+// as the specificity is the same
+@starting-style {
+  dialog[open] {
+    opacity: 0;
+    transform: translateX( 100% );
   }
 }
 
-@keyframes dialog-slide {
-  from {
-    right: -100%;
-  }
-  to {
-    right: 0%;
+dialog::backdrop {
+  background-color: rgb(0 0 0 / 0%);
+  transition:
+    display $timing-dialog allow-discrete,
+    overlay $timing-dialog allow-discrete,
+    background-color $timing-dialog;
+}
+
+dialog[open]::backdrop {
+  background-color: rgb(0 0 0 / 70%);
+}
+
+@starting-style {
+  dialog[open]::backdrop {
+    background-color: rgb(0 0 0 / 0%);
   }
 }
