@@ -58,7 +58,11 @@ export function Alert({
       aria-label={role === 'region' ? `${type} alert` : ''}
     >
       <div className="usa-alert__body">
-        {heading && <Heading className="usa-alert__heading">{heading}</Heading>}
+        {heading && (
+          <Heading className="usa-alert__heading padding-left-2 font-sans-md">
+            {heading}
+          </Heading>
+        )}
         {children &&
           (validation ? (
             children

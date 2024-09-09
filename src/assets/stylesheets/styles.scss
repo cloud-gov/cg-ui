@@ -97,11 +97,13 @@
 
   $background-color-palettes: (
     'palette-color-system-mint-medium',
-    'palette-color-system-green-cool-vivid' // no trailing comma
+    'palette-color-system-green-cool-vivid',
+    'palette-color-system-red-cool-vivid' // no trailing comma
   ),
 
   $border-color-palettes: (
-    'palette-color-system-green-cool' // no trailing comma
+    'palette-color-system-green-cool',
+    'palette-color-system-red-vivid' // no trailing comma
   ),
 
   $top-palettes: (
@@ -328,16 +330,51 @@ dialog.overlayDrawer[open]::backdrop {
   background: initial; // removes white bg provided by USWDS
 }
 
+.usa-checkbox__label::before {
+  background: initial;
+  box-shadow: 0 0 0 2px color('primary');
+}
+
+// primary color #2C608A
+
 // USA Alerts
 
-$success-color-bright: 'green-cool-5v';
+$success-color-light: 'green-cool-5v';
 $success-color-dark: 'green-cool-50';
+$error-color-light: 'red-cool-10v';
+$error-color-dark: 'red-40v';
+
+.usa-alert .usa-alert__body {
+  max-width: none;
+}
+
+.usa-alert .usa-alert__body h4 {
+  @include u-font-size('sans', 'md');
+  margin-bottom: units(2px);
+}
 
 .usa-alert--success {
-  @include u-bg($success-color-bright);
+  @include u-bg($success-color-light);
   border-left-color: color($success-color-dark);
 
   .usa-alert__body {
-    @include u-bg($success-color-bright);
+    @include u-bg($success-color-light);
+
+    &:before {
+      @include u-bg($success-color-dark); // icon color
+    }
+  }
+}
+
+.usa-alert--error {
+  @include u-bg($error-color-light);
+  border-left-color: color($error-color-dark);
+
+  .usa-alert__body {
+    @include u-bg($error-color-light);
+
+    &:before {
+      @include u-bg($error-color-dark); // icon color
+    }
   }
 }

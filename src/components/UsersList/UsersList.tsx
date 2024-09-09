@@ -26,6 +26,7 @@ import { UsersActionsRemoveFromOrg } from '@/components/UsersActions/UsersAction
 import { OverlayDrawer } from '@/components/OverlayDrawer';
 import { OrgUserOrgRolesOverlay } from '@/components/Overlays/OrgUserOrgRolesOverlay';
 import { Button } from '@/components/uswds/Button';
+import { SpaceRolesOverlay } from '@/components/Overlays/SpaceRolesOverlay';
 
 type SortDirection = 'asc' | 'desc';
 
@@ -121,30 +122,30 @@ export function UsersList({
     openModal(user);
   }
 
-  // Org roles overlay
-
-  const openOrgRoles = (userId: string) => {
-    setDialogType('org');
+  // Overlays
+  const openOverlay = (userId: string, type: DialogType = 'org') => {
+    setDialogType(type);
     setCurrentMemberId(userId);
     setDialogOpen(true);
   };
 
-  const closeOrgRoles = () => {
+  const closeOverlay = () => {
     setDialogOpen(false);
     setCurrentMemberId('');
   };
 
-  // success message
-
-  const dismissSuccessMsg = () => {
-    setSuccessMsg('');
-  };
-  const onOrgRolesSuccess = (userId: string) => {
+  const onRolesEditSuccess = (userId: string, type: DialogType = 'org') => {
     const username = users.find((user) => user.guid === userId)?.username;
     const usernameText = username ? `for ${username}` : '';
-    const msg = `The organization roles ${usernameText} have been updated.`;
+    const rolesText = type === 'org' ? 'organization' : 'space';
+    const msg = `The ${rolesText} roles ${usernameText} have been updated.`;
     setSuccessMsg(msg);
-    closeOrgRoles();
+    closeOverlay();
+  };
+
+  // Success alert
+  const dismissSuccessMsg = () => {
+    setSuccessMsg('');
   };
 
   // Helpers
@@ -159,23 +160,38 @@ export function UsersList({
       <OverlayDrawer
         id="overlay-drawer-1"
         isOpen={dialogOpen}
-        close={() => closeOrgRoles()}
+        close={() => closeOverlay()}
       >
         {dialogType === 'org' && (
           <OrgUserOrgRolesOverlay
             onCancel={() => {
-              closeOrgRoles();
+              closeOverlay();
             }}
             orgGuid={orgGuid}
             user={currentMember}
             serviceAccount={serviceAccounts[currentMember?.username || '']}
-            onSuccess={onOrgRolesSuccess}
+            onSuccess={onRolesEditSuccess}
+          />
+        )}
+        {dialogType === 'space' && (
+          <SpaceRolesOverlay
+            onCancel={() => {
+              closeOverlay();
+            }}
+            orgGuid={orgGuid}
+            serviceAccount={serviceAccounts[currentMember?.username || '']}
+            user={currentMember}
+            onSuccess={onRolesEditSuccess}
           />
         )}
       </OverlayDrawer>
 
       {successMsg && (
-        <Alert type="success" className="margin-bottom-4">
+        <Alert
+          type="success"
+          className="margin-bottom-4"
+          heading="Your changes have been saved."
+        >
           {successMsg}{' '}
           <Button
             onClick={() => dismissSuccessMsg()}
@@ -274,7 +290,7 @@ export function UsersList({
                 <UsersListOrgRoles
                   orgRolesCount={user.orgRolesCount}
                   onClick={() => {
-                    openOrgRoles(user.guid);
+                    openOverlay(user.guid, 'org');
                   }}
                 />
               </TableCell>
@@ -284,9 +300,11 @@ export function UsersList({
                 sort={sortParam === 'spaceRolesCount'}
               >
                 <UsersListSpaceRoles
-                  href={`/orgs/${orgGuid}/users/${user.guid}`}
                   spaceRolesCount={user.spaceRolesCount}
                   spacesCount={spacesCount}
+                  onClick={() => {
+                    openOverlay(user.guid, 'space');
+                  }}
                 />
               </TableCell>
 

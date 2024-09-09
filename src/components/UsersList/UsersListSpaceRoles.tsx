@@ -1,14 +1,14 @@
 'use client';
 
-import Link from 'next/link';
 import { pluralize } from '@/helpers/text';
+import { Button } from '../uswds/Button';
 
 export function UsersListSpaceRoles({
+  onClick,
   spacesCount,
-  href,
   spaceRolesCount,
 }: {
-  href: string;
+  onClick: Function;
   spacesCount: number;
   spaceRolesCount: number;
 }) {
@@ -16,15 +16,21 @@ export function UsersListSpaceRoles({
     return (
       <>
         None yet —{' '}
-        <Link href={href} className="usa-button--unstyled text-bold">
+        <Button
+          className="usa-button--unstyled font-ui-2xs text-bold"
+          onClick={() => onClick()}
+        >
           edit permissions
-        </Link>
+        </Button>
       </>
     );
   }
   return (
-    <Link href={href} className="usa-button--unstyled">
+    <Button
+      className="usa-button--unstyled font-ui-2xs"
+      onClick={() => onClick()}
+    >
       {`${spaceRolesCount} of ${spacesCount} ${pluralize('space', spacesCount)}`}
-    </Link>
+    </Button>
   );
 }
