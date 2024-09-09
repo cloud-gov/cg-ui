@@ -23,8 +23,13 @@ import { UsersListSpaceRoles } from '@/components/UsersList/UsersListSpaceRoles'
 import { UserAccountExpires } from '@/components/UserAccount/UserAccountExpires';
 import { UserAccountLastLogin } from '@/components/UserAccount/UserAccountLastLogin';
 import { UsersActionsRemoveFromOrg } from '@/components/UsersActions/UsersActionsRemoveFromOrg';
+import { OverlayDrawer } from '@/components/OverlayDrawer';
+import { OrgUserOrgRolesOverlay } from '@/components/Overlays/OrgUserOrgRolesOverlay';
+import { Button } from '@/components/uswds/Button';
 
 type SortDirection = 'asc' | 'desc';
+
+type DialogType = 'org' | 'space';
 
 export function UsersList({
   users,
@@ -45,6 +50,10 @@ export function UsersList({
   const [searchValue, setSearchValue] = useState('' as string);
   const [sortParam, setSortParam] = useState('username' as string);
   const [sortDir, setSortDir] = useState('asc' as SortDirection);
+  const [dialogOpen, setDialogOpen] = useState(false);
+  const [dialogType, setDialogType] = useState('org' as DialogType);
+  const [currentMemberId, setCurrentMemberId] = useState('');
+  const [successMsg, setSuccessMsg] = useState('');
 
   // Searching/Filtering
   const onSearchAction = (value: string) => {
@@ -96,7 +105,7 @@ export function UsersList({
     }
   };
 
-  // Modal
+  // Remove Modal
   const modalHeadingId = (name: string) => `removeUserSuccess-${name}`;
 
   function closeModal(): undefined {
@@ -112,13 +121,71 @@ export function UsersList({
     openModal(user);
   }
 
+  // Org roles overlay
+
+  const openOrgRoles = (userId: string) => {
+    setDialogType('org');
+    setCurrentMemberId(userId);
+    setDialogOpen(true);
+  };
+
+  const closeOrgRoles = () => {
+    setDialogOpen(false);
+    setCurrentMemberId('');
+  };
+
+  // success message
+
+  const dismissSuccessMsg = () => {
+    setSuccessMsg('');
+  };
+  const onOrgRolesSuccess = (userId: string) => {
+    const username = users.find((user) => user.guid === userId)?.username;
+    const usernameText = username ? `for ${username}` : '';
+    const msg = `The organization roles ${usernameText} have been updated.`;
+    setSuccessMsg(msg);
+    closeOrgRoles();
+  };
+
   // Helpers
   const currentUsers = usersSorted(usersFiltered(users));
   const usersResultsText = currentUsers.length === 1 ? 'user' : 'users';
   const spacesCount = Object.keys(spaces).length;
+  const currentMember =
+    users.find((user) => user.guid === currentMemberId) || null;
 
   return (
     <>
+      <OverlayDrawer
+        id="overlay-drawer-1"
+        isOpen={dialogOpen}
+        close={() => closeOrgRoles()}
+      >
+        {dialogType === 'org' && (
+          <OrgUserOrgRolesOverlay
+            onCancel={() => {
+              closeOrgRoles();
+            }}
+            orgGuid={orgGuid}
+            user={currentMember}
+            serviceAccount={serviceAccounts[currentMember?.username || '']}
+            onSuccess={onOrgRolesSuccess}
+          />
+        )}
+      </OverlayDrawer>
+
+      {successMsg && (
+        <Alert type="success" className="margin-bottom-4">
+          {successMsg}{' '}
+          <Button
+            onClick={() => dismissSuccessMsg()}
+            className="usa-button--unstyled text-bold text-ink"
+          >
+            (Dismiss this message.)
+          </Button>
+        </Alert>
+      )}
+
       <ListSearchInput
         onSubmit={onSearchAction}
         labelText="Find account names that match:"
@@ -193,7 +260,7 @@ export function UsersList({
                 <div className="display-flex flex-justify">
                   <span className="mobile-lg:text-bold maxw-card-lg text-ellipsis">
                     <Username
-                      user={user}
+                      username={user.username}
                       serviceAccount={serviceAccounts[user.username]}
                     />
                   </span>
@@ -205,8 +272,10 @@ export function UsersList({
                 sort={sortParam === 'orgRolesCount'}
               >
                 <UsersListOrgRoles
-                  href={`/orgs/${orgGuid}/users/${user.guid}/org-roles`}
                   orgRolesCount={user.orgRolesCount}
+                  onClick={() => {
+                    openOrgRoles(user.guid);
+                  }}
                 />
               </TableCell>
 

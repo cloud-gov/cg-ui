@@ -60,11 +60,15 @@ const initialRoles = {
 export function UsersActionsOrgRoles({
   orgGuid,
   userGuid,
+  onCancel,
   onCancelPath,
+  onSuccess,
 }: {
   orgGuid: string;
   userGuid: string;
+  onCancel?: Function;
   onCancelPath?: string;
+  onSuccess?: Function;
 }) {
   const [roles, setRoles] = useState(initialRoles as FormRoles);
   const [dataLoaded, setDataLoaded] = useState(false);
@@ -127,6 +131,7 @@ export function UsersActionsOrgRoles({
         setRoles(initialRoles); // reset data is needed to wipe the old guids from removed roles
         setFetchedRolesToState(result.payload.resources);
         setActionStatus('success' as ActionStatus);
+        onSuccess && onSuccess(userGuid);
       }
       if (result?.meta?.status === 'error') {
         result?.meta?.errors && setActionErrors(result.meta.errors);
@@ -156,10 +161,10 @@ export function UsersActionsOrgRoles({
       )}
       <form onSubmit={onSubmit} name="edit-org-roles-form">
         <fieldset className="usa-fieldset">
-          <legend className="usa-legend margin-bottom-2">
+          <legend className="usa-legend usa-sr-only margin-bottom-2">
             <strong>Select org roles</strong>
           </legend>
-          <div className="padding-3 bg-white">
+          <div className="padding-3 border-top border-base-light">
             {Object.values(roles).map((role, i) => (
               <div
                 key={`UsersActionsOrgRoles-checkbox-${i}`}
@@ -178,7 +183,14 @@ export function UsersActionsOrgRoles({
               </div>
             ))}
           </div>
-          <div className="padding-top-3">
+          <div>
+            <Button
+              className="margin-right-4"
+              type="submit"
+              disabled={actionStatus === 'pending'}
+            >
+              Update roles
+            </Button>
             {onCancelPath && (
               <Link
                 href={onCancelPath}
@@ -187,9 +199,14 @@ export function UsersActionsOrgRoles({
                 Cancel
               </Link>
             )}
-            <Button type="submit" disabled={actionStatus === 'pending'}>
-              Save
-            </Button>
+            {onCancel && (
+              <Button
+                className="usa-button--outline"
+                onClick={() => onCancel()}
+              >
+                Cancel
+              </Button>
+            )}
           </div>
           {actionStatus === 'pending' && <p>submission in progress...</p>}
         </fieldset>
