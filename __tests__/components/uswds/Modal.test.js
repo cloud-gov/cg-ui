@@ -67,4 +67,22 @@ describe('Modal', () => {
     // expect
     expect(closeModal).toHaveBeenCalled();
   });
+
+  it('closes modal when a click happens outside modal', () => {
+    // setup
+    const closeModal = jest.fn();
+    // render
+    render(
+      <Modal modalId="modal-id" headingId="heading-id" close={closeModal}>
+        <p id="heading-id">foo content</p>
+      </Modal>
+    );
+    // expect
+    const modalOverlay = screen.getByTestId(/usa-modal-overlay/);
+    expect(modalOverlay).toBeInTheDocument();
+    // act = press escape key
+    fireEvent.click(modalOverlay);
+    // expect
+    expect(closeModal).toHaveBeenCalled();
+  });
 });
