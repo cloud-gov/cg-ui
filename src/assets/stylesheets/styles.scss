@@ -77,6 +77,8 @@
   // sizing
   $theme-site-margins-width: 2,
 
+  // utilities settings
+
   $display-settings: (
     responsive: true,
   ),
@@ -89,13 +91,24 @@
     responsive: true,
   ),
 
-  // utilities settings
   $text-align-settings: (
     responsive: true
   ),
 
   $background-color-palettes: (
     'palette-color-system-mint-medium' // no trailing comma
+  ),
+
+  $top-palettes: (
+    'palette-units-system-positive'
+  ),
+
+  $right-palettes: (
+    'palette-units-system-positive'
+  ),
+
+  $theme-utility-breakpoints: (
+    'tablet-lg': true,
   ),
 );
 
@@ -237,5 +250,65 @@ $table-sort-active-color: color('blue-cool-5v');
     td:not(:last-child) {
       border-bottom: none;
     }
+  }
+}
+
+// OverlayDrawer
+
+body:has(dialog.overlayDrawer[open]) {
+  overflow: hidden; // prevents scrolling outside of dialog
+}
+
+// OverlayDrawer Animations
+// From MDN - Animating Dialogs: https://developer.mozilla.org/en-US/docs/Web/HTML/Element/dialog#animating_dialogs
+
+$timing-dialog: 0.2s;
+
+// Open state of the dialog
+dialog.overlayDrawer[open] {
+  left: initial;
+  opacity: 1;
+  transform: translateX( 0 );
+  transition-delay: 0;
+}
+
+// Closed state of the dialog
+dialog.overlayDrawer {
+  left: initial;
+  opacity: 1;
+  transform: translateX( 100% );
+  transition-delay: calc( var( $timing-dialog ) / 2);
+  transition:
+    transform $timing-dialog ease-in,
+    overlay $timing-dialog ease-in allow-discrete,
+    display $timing-dialog ease-in allow-discrete;
+}
+
+// Before-open state
+// Needs to be after the previous dialog[open] rule to take effect,
+// as the specificity is the same
+@starting-style {
+  dialog.overlayDrawer[open] {
+    transform: translateX( 100% );
+    transition-delay: 0;
+  }
+}
+
+dialog.overlayDrawer::backdrop {
+  background-color: rgb(0 0 0 / 0%);
+  transition-delay: calc( var( $timing-dialog ) / 2);
+  transition:
+    display $timing-dialog allow-discrete,
+    overlay $timing-dialog allow-discrete,
+    background-color $timing-dialog;
+}
+
+dialog.overlayDrawer[open]::backdrop {
+  background-color: rgb(0 0 0 / 70%);
+}
+
+@starting-style {
+  dialog.overlayDrawer[open]::backdrop {
+    background-color: rgb(0 0 0 / 0%);
   }
 }
