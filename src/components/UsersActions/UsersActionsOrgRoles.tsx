@@ -173,7 +173,7 @@ export function UsersActionsOrgRoles({
           <legend className="usa-legend usa-sr-only margin-bottom-2">
             <strong>Select org roles</strong>
           </legend>
-          <div className="padding-3 border-top border-base-light">
+          <div className="padding-3 padding-left-0 border-top border-base-light">
             {Object.values(roles).map((role, i) => (
               <div
                 key={`UsersActionsOrgRoles-checkbox-${i}`}
