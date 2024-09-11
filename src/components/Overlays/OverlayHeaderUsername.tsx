@@ -13,21 +13,21 @@ export function OverlayHeaderUsername({
 }) {
   return (
     <>
-      <h4
-        className="margin-top-0 margin-bottom-7 text-uppercase text-light underline-base-light text-underline"
+      <h2
+        className="margin-top-0 margin-bottom-7 text-uppercase text-light underline-base-light text-underline font-sans-xs"
         style={{ textUnderlineOffset: '0.7em' }}
       >
         {header}
-      </h4>
+      </h2>
       {serviceAccount && (
         <Tag
           className={'bg-primary font-sans-3xs text-white text-light text-ls-3'}
           label="service"
         />
       )}
-      <h2 className="margin-top-1 margin-bottom-5">
+      <h3 className="margin-top-1 margin-bottom-5 font-sans-md mobile-lg:font-sans-lg">
         <Username username={username} />
-      </h2>
+      </h3>
     </>
   );
 }

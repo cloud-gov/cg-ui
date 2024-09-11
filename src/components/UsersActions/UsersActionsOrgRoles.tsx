@@ -194,7 +194,7 @@ export function UsersActionsOrgRoles({
           </div>
           <div>
             <Button
-              className="margin-right-4"
+              className="margin-right-4 margin-bottom-2"
               type="submit"
               disabled={actionStatus === 'pending'}
             >
