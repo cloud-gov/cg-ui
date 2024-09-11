@@ -25,7 +25,7 @@ export function OverlayHeaderUsername({
           label="service"
         />
       )}
-      <h2 className="margin-top-1">
+      <h2 className="margin-top-1 margin-bottom-5">
         <Username username={username} />
       </h2>
     </>
