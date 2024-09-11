@@ -30,7 +30,7 @@ import { SpaceRolesOverlay } from '@/components/Overlays/SpaceRolesOverlay';
 
 type SortDirection = 'asc' | 'desc';
 
-type DialogType = 'org' | 'space';
+type OverlayType = 'org' | 'space';
 
 export function UsersList({
   users,
@@ -51,8 +51,8 @@ export function UsersList({
   const [searchValue, setSearchValue] = useState('' as string);
   const [sortParam, setSortParam] = useState('username' as string);
   const [sortDir, setSortDir] = useState('asc' as SortDirection);
-  const [dialogOpen, setDialogOpen] = useState(false);
-  const [dialogType, setDialogType] = useState('org' as DialogType);
+  const [overlayOpen, setOverlayOpen] = useState(false);
+  const [overlayType, setOverlayType] = useState('org' as OverlayType);
   const [currentMemberId, setCurrentMemberId] = useState('');
   const [successMsg, setSuccessMsg] = useState('');
 
@@ -123,18 +123,18 @@ export function UsersList({
   }
 
   // Overlays
-  const openOverlay = (userId: string, type: DialogType = 'org') => {
-    setDialogType(type);
+  const openOverlay = (userId: string, type: OverlayType = 'org') => {
+    setOverlayType(type);
     setCurrentMemberId(userId);
-    setDialogOpen(true);
+    setOverlayOpen(true);
   };
 
   const closeOverlay = () => {
-    setDialogOpen(false);
+    setOverlayOpen(false);
     setCurrentMemberId('');
   };
 
-  const onRolesEditSuccess = (userId: string, type: DialogType = 'org') => {
+  const onRolesEditSuccess = (userId: string, type: OverlayType = 'org') => {
     const username = users.find((user) => user.guid === userId)?.username;
     const usernameText = username ? `for ${username}` : '';
     const rolesText = type === 'org' ? 'organization' : 'space';
@@ -154,34 +154,36 @@ export function UsersList({
   const spacesCount = Object.keys(spaces).length;
   const currentMember =
     users.find((user) => user.guid === currentMemberId) || null;
+  const overlayAriaLabel = `Edit ${overlayType === 'org' ? 'organization roles' : 'access permissions'} for ${currentMember ? currentMember?.username : 'this user'}`;
 
   return (
     <>
       <OverlayDrawer
+        ariaLabel={overlayAriaLabel}
         id="overlay-drawer-1"
-        isOpen={dialogOpen}
+        isOpen={overlayOpen}
         close={() => closeOverlay()}
       >
-        {dialogType === 'org' && (
+        {overlayType === 'org' && (
           <OrgUserOrgRolesOverlay
             onCancel={() => {
               closeOverlay();
             }}
-            orgGuid={orgGuid}
-            user={currentMember}
-            serviceAccount={serviceAccounts[currentMember?.username || '']}
             onSuccess={onRolesEditSuccess}
+            orgGuid={orgGuid}
+            serviceAccount={serviceAccounts[currentMember?.username || '']}
+            user={currentMember}
           />
         )}
-        {dialogType === 'space' && (
+        {overlayType === 'space' && (
           <SpaceRolesOverlay
             onCancel={() => {
               closeOverlay();
             }}
+            onSuccess={onRolesEditSuccess}
             orgGuid={orgGuid}
             serviceAccount={serviceAccounts[currentMember?.username || '']}
             user={currentMember}
-            onSuccess={onRolesEditSuccess}
           />
         )}
       </OverlayDrawer>
