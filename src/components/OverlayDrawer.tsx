@@ -8,13 +8,13 @@ export function OverlayDrawer({
   ariaLabel = 'dialog', // should announce the purpose of the dialog when opening
   children,
   close, // function for dialog close button that should change the isOpen prop from the parent
-  id,
+  id = 'overlay-drawer', // helps distinguish which overlay drawer in case there are multiple on the page
   isOpen = false,
 }: {
   ariaLabel?: string;
   children: React.ReactNode;
   close: Function;
-  id: string;
+  id?: string;
   isOpen: boolean;
 }) {
   const dialogRef = useRef<HTMLDialogElement>(null);
@@ -33,35 +33,59 @@ export function OverlayDrawer({
         close();
       }
     };
-    window.addEventListener('keydown', handleEscapeKeyPress);
+    // close when clicking outside dialog
+    const clicked = (e: MouseEvent) => {
+      const target = e.target as HTMLElement;
+      // Clicking #dialog-body will not trigger this, only the id of the dialog itself.
+      // #dialog-body must cover the full open dialog area for this to work.
+      if (isOpen && target?.id?.match(id)) {
+        close();
+      }
+    };
+    const addListeners = () => {
+      window.addEventListener('keydown', handleEscapeKeyPress);
+      window.addEventListener('click', clicked);
+    };
+    const removeListeners = () => {
+      window.removeEventListener('keydown', handleEscapeKeyPress);
+      window.removeEventListener('click', clicked);
+    };
+    if (isOpen) {
+      addListeners();
+    }
 
     return () => {
-      window.removeEventListener('keydown', handleEscapeKeyPress);
+      removeListeners();
     };
-  }, [close, isOpen]);
+  }, [close, id, isOpen]);
 
   return (
     <dialog
       id={id}
-      className="overlayDrawer height-full maxh-none tablet-lg:width-tablet-lg maxw-none padding-y-10 tablet-lg:padding-y-15 padding-right-1 tablet-lg:padding-right-4 padding-left-3 tablet-lg:padding-left-10 bg-accent-warm-light border-accent-cool tablet-lg:border-accent-cool border-left-1 tablet-lg:border-left-105 border-right-0 border-top-0 border-bottom-0"
+      className="overlayDrawer height-full maxh-none tablet-lg:width-tablet-lg maxw-none border-0 padding-0"
       ref={dialogRef}
       aria-label={ariaLabel}
     >
-      <button
-        type="button"
-        className="usa-button usa-modal__close position-fixed top-7 right-4"
-        aria-label="Close this dialog"
-        onClick={() => close()}
+      <div
+        id="dialog-body"
+        className="minh-full padding-y-10 tablet-lg:padding-y-15 padding-right-1 tablet-lg:padding-right-4 padding-left-3 tablet-lg:padding-left-10 bg-accent-warm-light border-accent-cool tablet-lg:border-accent-cool border-left-1 tablet-lg:border-left-105 border-right-0 border-top-0 border-bottom-0"
       >
-        <Image
-          unoptimized
-          src={closeIcon}
-          alt="Close this dialog"
-          width="32"
-          height="32"
-        />
-      </button>
-      <div style={{ overscrollBehavior: 'contain' }}>{children}</div>
+        <button
+          type="button"
+          className="usa-button usa-modal__close position-fixed top-7 right-4"
+          aria-label="Close this dialog"
+          onClick={() => close()}
+        >
+          <Image
+            unoptimized
+            src={closeIcon}
+            alt="Close this dialog"
+            width="32"
+            height="32"
+          />
+        </button>
+        <div>{children}</div>
+      </div>
     </dialog>
   );
 }

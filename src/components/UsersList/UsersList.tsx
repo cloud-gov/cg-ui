@@ -151,6 +151,7 @@ export function UsersList({
   // Helpers
   const currentUsers = usersSorted(usersFiltered(users));
   const usersResultsText = currentUsers.length === 1 ? 'user' : 'users';
+  const searchAriaLiveText = `${currentUsers.length} ${usersResultsText} found for ${searchValue}`;
   const spacesCount = Object.keys(spaces).length;
   const currentMember =
     users.find((user) => user.guid === currentMemberId) || null;
@@ -160,7 +161,7 @@ export function UsersList({
     <>
       <OverlayDrawer
         ariaLabel={overlayAriaLabel}
-        id="overlay-drawer-1"
+        id="overlay-drawer-manage-users"
         isOpen={overlayOpen}
         close={() => closeOverlay()}
       >
@@ -212,13 +213,10 @@ export function UsersList({
       aria-live region needs to show up on initial page render.
       More info: https://tetralogical.com/blog/2024/05/01/why-are-my-live-regions-not-working/
       */}
-      <div role="region" aria-live="polite">
+      <div role="region" aria-live="assertive" aria-atomic={true}>
         {searchValue && (
           <div className="margin-bottom-2">
-            <strong>
-              {currentUsers.length} {usersResultsText} found for{' '}
-              {`"${searchValue}"`}
-            </strong>
+            <strong>{searchAriaLiveText}</strong>
           </div>
         )}
       </div>
