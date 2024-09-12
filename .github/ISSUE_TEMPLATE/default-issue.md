@@ -1,11 +1,4 @@
 ---
-name: Default issue
-about: 'If you''re unsure which template to use, start here. '
-title: ''
-labels: squad-dashboard
-assignees: ''
-
----
 
 _Can this task be done in one increment?_
 _If not, please break it up into smaller issues._ 
