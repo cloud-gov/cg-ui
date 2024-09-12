@@ -1,19 +1,28 @@
----
-name: Default issue
-about: 'If you''re unsure which template to use, start here. '
-title: ''
-labels: squad-dashboard
-assignees: ''
+# Task Template
 
----
+A workitem that needs to be done while developing a story or feature and does not span more than 2 days.
+Where a single actor takes a single action with a single output.
 
-_Can this task be done in one increment?_
-_If not, please break it up into smaller issues._ 
-_If this is unknown, label the issue as "research"._ 
+----
 
+Provide a general summary of the issue in the Title above.
 
-_Ensure this issue has a clear Definition of Done in the Acceptance Criteria list below:_ 
 ### Acceptance Criteria
-- [ ] .
-- [ ] .
-- [ ] .
+
+Tell us what should happen. It should be measurable so that we know when we're done and that it can be tested.
+
+### Requirement Documents 
+
+Add sketch / API documents. 
+
+### Environment 
+
+Provide test accounts if possible. 
+
+### Possible Solution
+
+Not obligatory, but suggest a approach.
+
+### Possible Implementation
+
+Not obligatory, but suggest an idea for implementing addition or change. Link to confluence page and / or story. 
