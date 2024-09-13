@@ -76,7 +76,7 @@ describe('UsersActionsOrgRoles', () => {
         expect(screen.getByText(/Billing manager/)).toBeInTheDocument()
       );
       // query
-      const submitBtn = screen.getByText('Save');
+      const submitBtn = screen.getByText('Update roles');
       // act
       fireEvent.click(submitBtn);
       // expect a success message

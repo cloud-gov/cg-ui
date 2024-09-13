@@ -17,12 +17,12 @@ export function RolesForSpace({
   return (
     <GridListItem>
       <div className="grid-row users-actions-space-role">
-        <div className="tablet:grid-col-4">
+        <div className="tablet-lg:grid-col-4 mobile-lg:padding-bottom-2 tablet-lg:padding-bottom-0">
           <strong>{space.name}</strong>
         </div>
         {Object.values(roles).map((role: any) => (
           <div
-            className="tablet:grid-col-2"
+            className="mobile-lg:grid-col-6 tablet-lg:grid-col-2 tablet:padding-bottom-2 tablet-lg:padding-bottom-0"
             key={`space-${space.guid}-role-${role.type}`}
           >
             <Checkbox

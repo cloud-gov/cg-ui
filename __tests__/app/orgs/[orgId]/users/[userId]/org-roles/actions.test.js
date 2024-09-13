@@ -105,9 +105,7 @@ describe('edit org roles actions', () => {
         // act/expect
         expect(async () => {
           await updateOrgRolesForUser(userGuid, orgGuid, roles);
-        }).rejects.toThrow(
-          new Error('Unable to edit org role. Please try again.')
-        );
+        }).rejects.toThrow(new Error('Try submitting your changes again.'));
       });
     });
   });

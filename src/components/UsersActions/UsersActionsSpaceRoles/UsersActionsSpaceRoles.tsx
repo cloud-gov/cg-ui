@@ -1,6 +1,7 @@
 'use client';
 
 import React from 'react';
+import Link from 'next/link';
 import { getOrgUserSpacesPage } from '@/controllers/controllers';
 import { ControllerResult, RolesState } from '@/controllers/controller-types';
 import { defaultSpaceRoles } from '@/controllers/controller-helpers';
@@ -17,9 +18,13 @@ type ActionStatus = 'default' | 'pending' | 'success' | 'error';
 type SpacesPayload = Array<SpaceObj>;
 
 export function UsersActionsSpaceRoles({
+  onCancel,
+  onSuccess,
   orgGuid,
   userGuid,
 }: {
+  onCancel?: Function;
+  onSuccess?: Function;
   orgGuid: string;
   userGuid: string;
 }) {
@@ -81,6 +86,7 @@ export function UsersActionsSpaceRoles({
       if (meta.status === 'success') {
         setFetchedDataToState(payload);
         setActionStatus('success' as ActionStatus);
+        onSuccess && onSuccess(userGuid, 'space');
       }
       if (meta.status === 'error') {
         meta?.errors && setActionErrors(meta.errors);
@@ -101,47 +107,69 @@ export function UsersActionsSpaceRoles({
   }
   return (
     <form onSubmit={submitForm}>
-      {actionStatus === 'pending' && (
-        <Alert type="warning">Submission in progress...</Alert>
-      )}
+      <div className="tablet:display-flex flex-row flex-justify margin-bottom-3">
+        <div className="flex-4 maxw-mobile-lg">
+          <p className="margin-bottom-0">
+            By assigning roles, you can grant a user access to specific
+            information and features within a given Space.
+          </p>
+        </div>
+      </div>
       {actionStatus === 'success' && (
         <Alert type="success">Changes saved!</Alert>
       )}
       {actionStatus === 'error' && (
-        <Alert type="error">{actionErrors.join(', ')}</Alert>
-      )}
-      <div className="tablet:display-flex flex-row flex-justify margin-bottom-3">
-        <div className="flex-4 maxw-mobile-lg">
-          <h2>Space roles</h2>
-          <p className="margin-bottom-0">
-            Optional. By assigning additional roles, you can grant access to
-            space level information and features.
-          </p>
-        </div>
-        <div className="align-self-end margin-top-2 tablet:margin-top-auto">
-          <Button type="submit" disabled={isButtonDisabled}>
-            Save changes
-          </Button>
-        </div>
-      </div>
-      <GridList>
-        {spaces.map((space: any) => (
-          <fieldset
-            key={space.guid}
-            disabled={isFieldsetDisabled}
-            className="usa-fieldset"
+        <Alert type="error" heading="An error has occured.">
+          {actionErrors.join(', ')} If the error occurs again, please contact{' '}
+          <Link
+            className="text-bold text-ink"
+            href={process.env.NEXT_PUBLIC_CLOUD_SUPPORT_URL || '/'}
           >
-            <legend className="usa-legend usa-sr-only">
-              <strong>Select roles for space: {space.name}</strong>
-            </legend>
-            <RolesForSpace
-              space={space}
-              roles={roles[space.guid] || defaultSpaceRoles}
-              handleChange={handleChange}
-            />
-          </fieldset>
-        ))}
-      </GridList>
+            Cloud.gov support
+          </Link>
+          .
+        </Alert>
+      )}
+      <div className="margin-top-3 border-bottom border-top border-base-light">
+        <GridList>
+          {spaces.map((space: any) => (
+            <fieldset
+              key={space.guid}
+              disabled={isFieldsetDisabled}
+              className="usa-fieldset"
+            >
+              <legend className="usa-legend usa-sr-only">
+                <strong>Select roles for space: {space.name}</strong>
+              </legend>
+              <RolesForSpace
+                space={space}
+                roles={roles[space.guid] || defaultSpaceRoles}
+                handleChange={handleChange}
+              />
+            </fieldset>
+          ))}
+        </GridList>
+      </div>
+      <div className="margin-top-3">
+        <Button
+          className="margin-right-4"
+          type="submit"
+          disabled={isButtonDisabled}
+        >
+          Update permissions
+        </Button>
+
+        {onCancel && (
+          <Button
+            className="usa-button--outline"
+            type="button"
+            onClick={() => onCancel()}
+          >
+            Cancel
+          </Button>
+        )}
+      </div>
+      {actionStatus === 'pending' && <p>Submission in progress...</p>}
     </form>
   );
 }

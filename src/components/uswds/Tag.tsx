@@ -7,6 +7,6 @@ export function Tag({
   className?: string;
   label: string;
 }) {
-  const classes = classNames('usa-tag', className);
+  const classes = classNames('usa-tag radius-pill', className);
   return <span className={classes}>{label}</span>;
 }
