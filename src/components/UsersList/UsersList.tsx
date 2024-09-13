@@ -139,8 +139,11 @@ export function UsersList({
     const usernameText = username ? `for ${username}` : '';
     const rolesText = type === 'org' ? 'organization' : 'space';
     const msg = `The ${rolesText} roles ${usernameText} have been updated.`;
-    setSuccessMsg(msg);
     closeOverlay();
+    // delaying this to get aria-live region to announce success
+    setTimeout(() => {
+      setSuccessMsg(msg);
+    }, 500);
   };
 
   // Success alert
@@ -159,6 +162,13 @@ export function UsersList({
 
   return (
     <>
+      {/*
+      aria-live region needs to show up on initial page render.
+      More info: https://tetralogical.com/blog/2024/05/01/why-are-my-live-regions-not-working/
+      */}
+      <div role="region" aria-live="assertive" aria-atomic={true}>
+        {successMsg}
+      </div>
       <OverlayDrawer
         ariaLabel={overlayAriaLabel}
         id="overlay-drawer-manage-users"
