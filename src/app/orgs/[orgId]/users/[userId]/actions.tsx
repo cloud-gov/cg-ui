@@ -40,7 +40,7 @@ export async function updateSpaceRolesForUser(
       logDevError(
         `api error on cf edit spaces page with http code ${response.status} for url: ${response.url}`
       );
-      throw new Error('Unable to edit space role. Please try again.');
+      throw new Error('Try submitting your changes again.');
     }
     return response.headers.get('Location');
   });

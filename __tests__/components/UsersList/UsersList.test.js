@@ -1,7 +1,7 @@
 /**
  * @jest-environment jsdom
  */
-import { describe, expect, it } from '@jest/globals';
+import { describe, expect, it, beforeAll } from '@jest/globals';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { UsersList } from '@/components/UsersList/UsersList';
@@ -68,6 +68,22 @@ const mockUserLogonTime = {
 };
 
 describe('UsersList', () => {
+  beforeAll(() => {
+    /* global jest */
+    /* eslint no-undef: "off" */
+    HTMLDialogElement.prototype.show = jest.fn(function () {
+      this.open = true;
+    });
+
+    HTMLDialogElement.prototype.showModal = jest.fn(function () {
+      this.open = true;
+    });
+
+    HTMLDialogElement.prototype.close = jest.fn(function () {
+      this.open = false;
+    });
+    /* eslint no-undef: "error" */
+  });
   it('sorts all users by username in alpha order', () => {
     // act
     render(

@@ -23,8 +23,14 @@ import { UsersListSpaceRoles } from '@/components/UsersList/UsersListSpaceRoles'
 import { UserAccountExpires } from '@/components/UserAccount/UserAccountExpires';
 import { UserAccountLastLogin } from '@/components/UserAccount/UserAccountLastLogin';
 import { UsersActionsRemoveFromOrg } from '@/components/UsersActions/UsersActionsRemoveFromOrg';
+import { OverlayDrawer } from '@/components/OverlayDrawer';
+import { OrgUserOrgRolesOverlay } from '@/components/Overlays/OrgUserOrgRolesOverlay';
+import { Button } from '@/components/uswds/Button';
+import { SpaceRolesOverlay } from '@/components/Overlays/SpaceRolesOverlay';
 
 type SortDirection = 'asc' | 'desc';
+
+type OverlayType = 'org' | 'space';
 
 export function UsersList({
   users,
@@ -45,6 +51,10 @@ export function UsersList({
   const [searchValue, setSearchValue] = useState('' as string);
   const [sortParam, setSortParam] = useState('username' as string);
   const [sortDir, setSortDir] = useState('asc' as SortDirection);
+  const [overlayOpen, setOverlayOpen] = useState(false);
+  const [overlayType, setOverlayType] = useState('org' as OverlayType);
+  const [currentMemberId, setCurrentMemberId] = useState('');
+  const [successMsg, setSuccessMsg] = useState('');
 
   // Searching/Filtering
   const onSearchAction = (value: string) => {
@@ -96,7 +106,7 @@ export function UsersList({
     }
   };
 
-  // Modal
+  // Remove Modal
   const modalHeadingId = (name: string) => `removeUserSuccess-${name}`;
 
   function closeModal(): undefined {
@@ -112,13 +122,99 @@ export function UsersList({
     openModal(user);
   }
 
+  // Overlays
+  const openOverlay = (userId: string, type: OverlayType = 'org') => {
+    setOverlayType(type);
+    setCurrentMemberId(userId);
+    setOverlayOpen(true);
+  };
+
+  const closeOverlay = () => {
+    setOverlayOpen(false);
+    setCurrentMemberId('');
+  };
+
+  const onRolesEditSuccess = (userId: string, type: OverlayType = 'org') => {
+    const username = users.find((user) => user.guid === userId)?.username;
+    const usernameText = username ? `for ${username}` : '';
+    const rolesText = type === 'org' ? 'organization' : 'space';
+    const msg = `The ${rolesText} roles ${usernameText} have been updated.`;
+    closeOverlay();
+    // delaying this to get aria-live region to announce success
+    setTimeout(() => {
+      setSuccessMsg(msg);
+    }, 500);
+  };
+
+  // Success alert
+  const dismissSuccessMsg = () => {
+    setSuccessMsg('');
+  };
+
   // Helpers
   const currentUsers = usersSorted(usersFiltered(users));
   const usersResultsText = currentUsers.length === 1 ? 'user' : 'users';
+  const searchAriaLiveText = `${currentUsers.length} ${usersResultsText} found for ${searchValue}`;
   const spacesCount = Object.keys(spaces).length;
+  const currentMember =
+    users.find((user) => user.guid === currentMemberId) || null;
+  const overlayAriaLabel = `Edit ${overlayType === 'org' ? 'organization roles' : 'access permissions'} for ${currentMember ? currentMember?.username : 'this user'}`;
 
   return (
     <>
+      {/*
+      aria-live region needs to show up on initial page render.
+      More info: https://tetralogical.com/blog/2024/05/01/why-are-my-live-regions-not-working/
+      */}
+      <div role="region" aria-live="assertive" aria-atomic={true}>
+        {successMsg}
+      </div>
+      <OverlayDrawer
+        ariaLabel={overlayAriaLabel}
+        id="overlay-drawer-manage-users"
+        isOpen={overlayOpen}
+        close={() => closeOverlay()}
+      >
+        {overlayType === 'org' && (
+          <OrgUserOrgRolesOverlay
+            onCancel={() => {
+              closeOverlay();
+            }}
+            onSuccess={onRolesEditSuccess}
+            orgGuid={orgGuid}
+            serviceAccount={serviceAccounts[currentMember?.username || '']}
+            user={currentMember}
+          />
+        )}
+        {overlayType === 'space' && (
+          <SpaceRolesOverlay
+            onCancel={() => {
+              closeOverlay();
+            }}
+            onSuccess={onRolesEditSuccess}
+            orgGuid={orgGuid}
+            serviceAccount={serviceAccounts[currentMember?.username || '']}
+            user={currentMember}
+          />
+        )}
+      </OverlayDrawer>
+
+      {successMsg && (
+        <Alert
+          type="success"
+          className="margin-bottom-4"
+          heading="Your changes have been saved."
+        >
+          {successMsg}{' '}
+          <Button
+            onClick={() => dismissSuccessMsg()}
+            className="usa-button--unstyled text-bold text-ink"
+          >
+            (Dismiss this message.)
+          </Button>
+        </Alert>
+      )}
+
       <ListSearchInput
         onSubmit={onSearchAction}
         labelText="Find account names that match:"
@@ -127,13 +223,10 @@ export function UsersList({
       aria-live region needs to show up on initial page render.
       More info: https://tetralogical.com/blog/2024/05/01/why-are-my-live-regions-not-working/
       */}
-      <div role="region" aria-live="polite">
+      <div role="region" aria-live="assertive" aria-atomic={true}>
         {searchValue && (
           <div className="margin-bottom-2">
-            <strong>
-              {currentUsers.length} {usersResultsText} found for{' '}
-              {`"${searchValue}"`}
-            </strong>
+            <strong>{searchAriaLiveText}</strong>
           </div>
         )}
       </div>
@@ -193,7 +286,7 @@ export function UsersList({
                 <div className="display-flex flex-justify">
                   <span className="mobile-lg:text-bold maxw-card-lg text-ellipsis">
                     <Username
-                      user={user}
+                      username={user.username}
                       serviceAccount={serviceAccounts[user.username]}
                     />
                   </span>
@@ -205,8 +298,10 @@ export function UsersList({
                 sort={sortParam === 'orgRolesCount'}
               >
                 <UsersListOrgRoles
-                  href={`/orgs/${orgGuid}/users/${user.guid}/org-roles`}
                   orgRolesCount={user.orgRolesCount}
+                  onClick={() => {
+                    openOverlay(user.guid, 'org');
+                  }}
                 />
               </TableCell>
 
@@ -215,9 +310,11 @@ export function UsersList({
                 sort={sortParam === 'spaceRolesCount'}
               >
                 <UsersListSpaceRoles
-                  href={`/orgs/${orgGuid}/users/${user.guid}`}
                   spaceRolesCount={user.spaceRolesCount}
                   spacesCount={spacesCount}
+                  onClick={() => {
+                    openOverlay(user.guid, 'space');
+                  }}
                 />
               </TableCell>
 

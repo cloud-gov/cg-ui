@@ -77,6 +77,8 @@
   // sizing
   $theme-site-margins-width: 2,
 
+  // utilities settings
+
   $display-settings: (
     responsive: true,
   ),
@@ -90,14 +92,36 @@
   ),
 
   // utilities settings
-  $text-align-settings:
-    (
-      responsive: true,
-    ),
+  $text-align-settings: (
+    responsive: true
+  ),
 
   $background-color-palettes: (
-    'palette-color-system-mint-medium' // no trailing comma,
-  )
+    'palette-color-system-mint-medium',
+    'palette-color-system-green-cool-vivid',
+    'palette-color-system-red-cool-vivid' // no trailing comma
+  ),
+
+  $border-color-palettes: (
+    'palette-color-system-green-cool',
+    'palette-color-system-red-vivid' // no trailing comma
+  ),
+
+  $top-palettes: (
+    'palette-units-system-positive'
+  ),
+
+  $bottom-palettes: (
+    'palette-units-system-positive'
+  ),
+
+  $right-palettes: (
+    'palette-units-system-positive'
+  ),
+
+  $theme-utility-breakpoints: (
+    'tablet-lg': true,
+  ),
 );
 
 // 2. Load USWDS source code
@@ -244,4 +268,119 @@ $table-sort-active-color: color('blue-cool-5v');
 // Org selector component
 .orgs-selector__list {
   scrollbar-width: thin;
+}
+
+// OverlayDrawer
+
+body:has(dialog.overlayDrawer[open]) {
+  overflow: hidden; // prevents scrolling outside of dialog
+}
+
+// OverlayDrawer Animations
+// From MDN - Animating Dialogs: https://developer.mozilla.org/en-US/docs/Web/HTML/Element/dialog#animating_dialogs
+
+$timing-dialog: 0.2s;
+
+// Open state of the dialog
+dialog.overlayDrawer[open] {
+  left: initial;
+  opacity: 1;
+  transform: translateX( 0 );
+  transition-delay: 0;
+}
+
+// Closed state of the dialog
+dialog.overlayDrawer {
+  left: initial;
+  opacity: 1;
+  transform: translateX( 100% );
+  transition-delay: calc( var( $timing-dialog ) / 2);
+  transition:
+    transform $timing-dialog ease-in,
+    overlay $timing-dialog ease-in allow-discrete,
+    display $timing-dialog ease-in allow-discrete;
+}
+
+// Before-open state
+// Needs to be after the previous dialog[open] rule to take effect,
+// as the specificity is the same
+@starting-style {
+  dialog.overlayDrawer[open] {
+    transform: translateX( 100% );
+    transition-delay: 0;
+  }
+}
+
+dialog.overlayDrawer::backdrop {
+  background-color: rgb(0 0 0 / 0%);
+  transition-delay: calc( var( $timing-dialog ) / 2);
+  transition:
+    display $timing-dialog allow-discrete,
+    overlay $timing-dialog allow-discrete,
+    background-color $timing-dialog;
+}
+
+dialog.overlayDrawer[open]::backdrop {
+  background-color: rgb(0 0 0 / 70%);
+}
+
+@starting-style {
+  dialog.overlayDrawer[open]::backdrop {
+    background-color: rgb(0 0 0 / 0%);
+  }
+}
+
+// USA Checkbox
+
+.usa-checkbox {
+  background: initial; // removes white bg provided by USWDS
+}
+
+.usa-checkbox__label::before {
+  background: initial;
+  box-shadow: 0 0 0 2px color('primary');
+}
+
+// primary color #2C608A
+
+// USA Alerts
+
+$success-color-light: 'green-cool-5v';
+$success-color-dark: 'green-cool-50';
+$error-color-light: 'red-cool-10v';
+$error-color-dark: 'red-40v';
+
+.usa-alert .usa-alert__body {
+  max-width: none;
+}
+
+.usa-alert .usa-alert__body h4 {
+  @include u-font-size('sans', 'md');
+  margin-bottom: units(2px);
+}
+
+.usa-alert--success {
+  @include u-bg($success-color-light);
+  border-left-color: color($success-color-dark);
+
+  .usa-alert__body {
+    @include u-bg($success-color-light);
+
+    &:before {
+      @include u-bg($success-color-dark); // icon color
+    }
+  }
+}
+
+.usa-alert--error {
+  @include u-bg($error-color-light);
+  border-left-color: color($error-color-dark);
+
+  .usa-alert__body {
+    @include u-bg($error-color-light);
+
+    &:before {
+      @include u-bg($error-color-dark); // icon color
+    }
+  }
 }

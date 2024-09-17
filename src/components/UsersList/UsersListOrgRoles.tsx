@@ -1,29 +1,35 @@
 'use client';
 
 import React from 'react';
-import Link from 'next/link';
+import { Button } from '@/components/uswds/Button';
 import { pluralize } from '@/helpers/text';
 
 export function UsersListOrgRoles({
   orgRolesCount,
-  href,
+  onClick,
 }: {
   orgRolesCount: number;
-  href: string;
+  onClick: Function;
 }) {
   if (orgRolesCount <= 0) {
     return (
       <>
         None yet —{' '}
-        <Link href={href} className="usa-button--unstyled text-bold">
+        <Button
+          className="usa-button--unstyled font-ui-2xs text-bold"
+          onClick={() => onClick()}
+        >
           edit roles
-        </Link>
+        </Button>
       </>
     );
   }
   return (
-    <Link href={href} className="usa-button--unstyled">
+    <Button
+      className="usa-button--unstyled font-ui-2xs"
+      onClick={() => onClick()}
+    >
       {`${orgRolesCount} ${pluralize('role', orgRolesCount)}`}
-    </Link>
+    </Button>
   );
 }

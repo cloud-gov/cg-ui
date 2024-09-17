@@ -41,7 +41,7 @@ export async function updateOrgRolesForUser(
       logDevError(
         `api error on cf edit org page with http code ${response.status} for url: ${response.url}`
       );
-      throw new Error('Unable to edit org role. Please try again.');
+      throw new Error('Try submitting your changes again.');
     }
     return response.headers.get('Location');
   });

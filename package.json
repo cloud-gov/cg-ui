@@ -13,12 +13,12 @@
     "setup-precommit": "cp ./scripts/pre-commit .git/hooks"
   },
   "dependencies": {
-    "@aws-sdk/client-s3": "^3.637.0",
-    "@aws-sdk/credential-providers": "^3.637.0",
+    "@aws-sdk/client-s3": "^3.645.0",
+    "@aws-sdk/credential-providers": "^3.645.0",
     "@uswds/uswds": "3.8.2",
     "classnames": "^2.5.1",
     "jose": "^5.8.0",
-    "next": "~14.2.7",
+    "next": "~14.2.8",
     "pg": "^8.12.0",
     "react": "18.3.1",
     "react-dom": "18.3.1"
@@ -32,13 +32,13 @@
     "@testing-library/react": "^16.0.1",
     "@testing-library/user-event": "^14.5.2",
     "aws-sdk-client-mock": "^4.0.1",
-    "eslint-config-next": "14.2.7",
+    "eslint-config-next": "14.2.8",
     "eslint-config-prettier": "^9.1.0",
     "eslint-plugin-prettier": "^5.2.1",
     "jest": "^29.7.0",
     "jest-environment-jsdom": "^29.7.0",
     "jsonwebtoken": "^9.0.2",
-    "lint-staged": "^15.2.9",
+    "lint-staged": "^15.2.10",
     "nock": "^14.0.0-beta.7",
     "sass": "^1.77.8"
   }

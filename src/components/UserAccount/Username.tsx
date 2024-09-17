@@ -1,16 +1,13 @@
 'use client';
 
-import {
-  ServiceCredentialBindingObj,
-  UserObj,
-} from '@/api/cf/cloudfoundry-types';
+import { ServiceCredentialBindingObj } from '@/api/cf/cloudfoundry-types';
 import { ServiceTag } from '@/components/ServiceTag';
 
 export function Username({
-  user,
+  username,
   serviceAccount,
 }: {
-  user: UserObj;
+  username?: string;
   serviceAccount?: ServiceCredentialBindingObj | undefined;
 }) {
   if (serviceAccount) {
@@ -21,6 +18,6 @@ export function Username({
       </>
     );
   } else {
-    return <>{user.username ? user.username : 'Unnamed user'}</>;
+    return <>{username ? username : 'Unnamed user'}</>;
   }
 }

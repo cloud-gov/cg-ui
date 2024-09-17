@@ -26,7 +26,12 @@ export default async function SpaceLayout({
       </div>
       <div className="margin-top-3">
         <PageHeader
-          heading={<Username user={user} serviceAccount={serviceAccount} />}
+          heading={
+            <Username
+              username={user.username}
+              serviceAccount={serviceAccount}
+            />
+          }
         />
       </div>
       {children}

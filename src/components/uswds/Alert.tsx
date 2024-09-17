@@ -42,10 +42,27 @@ export function Alert({
 
   const Heading = headingLevel;
 
+  let role = 'region';
+  if (type === 'success') {
+    role = 'status';
+  }
+  if (type === 'error' || type === 'emergency') {
+    role = 'alert';
+  }
+
   return (
-    <div className={classes} {...defaultProps}>
+    <div
+      className={classes}
+      role={role}
+      {...defaultProps}
+      aria-label={role === 'region' ? `${type} alert` : ''}
+    >
       <div className="usa-alert__body">
-        {heading && <Heading className="usa-alert__heading">{heading}</Heading>}
+        {heading && (
+          <Heading className="usa-alert__heading padding-left-2 font-sans-md">
+            {heading}
+          </Heading>
+        )}
         {children &&
           (validation ? (
             children
