@@ -19,7 +19,7 @@ export function OrgPicker({ single }: { single: Boolean }) {
       <span className="usa-label font-sans-xs padding-right-105">
         Current organization:
       </span>
-      <nav className="orgs-selector width-mobile bg-white border border-base-light shadow-2 font-sans-xs padding-x-105 margin-y-105">
+      <nav className="orgs-selector width-mobile bg-white border border-base-light font-sans-xs padding-x-105 margin-y-105">
         <header className="display-flex padding-y-105">
           <strong className="orgs-selector__current text-bold text-base-darker text-ellipsis margin-right-1 padding-right-1 border-right border-base-light">
             sandbox-gsa-much-longer-name-goes-here-and-is-very-very-long
