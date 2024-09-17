@@ -16,11 +16,11 @@ export function OrgPicker({ single }: { single: Boolean }) {
 
   return !single ? (
     <div className="display-block desktop:display-flex">
-      <span className="usa-label font-sans-xs padding-right-105">
+      <span className="usa-label font-body-2xs padding-right-105">
         Current organization:
       </span>
-      <nav className="orgs-selector width-mobile bg-white border border-base-light font-sans-xs padding-x-105 margin-y-105">
-        <header className="display-flex padding-y-105">
+      <nav className="orgs-selector width-mobile bg-white border border-base-light font-body-2xs padding-x-105 margin-y-105">
+        <header className="display-flex padding-bottom-105 padding-top-2">
           <strong className="orgs-selector__current text-bold text-base-darker text-ellipsis margin-right-1 padding-right-1 border-right border-base-light">
             sandbox-gsa-much-longer-name-goes-here-and-is-very-very-long
           </strong>
@@ -48,7 +48,7 @@ export function OrgPicker({ single }: { single: Boolean }) {
     </div>
   ) : (
     <div className="display-block width-card-lg desktop:display-flex desktop:width-mobile-lg">
-      <span className="usa-label font-sans-xs padding-right-105">
+      <span className="usa-label font-body-2xs padding-right-105">
         Current organization:
       </span>
       <strong className="text-bold text-base-darker margin-top-3 maxw-mobile">
