@@ -12,14 +12,15 @@ import { OrgPickerList } from './OrgPickerList';
 import { OrgPickerFooter } from './OrgPickerFooter';
 
 export function OrgPicker({ single }: { single: Boolean }) {
-  const [toggle, setToggle] = useState(true);
+  const [isOpen, setIsOpen] = useState(false);
+  const togglePicker = () => setIsOpen(!isOpen);
 
   return !single ? (
     <div className="display-block desktop:display-flex">
       <span className="usa-label font-body-2xs padding-right-105">
         Current organization:
       </span>
-      <nav className="orgs-selector width-mobile bg-white border border-base-light font-body-2xs padding-x-105 margin-y-105">
+      <nav id="orgs-selector" className="orgs-selector width-mobile bg-white border border-base-light font-body-2xs padding-x-105 margin-y-105" aria-expanded={isOpen}>
         <header className="display-flex padding-bottom-105 padding-top-2">
           <strong className="orgs-selector__current text-bold text-base-darker text-ellipsis margin-right-1 padding-right-1 border-right border-base-light">
             sandbox-gsa-much-longer-name-goes-here-and-is-very-very-long
@@ -27,18 +28,20 @@ export function OrgPicker({ single }: { single: Boolean }) {
           <Button
             unstyled
             className="width-6"
-            onClick={() => setToggle(!toggle)}
+            aria-expanded={isOpen}
+            aria-controls="orgs-selector"
+            onClick={togglePicker}
           >
             <Image
               unoptimized
-              src={toggle ? expandIcon : collapseIcon}
-              alt="collapse"
+              src={isOpen ? expandIcon : collapseIcon}
+              alt=""
               width={24}
               height={24}
             />
           </Button>
         </header>
-        {toggle && (
+        {isOpen && (
           <>
             <OrgPickerList />
             <OrgPickerFooter />
