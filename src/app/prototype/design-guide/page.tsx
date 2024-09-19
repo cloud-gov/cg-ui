@@ -37,9 +37,11 @@ export default function DesignGuidePage() {
       <h2>USA banner</h2>
       <Banner />
 
-      <h2>Org Picker</h2>
 
-      <OrgPicker single={false} />
+      <section className='position-relative padding-y-6'>
+        <h2>Org Picker</h2>
+        <OrgPicker single={false} />
+      </section>
 
       <h2>Headers in prose:</h2>
 

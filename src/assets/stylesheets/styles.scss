@@ -91,21 +91,29 @@
     responsive: true,
   ),
 
-  // utilities settings
-  $text-align-settings:
-    (
-      responsive: true,
-    ),
+  $text-align-settings: (
+    responsive: true,
+  ),
+
+  $position-settings: (
+    responsive: true,
+  ),
+
+  $right-settings: (
+    responsive: true,
+  ),
 
   $background-color-palettes: (
     'palette-color-system-mint-medium',
     'palette-color-system-green-cool-vivid',
-    'palette-color-system-red-cool-vivid' // no trailing comma,,,,,,,,,,,,,,,,,,
+    'palette-color-system-red-cool-vivid'
+      // no trailing comma,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
   ),
 
   $border-color-palettes: (
     'palette-color-system-green-cool',
-    'palette-color-system-red-vivid' // no trailing comma,,,,,,,,,,,,,,,,,,
+    'palette-color-system-red-vivid'
+      // no trailing comma,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
   ),
 
   $top-palettes: (
@@ -270,6 +278,15 @@ $table-sort-active-color: color('blue-cool-5v');
 .orgs-selector {
   &[aria-expanded='true'] {
     box-shadow: 0 2px 8px 0 rgba(color('gray-cool-30'), 0.5);
+  }
+
+  header {
+    padding-top: calc(units(1.5) / 2); // 6px
+    padding-bottom: calc(units(1.5) / 2);
+    @include at-media('desktop') {
+      padding-top: units(1); // 8px
+      padding-bottom: units(1);
+    }
   }
 
   &__list {
