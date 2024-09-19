@@ -1,10 +1,18 @@
 // docs: https://nextjs.org/docs/app/building-your-application/routing/middleware
+import type { NextRequest } from 'next/server';
 import { NextResponse } from 'next/server';
 import { decodeJwt } from 'jose';
-import { postToAuthTokenUrl } from '@/api/auth';
+import { postToAuthTokenUrl, UAATokenResponseObj } from '@/api/auth';
 
-export function login(request) {
-  const state = request.nextUrl.searchParams.get('state');
+export function login(request: NextRequest) {
+  if (
+    !process.env.UAA_ROOT_URL ||
+    !process.env.UAA_AUTH_PATH ||
+    !process.env.OAUTH_CLIENT_ID
+  ) {
+    throw new Error('UAA environment variables are not set');
+  }
+  const state = request.nextUrl.searchParams.get('state') || '';
   const loginUrl = new URL(
     process.env.UAA_ROOT_URL + process.env.UAA_AUTH_PATH
   );
@@ -18,6 +26,16 @@ export function login(request) {
 }
 
 export function logout() {
+  if (
+    !process.env.UAA_ROOT_URL ||
+    !process.env.UAA_LOGOUT_PATH ||
+    !process.env.ROOT_URL ||
+    !process.env.AUTH_CALLBACK_PATH ||
+    !process.env.OAUTH_CLIENT_ID
+  ) {
+    throw new Error('UAA environment variables are not set');
+  }
+
   const logoutUrl = new URL(
     process.env.UAA_ROOT_URL + process.env.UAA_LOGOUT_PATH
   );
@@ -29,7 +47,10 @@ export function logout() {
   return response;
 }
 
-export function setAuthCookie(data, response) {
+export function setAuthCookie(
+  data: UAATokenResponseObj,
+  response: NextResponse
+) {
   const decodedToken = decodeJwt(data.access_token);
   response.cookies.set(
     'authsession',
@@ -43,7 +64,15 @@ export function setAuthCookie(data, response) {
   return response;
 }
 
-export async function requestAndSetAuthToken(request) {
+export async function requestAndSetAuthToken(request: NextRequest) {
+  if (
+    !process.env.UAA_ROOT_URL ||
+    !process.env.OAUTH_CLIENT_ID ||
+    !process.env.OAUTH_CLIENT_SECRET
+  ) {
+    throw new Error('UAA environment variables are not set');
+  }
+
   const stateCookie = request.cookies.get('state');
   let response = NextResponse.redirect(new URL('/', request.url));
 
@@ -54,7 +83,7 @@ export async function requestAndSetAuthToken(request) {
     return response;
   }
   const data = await postToAuthTokenUrl({
-    code: request.nextUrl.searchParams.get('code'),
+    code: request.nextUrl.searchParams.get('code') || '',
     grant_type: 'authorization_code',
     response_type: 'token',
     client_id: process.env.OAUTH_CLIENT_ID,
@@ -65,7 +94,11 @@ export async function requestAndSetAuthToken(request) {
   return response;
 }
 
-export async function refreshAuthToken(refreshToken) {
+export async function refreshAuthToken(refreshToken: string) {
+  if (!process.env.OAUTH_CLIENT_ID || !process.env.OAUTH_CLIENT_SECRET) {
+    throw new Error('OAUTH environment variables are not set');
+  }
+
   const data = await postToAuthTokenUrl({
     grant_type: 'refresh_token',
     refresh_token: refreshToken,
@@ -75,7 +108,7 @@ export async function refreshAuthToken(refreshToken) {
   return data;
 }
 
-export async function authenticateRoute(request) {
+export async function authenticateRoute(request: NextRequest) {
   // get auth session cookie
   const authCookie = request.cookies.get('authsession');
   // if no cookie, redirect to login page
@@ -93,7 +126,7 @@ export async function authenticateRoute(request) {
   return NextResponse.next();
 }
 
-export function middleware(request) {
+export function middleware(request: NextRequest) {
   if (request.nextUrl.pathname.startsWith('/test/authenticated')) {
     return authenticateRoute(request);
   }

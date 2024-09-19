@@ -1,7 +1,7 @@
 import { describe, expect, it, beforeAll, afterEach } from '@jest/globals';
 import { NextRequest, NextResponse } from 'next/server';
 import jwt from 'jsonwebtoken';
-import { middleware } from '@/middleware.js';
+import { middleware } from '@/middleware.ts';
 // Need to disable eslint for this import because
 // you need to import the module you're going to mock with Jest
 // eslint-disable-next-line no-unused-vars
