@@ -6,7 +6,6 @@ import React from 'react';
 import { Button } from '@/components/uswds/Button';
 import { useState } from 'react';
 import Image from 'next/image';
-import expandIcon from '@/../public/img/uswds/usa-icons/expand_less.svg';
 import collapseIcon from '@/../public/img/uswds/usa-icons/expand_more.svg';
 import { OrgPickerList } from './OrgPickerList';
 import { OrgPickerFooter } from './OrgPickerFooter';
