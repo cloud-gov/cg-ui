@@ -3,7 +3,7 @@
  */
 import React from 'react';
 import { Button } from '@/components/uswds/Button';
-import { useState } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import Image from 'next/image';
 import collapseIcon from '@/../public/img/uswds/usa-icons/expand_more.svg';
 import { OrgPickerList } from './OrgPickerList';
@@ -11,10 +11,44 @@ import { OrgPickerFooter } from './OrgPickerFooter';
 
 export function OrgPicker({ single }: { single: Boolean }) {
   const [isOpen, setIsOpen] = useState(false);
+  const orgPickerRef = useRef<HTMLDivElement>(null);
+
+  // Toggle the org picker
   const togglePicker = () => setIsOpen(!isOpen);
 
+  // Close the picker when clicking outside
+  const handleOutsideClick = (e: MouseEvent) => {
+    if (orgPickerRef.current && !orgPickerRef.current.contains(e.target as Node)) {
+      setIsOpen(false);
+    }
+  }
+
+  // Close the picker when pressing the ESC key
+  const handleEscapeKeyPress = (e: KeyboardEvent) => {
+    if (e.key === 'Escape') {
+      setIsOpen(false);
+    }
+  }
+
+  useEffect(() => {
+    if (isOpen) {
+      document.addEventListener('mousedown', handleOutsideClick);
+      document.addEventListener('keydown', handleEscapeKeyPress);
+    } else {
+      // Cleanup listeners if org picker is not open
+      document.removeEventListener('mousedown', handleOutsideClick);
+      document.removeEventListener('keydown', handleEscapeKeyPress);
+    }
+
+    // Cleanup listeners when the component unmounts
+    return () => {
+      document.removeEventListener('mousedown', handleOutsideClick);
+      document.removeEventListener('keydown', handleEscapeKeyPress);
+    };
+  }, [isOpen]);
+
   return !single ? (
-    <div className="display-block desktop:display-flex desktop:position-absolute">
+    <div className="display-block desktop:display-flex desktop:position-absolute" ref={orgPickerRef}>
       <span className="usa-label font-body-2xs padding-right-105">
         Current organization:
       </span>
