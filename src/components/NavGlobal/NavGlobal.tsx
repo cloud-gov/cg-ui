@@ -15,17 +15,13 @@ const sharedLinkClasses = [
   'border-x-0',
   'flex-align-center',
   'margin-right-205',
-  'padding-bottom-1',
-  'padding-top-105',
-  'desktop:padding-bottom-2',
-  'desktop:padding-top-205',
   'text-no-underline',
 ];
 
 export function NavGlobal() {
   return (
     <div id="nav-global" className="font-body-xs">
-      <div className="display-flex flex-align-center margin-x-auto maxw-desktop-lg padding-x-2 desktop:padding-x-4">
+      <div className="display-flex flex-align-center margin-x-auto maxw-desktop-lg padding-x-2 desktop:padding-x-2 padding-y-2px">
         <NavGlobalLinkLogo href="/" sharedClasses={sharedLinkClasses}>
           <CloudGovLogo />
         </NavGlobalLinkLogo>

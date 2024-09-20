@@ -15,9 +15,12 @@ export function NavGlobalLinkLogo({
     'cloud-logo',
     // USWDS classes
     'display-block',
-    'mobile-lg:margin-right-7',
+    'mobile-lg:margin-right-3',
     'mobile-lg:overflow-visible',
+    'tablet-lg:margin-right-7',
     'overflow-hidden',
+    'margin-top-2px',
+    'padding-top-2px',
     ...sharedClasses
   );
   return (
