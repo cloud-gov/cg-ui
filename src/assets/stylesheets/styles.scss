@@ -107,13 +107,13 @@
     'palette-color-system-mint-medium',
     'palette-color-system-green-cool-vivid',
     'palette-color-system-red-cool-vivid'
-      // no trailing comma,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+      // no trailing comma,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
   ),
 
   $border-color-palettes: (
     'palette-color-system-green-cool',
     'palette-color-system-red-vivid'
-      // no trailing comma,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+      // no trailing comma,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
   ),
 
   $top-palettes: (
@@ -278,9 +278,17 @@ $table-sort-active-color: color('blue-cool-5v');
 .orgs-selector {
   &[aria-expanded='true'] {
     box-shadow: 0 2px 8px 0 rgba(color('gray-cool-30'), 0.5);
+
+    .usa-button-expand {
+      transform: rotate(180deg);
+    }
   }
 
-  header {
+  .usa-button-expand {
+    transition: transform 0.5s ease;
+  }
+
+  &__header {
     padding-top: calc(units(1.5) / 2); // 6px
     padding-bottom: calc(units(1.5) / 2);
     @include at-media('desktop') {
