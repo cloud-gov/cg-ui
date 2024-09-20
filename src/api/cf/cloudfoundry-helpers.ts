@@ -27,6 +27,9 @@ export async function cfRequest(
   const options = await cfRequestOptions(method, data);
   const res = await request(CF_API_URL + path, options);
   if (res.status === 401) {
+    if (process.env.NODE_ENV === 'development') {
+      throw new Error('Time to refresh your CF_API_TOKEN');
+    }
     const path = await logInPathAsync();
     redirect(path);
   }
