@@ -6,7 +6,10 @@ export function LoginButton() {
 
   return (
     <>
-      <a href={loginPathBase + randomString} className="text-white hover:text-no-underline">
+      <a
+        href={loginPathBase + randomString}
+        className="text-white hover:text-no-underline"
+      >
         Log in
       </a>
     </>
