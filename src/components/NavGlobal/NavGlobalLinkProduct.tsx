@@ -15,6 +15,10 @@ export function NavGlobalLinkProduct({
 }) {
   const classes = classnames(
     'nav-product',
+    // Custom class for “active” product link
+    {
+      'nav-product-active': active
+    },
     // USWDS classes
     'display-flex',
     'margin-bottom-2px',
