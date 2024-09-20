@@ -5,8 +5,8 @@ export function LoginButton() {
 
   return (
     <>
-      <a href={'/login?state=' + randomString} className="text-white">
-        Log In
+      <a href={'/login?state=' + randomString} className="text-white hover:text-no-underline">
+        Log in
       </a>
     </>
   );
