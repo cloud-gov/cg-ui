@@ -6,6 +6,7 @@ export function OrgPickerList() {
       className="orgs-selector__list usa-list usa-list--unstyled maxh-card overflow-x-hidden overflow-y-scroll border-bottom border-top border-base-light"
       tabIndex={0}
       aria-label="Organizations list"
+      role="menu"
     >
       <OrgPickerListItem>another-organization-name-goes-here</OrgPickerListItem>
       <OrgPickerListItem>significantly-shorter-name</OrgPickerListItem>

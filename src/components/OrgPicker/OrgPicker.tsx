@@ -30,20 +30,37 @@ export function OrgPicker({ single }: { single: Boolean }) {
     }
   }
 
+  // Focus back on the toggle button after tabbing through list
+  const handleTabKeyPress = (e: KeyboardEvent) => {
+    if (e.key === 'Tab' && isOpen && orgPickerRef.current) {
+      const firstElement = orgPickerRef.current.querySelector('button');
+      const lastElement = orgPickerRef.current.querySelector('footer a');
+
+      if (!e.shiftKey && document.activeElement === lastElement) {
+        e.preventDefault();
+        setIsOpen(false);
+        firstElement?.focus();
+      }
+    }
+  }
+
   useEffect(() => {
     if (isOpen) {
       document.addEventListener('mousedown', handleOutsideClick);
       document.addEventListener('keydown', handleEscapeKeyPress);
+      document.addEventListener('keydown', handleTabKeyPress);
     } else {
       // Cleanup listeners if org picker is not open
       document.removeEventListener('mousedown', handleOutsideClick);
       document.removeEventListener('keydown', handleEscapeKeyPress);
+      document.removeEventListener('keydown', handleTabKeyPress);
     }
 
     // Cleanup listeners when the component unmounts
     return () => {
       document.removeEventListener('mousedown', handleOutsideClick);
       document.removeEventListener('keydown', handleEscapeKeyPress);
+      document.removeEventListener('keydown', handleTabKeyPress);
     };
   }, [isOpen]);
 
