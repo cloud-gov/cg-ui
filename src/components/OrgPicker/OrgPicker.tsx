@@ -20,7 +20,11 @@ export function OrgPicker({ single }: { single: Boolean }) {
       <span className="usa-label font-body-2xs padding-right-105">
         Current organization:
       </span>
-      <nav id="orgs-selector" className="orgs-selector width-mobile bg-white border border-base-light font-body-2xs padding-x-105 margin-y-105" aria-expanded={isOpen}>
+      <nav
+        id="orgs-selector"
+        className="orgs-selector width-mobile bg-white border border-base-light font-body-2xs padding-x-105 margin-y-105"
+        aria-expanded={isOpen}
+      >
         <header className="orgs-selector__header display-flex desktop:padding-y-1 flex-align-center">
           <strong className="orgs-selector__current text-bold text-base-darker text-ellipsis margin-right-1 padding-right-1 border-right border-base-light">
             sandbox-gsa-much-longer-name-goes-here-and-is-very-very-long
@@ -35,7 +39,7 @@ export function OrgPicker({ single }: { single: Boolean }) {
             <Image
               unoptimized
               src={collapseIcon}
-              alt={isOpen ? "close list" : "open list"}
+              alt={isOpen ? 'close list' : 'open list'}
               className="usa-button-expand"
               width={24}
               height={24}
