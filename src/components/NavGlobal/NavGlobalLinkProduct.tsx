@@ -17,7 +17,7 @@ export function NavGlobalLinkProduct({
     'nav-product',
     // Custom class for “active” product link
     {
-      'nav-product-active': active
+      'nav-product-active': active,
     },
     // USWDS classes
     'display-flex',
