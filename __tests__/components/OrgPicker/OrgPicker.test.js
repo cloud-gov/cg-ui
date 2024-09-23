@@ -2,7 +2,8 @@
  * @jest-environment jsdom
  */
 import { describe, expect, it } from '@jest/globals';
-import { render, screen, fireEvent } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import { OrgPicker } from '@/components/OrgPicker/OrgPicker';
 
 describe('<OrgPicker />', () => {
@@ -19,10 +20,11 @@ describe('<OrgPicker />', () => {
   describe('when button is clicked', () => {
     it('content expands', async () => {
       // setup
+      const user = userEvent.setup();
       render(<OrgPicker />);
       // act
-      const button = screen.getByAltText('open list');
-      fireEvent.click(button);
+      const button = screen.getByRole('button', {expanded : false});
+      await user.click(button);
       // assert
       const content = await screen.findByText('View all organizations');
       expect(content).toBeInTheDocument();
