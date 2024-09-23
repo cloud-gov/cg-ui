@@ -12,13 +12,14 @@ import { OrgPickerFooter } from './OrgPickerFooter';
 export function OrgPicker({ single }: { single: Boolean }) {
   const [isOpen, setIsOpen] = useState(false);
   const orgPickerRef = useRef<HTMLDivElement>(null);
+  const orgsSelectorRef = useRef<HTMLElement>(null);
 
   // Toggle the org picker
   const togglePicker = () => setIsOpen(!isOpen);
 
   // Close the picker when clicking outside
   const handleOutsideClick = (e: MouseEvent) => {
-    if (orgPickerRef.current && !orgPickerRef.current.contains(e.target as Node)) {
+    if (orgsSelectorRef.current && !orgsSelectorRef.current.contains(e.target as Node)) {
       setIsOpen(false);
     }
   }
@@ -73,6 +74,7 @@ export function OrgPicker({ single }: { single: Boolean }) {
         id="orgs-selector"
         className="orgs-selector width-mobile bg-white border border-base-light font-body-2xs padding-x-105 margin-y-1 desktop:margin-y-105"
         aria-expanded={isOpen}
+        ref={orgsSelectorRef}
       >
         <header className="orgs-selector__header display-flex desktop:padding-y-1 flex-align-center">
           <strong className="orgs-selector__current text-bold text-base-darker text-ellipsis margin-right-1 padding-right-1 border-right border-base-light">
