@@ -20,7 +20,7 @@ export function OrgPicker({ single }: { single: Boolean }) {
       </span>
       <nav
         id="orgs-selector"
-        className="orgs-selector width-mobile bg-white border border-base-light font-body-2xs padding-x-105 margin-y-105"
+        className="orgs-selector width-mobile bg-white border border-base-light font-body-2xs padding-x-105 margin-y-1 desktop:margin-y-105"
         aria-expanded={isOpen}
       >
         <header className="orgs-selector__header display-flex desktop:padding-y-1 flex-align-center">
