@@ -78,10 +78,10 @@
   $theme-site-margins-width: 2,
 
   // utilities settings
-
-  $display-settings: (
-    responsive: true,
-  ),
+  $display-settings:
+    (
+      responsive: true,
+    ),
 
   $height-settings: (
     responsive: true,
@@ -92,35 +92,45 @@
   ),
 
   $text-align-settings: (
-    responsive: true
+    responsive: true,
+  ),
+
+  $position-settings: (
+    responsive: true,
+  ),
+
+  $right-settings: (
+    responsive: true,
   ),
 
   $background-color-palettes: (
     'palette-color-system-mint-medium',
     'palette-color-system-green-cool-vivid',
-    'palette-color-system-red-cool-vivid' // no trailing comma
+    'palette-color-system-red-cool-vivid'
+      // no trailing comma,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
   ),
 
   $border-color-palettes: (
     'palette-color-system-green-cool',
-    'palette-color-system-red-vivid' // no trailing comma
+    'palette-color-system-red-vivid'
+      // no trailing comma,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
   ),
 
   $top-palettes: (
-    'palette-units-system-positive'
+    'palette-units-system-positive',
   ),
 
   $bottom-palettes: (
-    'palette-units-system-positive'
+    'palette-units-system-positive',
   ),
 
   $right-palettes: (
-    'palette-units-system-positive'
+    'palette-units-system-positive',
   ),
 
   $theme-utility-breakpoints: (
     'tablet-lg': true,
-  ),
+  )
 );
 
 // 2. Load USWDS source code
@@ -201,7 +211,7 @@ $table-sort-active-color: color('blue-cool-5v');
     background: color('gray-warm-4'); // .bg-accent-warm-light
     border: none; // .border-0
     border-bottom: $table-border;
-    padding: units( 0.5 ) units( 1 );
+    padding: units(0.5) units(1);
   }
   // Default padding for table headings/cells.
   tbody th,
@@ -262,6 +272,36 @@ $table-sort-active-color: color('blue-cool-5v');
   }
 }
 
+// Org selector component
+$timing-dropdown: 0.2s;
+
+.orgs-selector {
+  &[aria-expanded='true'] {
+    box-shadow: 0 2px 8px 0 rgba(color('gray-cool-30'), 0.5);
+
+    .usa-button-expand {
+      transform: rotate(180deg);
+    }
+  }
+
+  .usa-button-expand {
+    transition: transform $timing-dropdown ease;
+  }
+
+  &__header {
+    padding-top: calc(units(1.5) / 2); // 6px
+    padding-bottom: calc(units(1.5) / 2);
+    @include at-media('desktop') {
+      padding-top: units(1); // 8px
+      padding-bottom: units(1);
+    }
+  }
+
+  &__list {
+    scrollbar-width: thin;
+  }
+}
+
 // OverlayDrawer
 
 body:has(dialog.overlayDrawer[open]) {
@@ -277,7 +317,7 @@ $timing-dialog: 0.2s;
 dialog.overlayDrawer[open] {
   left: initial;
   opacity: 1;
-  transform: translateX( 0 );
+  transform: translateX(0);
   transition-delay: 0;
 }
 
@@ -285,8 +325,8 @@ dialog.overlayDrawer[open] {
 dialog.overlayDrawer {
   left: initial;
   opacity: 1;
-  transform: translateX( 100% );
-  transition-delay: calc( var( $timing-dialog ) / 2);
+  transform: translateX(100%);
+  transition-delay: calc(var($timing-dialog) / 2);
   transition:
     transform $timing-dialog ease-in,
     overlay $timing-dialog ease-in allow-discrete,
@@ -298,14 +338,14 @@ dialog.overlayDrawer {
 // as the specificity is the same
 @starting-style {
   dialog.overlayDrawer[open] {
-    transform: translateX( 100% );
+    transform: translateX(100%);
     transition-delay: 0;
   }
 }
 
 dialog.overlayDrawer::backdrop {
   background-color: rgb(0 0 0 / 0%);
-  transition-delay: calc( var( $timing-dialog ) / 2);
+  transition-delay: calc(var($timing-dialog) / 2);
   transition:
     display $timing-dialog allow-discrete,
     overlay $timing-dialog allow-discrete,
