@@ -23,7 +23,7 @@ describe('<OrgPicker />', () => {
       const user = userEvent.setup();
       render(<OrgPicker />);
       // act
-      const button = screen.getByRole('button', {expanded : false});
+      const button = screen.getByRole('button', { expanded: false });
       await user.click(button);
       // assert
       const content = await screen.findByText('View all organizations');

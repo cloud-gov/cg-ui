@@ -21,10 +21,13 @@ export function OrgPicker({ single }: { single: Boolean }) {
 
   // Close the picker when clicking outside
   const handleOutsideClick = (e: MouseEvent) => {
-    if (orgsSelectorRef.current && !orgsSelectorRef.current.contains(e.target as Node)) {
+    if (
+      orgsSelectorRef.current &&
+      !orgsSelectorRef.current.contains(e.target as Node)
+    ) {
       setIsOpen(false);
     }
-  }
+  };
 
   // Close the picker when pressing the ESC key
   const handleEscapeKeyPress = (e: KeyboardEvent) => {
@@ -32,7 +35,7 @@ export function OrgPicker({ single }: { single: Boolean }) {
       setIsOpen(false);
       returnFocus();
     }
-  }
+  };
 
   // Focus back on the toggle button after tabbing through list
   const handleTabKeyPress = (e: KeyboardEvent) => {
@@ -45,14 +48,14 @@ export function OrgPicker({ single }: { single: Boolean }) {
         returnFocus();
       }
     }
-  }
+  };
 
   // Add event listners to the org picker
   const addListeners = () => {
     document.addEventListener('mousedown', handleOutsideClick);
     document.addEventListener('keydown', handleEscapeKeyPress);
     document.addEventListener('keydown', handleTabKeyPress);
-  }
+  };
 
   // Remove event listners
   const removeListeners = () => {
@@ -60,7 +63,7 @@ export function OrgPicker({ single }: { single: Boolean }) {
     document.removeEventListener('mousedown', handleOutsideClick);
     document.removeEventListener('keydown', handleEscapeKeyPress);
     document.removeEventListener('keydown', handleTabKeyPress);
-  }
+  };
 
   useEffect(() => {
     if (isOpen) {
