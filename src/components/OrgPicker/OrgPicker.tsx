@@ -47,23 +47,32 @@ export function OrgPicker({ single }: { single: Boolean }) {
     }
   }
 
+  // Add event listners to the org picker
+  const addListeners = () => {
+    document.addEventListener('mousedown', handleOutsideClick);
+    document.addEventListener('keydown', handleEscapeKeyPress);
+    document.addEventListener('keydown', handleTabKeyPress);
+  }
+
+  // Remove event listners
+  const removeListeners = () => {
+    // Remove listeners if org picker is not open
+    document.removeEventListener('mousedown', handleOutsideClick);
+    document.removeEventListener('keydown', handleEscapeKeyPress);
+    document.removeEventListener('keydown', handleTabKeyPress);
+  }
+
   useEffect(() => {
     if (isOpen) {
-      document.addEventListener('mousedown', handleOutsideClick);
-      document.addEventListener('keydown', handleEscapeKeyPress);
-      document.addEventListener('keydown', handleTabKeyPress);
+      addListeners();
     } else {
       // Cleanup listeners if org picker is not open
-      document.removeEventListener('mousedown', handleOutsideClick);
-      document.removeEventListener('keydown', handleEscapeKeyPress);
-      document.removeEventListener('keydown', handleTabKeyPress);
+      removeListeners();
     }
 
     // Cleanup listeners when the component unmounts
     return () => {
-      document.removeEventListener('mousedown', handleOutsideClick);
-      document.removeEventListener('keydown', handleEscapeKeyPress);
-      document.removeEventListener('keydown', handleTabKeyPress);
+      removeListeners();
     };
   }, [isOpen]);
 
