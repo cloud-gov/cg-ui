@@ -2,7 +2,6 @@
  * While visually similar to the USWDS Combo box component, this expandable element presents a scrollable list of links. The link at the bottom of the menu directs the user to a page listing all the organizations they can access.
  */
 import React from 'react';
-import { Button } from '@/components/uswds/Button';
 import { useState, useRef, useEffect } from 'react';
 import Image from 'next/image';
 import collapseIcon from '@/../public/img/uswds/usa-icons/expand_more.svg';
@@ -11,11 +10,14 @@ import { OrgPickerFooter } from './OrgPickerFooter';
 
 export function OrgPicker({ single }: { single: Boolean }) {
   const [isOpen, setIsOpen] = useState(false);
-  const orgPickerRef = useRef<HTMLDivElement>(null);
   const orgsSelectorRef = useRef<HTMLElement>(null);
+  const toggleButtonRef = useRef<HTMLButtonElement>(null);
 
   // Toggle the org picker
   const togglePicker = () => setIsOpen(!isOpen);
+
+  // Return focus to toggle button
+  const returnFocus = () => toggleButtonRef.current?.focus();
 
   // Close the picker when clicking outside
   const handleOutsideClick = (e: MouseEvent) => {
@@ -28,19 +30,19 @@ export function OrgPicker({ single }: { single: Boolean }) {
   const handleEscapeKeyPress = (e: KeyboardEvent) => {
     if (e.key === 'Escape') {
       setIsOpen(false);
+      returnFocus();
     }
   }
 
   // Focus back on the toggle button after tabbing through list
   const handleTabKeyPress = (e: KeyboardEvent) => {
-    if (e.key === 'Tab' && isOpen && orgPickerRef.current) {
-      const firstElement = orgPickerRef.current.querySelector('button');
-      const lastElement = orgPickerRef.current.querySelector('footer a');
+    if (e.key === 'Tab' && isOpen && orgsSelectorRef.current) {
+      const lastElement = orgsSelectorRef.current.querySelector('footer a');
 
       if (!e.shiftKey && document.activeElement === lastElement) {
         e.preventDefault();
         setIsOpen(false);
-        firstElement?.focus();
+        returnFocus();
       }
     }
   }
@@ -66,7 +68,7 @@ export function OrgPicker({ single }: { single: Boolean }) {
   }, [isOpen]);
 
   return !single ? (
-    <div className="display-block desktop:display-flex desktop:position-absolute" ref={orgPickerRef}>
+    <div className="display-block desktop:display-flex desktop:position-absolute">
       <span className="usa-label font-body-2xs padding-right-105">
         Current organization:
       </span>
@@ -80,12 +82,12 @@ export function OrgPicker({ single }: { single: Boolean }) {
           <strong className="orgs-selector__current text-bold text-base-darker text-ellipsis margin-right-1 padding-right-1 border-right border-base-light">
             sandbox-gsa-much-longer-name-goes-here-and-is-very-very-long
           </strong>
-          <Button
-            unstyled
-            className="width-5 flex-justify-center"
+          <button
+            className="usa-button usa-button--unstyled width-5 flex-justify-center"
             aria-expanded={isOpen}
             aria-controls="orgs-selector"
             onClick={togglePicker}
+            ref={toggleButtonRef}
           >
             <Image
               unoptimized
@@ -95,7 +97,7 @@ export function OrgPicker({ single }: { single: Boolean }) {
               width={24}
               height={24}
             />
-          </Button>
+          </button>
         </header>
         {isOpen && (
           <>
