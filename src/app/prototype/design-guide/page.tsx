@@ -5,7 +5,6 @@ import { Button } from '@/components/uswds/Button';
 import { Banner } from '@/components/uswds/Banner';
 import Checkbox from '@/components/uswds/Checkbox';
 import { useState } from 'react';
-import { OrgPicker } from '@/components/OrgPicker/OrgPicker';
 
 export default function DesignGuidePage() {
   const initialCheckboxes = {
@@ -36,11 +35,6 @@ export default function DesignGuidePage() {
 
       <h2>USA banner</h2>
       <Banner />
-
-      <section className="position-relative padding-y-6">
-        <h2>Org Picker</h2>
-        <OrgPicker single={false} />
-      </section>
 
       <h2>Headers in prose:</h2>
 

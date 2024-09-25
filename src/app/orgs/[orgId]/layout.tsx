@@ -1,7 +1,6 @@
 import React from 'react';
-import Link from 'next/link';
-import { LayoutHeader } from '@/components/LayoutHeader';
-import { getOrg } from '@/controllers/controllers';
+import { OrgPicker } from '@/components/OrgPicker/OrgPicker';
+import { getOrgs } from '@/api/cf/cloudfoundry';
 
 export default async function OrgLayout({
   children,
@@ -10,15 +9,17 @@ export default async function OrgLayout({
   children: React.ReactNode;
   params: { orgId: string };
 }) {
-  const { payload, meta } = await getOrg(params.orgId);
+  const orgsRes = await getOrgs();
+  if (!orgsRes.ok) {
+    return <>orgs not found</>;
+  }
+  const orgResJson = await orgsRes.json();
+  const orgs = orgResJson.resources;
 
   return (
     <>
-      <LayoutHeader>
-        {meta.status === 'success' ? payload.name : 'Org name not found'}
-      </LayoutHeader>
-      <div className="display-block padding-bottom-2">
-        <Link href="/orgs">Back to all organizations</Link>
+      <div className="display-flex flex-column flex-align-end width-full desktop:height-10 margin-top-3">
+        <OrgPicker orgs={orgs} currentOrgId={params.orgId} />
       </div>
       {children}
     </>

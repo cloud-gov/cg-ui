@@ -25,3 +25,27 @@ export function emailIsValid(text: string): boolean {
 export function pluralize(text: string, count: number): string {
   return `${text}${count != 1 && count != -1 ? 's' : ''}`;
 }
+
+export function newOrgPathname(currentPath: string, guid: string): string {
+  // Capture everything past an org GUID,
+  // until you get to another digit (which would be inside the next GUID)
+  const guidRegex =
+    /[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-5][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}/;
+  const match = currentPath.match(
+    /\/orgs\/[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-5][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}\/\D+/
+  );
+  if (match && match[0]) {
+    let newPath = match[0];
+    if (newPath !== currentPath) {
+      // This means digits were removed
+      // Since the next GUID could've started with a-zA-Z,
+      // this removes those stragging chars from the previous match.
+      newPath = match[0].replace(/[a-zA-Z]+$/, '');
+    }
+    // replace org GUID with provided one
+    return newPath.replace(guidRegex, guid);
+  } else {
+    // if there's no match, then just replace any GUID with the provided one
+    return currentPath.replace(guidRegex, guid);
+  }
+}
