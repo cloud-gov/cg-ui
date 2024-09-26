@@ -18,11 +18,9 @@ import { newOrgPathname } from '@/helpers/text';
 export function OrgPicker({
   currentOrgId,
   orgs = [],
-  single = false,
 }: {
   currentOrgId: string;
   orgs?: Array<OrgObj>;
-  single?: Boolean;
 }) {
   const [isOpen, setIsOpen] = useState(false);
   const orgsSelectorRef = useRef<HTMLElement>(null);
@@ -99,7 +97,24 @@ export function OrgPicker({
     };
   }, [isOpen]);
 
-  return !single ? (
+  if (orgs.length <= 0 || !currentOrg) {
+    return null;
+  }
+
+  if (orgs.length === 1) {
+    return (
+      <div className="display-block desktop:display-flex">
+        <span className="usa-label font-body-2xs padding-right-105">
+          Current organization:
+        </span>
+        <strong className="text-bold text-base-darker margin-top-3 maxw-mobile">
+          {currentOrg.name}
+        </strong>
+      </div>
+    );
+  }
+
+  return (
     <div className="display-block desktop:display-flex desktop:position-absolute">
       <span className="usa-label font-body-2xs padding-right-105">
         Current organization:
@@ -112,7 +127,7 @@ export function OrgPicker({
       >
         <header className="orgs-selector__header display-flex desktop:padding-y-1 flex-align-center flex-justify">
           <strong className="orgs-selector__current text-bold text-base-darker text-ellipsis margin-right-1 padding-right-1">
-            {currentOrg?.name || 'loading'}
+            {currentOrg.name}
           </strong>
           <button
             className="usa-button usa-button--unstyled width-5 flex-justify-center border-left border-base-light"
@@ -146,15 +161,6 @@ export function OrgPicker({
           </>
         )}
       </nav>
-    </div>
-  ) : (
-    <div className="display-block width-card-lg desktop:display-flex desktop:width-mobile-lg">
-      <span className="usa-label font-body-2xs padding-right-105">
-        Current organization:
-      </span>
-      <strong className="text-bold text-base-darker margin-top-3 maxw-mobile">
-        {currentOrg?.name || 'loading'}
-      </strong>
     </div>
   );
 }

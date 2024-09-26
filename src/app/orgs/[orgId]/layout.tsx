@@ -10,9 +10,6 @@ export default async function OrgLayout({
   params: { orgId: string };
 }) {
   const orgsRes = await getOrgs();
-  if (!orgsRes.ok) {
-    return <>orgs not found</>;
-  }
   const orgResJson = await orgsRes.json();
   const orgs = orgResJson.resources;
 
