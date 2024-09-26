@@ -121,7 +121,7 @@ export function OrgPicker({
       </span>
       <nav
         id="orgs-selector"
-        className="orgs-selector width-mobile bg-white border border-base-light font-body-2xs padding-left-105 margin-y-1 desktop:margin-y-105"
+        className="orgs-selector width-mobile bg-white border border-base-light font-body-2xs padding-x-105 margin-y-1 desktop:margin-y-105"
         aria-expanded={isOpen}
         ref={orgsSelectorRef}
       >
@@ -130,7 +130,7 @@ export function OrgPicker({
             {currentOrg.name}
           </strong>
           <button
-            className="usa-button usa-button--unstyled width-5 flex-justify-center border-left border-base-light"
+            className="usa-button usa-button--unstyled width-5 flex-justify-center flex-shrink-0 border-left border-base-light padding-left-1"
             aria-expanded={isOpen}
             aria-controls="orgs-selector"
             onClick={togglePicker}

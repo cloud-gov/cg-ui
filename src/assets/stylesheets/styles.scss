@@ -139,6 +139,13 @@
 // 3. Load any custom SASS
 
 /* Custom utilities classes */
+
+// Flex
+
+.flex-shrink-0 {
+  flex-shrink: 0;
+}
+
 // text styling
 .text-capitalize {
   text-transform: capitalize;
