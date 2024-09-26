@@ -121,7 +121,7 @@ export function OrgPicker({
       </span>
       <nav
         id="orgs-selector"
-        className="orgs-selector width-mobile bg-white border border-base-light font-body-2xs padding-x-105 margin-y-1 desktop:margin-y-105"
+        className="orgs-selector width-mobile bg-white border border-base-light font-body-2xs padding-left-105 margin-y-1 desktop:margin-y-105"
         aria-expanded={isOpen}
         ref={orgsSelectorRef}
       >
