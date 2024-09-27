@@ -4,6 +4,7 @@ import {
   emailIsValid,
   underscoreToText,
   pluralize,
+  newOrgPathname,
 } from '@/helpers/text';
 
 describe('text helpers', () => {
@@ -45,6 +46,57 @@ describe('text helpers', () => {
     it('keeps s off when not plural', () => {
       expect(pluralize('role', 1)).toBe('role');
       expect(pluralize('role', -1)).toBe('role');
+    });
+  });
+
+  describe('newOrgPathname', () => {
+    const newGUID = 'foobar';
+
+    describe('when last GUID starts with an a-z character', () => {
+      it('removes last GUID from pathname', () => {
+        const path =
+          '/orgs/470bd8ff-ed0e-4d11-95c4-cf765202cebd/users/add/b70bd8ff-ed0e-4d11-95c4-cf765202cebd'; // last GUID starts with an a-z character
+        const result = newOrgPathname(path, newGUID);
+        expect(result).toEqual('/orgs/foobar/users/add/');
+      });
+    });
+
+    describe('last GUID starts with an a-z character, but then keeps going with more path sections', () => {
+      it('removes last GUID and beyond from pathname', () => {
+        const path =
+          '/orgs/470bd8ff-ed0e-4d11-95c4-cf765202cebd/users/add/b70bd8ff-ed0e-4d11-95c4-cf765202cebd/keeps-going'; // last GUID starts with an a-z character, but then keeps going with more path sections
+        const result = newOrgPathname(path, newGUID);
+        expect(result).toEqual('/orgs/foobar/users/add/');
+      });
+    });
+
+    describe('when last GUID starts with a digit', () => {
+      it('removes last GUID from pathname', () => {
+        const path =
+          '/orgs/470bd8ff-ed0e-4d11-95c4-cf765202cebd/users/add/470bd8ff-ed0e-4d11-95c4-cf765202cebd/'; // next GUID starts with a digit
+        const result = newOrgPathname(path, newGUID);
+        expect(result).toEqual('/orgs/foobar/users/add/');
+      });
+    });
+
+    describe('when no other GUID but the org GUID', () => {
+      it('just replaces the org guid with new guid', () => {
+        const path = '/orgs/470bd8ff-ed0e-4d11-95c4-cf765202cebd'; // without trailing slash
+        const result = newOrgPathname(path, newGUID);
+        expect(result).toEqual('/orgs/foobar');
+      });
+
+      it('just replaces the org guid with new guid', () => {
+        const path = '/orgs/470bd8ff-ed0e-4d11-95c4-cf765202cebd/'; // with trailing slash
+        const result = newOrgPathname(path, newGUID);
+        expect(result).toEqual('/orgs/foobar/');
+      });
+
+      it('just replaces the org guid with new guid', () => {
+        const path = '/orgs/470bd8ff-ed0e-4d11-95c4-cf765202cebd/users/add'; // with trailing slash
+        const result = newOrgPathname(path, newGUID);
+        expect(result).toEqual('/orgs/foobar/users/add');
+      });
     });
   });
 });
