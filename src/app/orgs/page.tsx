@@ -10,7 +10,14 @@ export default async function OrgsPage() {
   return (
     <>
       <PageHeader heading="Organizations" />
-      <OrganizationsList orgs={payload.orgs} />
+      <OrganizationsList
+        orgs={payload.orgs}
+        userCounts={payload.userCounts}
+        appCounts={payload.appCounts}
+        memoryAllocated={payload.memoryAllocated}
+        memoryCurrentUsage={payload.memoryCurrentUsage}
+        spaceCounts={payload.spaceCounts}
+      />
     </>
   );
 }

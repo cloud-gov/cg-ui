@@ -5,6 +5,7 @@
 import { revalidatePath } from 'next/cache';
 import * as CF from '@/api/cf/cloudfoundry';
 import {
+  OrgObj,
   ServiceCredentialBindingObj,
   ServiceInstanceObj,
   SpaceObj,
@@ -20,6 +21,11 @@ import {
   pollForJobCompletion,
   resourceKeyedById,
   apiErrorMessage,
+  countUsersPerOrg,
+  allocatedMemoryPerOrg,
+  memoryUsagePerOrg,
+  countSpacesPerOrg,
+  countAppsPerOrg,
 } from './controller-helpers';
 import { sortObjectsByParam } from '@/helpers/arrays';
 import { daysToExpiration } from '@/helpers/dates';
@@ -75,13 +81,30 @@ export async function getOrgsPage(): Promise<ControllerResult> {
     return {
       payload: {
         orgs: [],
+        userCounts: {},
       },
       meta: { status: 'error' },
     };
   }
+  const orgs = (await res.json()).resources;
+  const orgGuids = orgs.map((org: OrgObj) => org.guid);
+  const userCounts = await countUsersPerOrg(orgGuids);
+  const memoryAllocated = await allocatedMemoryPerOrg(orgGuids);
+  const memoryCurrentUsage = await memoryUsagePerOrg(orgGuids);
+  const spaceCounts = await countSpacesPerOrg(orgGuids);
+  const appCounts = await countAppsPerOrg(orgGuids);
+  // get user's roles for each org
+  const roles = {};
+
   return {
     payload: {
-      orgs: (await res.json()).resources,
+      orgs: orgs,
+      userCounts: userCounts,
+      appCounts: appCounts,
+      memoryAllocated: memoryAllocated,
+      memoryCurrentUsage: memoryCurrentUsage,
+      spaceCounts: spaceCounts,
+      roles: roles,
     },
     meta: { status: 'success' },
   };

@@ -1,5 +1,6 @@
-import { RolesByUser, SpaceRoleMap } from './controller-types';
-import { RoleObj, UserObj } from '@/api/cf/cloudfoundry-types';
+import * as CF from '@/api/cf/cloudfoundry';
+import { OrgQuotaObject, RolesByUser, SpaceRoleMap } from './controller-types';
+import { RoleObj, UserObj, SpaceObj } from '@/api/cf/cloudfoundry-types';
 import { UserLogonInfoById } from '@/api/aws/s3-types';
 import { cfRequestOptions } from '@/api/cf/cloudfoundry-helpers';
 import { request } from '@/api/api';
@@ -159,6 +160,107 @@ export const defaultSpaceRoles = {
 export function resourceKeyedById(resource: Array<any>): Object {
   return resource.reduce((acc, item) => {
     acc[item.guid || item.id] = item;
+    return acc;
+  }, {});
+}
+
+// get number of users for each org
+export async function countUsersPerOrg(
+  orgGuids: Array<string>
+): Promise<{ [orgGuid: string]: number }> {
+  const responses = await Promise.all(
+    orgGuids.map((orgId: string) => CF.getOrgUsers(orgId))
+  );
+  const responsesJson = await Promise.all(responses.map((res) => res.json()));
+  return responsesJson.reduce((acc, curRes, curIndex) => {
+    acc[orgGuids[curIndex]] = curRes?.resources?.length || 0;
+    return acc;
+  }, {});
+}
+
+// get allocated memory for each org
+export async function allocatedMemoryPerOrg(
+  orgGuids: Array<string>
+): Promise<{ [orgGuid: string]: number }> {
+  let memoryAllocated = {};
+  const orgQuotaRes = await CF.getOrgQuotas({
+    organizationGuids: orgGuids,
+  });
+  if (orgQuotaRes.ok) {
+    const orgQuotas = (await orgQuotaRes.json()).resources;
+    memoryAllocated = orgQuotas.reduce(
+      (acc: { [orgId: string]: number }, curQuota: OrgQuotaObject) => {
+        const relatedOrgs = curQuota.relationships.organizations.data.map(
+          (o: any) => o.guid
+        );
+        orgGuids.map((orgGuid: string) => {
+          if (
+            relatedOrgs.find(
+              (relatedOrgGuid: string) => relatedOrgGuid === orgGuid
+            )
+          ) {
+            acc[orgGuid] = curQuota.apps.total_memory_in_mb;
+          }
+        });
+        return acc;
+      },
+      {}
+    );
+  }
+  return memoryAllocated;
+}
+
+// get memory usage for each org
+export async function memoryUsagePerOrg(
+  orgGuids: Array<string>
+): Promise<{ [orgGuid: string]: number }> {
+  let memoryUsage = {};
+  const responses = await Promise.all(
+    orgGuids.map((orgId: string) => CF.getOrgUsageSummary(orgId))
+  );
+  const responsesJson = await Promise.all(responses.map((res) => res.json()));
+  memoryUsage = responsesJson.reduce((acc, curResponse, index) => {
+    acc[orgGuids[index]] = curResponse.usage_summary.memory_in_mb;
+    return acc;
+  }, {});
+  return memoryUsage;
+}
+
+// get spaces for each org
+export async function countSpacesPerOrg(
+  orgGuids: Array<string>
+): Promise<{ [orgGuid: string]: number }> {
+  let spaceCounts = {};
+  const responses = await CF.getSpaces({
+    organizationGuids: orgGuids,
+  });
+  const spaces = (await responses.json()).resources;
+  spaceCounts = spaces.reduce(
+    (acc: { [orgId: string]: number }, curSpace: SpaceObj) => {
+      const orgId = curSpace.relationships.organization.data.guid;
+      if (!acc[orgId]) acc[orgId] = 0;
+      acc[orgId] = acc[orgId] + 1;
+      return acc;
+    },
+    {}
+  );
+  return spaceCounts;
+}
+
+// get number of apps per org
+export async function countAppsPerOrg(
+  orgGuids: Array<string>
+): Promise<{ [orgGuid: string]: number }> {
+  const responses = await Promise.all(
+    orgGuids.map((orgId: string) =>
+      CF.getApps({
+        organizationGuids: [orgId],
+      })
+    )
+  );
+  const responsesJson = await Promise.all(responses.map((res) => res.json()));
+  return responsesJson.reduce((acc, curRes, curIndex) => {
+    acc[orgGuids[curIndex]] = curRes?.resources?.length || 0;
     return acc;
   }, {});
 }

@@ -51,6 +51,10 @@ export async function getOrgs(): Promise<Response> {
   return await cfRequest('/organizations', 'get');
 }
 
+export async function getOrgUsers(guid: string): Promise<Response> {
+  return await cfRequest(`/organizations/${guid}/users`, 'get');
+}
+
 // ROLES
 
 // NOTE: addRole relies on username rather than user guid
