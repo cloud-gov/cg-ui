@@ -124,8 +124,12 @@ export function redirectToLogin(request: NextRequest): NextResponse {
 }
 
 export async function authenticateRoute(request: NextRequest) {
+  let response = NextResponse.next();
   // For those working locally, just pass them through
-  if (process.env.NODE_ENV === 'development') return NextResponse.next();
+  if (process.env.NODE_ENV === 'development') {
+    response = setLastViewedOrg(request, response);
+    return response;
+  }
   // get auth session cookie
   const authCookie = request.cookies.get('authsession');
   // if no cookie, redirect to login page
@@ -135,16 +139,15 @@ export async function authenticateRoute(request: NextRequest) {
   // if no expiration at all, redirect to login page
   if (!authObj.expiry) return redirectToLogin(request);
   // if cookie expired, run refresh routine
-  let nextRes = NextResponse.next();
   if (Date.now() > authObj.expiry) {
     const newAuthResponse = await refreshAuthToken(authObj.refreshToken);
-    nextRes = setAuthCookie(newAuthResponse, nextRes);
-    return nextRes;
+    response = setAuthCookie(newAuthResponse, response);
+    return response;
   }
   // they're logged in already
-  nextRes = setLastViewedOrg(request, nextRes);
+  response = setLastViewedOrg(request, response);
   // go to page
-  return nextRes;
+  return response;
 }
 
 export function setLastViewedOrg(request: NextRequest, response: NextResponse) {
@@ -184,5 +187,6 @@ export const config = {
     '/login',
     '/test/authenticated/:path*',
     '/orgs',
+    '/orgs/:path*',
   ],
 };
