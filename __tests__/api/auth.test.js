@@ -1,6 +1,6 @@
 import { describe, beforeEach, afterEach, it, expect } from '@jest/globals';
 import nock from 'nock';
-import { postToAuthTokenUrl } from '@/api/auth';
+import { postToAuthTokenUrl } from '@/api/auth.ts';
 
 describe('auth api', () => {
   beforeEach(() => {

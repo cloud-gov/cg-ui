@@ -5,6 +5,7 @@ import {
   underscoreToText,
   pluralize,
   newOrgPathname,
+  randomString,
 } from '@/helpers/text';
 
 describe('text helpers', () => {
@@ -98,5 +99,11 @@ describe('text helpers', () => {
         expect(result).toEqual('/orgs/foobar/users/add');
       });
     });
+  });
+});
+
+describe('randomString', () => {
+  it('returns a string', () => {
+    expect(typeof randomString()).toBe('string');
   });
 });

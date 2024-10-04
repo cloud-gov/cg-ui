@@ -1,7 +1,7 @@
 import { describe, expect, it, beforeAll, afterEach } from '@jest/globals';
 import { NextRequest, NextResponse } from 'next/server';
 import jwt from 'jsonwebtoken';
-import { middleware } from '@/middleware.js';
+import { middleware } from '@/middleware.ts';
 // Need to disable eslint for this import because
 // you need to import the module you're going to mock with Jest
 // eslint-disable-next-line no-unused-vars
@@ -74,6 +74,7 @@ describe('auth/login/callback', () => {
         new URL('/auth/login/callback?state=foo', process.env.ROOT_URL)
       );
       request.cookies.set('state', 'foo');
+      request.cookies.set('last_page', '/bar');
       // run
       response = await middleware(request);
     });
@@ -89,6 +90,13 @@ describe('auth/login/callback', () => {
     });
     it('unsets the state cookie', async () => {
       expect(response.cookies.get('state')['value']).toBe('');
+    });
+    it('unsets the last page cookie', async () => {
+      expect(response.cookies.get('last_page')['value']).toBe('');
+    });
+    it('redirects back to last page if it exists', () => {
+      const location = response.headers.get('location');
+      expect(location).toMatch(process.env.ROOT_URL + 'bar');
     });
   });
 });
@@ -129,7 +137,7 @@ describe('/test/authenticated/:path*', () => {
       // run
       const response = await middleware(request);
       // assert
-      expect(response.headers.get('location')).toBe(process.env.ROOT_URL);
+      expect(response.headers.get('location')).toContain(process.env.ROOT_URL);
     });
   });
 

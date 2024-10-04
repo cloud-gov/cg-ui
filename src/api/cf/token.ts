@@ -1,7 +1,5 @@
 import { cookies } from 'next/headers';
 
-// if developing locally, uses the token you manually set
-// otherwise, uses a token returned from UAA
 export function getToken(): string {
   return getLocalToken() || getCFToken();
 }
@@ -23,7 +21,8 @@ function getLocalToken(): string | undefined {
 
 export function isLoggedIn(): boolean {
   try {
-    const token = getToken();
+    // Note: this only checks the auth cookie, not the CF_API_TOKEN when working locally
+    const token = getCFToken();
     return !!token;
   } catch (error: any) {
     return false;

@@ -1,5 +1,7 @@
 'use server';
 
+import { redirect } from 'next/navigation';
+import { logInPath } from '@/helpers/authentication';
 import { camelToSnakeCase } from '@/helpers/text';
 import { request } from '../api';
 import { getToken } from './token';
@@ -22,17 +24,15 @@ export async function cfRequest(
   method: MethodType = 'get',
   data?: any
 ): Promise<Response> {
-  try {
-    const options = await cfRequestOptions(method, data);
-    return await request(CF_API_URL + path, options);
-  } catch (error: any) {
-    if (process.env.NODE_ENV == 'development') {
-      console.error(
-        `request to ${path} with method ${method} failed: ${error.statusCode} -- ${error.message}`
-      );
+  const options = await cfRequestOptions(method, data);
+  const res = await request(CF_API_URL + path, options);
+  if (res.status === 401) {
+    if (process.env.NODE_ENV === 'development') {
+      throw new Error('Time to refresh your CF_API_TOKEN');
     }
-    throw new Error(`something went wrong: ${error.message}`);
+    redirect(logInPath());
   }
+  return res;
 }
 
 export async function cfRequestOptions(
