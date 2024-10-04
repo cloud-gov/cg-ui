@@ -135,14 +135,27 @@ export async function authenticateRoute(request: NextRequest) {
   // if no expiration at all, redirect to login page
   if (!authObj.expiry) return redirectToLogin(request);
   // if cookie expired, run refresh routine
+  let nextRes = NextResponse.next();
   if (Date.now() > authObj.expiry) {
     const newAuthResponse = await refreshAuthToken(authObj.refreshToken);
-    let nextRes = NextResponse.next();
     nextRes = setAuthCookie(newAuthResponse, nextRes);
     return nextRes;
   }
-  // cookie is not expired, go to page
-  return NextResponse.next();
+  // they're logged in already
+  nextRes = setLastViewedOrg(request, nextRes);
+  // go to page
+  return nextRes;
+}
+
+export function setLastViewedOrg(request: NextRequest, response: NextResponse) {
+  const matches = request.nextUrl.pathname.match(
+    /orgs\/([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-5][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12})/
+  );
+  let id;
+  if (matches && (id = matches[1])) {
+    response.cookies.set('lastViewedOrgId', id);
+  }
+  return response;
 }
 
 export function middleware(request: NextRequest) {
@@ -171,6 +184,5 @@ export const config = {
     '/login',
     '/test/authenticated/:path*',
     '/orgs',
-    '/orgs/:path*',
   ],
 };

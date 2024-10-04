@@ -3,13 +3,18 @@
 import { getOrgsPage } from '@/controllers/controllers';
 import { OrganizationsList } from '@/components/OrganizationsList/OrganizationsList';
 import { PageHeader } from '@/components/PageHeader';
+import { LastViewedOrgLink } from '@/components/LastViewedOrgLink';
 
 export default async function OrgsPage() {
   const { payload } = await getOrgsPage();
 
   return (
     <>
-      <PageHeader heading="Organizations" />
+      <PageHeader
+        heading="Your organizations"
+        intro="These are all the organizations you can access. In each, you can view users and applications, and access usage information."
+      />
+      <LastViewedOrgLink />
       <OrganizationsList
         orgs={payload.orgs}
         userCounts={payload.userCounts}
