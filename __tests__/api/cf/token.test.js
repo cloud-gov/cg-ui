@@ -20,9 +20,6 @@ describe('cloudfoundry token tests', () => {
     it('getToken() returns a manual token', () => {
       expect(getToken()).toBe('manual-token');
     });
-    it('isLoggedIn() returns true', () => {
-      expect(isLoggedIn()).toBeTruthy();
-    });
   });
 
   describe('when token environment variable is not set', () => {

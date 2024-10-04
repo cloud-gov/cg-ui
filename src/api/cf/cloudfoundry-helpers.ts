@@ -1,7 +1,7 @@
 'use server';
 
 import { redirect } from 'next/navigation';
-import { logInPathAsync } from '@/helpers/authentication';
+import { logInPath } from '@/helpers/authentication';
 import { camelToSnakeCase } from '@/helpers/text';
 import { request } from '../api';
 import { getToken } from './token';
@@ -30,8 +30,7 @@ export async function cfRequest(
     if (process.env.NODE_ENV === 'development') {
       throw new Error('Time to refresh your CF_API_TOKEN');
     }
-    const path = await logInPathAsync();
-    redirect(path);
+    redirect(logInPath());
   }
   return res;
 }

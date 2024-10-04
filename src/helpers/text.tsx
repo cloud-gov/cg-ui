@@ -26,6 +26,10 @@ export function pluralize(text: string, count: number): string {
   return `${text}${count != 1 && count != -1 ? 's' : ''}`;
 }
 
+export const randomString = (): string => {
+  return Math.floor(Math.random() * 100000000).toString();
+};
+
 export function newOrgPathname(currentPath: string, guid: string): string {
   // Capture everything past an org GUID,
   // until you get to another digit (which would be inside the next GUID)

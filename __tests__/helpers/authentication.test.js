@@ -1,8 +1,8 @@
 import { describe, it, expect } from '@jest/globals';
-import { logInPathAsync } from '@/helpers/authentication';
+import { logInPath } from '@/helpers/authentication';
 
-describe('logInPathAsync', () => {
+describe('logInPath', () => {
   it('returns the correct path with state', async () => {
-    expect(await logInPathAsync()).toMatch(/^\/login\?state=[a-z|\d]+$/);
+    expect(logInPath()).toMatch(/^\/login\?state=[a-z|\d]+$/);
   });
 });

@@ -3,6 +3,7 @@ import type { NextRequest } from 'next/server';
 import { NextResponse } from 'next/server';
 import { decodeJwt } from 'jose';
 import { postToAuthTokenUrl, UAATokenResponseObj } from '@/api/auth';
+import { logInPath } from '@/helpers/authentication';
 
 export function login(request: NextRequest) {
   if (
@@ -74,7 +75,13 @@ export async function requestAndSetAuthToken(request: NextRequest) {
   }
 
   const stateCookie = request.cookies.get('state');
-  let response = NextResponse.redirect(new URL('/', request.url));
+  let response;
+  let lastPagePath;
+  if ((lastPagePath = request.cookies.get('last_page')?.value)) {
+    response = NextResponse.redirect(new URL(lastPagePath, request.url));
+  } else {
+    response = NextResponse.redirect(new URL('/', request.url));
+  }
 
   if (
     !stateCookie ||
@@ -91,6 +98,7 @@ export async function requestAndSetAuthToken(request: NextRequest) {
   });
   response = setAuthCookie(data, response);
   response.cookies.delete('state');
+  response.cookies.delete('last_page');
   return response;
 }
 
@@ -108,13 +116,24 @@ export async function refreshAuthToken(refreshToken: string) {
   return data;
 }
 
+export function redirectToLogin(request: NextRequest): NextResponse {
+  const loginPath = logInPath();
+  const response = NextResponse.redirect(new URL(loginPath, request.url));
+  response.cookies.set('last_page', request.nextUrl.pathname);
+  return response;
+}
+
 export async function authenticateRoute(request: NextRequest) {
+  // For those working locally, just pass them through
+  if (process.env.NODE_ENV === 'development') return NextResponse.next();
   // get auth session cookie
   const authCookie = request.cookies.get('authsession');
   // if no cookie, redirect to login page
-  if (!authCookie) return NextResponse.redirect(new URL('/', request.url));
+  if (!authCookie) return redirectToLogin(request);
+
   const authObj = JSON.parse(authCookie['value']);
-  if (!authObj.expiry) return NextResponse.redirect(new URL('/', request.url));
+  // if no expiration at all, redirect to login page
+  if (!authObj.expiry) return redirectToLogin(request);
   // if cookie expired, run refresh routine
   if (Date.now() > authObj.expiry) {
     const newAuthResponse = await refreshAuthToken(authObj.refreshToken);
@@ -127,16 +146,17 @@ export async function authenticateRoute(request: NextRequest) {
 }
 
 export function middleware(request: NextRequest) {
-  if (request.nextUrl.pathname.startsWith('/test/authenticated')) {
+  const pn = request.nextUrl.pathname;
+  if (pn.startsWith('/test/authenticated') || pn.startsWith('/orgs')) {
     return authenticateRoute(request);
   }
-  if (request.nextUrl.pathname.startsWith('/login')) {
+  if (pn.startsWith('/login')) {
     return login(request);
   }
-  if (request.nextUrl.pathname.startsWith('/logout')) {
+  if (pn.startsWith('/logout')) {
     return logout();
   }
-  if (request.nextUrl.pathname.startsWith('/auth/login/callback')) {
+  if (pn.startsWith('/auth/login/callback')) {
     return requestAndSetAuthToken(request);
   }
 }
@@ -150,5 +170,7 @@ export const config = {
     '/logout',
     '/login',
     '/test/authenticated/:path*',
+    '/orgs',
+    '/orgs/:path*',
   ],
 };
