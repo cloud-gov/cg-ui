@@ -90,7 +90,7 @@ export function likelyNonHumanUser(user: UserObj): boolean {
 
 export async function logDevError(message: string) {
   if (process.env.NODE_ENV === 'development') {
-    console.error(message);
+    console.log(message);
   }
 }
 

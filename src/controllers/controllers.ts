@@ -73,41 +73,43 @@ export async function getOrg(guid: string): Promise<ControllerResult> {
 }
 
 export async function getOrgsPage(): Promise<ControllerResult> {
-  const res = await CF.getOrgs();
-  if (!res.ok) {
-    logDevError(
-      `api error on cf orgs with http code ${res.status} for url: ${res.url}`
-    );
+  try {
+    const res = await CF.getOrgs();
+    if (!res.ok) {
+      logDevError(
+        `api error on cf orgs with http code ${res.status} for url: ${res.url}`
+      );
+      throw new Error(
+        'There was a problem with the request. Please try again, and if the issue persists, please contact Cloud.gov support.'
+      );
+    }
+    const orgs = (await res.json()).resources;
+    const orgGuids = orgs.map((org: OrgObj) => org.guid);
+    const userCounts = await countUsersPerOrg(orgGuids);
+    const memoryAllocated = await allocatedMemoryPerOrg(orgGuids);
+    const memoryCurrentUsage = await memoryUsagePerOrg(orgGuids);
+    const spaceCounts = await countSpacesPerOrg(orgGuids);
+    const appCounts = await countAppsPerOrg(orgGuids);
+    // get user's roles for each org
+    const roles = {};
+
     return {
       payload: {
-        orgs: [],
-        userCounts: {},
+        orgs: orgs,
+        userCounts: userCounts,
+        appCounts: appCounts,
+        memoryAllocated: memoryAllocated,
+        memoryCurrentUsage: memoryCurrentUsage,
+        spaceCounts: spaceCounts,
+        roles: roles,
       },
-      meta: { status: 'error' },
+      meta: { status: 'success' },
     };
+  } catch (e: any) {
+    throw new Error(
+      'There was a problem with the request. Please try again, and if the issue persists, please contact Cloud.gov support.'
+    );
   }
-  const orgs = (await res.json()).resources;
-  const orgGuids = orgs.map((org: OrgObj) => org.guid);
-  const userCounts = await countUsersPerOrg(orgGuids);
-  const memoryAllocated = await allocatedMemoryPerOrg(orgGuids);
-  const memoryCurrentUsage = await memoryUsagePerOrg(orgGuids);
-  const spaceCounts = await countSpacesPerOrg(orgGuids);
-  const appCounts = await countAppsPerOrg(orgGuids);
-  // get user's roles for each org
-  const roles = {};
-
-  return {
-    payload: {
-      orgs: orgs,
-      userCounts: userCounts,
-      appCounts: appCounts,
-      memoryAllocated: memoryAllocated,
-      memoryCurrentUsage: memoryCurrentUsage,
-      spaceCounts: spaceCounts,
-      roles: roles,
-    },
-    meta: { status: 'success' },
-  };
 }
 
 export async function getOrgPage(orgGuid: string): Promise<ControllerResult> {
