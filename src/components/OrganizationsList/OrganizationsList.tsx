@@ -40,8 +40,8 @@ export function OrganizationsList({
                   className="tablet-lg:grid-col-4 margin-bottom-3"
                   key={`org-${index}`}
                 >
-                  <div className="bg-white border border-gray-cool-20 radius-md padding-3">
-                    <h2 className="margin-top-0 border-bottom border-gray-cool-20 padding-bottom-2">
+                  <div className="bg-white border border-gray-cool-20 radius-md padding-2 tablet-lg:padding-3">
+                    <h2 className="margin-top-0 border-bottom border-gray-cool-20 padding-bottom-2 font-sans-md tablet-lg:font-sans-lg">
                       <Link
                         href={`/orgs/${org.guid}`}
                         className="usa-link text-ellipsis"
