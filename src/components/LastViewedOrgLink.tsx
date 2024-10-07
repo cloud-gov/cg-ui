@@ -17,7 +17,7 @@ export async function LastViewedOrgLink() {
   return (
     <>
       (Need to jump back in? The organization you last accessed was{' '}
-      <Link className="usa-link" href={`/orgs/${orgId}`}>
+      <Link className="usa-link text-bold" href={`/orgs/${orgId}`}>
         {org.name}
       </Link>
       .)

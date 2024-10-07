@@ -9,7 +9,7 @@ export default async function OrgsPage() {
   const { payload } = await getOrgsPage();
 
   return (
-    <>
+    <div className="margin-top-4">
       <PageHeader
         heading="Your organizations"
         intro="These are all the organizations you can access. In each, you can view users and applications, and access usage information."
@@ -23,6 +23,6 @@ export default async function OrgsPage() {
         memoryCurrentUsage={payload.memoryCurrentUsage}
         spaceCounts={payload.spaceCounts}
       />
-    </>
+    </div>
   );
 }

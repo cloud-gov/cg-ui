@@ -1,7 +1,8 @@
 import { OrgObj } from '@/api/cf/cloudfoundry-types';
-import { sortObjectsByParam } from '@/helpers/arrays';
-import { GridList } from '../GridList/GridList';
-import { OrganizationsListItem } from './OrganizationsListItem';
+import { chunkArray, sortObjectsByParam } from '@/helpers/arrays';
+import Link from 'next/link';
+import { MemoryBar } from '@/components/MemoryBar';
+import { formatInt } from '@/helpers/numbers';
 
 export function OrganizationsList({
   orgs,
@@ -18,35 +19,77 @@ export function OrganizationsList({
   memoryCurrentUsage: { [orgGuid: string]: number };
   spaceCounts: { [orgGuid: string]: number };
 }) {
-  const orgsSorted = sortObjectsByParam(orgs, 'name');
+  if (!orgs.length) {
+    return <>no orgs found</>;
+  }
 
-  return orgsSorted.length > 0 ? (
-    <GridList>
-      {orgsSorted.map((org) => {
+  const orgsSorted = sortObjectsByParam(orgs, 'name');
+  const orgsGrouped = chunkArray(orgsSorted, 3);
+
+  return (
+    <div className="margin-y-4">
+      {orgsGrouped.map((orgGoup, groupIndex) => {
         return (
-          <div key={`OrgsListItem-${org.guid}`}>
-            <OrganizationsListItem org={org} />
-            <ol>
-              <li>number of users: {userCounts[org.guid]}</li>
-              <li>number of apps: {appCounts[org.guid]}</li>
-              <li>
-                memory allocated:{' '}
-                {memoryAllocated[org.guid] === null
-                  ? 'unlimited'
-                  : memoryAllocated[org.guid]}
-              </li>
-              <li>memory current usage: {memoryCurrentUsage[org.guid]}</li>
-              <li>
-                memory remaining:{' '}
-                {memoryAllocated[org.guid] - memoryCurrentUsage[org.guid]}
-              </li>
-              <li>number of spaces: {spaceCounts[org.guid] || 0}</li>
-            </ol>
-          </div>
+          <ul
+            className="grid-row grid-gap-3 usa-card-group"
+            key={`org-group-${groupIndex}`}
+          >
+            {orgGoup.map((org, index) => {
+              return (
+                <li
+                  className="tablet-lg:grid-col-4 margin-bottom-3"
+                  key={`org-${index}`}
+                >
+                  <div className="bg-white border border-gray-cool-20 radius-md padding-3">
+                    <h2 className="margin-top-0 border-bottom border-gray-cool-20 padding-bottom-2">
+                      <Link
+                        href={`/orgs/${org.guid}`}
+                        className="usa-link text-ellipsis"
+                      >
+                        {org.name}
+                      </Link>
+                    </h2>
+
+                    <div className="display-flex flex-justify">
+                      <div className="maxw-15 font-sans-3xs line-height-sans-4">
+                        TODO: You’re a <strong>Manager</strong> and a{' '}
+                        <strong>Billing Manager</strong> in this organization.
+                      </div>
+                      <div className="maxw-15 font-sans-3xs line-height-sans-4">
+                        <p className="margin-top-0 margin-bottom-1 text-uppercase">
+                          at a glance:
+                        </p>
+                        <ul className="usa-list usa-list--unstyled">
+                          <li>
+                            <Link href="#" className="usa-link">
+                              {formatInt(userCounts[org.guid])} users
+                            </Link>
+                          </li>
+                          <li>
+                            <Link href="#" className="usa-link">
+                              {formatInt(spaceCounts[org.guid])} spaces
+                            </Link>
+                          </li>
+                          <li>
+                            <Link href="#" className="usa-link">
+                              {formatInt(appCounts[org.guid])} applications
+                            </Link>
+                          </li>
+                        </ul>
+                      </div>
+                    </div>
+
+                    <MemoryBar
+                      memoryUsed={memoryCurrentUsage[org.guid]}
+                      memoryAllocated={memoryAllocated[org.guid]}
+                    />
+                  </div>
+                </li>
+              );
+            })}
+          </ul>
         );
       })}
-    </GridList>
-  ) : (
-    <p>No organizations found</p>
+    </div>
   );
 }
