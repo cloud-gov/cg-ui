@@ -83,17 +83,26 @@ export function OrganizationsList({
                         </p>
                         <ul className="usa-list usa-list--unstyled">
                           <li>
-                            <Link href="#" className="usa-link">
+                            <Link
+                              href={`/orgs/${org.guid}`}
+                              className="usa-link"
+                            >
                               {formatInt(userCounts[org.guid])}&nbsp;users
                             </Link>
                           </li>
                           <li>
-                            <Link href="#" className="usa-link">
+                            <Link
+                              href={`/orgs/${org.guid}`}
+                              className="usa-link"
+                            >
                               {formatInt(spaceCounts[org.guid])}&nbsp;spaces
                             </Link>
                           </li>
                           <li>
-                            <Link href="#" className="usa-link">
+                            <Link
+                              href={`/orgs/${org.guid}/apps`}
+                              className="usa-link"
+                            >
                               {formatInt(appCounts[org.guid])}&nbsp;applications
                             </Link>
                           </li>
