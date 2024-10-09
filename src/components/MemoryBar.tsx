@@ -1,5 +1,5 @@
 import { ProgressBar } from '@/components/ProgressBar';
-import { formatInt } from '@/helpers/numbers';
+import { formatMb } from '@/helpers/numbers';
 
 export function MemoryBar({
   memoryUsed,
@@ -21,11 +21,10 @@ export function MemoryBar({
 
       <div className="margin-top-1 display-flex flex-justify font-sans-3xs">
         <div className="">
-          {formatInt(memoryUsedNum)}MB of {formatInt(memoryAllocated)}MB
-          allocated
+          {formatMb(memoryUsedNum)} of {formatMb(memoryAllocated)} allocated
         </div>
 
-        <div className="maxw-15">{formatInt(mbRemaining)}MB remaining</div>
+        <div className="maxw-15">{formatMb(mbRemaining)} remaining</div>
       </div>
     </div>
   );
