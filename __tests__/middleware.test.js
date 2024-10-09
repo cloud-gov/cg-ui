@@ -8,7 +8,16 @@ import { middleware } from '@/middleware.ts';
 import { postToAuthTokenUrl } from '@/api/auth';
 
 const mockEmailAddress = 'foo@example.com';
-const mockAccessToken = jwt.sign({ email: mockEmailAddress }, 'fooPrivateKey');
+const mockUserName = 'fooUserName';
+const mockUserId = 'fooUserId';
+const mockAccessToken = jwt.sign(
+  {
+    email: mockEmailAddress,
+    user_name: mockUserName,
+    user_id: mockUserId,
+  },
+  'fooPrivateKey'
+);
 const mockRefreshToken = 'fooRefreshToken';
 const mockExpiry = 43199;
 const mockAuthResponse = {
@@ -84,6 +93,8 @@ describe('auth/login/callback', () => {
         response.cookies.get('authsession')['value']
       );
       expect(authCookieObj.email).toMatch(mockEmailAddress);
+      expect(authCookieObj.user_id).toMatch(mockUserId);
+      expect(authCookieObj.user_name).toMatch(mockUserName);
       expect(authCookieObj.accessToken).toMatch(mockAccessToken);
       expect(authCookieObj.refreshToken).toMatch(mockRefreshToken);
       expect(authCookieObj.expiry).toBeDefined();

@@ -26,6 +26,7 @@ import {
   memoryUsagePerOrg,
   countSpacesPerOrg,
   countAppsPerOrg,
+  getOrgRolesForCurrentUser,
 } from './controller-helpers';
 import { sortObjectsByParam } from '@/helpers/arrays';
 import { daysToExpiration } from '@/helpers/dates';
@@ -90,8 +91,7 @@ export async function getOrgsPage(): Promise<ControllerResult> {
     const memoryCurrentUsage = await memoryUsagePerOrg(orgGuids);
     const spaceCounts = await countSpacesPerOrg(orgGuids);
     const appCounts = await countAppsPerOrg(orgGuids);
-    // get user's roles for each org
-    const roles = {};
+    const roles = await getOrgRolesForCurrentUser(orgGuids);
 
     return {
       payload: {

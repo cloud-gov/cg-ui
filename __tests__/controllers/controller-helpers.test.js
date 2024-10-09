@@ -8,14 +8,29 @@ import {
   memoryUsagePerOrg,
   countSpacesPerOrg,
   countAppsPerOrg,
+  getOrgRolesForCurrentUser,
 } from '@/controllers/controller-helpers';
-import { mockUsersByOrganization, mockUsersBySpace } from '../api/mocks/roles';
+import {
+  mockUsersByOrganization,
+  mockUsersBySpace,
+  mockRolesFilteredByOrgAndUser,
+} from '../api/mocks/roles';
 import { mockS3Object } from '../api/mocks/lastlogon-summary';
 import nock from 'nock';
 import mockUsers from '../api/mocks/users';
 import { mockOrgQuotas } from '../api/mocks/orgQuotas';
 import { mockSpaces } from '../api/mocks/spaces';
 import { mockApps } from '../api/mocks/apps';
+// eslint-disable-next-line no-unused-vars
+import { getUserId } from '@/api/cf/token';
+
+/* global jest */
+/* eslint no-undef: "off" */
+jest.mock('@/api/cf/token', () => ({
+  ...jest.requireActual('../../src/api/cf/token'),
+  getUserId: jest.fn(() => '46ff1fd5-4238-4e22-a00a-1bec4fc0f9da'), // same user guid as in mockRolesFilteredByOrgAndUser
+}));
+/* eslint no-undef: "error" */
 
 beforeEach(() => {
   if (!nock.isActive()) {
@@ -305,6 +320,22 @@ describe('controller-helpers', () => {
       // assert
       expect(result['orgId1']).toEqual(2);
       expect(result['orgId2']).toEqual(2);
+    });
+  });
+
+  describe('getOrgRolesForCurrentUser', () => {
+    it('returns an object keyed by org id with value of array of role types', async () => {
+      // setup
+      const orgGuids = ['e8e31994-0dba-41e3-96ea-39942f1b30a4'];
+      nock(process.env.CF_API_URL)
+        .get(/roles/)
+        .reply(200, mockRolesFilteredByOrgAndUser);
+      // act
+      const result = await getOrgRolesForCurrentUser(orgGuids);
+      // assert
+      expect(result['e8e31994-0dba-41e3-96ea-39942f1b30a4']).toEqual([
+        'organization_manager',
+      ]);
     });
   });
 });

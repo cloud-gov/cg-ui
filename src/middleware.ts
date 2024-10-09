@@ -57,6 +57,8 @@ export function setAuthCookie(
     'authsession',
     JSON.stringify({
       accessToken: data.access_token,
+      user_id: decodedToken.user_id,
+      user_name: decodedToken.user_name,
       email: decodedToken.email,
       refreshToken: data.refresh_token,
       expiry: Date.now() + data.expires_in * 1000,

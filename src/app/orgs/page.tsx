@@ -22,6 +22,7 @@ export default async function OrgsPage() {
         memoryAllocated={payload.memoryAllocated}
         memoryCurrentUsage={payload.memoryCurrentUsage}
         spaceCounts={payload.spaceCounts}
+        roles={payload.roles}
       />
     </div>
   );

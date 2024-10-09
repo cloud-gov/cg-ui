@@ -4,7 +4,7 @@ import { redirect } from 'next/navigation';
 import { logInPath } from '@/helpers/authentication';
 import { camelToSnakeCase } from '@/helpers/text';
 import { request } from '../api';
-import { getToken } from './token';
+import { getToken, getUserId } from './token';
 
 type MethodType = 'delete' | 'get' | 'patch' | 'post';
 
@@ -74,4 +74,8 @@ export async function prepPathParams(options: {
 
   const urlParams = new URLSearchParams(params);
   return `?${urlParams.toString()}`;
+}
+
+export async function getCurrentUserId() {
+  return getUserId();
 }

@@ -28,6 +28,10 @@ jest.mock('@/controllers/controller-helpers', () => ({
   memoryUsagePerOrg: () => ({ orgId1: 4, orgId2: 5 }),
   countSpacesPerOrg: () => ({ orgId1: 6, orgId2: 7 }),
   countAppsPerOrg: () => ({ orgId1: 8, orgId2: 9 }),
+  getOrgRolesForCurrentUser: () => ({
+    orgId1: ['organization_manager'],
+    orgId2: ['organization_billing_manager'],
+  }),
 }));
 jest.mock('@/api/aws/s3', () => ({
   getUserLogonInfo: jest.fn(),
@@ -568,6 +572,11 @@ describe('controllers tests', () => {
       // apps
       expect(result.payload.appCounts['orgId1']).toEqual(8);
       expect(result.payload.appCounts['orgId2']).toEqual(9);
+      // roles
+      expect(result.payload.roles['orgId1']).toEqual(['organization_manager']);
+      expect(result.payload.roles['orgId2']).toEqual([
+        'organization_billing_manager',
+      ]);
     });
   });
 });

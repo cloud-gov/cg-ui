@@ -2,7 +2,10 @@ import * as CF from '@/api/cf/cloudfoundry';
 import { OrgQuotaObject, RolesByUser, SpaceRoleMap } from './controller-types';
 import { RoleObj, UserObj, SpaceObj } from '@/api/cf/cloudfoundry-types';
 import { UserLogonInfoById } from '@/api/aws/s3-types';
-import { cfRequestOptions } from '@/api/cf/cloudfoundry-helpers';
+import {
+  cfRequestOptions,
+  getCurrentUserId,
+} from '@/api/cf/cloudfoundry-helpers';
 import { request } from '@/api/api';
 import { delay } from '@/helpers/timeout';
 
@@ -263,4 +266,28 @@ export async function countAppsPerOrg(
     acc[orgGuids[curIndex]] = curRes?.resources?.length || 0;
     return acc;
   }, {});
+}
+
+export async function getOrgRolesForCurrentUser(orgGuids: Array<string>) {
+  let roles: { [orgId: string]: Array<string> } = {};
+  const userId = await getCurrentUserId();
+  if (userId) {
+    const rolesRes = await CF.getRoles({
+      userGuids: [userId],
+      organizationGuids: orgGuids,
+    });
+    const rolesJson = (await rolesRes.json()).resources;
+    roles = rolesJson.reduce(
+      (acc: { [orgId: string]: Array<string> }, curRole: RoleObj) => {
+        if (curRole.type === 'organization_user') return acc;
+        const orgId = curRole.relationships.organization.data.guid;
+        if (!orgId) return acc;
+        if (!acc[orgId]) acc[orgId] = [];
+        acc[orgId].push(curRole.type);
+        return acc;
+      },
+      {}
+    );
+  }
+  return roles;
 }
