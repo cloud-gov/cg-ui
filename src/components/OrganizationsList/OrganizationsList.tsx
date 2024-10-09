@@ -60,7 +60,7 @@ export function OrganizationsList({
             {orgGoup.map((org, index) => {
               return (
                 <li
-                  className="tablet-lg:grid-col-4 margin-bottom-3"
+                  className="tablet:grid-col-6 tablet-lg:grid-col-4 margin-bottom-3"
                   key={`org-${index}`}
                 >
                   <div className="bg-white border border-gray-cool-20 radius-md padding-2 tablet-lg:padding-3">
@@ -79,22 +79,22 @@ export function OrganizationsList({
                       </div>
                       <div className="maxw-15 font-sans-3xs line-height-sans-4">
                         <p className="margin-top-0 margin-bottom-1 text-uppercase">
-                          at a glance:
+                          at&nbsp;a&nbsp;glance:
                         </p>
                         <ul className="usa-list usa-list--unstyled">
                           <li>
                             <Link href="#" className="usa-link">
-                              {formatInt(userCounts[org.guid])} users
+                              {formatInt(userCounts[org.guid])}&nbsp;users
                             </Link>
                           </li>
                           <li>
                             <Link href="#" className="usa-link">
-                              {formatInt(spaceCounts[org.guid])} spaces
+                              {formatInt(spaceCounts[org.guid])}&nbsp;spaces
                             </Link>
                           </li>
                           <li>
                             <Link href="#" className="usa-link">
-                              {formatInt(appCounts[org.guid])} applications
+                              {formatInt(appCounts[org.guid])}&nbsp;applications
                             </Link>
                           </li>
                         </ul>

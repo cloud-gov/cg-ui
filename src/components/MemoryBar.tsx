@@ -20,11 +20,13 @@ export function MemoryBar({
       <ProgressBar total={memoryAllocated} fill={memoryUsedNum} />
 
       <div className="margin-top-1 display-flex flex-justify font-sans-3xs">
-        <div className="">
+        <div className="margin-right-1">
           {formatMb(memoryUsedNum)} of {formatMb(memoryAllocated)} allocated
         </div>
 
-        <div className="maxw-15">{formatMb(mbRemaining)} remaining</div>
+        <div className="maxw-15 text-right">
+          {formatMb(mbRemaining)} remaining
+        </div>
       </div>
     </div>
   );
