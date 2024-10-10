@@ -1,5 +1,6 @@
 import React from 'react';
 import Link from 'next/link';
+import a from 'indefinite';
 import { OrgObj } from '@/api/cf/cloudfoundry-types';
 import { Card } from '@/components/Card/Card';
 import { formatInt } from '@/helpers/numbers';
@@ -32,13 +33,19 @@ export function OrganizationsListCard({
       );
     }
     const formattedRoles = roles
-      .map<React.ReactNode>((r) => (
-        <span className="text-bold text-capitalize" key={`${orgGuid}-${r}`}>
-          {formatOrgRoleName(r).replace('org ', '')}
-        </span>
-      ))
+      .map<React.ReactNode>((r) => {
+        const word = formatOrgRoleName(r).replace('org ', '');
+        return (
+          <>
+            {a(word, { articleOnly: true })}{' '}
+            <span className="text-bold text-capitalize" key={`${orgGuid}-${r}`}>
+              {word}
+            </span>
+          </>
+        );
+      })
       .reduce((prev, cur) => [prev, ' and ', cur]);
-    return <>You're a {formattedRoles} in this organization.</>;
+    return <>You're {formattedRoles} in this organization.</>;
   };
 
   return (
