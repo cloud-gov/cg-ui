@@ -15,6 +15,7 @@ interface ApiRequestOptions {
     'Content-Type'?: string;
   };
   body?: any;
+  cache?: string;
 }
 
 const CF_API_URL = process.env.CF_API_URL;
@@ -45,9 +46,14 @@ export async function cfRequestOptions(
       Authorization: `bearer ${getToken()}`,
     },
   };
-  if (data) {
+  if (data && method.toLowerCase() !== 'get') {
     options.body = JSON.stringify(data);
     options.headers['Content-Type'] = 'application/json';
+  }
+  // cache is a Next.js option——it's not related to CF requests.
+  // https://nextjs.org/docs/app/api-reference/functions/fetch#optionscache
+  if (data?.cache) {
+    options.cache = data.cache;
   }
   return options;
 }

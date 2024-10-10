@@ -107,6 +107,7 @@ export async function getOrgsPage(): Promise<ControllerResult> {
       meta: { status: 'success' },
     };
   } catch (e: any) {
+    logDevError(e.message);
     throw new Error(
       'There was a problem with the request. Please try again, and if the issue persists, please contact Cloud.gov support.'
     );
