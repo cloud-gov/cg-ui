@@ -50,7 +50,7 @@ export function OrganizationsListCard({
       </h2>
 
       <div className="display-flex flex-justify">
-        <div className="maxw-card font-sans-3xs line-height-sans-4">
+        <div className="maxw-card font-sans-3xs line-height-sans-4 margin-right-1">
           {getOrgRolesText(org.guid)}
         </div>
         <div className="maxw-15 font-sans-3xs line-height-sans-4">
