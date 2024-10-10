@@ -36,12 +36,10 @@ export function OrganizationsListCard({
       .map<React.ReactNode>((r) => {
         const word = formatOrgRoleName(r).replace('org ', '');
         return (
-          <>
+          <span key={`${orgGuid}-${r}`}>
             {a(word, { articleOnly: true })}{' '}
-            <span className="text-bold text-capitalize" key={`${orgGuid}-${r}`}>
-              {word}
-            </span>
-          </>
+            <span className="text-bold text-capitalize">{word}</span>
+          </span>
         );
       })
       .reduce((prev, cur) => [prev, ' and ', cur]);
