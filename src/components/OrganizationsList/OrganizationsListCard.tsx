@@ -67,13 +67,13 @@ export function OrganizationsListCard({
           <ul className="usa-list usa-list--unstyled">
             <li>
               <Link href={`/orgs/${org.guid}`} className="usa-link">
-                {formatInt(userCount)}&nbsp;users
+                {formatInt(userCount || 0)}&nbsp;users
               </Link>
             </li>
-            <li>{formatInt(spaceCount)}&nbsp;spaces</li>
+            <li>{formatInt(spaceCount || 0)}&nbsp;spaces</li>
             <li>
               <Link href={`/orgs/${org.guid}/apps`} className="usa-link">
-                {formatInt(appCount)}&nbsp;applications
+                {formatInt(appCount || 0)}&nbsp;applications
               </Link>
             </li>
           </ul>
