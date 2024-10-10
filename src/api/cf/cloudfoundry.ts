@@ -44,11 +44,17 @@ export async function getOrgQuotas({
 }
 
 export async function getOrgUsageSummary(guid: string): Promise<Response> {
-  return await cfRequest(`/organizations/${guid}/usage_summary`);
+  return await cfRequest(`/organizations/${guid}/usage_summary`, 'get', {
+    cache: 'no-store',
+  });
 }
 
 export async function getOrgs(): Promise<Response> {
   return await cfRequest('/organizations', 'get');
+}
+
+export async function getOrgUsers(guid: string): Promise<Response> {
+  return await cfRequest(`/organizations/${guid}/users`, 'get');
 }
 
 // ROLES

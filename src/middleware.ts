@@ -57,6 +57,8 @@ export function setAuthCookie(
     'authsession',
     JSON.stringify({
       accessToken: data.access_token,
+      user_id: decodedToken.user_id,
+      user_name: decodedToken.user_name,
       email: decodedToken.email,
       refreshToken: data.refresh_token,
       expiry: Date.now() + data.expires_in * 1000,
@@ -124,8 +126,12 @@ export function redirectToLogin(request: NextRequest): NextResponse {
 }
 
 export async function authenticateRoute(request: NextRequest) {
+  let response = NextResponse.next();
   // For those working locally, just pass them through
-  if (process.env.NODE_ENV === 'development') return NextResponse.next();
+  if (process.env.NODE_ENV === 'development') {
+    response = setLastViewedOrg(request, response);
+    return response;
+  }
   // get auth session cookie
   const authCookie = request.cookies.get('authsession');
   // if no cookie, redirect to login page
@@ -137,12 +143,24 @@ export async function authenticateRoute(request: NextRequest) {
   // if cookie expired, run refresh routine
   if (Date.now() > authObj.expiry) {
     const newAuthResponse = await refreshAuthToken(authObj.refreshToken);
-    let nextRes = NextResponse.next();
-    nextRes = setAuthCookie(newAuthResponse, nextRes);
-    return nextRes;
+    response = setAuthCookie(newAuthResponse, response);
+    return response;
   }
-  // cookie is not expired, go to page
-  return NextResponse.next();
+  // they're logged in already
+  response = setLastViewedOrg(request, response);
+  // go to page
+  return response;
+}
+
+export function setLastViewedOrg(request: NextRequest, response: NextResponse) {
+  const matches = request.nextUrl.pathname.match(
+    /orgs\/([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-5][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12})/
+  );
+  let id;
+  if (matches && (id = matches[1])) {
+    response.cookies.set('lastViewedOrgId', id);
+  }
+  return response;
 }
 
 export function middleware(request: NextRequest) {
