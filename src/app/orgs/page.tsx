@@ -16,6 +16,8 @@ export default async function OrgsPage() {
         intro="These are all the organizations you can access. In each, you can view users and applications, and access usage information."
       />
       <LastViewedOrgLink />
+      <div className="width-full margin-top-3 margin-bottom-2 border-bottom border-gray-cool-20"></div>
+      <Timestamp timestamp={payload.lastUpdatedAt} />
       <OrganizationsList
         orgs={payload.orgs}
         userCounts={payload.userCounts}
@@ -25,7 +27,6 @@ export default async function OrgsPage() {
         spaceCounts={payload.spaceCounts}
         roles={payload.roles}
       />
-      <Timestamp timestamp={payload.lastUpdated} />
     </div>
   );
 }

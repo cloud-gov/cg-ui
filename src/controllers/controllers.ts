@@ -102,7 +102,7 @@ export async function getOrgsPage(): Promise<ControllerResult> {
         memoryCurrentUsage: memoryCurrentUsage,
         spaceCounts: spaceCounts,
         roles: roles,
-        lastUpdated: Date.now(),
+        lastUpdatedAt: Date.now(),
       },
       meta: { status: 'success' },
     };
