@@ -70,11 +70,7 @@ export function OrganizationsListCard({
                 {formatInt(userCount)}&nbsp;users
               </Link>
             </li>
-            <li>
-              <Link href={`/orgs/${org.guid}`} className="usa-link">
-                {formatInt(spaceCount)}&nbsp;spaces
-              </Link>
-            </li>
+            <li>{formatInt(spaceCount)}&nbsp;spaces</li>
             <li>
               <Link href={`/orgs/${org.guid}/apps`} className="usa-link">
                 {formatInt(appCount)}&nbsp;applications
