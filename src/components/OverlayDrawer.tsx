@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useRef, useEffect } from 'react';
-import Image from 'next/image';
+import Image from '@/components/Image';
 import closeIcon from '@/../public/img/uswds/usa-icons/close.svg';
 
 export function OverlayDrawer({
