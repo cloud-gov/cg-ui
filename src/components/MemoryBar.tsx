@@ -8,11 +8,8 @@ export function MemoryBar({
   memoryUsed?: number | null | undefined;
   memoryAllocated?: number | null | undefined;
 }) {
-  if (!memoryAllocated) {
-    return null;
-  }
   const memoryUsedNum = memoryUsed || 0;
-  const mbRemaining = memoryAllocated - memoryUsedNum;
+  const mbRemaining = (memoryAllocated || 0) - memoryUsedNum;
   return (
     <div className="margin-top-3" data-testid="memory-bar">
       <p className="font-sans-3xs text-uppercase text-bold">Memory:</p>
@@ -21,12 +18,20 @@ export function MemoryBar({
 
       <div className="margin-top-1 display-flex flex-justify font-sans-3xs">
         <div className="margin-right-1">
-          {formatMb(memoryUsedNum)} of {formatMb(memoryAllocated)} allocated
+          {memoryAllocated && memoryAllocated > 0 && (
+            <>
+              {formatMb(memoryUsedNum)} of {formatMb(memoryAllocated)} allocated
+            </>
+          )}
+          {memoryAllocated === null && (
+            <>{formatMb(memoryUsedNum)} used; no upper limit</>
+          )}
         </div>
-
-        <div className="maxw-15 text-right">
-          {formatMb(mbRemaining)} remaining
-        </div>
+        {memoryAllocated && memoryAllocated > 0 && (
+          <div className="maxw-15 text-right">
+            {formatMb(mbRemaining)} remaining
+          </div>
+        )}
       </div>
     </div>
   );

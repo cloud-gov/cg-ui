@@ -192,7 +192,7 @@ export async function allocatedMemoryPerOrg(
   if (orgQuotaRes.ok) {
     const orgQuotas = (await orgQuotaRes.json()).resources;
     memoryAllocated = orgQuotas.reduce(
-      (acc: { [orgId: string]: number }, curQuota: OrgQuotaObject) => {
+      (acc: { [orgId: string]: number | null }, curQuota: OrgQuotaObject) => {
         const relatedOrgs = curQuota.relationships.organizations.data.map(
           (o: any) => o.guid
         );

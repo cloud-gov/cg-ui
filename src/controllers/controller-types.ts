@@ -94,7 +94,7 @@ export interface UserOrgPage extends UserObj {
 
 export interface OrgQuotaObject {
   apps: {
-    total_memory_in_mb: number;
+    total_memory_in_mb: number | null;
   };
   relationships: {
     organizations: {

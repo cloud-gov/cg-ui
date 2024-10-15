@@ -119,7 +119,7 @@
   ),
 
   $top-palettes: (
-    'palette-units-system-positive',
+    'palette-units',
   ),
 
   $bottom-palettes: (
@@ -127,7 +127,7 @@
   ),
 
   $right-palettes: (
-    'palette-units-system-positive',
+    'palette-units',
   ),
 
   $theme-utility-breakpoints: (
@@ -424,4 +424,24 @@ $error-color-dark: 'red-40v';
       @include u-bg($error-color-dark); // icon color
     }
   }
+}
+
+// ProgressBar
+
+.progress__bg--infinite {
+  background: linear-gradient(90deg, color('blue-cool-20v') 78.42%, color('blue-cool-30v') 100%);
+}
+
+.progress__infinity-logo {
+  position: absolute;
+  top: -9px;
+  right: 0;
+  width: 28px;
+  height: 28px;
+  background: color('blue-cool-5v');
+  border: 2px solid color('blue-cool-30v');
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }

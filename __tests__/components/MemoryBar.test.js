@@ -6,11 +6,17 @@ import { render, screen } from '@testing-library/react';
 import { MemoryBar } from '@/components/MemoryBar';
 
 describe('<MemoryBar />', () => {
-  describe('when no allocated memory', () => {
-    it('returns nothing', () => {
-      render(<MemoryBar memoryUsed={50} memoryAllocated={null} />);
-      const component = screen.queryByTestId('memory-bar');
-      expect(component).not.toBeInTheDocument();
+  describe('when allocated memory is null', () => {
+    render(<MemoryBar memoryUsed={50} memoryAllocated={null} />);
+
+    it('says no upper limit', () => {
+      const text = screen.queryByText(/no upper limit/);
+      expect(text).toBeInTheDocument();
+    });
+
+    it('hides memory remaining', () => {
+      const text = screen.queryByText(/remaining/);
+      expect(text).not.toBeInTheDocument();
     });
   });
 
