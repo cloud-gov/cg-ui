@@ -20,7 +20,8 @@ export function MemoryBar({
         <div className="margin-right-1">
           {memoryAllocated && memoryAllocated > 0 && (
             <>
-              {formatMb(memoryUsedNum)} of {formatMb(memoryAllocated)} allocated
+              {formatMb(memoryUsedNum)} used of {formatMb(memoryAllocated)}{' '}
+              allocated
             </>
           )}
           {memoryAllocated === null && (
