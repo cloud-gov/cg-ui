@@ -59,7 +59,7 @@ export function OrganizationsListCard({
           {getOrgRolesText(org.guid)}
         </div>
         <div className="maxw-15 font-sans-3xs line-height-sans-4">
-          <p className="margin-top-0 margin-bottom-1 text-uppercase">
+          <p className="margin-top-0 margin-bottom-0 text-uppercase">
             at&nbsp;a&nbsp;glance:
           </p>
           <ul className="usa-list usa-list--unstyled">
