@@ -17,7 +17,9 @@ export default async function OrgsPage() {
       />
       <LastViewedOrgLink />
       <div className="width-full margin-top-3 margin-bottom-2 border-bottom border-gray-cool-20"></div>
-      <Timestamp timestamp={payload.lastUpdatedAt} />
+      <p className="margin-0 margin-bottom-4 font-sans-2xs">
+        Page last updated: <Timestamp timestamp={payload.lastUpdatedAt} />
+      </p>
       <OrganizationsList
         orgs={payload.orgs}
         userCounts={payload.userCounts}
