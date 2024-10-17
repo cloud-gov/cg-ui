@@ -91,3 +91,14 @@ export interface UserOrgPage extends UserObj {
   daysToExpiration: number | null;
   lastLogonTime: number | null | undefined;
 }
+
+export interface OrgQuotaObject {
+  apps: {
+    total_memory_in_mb: number | null;
+  };
+  relationships: {
+    organizations: {
+      data: { guid: string }[];
+    };
+  };
+}

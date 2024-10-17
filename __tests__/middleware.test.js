@@ -8,7 +8,16 @@ import { middleware } from '@/middleware.ts';
 import { postToAuthTokenUrl } from '@/api/auth';
 
 const mockEmailAddress = 'foo@example.com';
-const mockAccessToken = jwt.sign({ email: mockEmailAddress }, 'fooPrivateKey');
+const mockUserName = 'fooUserName';
+const mockUserId = 'fooUserId';
+const mockAccessToken = jwt.sign(
+  {
+    email: mockEmailAddress,
+    user_name: mockUserName,
+    user_id: mockUserId,
+  },
+  'fooPrivateKey'
+);
 const mockRefreshToken = 'fooRefreshToken';
 const mockExpiry = 43199;
 const mockAuthResponse = {
@@ -84,6 +93,8 @@ describe('auth/login/callback', () => {
         response.cookies.get('authsession')['value']
       );
       expect(authCookieObj.email).toMatch(mockEmailAddress);
+      expect(authCookieObj.user_id).toMatch(mockUserId);
+      expect(authCookieObj.user_name).toMatch(mockUserName);
       expect(authCookieObj.accessToken).toMatch(mockAccessToken);
       expect(authCookieObj.refreshToken).toMatch(mockRefreshToken);
       expect(authCookieObj.expiry).toBeDefined();
@@ -192,6 +203,91 @@ describe('/test/authenticated/:path*', () => {
       await middleware(request);
       // assert
       expect(responseSpy).toHaveBeenCalledTimes(1);
+    });
+  });
+});
+
+describe('/orgs/* when logged in', () => {
+  describe('when org id is part of url path', () => {
+    // setup
+    const request = new NextRequest(
+      new URL(
+        '/orgs/470bd8ff-ed0e-4d11-95c4-cf765202cebd/bar',
+        process.env.ROOT_URL
+      )
+    );
+    let response;
+
+    beforeAll(async () => {
+      // setup
+      request.cookies.set(
+        'authsession',
+        JSON.stringify({
+          expiry: Date.now() + 10000000,
+        })
+      );
+      // run
+      response = await middleware(request);
+    });
+
+    it('sets lastViewedOrgId cookie as org id', () => {
+      // assert
+      expect(response.cookies.get('lastViewedOrgId').value).toEqual(
+        '470bd8ff-ed0e-4d11-95c4-cf765202cebd'
+      );
+    });
+  });
+
+  describe('when org id is end of url path', () => {
+    // setup
+    const request = new NextRequest(
+      new URL(
+        '/orgs/470bd8ff-ed0e-4d11-95c4-cf765202cebd',
+        process.env.ROOT_URL
+      )
+    );
+    let response;
+
+    beforeAll(async () => {
+      // setup
+      request.cookies.set(
+        'authsession',
+        JSON.stringify({
+          expiry: Date.now() + 10000000,
+        })
+      );
+      // run
+      response = await middleware(request);
+    });
+
+    it('sets lastViewedOrgId cookie as org id', () => {
+      // assert
+      expect(response.cookies.get('lastViewedOrgId').value).toEqual(
+        '470bd8ff-ed0e-4d11-95c4-cf765202cebd'
+      );
+    });
+  });
+
+  describe('when org id is not in url path', () => {
+    // setup
+    const request = new NextRequest(new URL('/orgs/foo', process.env.ROOT_URL));
+    let response;
+
+    beforeAll(async () => {
+      // setup
+      request.cookies.set(
+        'authsession',
+        JSON.stringify({
+          expiry: Date.now() + 10000000,
+        })
+      );
+      // run
+      response = await middleware(request);
+    });
+
+    it('does not set lastViewedOrgId cookie', () => {
+      // assert
+      expect(response.cookies.get('lastViewedOrgId')).toBeUndefined();
     });
   });
 });

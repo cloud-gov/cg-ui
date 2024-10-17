@@ -1,5 +1,9 @@
 import { describe, expect, it } from '@jest/globals';
-import { sortObjectsByParam, filterObjectsByParams } from '@/helpers/arrays';
+import {
+  sortObjectsByParam,
+  filterObjectsByParams,
+  chunkArray,
+} from '@/helpers/arrays';
 
 describe('sortObjectsByParam', () => {
   // setup
@@ -66,5 +70,16 @@ describe('filterObjectsByParams', () => {
     expect(result.length).toEqual(2);
     expect(result[0]).toBe(ary[0]);
     expect(result[1]).toBe(ary[1]);
+  });
+});
+
+describe('chunkArray', () => {
+  it('groups items in array into another array per given chunk size', () => {
+    const ary = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
+    const size = 3;
+    const result = chunkArray(ary, size);
+    expect(result.length).toEqual(4);
+    expect(result[0].length).toEqual(3);
+    expect(result[0]).toEqual([1, 2, 3]);
   });
 });

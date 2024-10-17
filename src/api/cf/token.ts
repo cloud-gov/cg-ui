@@ -28,3 +28,22 @@ export function isLoggedIn(): boolean {
     return false;
   }
 }
+
+export function getUserId() {
+  return getLocalUserId() || getCFUserId();
+}
+
+export function getLocalUserId() {
+  return process.env.CF_USER_ID;
+}
+
+export function getCFUserId() {
+  const authSession = cookies().get('authsession');
+  if (authSession === undefined)
+    throw new Error('please confirm you are logged in');
+  try {
+    return JSON.parse(authSession.value).user_id;
+  } catch (error: any) {
+    throw new Error('unable to parse authsession user_id');
+  }
+}

@@ -3,10 +3,34 @@ import {
   associateUsersWithRoles,
   filterUserLogonInfo,
   pollForJobCompletion,
+  countUsersPerOrg,
+  allocatedMemoryPerOrg,
+  memoryUsagePerOrg,
+  countSpacesPerOrg,
+  countAppsPerOrg,
+  getOrgRolesForCurrentUser,
 } from '@/controllers/controller-helpers';
-import { mockUsersByOrganization, mockUsersBySpace } from '../api/mocks/roles';
+import {
+  mockUsersByOrganization,
+  mockUsersBySpace,
+  mockRolesFilteredByOrgAndUser,
+} from '../api/mocks/roles';
 import { mockS3Object } from '../api/mocks/lastlogon-summary';
 import nock from 'nock';
+import mockUsers from '../api/mocks/users';
+import { mockOrgQuotas } from '../api/mocks/orgQuotas';
+import { mockSpaces } from '../api/mocks/spaces';
+import { mockApps } from '../api/mocks/apps';
+// eslint-disable-next-line no-unused-vars
+import { getUserId } from '@/api/cf/token';
+
+/* global jest */
+/* eslint no-undef: "off" */
+jest.mock('@/api/cf/token', () => ({
+  ...jest.requireActual('../../src/api/cf/token'),
+  getUserId: jest.fn(() => '46ff1fd5-4238-4e22-a00a-1bec4fc0f9da'), // same user guid as in mockRolesFilteredByOrgAndUser
+}));
+/* eslint no-undef: "error" */
 
 beforeEach(() => {
   if (!nock.isActive()) {
@@ -207,6 +231,111 @@ describe('controller-helpers', () => {
       const result = await pollForJobCompletion(domain + path);
       // expect
       expect(result).not.toBeDefined(); // recursion just completes
+    });
+  });
+
+  describe('countUsersPerOrg', () => {
+    it('returns an object keyed by org guid with value of number of users', async () => {
+      // setup
+      // requst 1
+      nock(process.env.CF_API_URL)
+        .get(/orgId1\/users/)
+        .reply(200, { resources: mockUsers }); // mock users should have 10 users
+      // request 2
+      nock(process.env.CF_API_URL)
+        .get(/orgId2\/users/)
+        .reply(200, { resources: mockUsers.slice(0, 5) }); // mock users should have 10 users
+      // act
+      const result = await countUsersPerOrg(['orgId1', 'orgId2']);
+      // assert
+      expect(result['orgId1']).toEqual(10);
+      expect(result['orgId2']).toEqual(5);
+    });
+  });
+
+  describe('allocatedMemoryPerOrg', () => {
+    it('returns an object keyed by org id with value of memory in mb', async () => {
+      // setup
+      const orgGuids = ['orgId1', 'orgId2'];
+      nock(process.env.CF_API_URL)
+        .get(/organization_quotas\?organization_guids=orgId1%2CorgId2/)
+        .reply(200, mockOrgQuotas);
+      // act
+      const result = await allocatedMemoryPerOrg(orgGuids);
+      // assert
+      expect(result['orgId1']).toEqual(10240);
+      expect(result['orgId2']).toEqual(500);
+    });
+  });
+
+  describe('memoryUsagePerOrg', () => {
+    it('returns an object keyed by org id with value of memory current usage in mb', async () => {
+      // setup
+      const orgGuids = ['orgId1', 'orgId2'];
+      const mockOrgUsageSummary1 = {
+        usage_summary: {
+          memory_in_mb: 123,
+        },
+      };
+      const mockOrgUsageSummary2 = {
+        usage_summary: {
+          memory_in_mb: 456,
+        },
+      };
+      nock(process.env.CF_API_URL)
+        .get(/organizations\/orgId1\/usage_summary/)
+        .reply(200, mockOrgUsageSummary1);
+      nock(process.env.CF_API_URL)
+        .get(/organizations\/orgId2\/usage_summary/)
+        .reply(200, mockOrgUsageSummary2);
+      // act
+      const result = await memoryUsagePerOrg(orgGuids);
+      // assert
+      expect(result['orgId1']).toEqual(123);
+      expect(result['orgId2']).toEqual(456);
+    });
+  });
+
+  describe('countSpacesPerOrg', () => {
+    it('returns an object keyed by org id with value of number of spaces', async () => {
+      // setup
+      const orgGuids = ['914b4899-2a7c-4214-bacc-f97576e00777'];
+      nock(process.env.CF_API_URL)
+        .get(/spaces\?organization_guids=914b4899-2a7c-4214-bacc-f97576e00777/)
+        .reply(200, mockSpaces);
+      // act
+      const result = await countSpacesPerOrg(orgGuids);
+      // assert
+      expect(result['914b4899-2a7c-4214-bacc-f97576e00777']).toEqual(3);
+    });
+  });
+
+  describe('countAppsPerOrg', () => {
+    it('returns an object keyed by org id with value of number of apps', async () => {
+      // setup
+      const orgGuids = ['orgId1', 'orgId2'];
+      nock(process.env.CF_API_URL).persist().get(/apps/).reply(200, mockApps); // mock apps should have 2 apps
+      // act
+      const result = await countAppsPerOrg(orgGuids);
+      // assert
+      expect(result['orgId1']).toEqual(2);
+      expect(result['orgId2']).toEqual(2);
+    });
+  });
+
+  describe('getOrgRolesForCurrentUser', () => {
+    it('returns an object keyed by org id with value of array of role types', async () => {
+      // setup
+      const orgGuids = ['e8e31994-0dba-41e3-96ea-39942f1b30a4'];
+      nock(process.env.CF_API_URL)
+        .get(/roles/)
+        .reply(200, mockRolesFilteredByOrgAndUser);
+      // act
+      const result = await getOrgRolesForCurrentUser(orgGuids);
+      // assert
+      expect(result['e8e31994-0dba-41e3-96ea-39942f1b30a4']).toEqual([
+        'organization_manager',
+      ]);
     });
   });
 });
