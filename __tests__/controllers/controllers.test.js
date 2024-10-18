@@ -3,6 +3,7 @@ import { describe, it, expect, beforeEach, afterEach } from '@jest/globals';
 import {
   getEditOrgRoles,
   getOrgPage,
+  getOrgsPage,
   getOrgAppsPage,
   getOrgUsagePage,
   getUser,
@@ -22,6 +23,15 @@ import { getUserLogonInfo } from '@/api/aws/s3';
 jest.mock('@/controllers/controller-helpers', () => ({
   ...jest.requireActual('../../src/controllers/controller-helpers'),
   pollForJobCompletion: jest.fn(),
+  countUsersPerOrg: () => ({ orgId1: 0, orgId2: 1 }),
+  allocatedMemoryPerOrg: () => ({ orgId1: 2, orgId2: 3 }),
+  memoryUsagePerOrg: () => ({ orgId1: 4, orgId2: 5 }),
+  countSpacesPerOrg: () => ({ orgId1: 6, orgId2: 7 }),
+  countAppsPerOrg: () => ({ orgId1: 8, orgId2: 9 }),
+  getOrgRolesForCurrentUser: () => ({
+    orgId1: ['organization_manager'],
+    orgId2: ['organization_billing_manager'],
+  }),
 }));
 jest.mock('@/api/aws/s3', () => ({
   getUserLogonInfo: jest.fn(),
@@ -530,6 +540,43 @@ describe('controllers tests', () => {
       expect(async () => {
         await getEditOrgRoles(orgGuid, userGuid);
       }).rejects.toThrow(new Error('something went wrong with the request'));
+    });
+  });
+
+  describe('getOrgsPage', () => {
+    it('returns the correct values for each org', async () => {
+      // setup
+      const mockOrgs = [{ guid: 'orgId1' }, { guid: 'orgId2' }];
+      // get orgs
+      nock(process.env.CF_API_URL)
+        .get(/organizations/)
+        .reply(200, { resources: mockOrgs });
+      // act
+      const result = await getOrgsPage();
+      // assert
+      expect(result.meta.status).toEqual('success');
+      expect(result.payload.orgs.length).toEqual(2);
+      // see jest mocks at top of file for mock return values
+      // users
+      expect(result.payload.userCounts['orgId1']).toEqual(0);
+      expect(result.payload.userCounts['orgId2']).toEqual(1);
+      // allocated memory
+      expect(result.payload.memoryAllocated['orgId1']).toEqual(2);
+      expect(result.payload.memoryAllocated['orgId2']).toEqual(3);
+      // memory usage
+      expect(result.payload.memoryCurrentUsage['orgId1']).toEqual(4);
+      expect(result.payload.memoryCurrentUsage['orgId2']).toEqual(5);
+      // spaces
+      expect(result.payload.spaceCounts['orgId1']).toEqual(6);
+      expect(result.payload.spaceCounts['orgId2']).toEqual(7);
+      // apps
+      expect(result.payload.appCounts['orgId1']).toEqual(8);
+      expect(result.payload.appCounts['orgId2']).toEqual(9);
+      // roles
+      expect(result.payload.roles['orgId1']).toEqual(['organization_manager']);
+      expect(result.payload.roles['orgId2']).toEqual([
+        'organization_billing_manager',
+      ]);
     });
   });
 });
