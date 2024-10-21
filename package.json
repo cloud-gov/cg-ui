@@ -13,7 +13,7 @@
     "setup-precommit": "cp ./scripts/pre-commit .git/hooks"
   },
   "dependencies": {
-    "@aws-sdk/client-s3": "^3.667.0",
+    "@aws-sdk/client-s3": "^3.675.0",
     "@aws-sdk/credential-providers": "^3.654.0",
     "@uswds/uswds": "3.8.2",
     "byte-size": "9.0.0",
