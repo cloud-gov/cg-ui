@@ -169,7 +169,11 @@ export function UsersActionsSpaceRoles({
           </Button>
         )}
       </div>
-      {actionStatus === 'pending' && <p>Submission in progress...</p>}
+      {actionStatus === 'pending' && (
+        <div role="alert">
+          <p>submission in progress...</p>
+        </div>
+      )}
     </form>
   );
 }

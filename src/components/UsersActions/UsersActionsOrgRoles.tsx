@@ -153,15 +153,6 @@ export function UsersActionsOrgRoles({
 
   return (
     <>
-      {/* aria-live region needs to show up on initial page render. */}
-      <div
-        role="region"
-        aria-live="polite"
-        aria-atomic={true}
-        className="usa-sr-only"
-      >
-        {actionErrors.join(', ')}
-      </div>
       {actionStatus === 'success' && (
         <Alert type="success">Org roles have been saved!</Alert>
       )}
@@ -226,7 +217,11 @@ export function UsersActionsOrgRoles({
               </Button>
             )}
           </div>
-          {actionStatus === 'pending' && <p>submission in progress...</p>}
+          {actionStatus === 'pending' && (
+            <div role="alert">
+              <p>submission in progress...</p>
+            </div>
+          )}
         </fieldset>
       </form>
     </>

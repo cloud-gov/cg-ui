@@ -166,7 +166,12 @@ export function UsersList({
       aria-live region needs to show up on initial page render.
       More info: https://tetralogical.com/blog/2024/05/01/why-are-my-live-regions-not-working/
       */}
-      <div role="region" aria-live="assertive" aria-atomic={true}>
+      <div
+        role="region"
+        aria-live="assertive"
+        aria-atomic={true}
+        className="usa-sr-only"
+      >
         {successMsg}
       </div>
       <OverlayDrawer

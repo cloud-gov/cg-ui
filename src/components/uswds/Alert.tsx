@@ -43,10 +43,7 @@ export function Alert({
   const Heading = headingLevel;
 
   let role = 'region';
-  if (type === 'success') {
-    role = 'status';
-  }
-  if (type === 'error' || type === 'emergency') {
+  if (type === 'error' || type === 'emergency' || type === 'success') {
     role = 'alert';
   }
 
