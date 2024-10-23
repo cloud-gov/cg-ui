@@ -298,8 +298,6 @@ describe('/orgs/* when logged in', () => {
 
       const response = await middleware(request);
 
-      console.log(response.headers.get('content-security-policy'));
-
       // Assert that the headers were added as expected
       expect(response.headers.get('content-security-policy')).not.toBeNull();
     });
