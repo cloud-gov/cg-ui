@@ -1,9 +1,8 @@
 import { stackMiddlewares } from './middlewares/stackMiddlewares';
 import { withAuth } from './middlewares/withAuth';
 import { withCSP } from './middlewares/withCSP';
-import { withNonce } from './middlewares/withNonce';
 
-export default stackMiddlewares([withNonce, withCSP, withAuth]);
+export default stackMiddlewares([withCSP, withAuth]);
 
 export const config = {
   matcher: [
