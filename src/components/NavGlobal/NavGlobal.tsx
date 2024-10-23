@@ -1,4 +1,4 @@
-import Image from 'next/image';
+import Image from '@/components/Image';
 
 import CloudGovLogo from '@/components/svgs/CloudGovLogo';
 import cloudPagesIcon from '@/../public/img/logos/cloud-pages-icon.svg';
