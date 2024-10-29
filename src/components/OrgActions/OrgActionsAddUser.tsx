@@ -78,22 +78,21 @@ export function OrgActionsAddUser({
         able to manage their roles once they're added.
       </p>
 
-      {actionStatus === 'error' && (
-        <Alert type="error">{actionErrors.join(', ')}</Alert>
-      )}
-      {actionStatus === 'success' && (
-        <Alert type="success">
-          <strong>{emailInput || 'User'}</strong> has been added!
-          {userId && (
-            <>
-              <br />
-              <Link href={`/orgs/${orgId}/users/${userId}/org-roles`}>
-                Manage their organization roles
-              </Link>
-            </>
-          )}
-        </Alert>
-      )}
+      <Alert type="error" isVisible={actionStatus === 'error'}>
+        {actionErrors.join(', ')}
+      </Alert>
+
+      <Alert type="success" isVisible={actionStatus === 'success'}>
+        <strong>{emailInput || 'User'}</strong> has been added!
+        {userId && (
+          <>
+            <br />
+            <Link href={`/orgs/${orgId}/users/${userId}/org-roles`}>
+              Manage their organization roles
+            </Link>
+          </>
+        )}
+      </Alert>
 
       <fieldset className="usa-fieldset">
         <legend className="usa-legend usa-sr-only">

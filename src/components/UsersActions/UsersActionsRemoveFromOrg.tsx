@@ -56,19 +56,6 @@ function FormDefault({
   );
 }
 
-function FormSuccess({ user }: { user: UserObj }) {
-  return (
-    <Alert type="success">
-      <strong>{user.username}</strong> has been successfully removed from the
-      org.
-    </Alert>
-  );
-}
-
-function FormError({ errors }: { errors: string[] }) {
-  return <Alert type="error">{errors.join(', ')}</Alert>;
-}
-
 export function UsersActionsRemoveFromOrg({
   user,
   roles,
@@ -126,7 +113,10 @@ export function UsersActionsRemoveFromOrg({
           modalId={`modal-remove-from-org-user-${user.guid}`}
           headingId={modalHeadingId(user)}
         >
-          {actionStatus === 'error' && <FormError errors={actionErrors} />}
+          <Alert type="error" isVisible={actionStatus === 'error'}>
+            {actionErrors.join(', ')}
+          </Alert>
+
           {actionStatus !== 'success' && (
             <FormDefault
               user={user}
@@ -135,7 +125,11 @@ export function UsersActionsRemoveFromOrg({
               actionStatus={actionStatus}
             />
           )}
-          {actionStatus === 'success' && <FormSuccess user={user} />}
+
+          <Alert type="success" isVisible={actionStatus === 'success'}>
+            <strong>{user.username}</strong> has been successfully removed from
+            the org.
+          </Alert>
         </Modal>
       )}
     </>
