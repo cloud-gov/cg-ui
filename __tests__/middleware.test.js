@@ -57,6 +57,10 @@ describe('/login', () => {
     expect(location).toMatch('state=baz');
     expect(location).toMatch('response_type=code');
   });
+
+  it('has CSP headers present', () => {
+    expect(response.headers.get('content-security-policy')).not.toBeNull();
+  });
 });
 
 describe('auth/login/callback', () => {

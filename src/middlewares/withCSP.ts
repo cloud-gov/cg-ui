@@ -16,7 +16,7 @@ export const withCSP: MiddlewareFactory = (next: NextMiddleware) => {
         base-uri 'self';
         form-action 'self';
         frame-ancestors 'none';
-        upgrade-insecure-requests;
+        ${process.env.NODE_ENV !== 'development' ? 'upgrade-insecure-requests;' : ''};
       `;
 
     // Replace newline characters and spaces
