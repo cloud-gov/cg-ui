@@ -59,7 +59,7 @@ export function Alert({
     >
       <div className="usa-alert__body">
         {heading && (
-          <Heading className="usa-alert__heading padding-left-2 font-sans-md">
+          <Heading className="usa-alert__heading font-sans-md">
             {heading}
           </Heading>
         )}
@@ -67,8 +67,7 @@ export function Alert({
           (validation ? (
             children
           ) : (
-            // extra padding-left is needed here due to a bug with the $theme-site-margins-width setting
-            <p className="usa-alert__text padding-left-2">{children}</p>
+            <p className="usa-alert__text">{children}</p>
           ))}
       </div>
     </div>
