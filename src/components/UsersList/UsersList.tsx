@@ -162,13 +162,6 @@ export function UsersList({
 
   return (
     <>
-      {/*
-      aria-live region needs to show up on initial page render.
-      More info: https://tetralogical.com/blog/2024/05/01/why-are-my-live-regions-not-working/
-      */}
-      <div role="region" aria-live="assertive" aria-atomic={true}>
-        {successMsg}
-      </div>
       <OverlayDrawer
         ariaLabel={overlayAriaLabel}
         id="overlay-drawer-manage-users"
@@ -199,21 +192,20 @@ export function UsersList({
         )}
       </OverlayDrawer>
 
-      {successMsg && (
-        <Alert
-          type="success"
-          className="margin-bottom-4"
-          heading="Your changes have been saved."
+      <Alert
+        type="success"
+        isVisible={!!successMsg}
+        className="margin-bottom-4"
+        heading="Your changes have been saved."
+      >
+        {successMsg}{' '}
+        <Button
+          onClick={() => dismissSuccessMsg()}
+          className="usa-button--unstyled text-bold text-ink"
         >
-          {successMsg}{' '}
-          <Button
-            onClick={() => dismissSuccessMsg()}
-            className="usa-button--unstyled text-bold text-ink"
-          >
-            (Dismiss this message.)
-          </Button>
-        </Alert>
-      )}
+          (Dismiss this message.)
+        </Button>
+      </Alert>
 
       <ListSearchInput
         onSubmit={onSearchAction}
@@ -236,7 +228,11 @@ export function UsersList({
           modalId="removeUserSuccess"
           headingId={modalHeadingId(removedUsername)}
         >
-          <Alert type="success" id={modalHeadingId(removedUsername)}>
+          <Alert
+            type="success"
+            id={modalHeadingId(removedUsername)}
+            isVisible={true}
+          >
             <strong>{removedUsername}</strong> has successfully been removed.
           </Alert>
         </Modal>

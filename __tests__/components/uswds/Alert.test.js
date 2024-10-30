@@ -11,7 +11,7 @@ function selectAlert(rendered) {
 
 describe('<Alert />', () => {
   it('renders a default USWDS styled alert', () => {
-    const res = render(<Alert id="test"></Alert>);
+    const res = render(<Alert id="test" isVisible={true}></Alert>);
 
     const alert = selectAlert(res);
     expect(alert).toBeInTheDocument();
@@ -21,7 +21,9 @@ describe('<Alert />', () => {
 
   for (const type of types) {
     it(`renders an alert of type ${type}`, () => {
-      const res = render(<Alert id="test" type={type}></Alert>);
+      const res = render(
+        <Alert id="test" type={type} isVisible={true}></Alert>
+      );
 
       const alert = selectAlert(res);
       expect(alert).toHaveClass(`usa-alert--${type}`);
@@ -29,14 +31,21 @@ describe('<Alert />', () => {
   }
 
   it('renders an h4 heading by default', () => {
-    render(<Alert id="test" heading="Testing"></Alert>);
+    render(<Alert id="test" heading="Testing" isVisible={true}></Alert>);
 
     const heading = screen.getByRole('heading', { level: 4 });
     expect(heading).toBeInTheDocument();
   });
 
   it('renders an h3 if specified', () => {
-    render(<Alert id="test" heading="Testing" headingLevel="h3"></Alert>);
+    render(
+      <Alert
+        id="test"
+        heading="Testing"
+        headingLevel="h3"
+        isVisible={true}
+      ></Alert>
+    );
 
     const heading = screen.getByRole('heading', { level: 3 });
     expect(heading).toBeInTheDocument();
@@ -44,7 +53,11 @@ describe('<Alert />', () => {
 
   describe('with children', () => {
     it('renders normally within a p tag', () => {
-      const res = render(<Alert id="test">Test contents</Alert>);
+      const res = render(
+        <Alert id="test" isVisible={true}>
+          Test contents
+        </Alert>
+      );
 
       const alert = selectAlert(res);
       expect(alert).toHaveTextContent('Test contents');
@@ -53,7 +66,7 @@ describe('<Alert />', () => {
 
     it('renders validation without a p tag', () => {
       const res = render(
-        <Alert id="test" validation>
+        <Alert id="test" validation isVisible={true}>
           Test contents
         </Alert>
       );
@@ -65,7 +78,7 @@ describe('<Alert />', () => {
   });
 
   it('can render a slim alert without an icon', () => {
-    const res = render(<Alert id="test" slim noIcon></Alert>);
+    const res = render(<Alert id="test" slim noIcon isVisible={true}></Alert>);
 
     const alert = selectAlert(res);
     expect(alert).toHaveClass('usa-alert--slim');

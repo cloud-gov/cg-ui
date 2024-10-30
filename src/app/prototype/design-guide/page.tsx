@@ -84,22 +84,43 @@ export default function DesignGuidePage() {
         <div className="grid-row grid-gap">
           <div className="grid-col-6">
             <h3>Full sized with icons and default h4 heading size</h3>
-            <Alert type="success" heading="Success" className="display-block">
+            <Alert
+              type="success"
+              heading="Success"
+              className="display-block"
+              isVisible={true}
+            >
               Good job
             </Alert>
-            <Alert type="info" heading="Info" className="display-block">
+            <Alert
+              type="info"
+              heading="Info"
+              className="display-block"
+              isVisible={true}
+            >
               So you know
             </Alert>
-            <Alert type="warning" heading="Warning" className="display-block">
+            <Alert
+              type="warning"
+              heading="Warning"
+              className="display-block"
+              isVisible={true}
+            >
               Watch out
             </Alert>
-            <Alert type="error" heading="Error" className="display-block">
+            <Alert
+              type="error"
+              heading="Error"
+              className="display-block"
+              isVisible={true}
+            >
               Something is wrong
             </Alert>
             <Alert
               type="emergency"
               heading="Emergency"
               className="display-block"
+              isVisible={true}
             >
               Fear! Fire! Foes!
             </Alert>
@@ -110,42 +131,88 @@ export default function DesignGuidePage() {
               heading="Validation"
               validation
               className="display-block"
+              isVisible={true}
             >
               Validations do not use usa-alert__text p tag
             </Alert>
           </div>
           <div className="grid-col-6">
             <h3>Slim with icons and no headings</h3>
-            <Alert type="success" slim className="display-block">
+            <Alert
+              type="success"
+              slim
+              className="display-block"
+              isVisible={true}
+            >
               Success
             </Alert>
-            <Alert type="info" slim className="display-block">
+            <Alert type="info" slim className="display-block" isVisible={true}>
               Info
             </Alert>
-            <Alert type="warning" slim className="display-block">
+            <Alert
+              type="warning"
+              slim
+              className="display-block"
+              isVisible={true}
+            >
               Warning
             </Alert>
-            <Alert type="error" slim className="display-block">
+            <Alert type="error" slim className="display-block" isVisible={true}>
               Error
             </Alert>
-            <Alert type="emergency" slim className="display-block">
+            <Alert
+              type="emergency"
+              slim
+              className="display-block"
+              isVisible={true}
+            >
               Emergency
             </Alert>
 
             <h3>Slim with no icons and no headings</h3>
-            <Alert type="success" slim noIcon className="display-block">
+            <Alert
+              type="success"
+              slim
+              noIcon
+              className="display-block"
+              isVisible={true}
+            >
               Success
             </Alert>
-            <Alert type="info" slim noIcon className="display-block">
+            <Alert
+              type="info"
+              slim
+              noIcon
+              className="display-block"
+              isVisible={true}
+            >
               Info
             </Alert>
-            <Alert type="warning" slim noIcon className="display-block">
+            <Alert
+              type="warning"
+              slim
+              noIcon
+              className="display-block"
+              isVisible={true}
+            >
               Warning
             </Alert>
-            <Alert type="error" slim noIcon className="display-block">
+            <Alert
+              type="error"
+              slim
+              noIcon
+              className="display-block"
+              isVisible={true}
+            >
               Error
             </Alert>
-            <Alert type="emergency" slim noIcon className="display-block">
+            <Alert
+              type="emergency"
+              slim
+              noIcon
+              className="display-block"
+              isVisible={true}
+            >
               Emergency
             </Alert>
           </div>

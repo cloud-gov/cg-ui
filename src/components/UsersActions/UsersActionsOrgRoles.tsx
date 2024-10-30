@@ -144,7 +144,11 @@ export function UsersActionsOrgRoles({
   }
 
   if (loadingErrorMessage) {
-    return <Alert type="error">{loadingErrorMessage}</Alert>;
+    return (
+      <Alert type="error" isVisible={!!loadingErrorMessage}>
+        {loadingErrorMessage}
+      </Alert>
+    );
   }
 
   if (!dataLoaded) {
@@ -162,21 +166,26 @@ export function UsersActionsOrgRoles({
       >
         {actionErrors.join(', ')}
       </div>
-      {actionStatus === 'success' && (
-        <Alert type="success">Org roles have been saved!</Alert>
-      )}
-      {actionStatus === 'error' && (
-        <Alert type="error" heading="An error has occured.">
-          {actionErrors.join(', ')} If the error occurs again, please contact{' '}
-          <Link
-            className="text-bold text-ink"
-            href={process.env.NEXT_PUBLIC_CLOUD_SUPPORT_URL || '/'}
-          >
-            Cloud.gov support
-          </Link>
-          .
-        </Alert>
-      )}
+
+      <Alert type="success" isVisible={actionStatus === 'success'}>
+        Org roles have been saved!
+      </Alert>
+
+      <Alert
+        type="error"
+        isVisible={actionStatus === 'error'}
+        heading="An error has occured."
+      >
+        {actionErrors.join(', ')} If the error occurs again, please contact{' '}
+        <Link
+          className="text-bold text-ink"
+          href={process.env.NEXT_PUBLIC_CLOUD_SUPPORT_URL || '/'}
+        >
+          Cloud.gov support
+        </Link>
+        .
+      </Alert>
+
       <form onSubmit={onSubmit} name="edit-org-roles-form">
         <fieldset className="usa-fieldset">
           <legend className="usa-legend usa-sr-only margin-bottom-2">
@@ -226,7 +235,11 @@ export function UsersActionsOrgRoles({
               </Button>
             )}
           </div>
-          {actionStatus === 'pending' && <p>submission in progress...</p>}
+          {actionStatus === 'pending' && (
+            <div role="alert">
+              <p>submission in progress...</p>
+            </div>
+          )}
         </fieldset>
       </form>
     </>
