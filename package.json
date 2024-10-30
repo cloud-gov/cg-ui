@@ -14,7 +14,7 @@
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.675.0",
-    "@aws-sdk/credential-providers": "^3.675.0",
+    "@aws-sdk/credential-providers": "^3.679.0",
     "@uswds/uswds": "3.8.2",
     "byte-size": "9.0.0",
     "classnames": "^2.5.1",
