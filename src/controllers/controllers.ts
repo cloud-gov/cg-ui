@@ -146,7 +146,9 @@ export async function getOrgsPage(): Promise<ControllerResult> {
   }
 }
 
-export async function getOrgPage(orgGuid: string): Promise<ControllerResult> {
+export async function getOrgUsersPage(
+  orgGuid: string
+): Promise<ControllerResult> {
   const [orgUserRolesRes, spacesRes, userLogonInfoRes] = await Promise.all([
     // use this request to roles to also obtain the organization details and list the org users
     CF.getRoles({

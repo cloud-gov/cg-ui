@@ -7,16 +7,16 @@ export const dynamic = 'force-dynamic';
 export const revalidate = 0;
 
 import { UsersList } from '@/components/UsersList/UsersList';
-import { getOrgPage } from '@/controllers/controllers';
+import { getOrgUsersPage } from '@/controllers/controllers';
 import { PageHeader } from '@/components/PageHeader';
 import { AddUserButton } from '@/components/UsersList/AddUserButton';
 
-export default async function OrgPage({
+export default async function OrgUsersPage({
   params,
 }: {
   params: { orgId: string };
 }) {
-  const { payload } = await getOrgPage(params.orgId);
+  const { payload } = await getOrgUsersPage(params.orgId);
   const { roles, serviceAccounts, spaces, users } = payload;
 
   return (

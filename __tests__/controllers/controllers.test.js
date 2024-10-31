@@ -3,7 +3,7 @@ import { cookies } from 'next/headers';
 import { describe, it, expect, beforeEach, afterEach } from '@jest/globals';
 import {
   getEditOrgRoles,
-  getOrgPage,
+  getOrgUsersPage,
   getOrgsPage,
   getOrgAppsPage,
   getOrgUsagePage,
@@ -60,7 +60,7 @@ afterEach(() => {
 });
 
 describe('controllers tests', () => {
-  describe('getOrgPage', () => {
+  describe('getOrgUsersPage', () => {
     describe('if any of the first CF requests fail', () => {
       it('throws an error', async () => {
         // setup
@@ -76,7 +76,7 @@ describe('controllers tests', () => {
 
         // assert
         expect(async () => {
-          await getOrgPage(orgGuid);
+          await getOrgUsersPage(orgGuid);
         }).rejects.toThrow(new Error('something went wrong with the request'));
       });
     });
@@ -113,7 +113,7 @@ describe('controllers tests', () => {
           return undefined;
         });
 
-        const res = await getOrgPage(orgGuid);
+        const res = await getOrgUsersPage(orgGuid);
 
         // assert
         expect(res.payload.userLogonInfo).toBeUndefined();
@@ -164,7 +164,7 @@ describe('controllers tests', () => {
           };
         });
 
-        const result = await getOrgPage(orgGuid);
+        const result = await getOrgUsersPage(orgGuid);
         const firstUserRoles =
           result.payload.roles['73193f8c-e03b-43c8-aeee-8670908899d2'];
         const firstUser = result.payload.users[0];
@@ -289,7 +289,7 @@ describe('controllers tests', () => {
           .reply(200, mockServiceBindings);
 
         // act
-        const result = await getOrgPage(orgGuid);
+        const result = await getOrgUsersPage(orgGuid);
 
         // assert
         expect(result).toHaveProperty('meta');
