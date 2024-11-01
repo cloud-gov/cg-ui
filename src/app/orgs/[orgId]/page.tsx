@@ -4,6 +4,7 @@ import { getOrgLandingpage } from '@/controllers/controllers';
 import { CardRow } from '@/components/Card/CardRow';
 import { Card } from '@/components/Card/Card';
 import { RoleObj } from '@/api/cf/cloudfoundry-types';
+import { BlogSnippet } from '@/components/BlogSnippet/BlogSnippet';
 import peopleIcon from '@/../public/img/uswds/usa-icons/people.svg';
 
 export default async function OrgLandingPage() {
@@ -25,10 +26,15 @@ export default async function OrgLandingPage() {
 
   return (
     <div className="margin-bottom-5">
-      <h1>Welcome to the Dashboard. Let’s get started.</h1>
+      <h1 className="margin-bottom-4 font-sans-lg mobile-lg:font-sans-xl">
+        Welcome to the Dashboard. Let’s get started.
+      </h1>
       <CardRow>
         {showManageUsers && (
-          <Card className="display-flex flex-column flex-justify">
+          <Card
+            className="display-flex flex-column flex-justify"
+            containerClassname="tablet-lg:grid-col-8"
+          >
             <div>
               <h2 className="margin-top-0">
                 <Image
@@ -39,7 +45,7 @@ export default async function OrgLandingPage() {
                 />
                 Users
               </h2>
-              <p>
+              <p className="font-sans-md">
                 View the <strong>{usersText()}</strong> in your organization,
                 manage their permissions, and control their access to Spaces.
               </p>
@@ -52,9 +58,7 @@ export default async function OrgLandingPage() {
           </Card>
         )}
         <li className="tablet:grid-col-6 tablet-lg:grid-col-4 margin-bottom-3">
-          <h2 className="margin-top-0 text-light">
-            Here’s the latest from <strong>the Cloud.gov blog</strong>:
-          </h2>
+          <BlogSnippet />
         </li>
       </CardRow>
     </div>
