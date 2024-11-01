@@ -1,7 +1,7 @@
 import { describe, expect, it, beforeAll, afterEach } from '@jest/globals';
 import { NextRequest, NextResponse } from 'next/server';
 import jwt from 'jsonwebtoken';
-import { middleware } from '@/middleware.ts';
+import middleware from '@/middleware.ts';
 // Need to disable eslint for this import because
 // you need to import the module you're going to mock with Jest
 // eslint-disable-next-line no-unused-vars
@@ -56,6 +56,10 @@ describe('/login', () => {
     expect(location).toMatch('client_id=');
     expect(location).toMatch('state=baz');
     expect(location).toMatch('response_type=code');
+  });
+
+  it('has CSP headers present', () => {
+    expect(response.headers.get('content-security-policy')).not.toBeNull();
   });
 });
 
@@ -289,5 +293,18 @@ describe('/orgs/* when logged in', () => {
       // assert
       expect(response.cookies.get('lastViewedOrgId')).toBeUndefined();
     });
+  });
+});
+
+describe('withCSP', () => {
+  it('should modify request headers', async () => {
+    // setup
+    const request = new NextRequest(new URL('/', process.env.ROOT_URL));
+
+    const response = await middleware(request);
+
+    // Assert that the headers were added as expected
+    expect(response.headers.get('content-security-policy')).not.toBeNull();
+    expect(response.headers.get('x-nonce')).not.toBeNull();
   });
 });

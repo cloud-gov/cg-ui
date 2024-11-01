@@ -1,4 +1,4 @@
-import Image from 'next/image';
+import Image from '@/components/Image';
 
 import cloudGovIcon from '@/../public/img/logos/cloud-gov-logo-full-grey.svg';
 

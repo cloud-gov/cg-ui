@@ -13,10 +13,7 @@ export function OverlayHeaderUsername({
 }) {
   return (
     <>
-      <h2
-        className="margin-top-0 margin-bottom-7 text-uppercase text-light underline-base-light text-underline font-sans-xs"
-        style={{ textUnderlineOffset: '0.7em' }}
-      >
+      <h2 className="margin-top-0 margin-bottom-7 text-uppercase text-light underline-base-light text-underline text-underline-offset font-sans-xs">
         {header}
       </h2>
       {serviceAccount && (

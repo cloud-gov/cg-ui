@@ -7,7 +7,7 @@ import { formatInt } from '@/helpers/numbers';
 import { MemoryBar } from '@/components/MemoryBar';
 import { formatOrgRoleName } from '@/helpers/text';
 
-export function OrganizationsListCard({
+export async function OrganizationsListCard({
   org,
   userCount,
   appCount,
@@ -15,6 +15,7 @@ export function OrganizationsListCard({
   memoryCurrentUsage,
   spaceCount,
   roles,
+  nonce,
 }: {
   org: OrgObj;
   userCount: number;
@@ -23,6 +24,7 @@ export function OrganizationsListCard({
   memoryCurrentUsage: number;
   spaceCount: number;
   roles: Array<string>;
+  nonce: string | undefined;
 }) {
   const getOrgRolesText = (orgGuid: string): React.ReactNode => {
     if (!roles || !roles.length) {
@@ -81,6 +83,7 @@ export function OrganizationsListCard({
       <MemoryBar
         memoryUsed={memoryCurrentUsage}
         memoryAllocated={memoryAllocated}
+        nonce={nonce}
       />
     </Card>
   );

@@ -5,7 +5,7 @@
 'use client';
 import React from 'react';
 import { useState, useRef, useEffect } from 'react';
-import Image from 'next/image';
+import Image from '@/components/Image';
 import { usePathname } from 'next/navigation';
 import collapseIcon from '@/../public/img/uswds/usa-icons/expand_more.svg';
 import { OrgPickerList } from './OrgPickerList';

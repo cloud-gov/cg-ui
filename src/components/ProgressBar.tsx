@@ -6,12 +6,14 @@ export function ProgressBar({
   threshold1 = 75, // percentage where color should change first, between 0 and 100
   threshold2 = 90, // percentage where color should change next, between 0 and 100
   changeColors = true,
+  nonce,
 }: {
   total: number | null | undefined;
   fill: number;
   threshold1?: number;
   threshold2?: number;
   changeColors?: boolean;
+  nonce: string | undefined;
 }) {
   const heightClass = 'height-1';
   const percentage = total ? Math.floor((fill / total) * 100) : 100;
@@ -33,6 +35,7 @@ export function ProgressBar({
         className={`${heightClass} radius-pill ${color}`}
         style={{ width: `${percentage}%` }}
         data-testid="progress"
+        nonce={nonce}
       ></div>
       {!total && (
         <span className="progress__infinity-logo">
