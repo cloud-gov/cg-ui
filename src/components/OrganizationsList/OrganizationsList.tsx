@@ -12,6 +12,7 @@ export function OrganizationsList({
   memoryCurrentUsage,
   spaceCounts,
   roles,
+  nonce,
 }: {
   orgs: Array<OrgObj>;
   userCounts: { [orgGuid: string]: number };
@@ -20,6 +21,7 @@ export function OrganizationsList({
   memoryCurrentUsage: { [orgGuid: string]: number };
   spaceCounts: { [orgGuid: string]: number };
   roles: { [orgGuid: string]: Array<string> };
+  nonce: string | undefined;
 }) {
   if (!orgs.length) {
     return <>no orgs found</>;
@@ -44,6 +46,7 @@ export function OrganizationsList({
                   memoryCurrentUsage={memoryCurrentUsage[org.guid]}
                   spaceCount={spaceCounts[org.guid]}
                   roles={roles[org.guid]}
+                  nonce={nonce}
                 />
               );
             })}

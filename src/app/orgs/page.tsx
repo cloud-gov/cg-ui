@@ -1,5 +1,6 @@
 'use server';
 
+import { headers } from 'next/headers';
 import { getOrgsPage } from '@/controllers/controllers';
 import { OrganizationsList } from '@/components/OrganizationsList/OrganizationsList';
 import { PageHeader } from '@/components/PageHeader';
@@ -7,6 +8,8 @@ import { LastViewedOrgLink } from '@/components/LastViewedOrgLink';
 import { Timestamp } from '@/components/Timestamp';
 
 export default async function OrgsPage() {
+  const headersList = await headers();
+  const nonce = headersList.get('x-nonce') || undefined;
   const { payload } = await getOrgsPage();
 
   return (
@@ -28,6 +31,7 @@ export default async function OrgsPage() {
         memoryCurrentUsage={payload.memoryCurrentUsage}
         spaceCounts={payload.spaceCounts}
         roles={payload.roles}
+        nonce={nonce}
       />
     </div>
   );
