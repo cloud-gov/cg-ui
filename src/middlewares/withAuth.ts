@@ -131,11 +131,6 @@ export function redirectToLogin(request: NextRequest): NextResponse {
 
 export async function authenticateRoute(request: NextRequest) {
   let response = NextResponse.next();
-  // For those working locally, just pass them through
-  if (process.env.NODE_ENV === 'development') {
-    response = setLastViewedOrg(request, response);
-    return response;
-  }
   // get auth session cookie
   const authCookie = request.cookies.get('authsession');
   // if no cookie, redirect to login page
