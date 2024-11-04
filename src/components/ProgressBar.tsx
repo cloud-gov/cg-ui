@@ -1,3 +1,6 @@
+'use client';
+
+import { useLayoutEffect, useRef } from 'react';
 import { InfinitySVG } from '@/components/svgs/InfinitySVG';
 
 export function ProgressBar({
@@ -6,17 +9,23 @@ export function ProgressBar({
   threshold1 = 75, // percentage where color should change first, between 0 and 100
   threshold2 = 90, // percentage where color should change next, between 0 and 100
   changeColors = true,
-  nonce,
 }: {
   total: number | null | undefined;
   fill: number;
   threshold1?: number;
   threshold2?: number;
   changeColors?: boolean;
-  nonce: string | undefined;
 }) {
   const heightClass = 'height-1';
   const percentage = total ? Math.floor((fill / total) * 100) : 100;
+  const barRef = useRef<HTMLDivElement>(null);
+
+  useLayoutEffect(() => {
+    if (barRef.current) {
+      barRef.current.style.width = `${percentage}%`;
+    }
+  }, [percentage]);
+
   let color = 'bg-mint';
   if (changeColors && percentage > threshold1 && percentage < threshold2) {
     color = 'bg-red-30v';
@@ -33,9 +42,8 @@ export function ProgressBar({
     >
       <div
         className={`${heightClass} radius-pill ${color}`}
-        style={{ width: `${percentage}%` }}
         data-testid="progress"
-        nonce={nonce}
+        ref={barRef}
       ></div>
       {!total && (
         <span className="progress__infinity-logo">
