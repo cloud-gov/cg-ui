@@ -4,11 +4,9 @@ import { formatMb } from '@/helpers/numbers';
 export function MemoryBar({
   memoryUsed,
   memoryAllocated,
-  nonce,
 }: {
   memoryUsed?: number | null | undefined;
   memoryAllocated?: number | null | undefined;
-  nonce: string | undefined;
 }) {
   const memoryUsedNum = memoryUsed || 0;
   const mbRemaining = (memoryAllocated || 0) - memoryUsedNum;
@@ -16,7 +14,7 @@ export function MemoryBar({
     <div className="margin-top-3" data-testid="memory-bar">
       <p className="font-sans-3xs text-uppercase text-bold">Memory:</p>
 
-      <ProgressBar total={memoryAllocated} fill={memoryUsedNum} nonce={nonce} />
+      <ProgressBar total={memoryAllocated} fill={memoryUsedNum} />
 
       <div className="margin-top-1 display-flex flex-justify font-sans-3xs">
         <div className="margin-right-1">

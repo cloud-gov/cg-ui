@@ -15,7 +15,6 @@ export async function OrganizationsListCard({
   memoryCurrentUsage,
   spaceCount,
   roles,
-  nonce,
 }: {
   org: OrgObj;
   userCount: number;
@@ -24,7 +23,6 @@ export async function OrganizationsListCard({
   memoryCurrentUsage: number;
   spaceCount: number;
   roles: Array<string>;
-  nonce: string | undefined;
 }) {
   const getOrgRolesText = (orgGuid: string): React.ReactNode => {
     if (!roles || !roles.length) {
@@ -83,7 +81,6 @@ export async function OrganizationsListCard({
       <MemoryBar
         memoryUsed={memoryCurrentUsage}
         memoryAllocated={memoryAllocated}
-        nonce={nonce}
       />
     </Card>
   );
