@@ -8,7 +8,8 @@ export const withCSP: MiddlewareFactory = (next: NextMiddleware) => {
       const nonce = request.headers.get('x-nonce') as string;
       const cspHeader = `
         default-src 'self';
-        script-src 'self' 'nonce-${nonce}' 'strict-dynamic' ${process.env.NODE_ENV === 'development' ? "'unsafe-eval'" : ''};
+        connect-src 'self' *.us-gov-west-1.aws-us-gov.cloud.gov;
+        script-src 'self' 'nonce-${nonce}' 'strict-dynamic' https: http: ${process.env.NODE_ENV === 'production' ? '' : `'unsafe-eval'`};
         style-src 'self' 'nonce-${nonce}';
         img-src 'self' blob: data:;
         font-src 'self';
@@ -16,7 +17,7 @@ export const withCSP: MiddlewareFactory = (next: NextMiddleware) => {
         base-uri 'self';
         form-action 'self';
         frame-ancestors 'none';
-        ${process.env.NODE_ENV !== 'development' ? 'upgrade-insecure-requests;' : ''};
+        ${process.env.NODE_ENV === 'production' ? '' : 'upgrade-insecure-requests;'};
       `;
 
       // Replace newline characters and spaces
