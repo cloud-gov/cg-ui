@@ -9,7 +9,7 @@ import {
   getOrgUsagePage,
   getUser,
   removeUserFromOrg,
-  getHomepage,
+  getOrgLandingpage,
 } from '@/controllers/controllers';
 import { pollForJobCompletion } from '@/controllers/controller-helpers';
 import { mockApps } from '../api/mocks/apps';
@@ -601,7 +601,7 @@ describe('controllers tests', () => {
         get: () => ({ value: '{"lastViewedOrgId": null}' }),
       }));
       // act
-      const result = await getHomepage();
+      const result = await getOrgLandingpage();
       // assert orgs
       expect(result.payload.orgs.length).toEqual(3);
       expect(result.payload.orgs[0].name).toEqual('Org1');
@@ -626,7 +626,7 @@ describe('controllers tests', () => {
           get: () => ({ value: 'f114757b-568a-4291-a389-6b97e6b47c47' }),
         })); // guid from mockOrgs
         // act
-        const result = await getHomepage();
+        const result = await getOrgLandingpage();
         // assert
         expect(result.payload.currentOrgId).toEqual(
           'f114757b-568a-4291-a389-6b97e6b47c47'
@@ -649,7 +649,7 @@ describe('controllers tests', () => {
           get: () => ({ value: null }),
         })); // guid from mockOrgs
         // act
-        const result = await getHomepage();
+        const result = await getOrgLandingpage();
         // assert
         expect(result.payload.currentOrgId).toEqual(
           'b4b52bd5-4940-456a-9432-90c168af6cf8'

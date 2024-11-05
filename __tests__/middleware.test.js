@@ -2,10 +2,13 @@ import { describe, expect, it, beforeAll, afterEach } from '@jest/globals';
 import { NextRequest, NextResponse } from 'next/server';
 import jwt from 'jsonwebtoken';
 import middleware from '@/middleware.ts';
+import { mockOrgs } from './api/mocks/organizations';
 // Need to disable eslint for this import because
 // you need to import the module you're going to mock with Jest
 // eslint-disable-next-line no-unused-vars
 import { postToAuthTokenUrl } from '@/api/auth';
+// eslint-disable-next-line no-unused-vars
+import { getOrgs } from '@/api/cf/cloudfoundry';
 
 const mockEmailAddress = 'foo@example.com';
 const mockUserName = 'fooUserName';
@@ -25,11 +28,23 @@ const mockAuthResponse = {
   refresh_token: mockRefreshToken,
   expires_in: mockExpiry,
 };
+// eslint-disable-next-line no-undef
+const mockOrgsResponse = new Promise((resolve) =>
+  resolve({
+    json: async () => {
+      return mockOrgs;
+    },
+  })
+);
 
 /* global jest */
 /* eslint no-undef: "off" */
 jest.mock('@/api/auth', () => ({
   postToAuthTokenUrl: jest.fn(() => mockAuthResponse),
+}));
+
+jest.mock('@/api/cf/cloudfoundry', () => ({
+  getOrgs: jest.fn(() => mockOrgsResponse),
 }));
 /* eslint no-undef: "error" */
 
@@ -299,12 +314,69 @@ describe('/orgs/* when logged in', () => {
 describe('withCSP', () => {
   it('should modify request headers', async () => {
     // setup
-    const request = new NextRequest(new URL('/', process.env.ROOT_URL));
+    const request = new NextRequest(new URL('/foobar', process.env.ROOT_URL));
 
     const response = await middleware(request);
 
     // Assert that the headers were added as expected
     expect(response.headers.get('content-security-policy')).not.toBeNull();
     expect(response.headers.get('x-nonce')).not.toBeNull();
+  });
+});
+
+describe('/ (root)', () => {
+  describe('when authenticated', () => {
+    describe('when last viewed org id cookie is set', () => {
+      const request = new NextRequest(new URL('/', process.env.ROOT_URL));
+      // setup
+      let response;
+      beforeAll(async () => {
+        request.cookies.set('lastViewedOrgId', 'fooOrgId');
+        request.cookies.set(
+          'authsession',
+          JSON.stringify({
+            expiry: Date.now() + 10000000,
+            accessToken: 'foobar',
+            user_name: 'foo',
+            email: 'foo',
+            user_id: 'foo',
+          })
+        );
+        // run
+        response = await middleware(request);
+      });
+
+      it('redirects you to /orgs/:lastViewedOrgId', () => {
+        expect(response.headers.get('location')).toContain('/orgs/fooOrgId');
+      });
+    });
+
+    describe('when no last viewed org id cookie is set', () => {
+      // setup
+      const request = new NextRequest(new URL('/', process.env.ROOT_URL));
+      let response;
+      beforeAll(async () => {
+        // setup
+        request.cookies.set(
+          'authsession',
+          JSON.stringify({
+            expiry: Date.now() + 10000000,
+            accessToken: 'foo',
+            user_name: 'foo',
+            email: 'foo',
+            user_id: 'foo',
+          })
+        );
+
+        // run
+        response = await middleware(request);
+      });
+
+      it('takes you to first returned org from CF API', () => {
+        expect(response.headers.get('location')).toContain(
+          '/orgs/b4b52bd5-4940-456a-9432-90c168af6cf8'
+        ); // guid of first org in mockOrgs
+      });
+    });
   });
 });

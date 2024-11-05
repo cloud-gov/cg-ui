@@ -19,7 +19,7 @@ export default async function SpaceLayout({
   return (
     <div className="padding-bottom-4">
       <div className="desktop:display-flex border-bottom border-accent-warm-light padding-bottom-105">
-        <Link href={`/orgs/${params.orgId}`} className="usa-link">
+        <Link href={`/orgs/${params.orgId}/users`} className="usa-link">
           Manage users
         </Link>{' '}
         &nbsp; &gt; Roles

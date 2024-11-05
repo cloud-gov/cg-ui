@@ -16,7 +16,7 @@ export default function OrgUserOrgRolesPage({
         <UsersActionsOrgRoles
           orgGuid={params.orgId}
           userGuid={params.userId}
-          onCancelPath={`/orgs/${params.orgId}`}
+          onCancelPath={`/orgs/${params.orgId}/users`}
         />
       </div>
     </div>

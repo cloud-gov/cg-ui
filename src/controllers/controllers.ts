@@ -38,7 +38,7 @@ import { getCurrentUserId } from '@/api/cf/cloudfoundry-helpers';
 //        READ         //
 /* ------------------- */
 
-export async function getHomepage(): Promise<ControllerResult> {
+export async function getOrgLandingpage(): Promise<ControllerResult> {
   const orgsRes = await CF.getOrgs();
   const orgs = (await orgsRes.json()).resources;
   let currentOrgId;
