@@ -14,8 +14,8 @@ export async function BlogSnippet() {
 
     return (
       <div>
-        <h2 className="margin-top-0 text-light">
-          Here’s the latest from <strong>the Cloud.gov blog</strong>:
+        <h2 className="margin-top-0 text-normal">
+          Here’s the latest from <strong>the Cloud.gov&nbsp;blog</strong>:
         </h2>
         <div className="display-flex">
           <Image
@@ -25,15 +25,15 @@ export async function BlogSnippet() {
             alt=""
             className="margin-right-2"
           />
-          <h3 className="margin-top-1">
-            <Link href={link} target="_blank">
+          <h3 className="margin-top-0">
+            <Link href={link} target="_blank" className="usa-link">
               {title}
             </Link>
           </h3>
         </div>
-        <p>
+        <p className="line-height-sans-4">
           {pubDate} — {summary}{' '}
-          <Link href={link} target="_blank">
+          <Link href={link} target="_blank" className="usa-link">
             Read more »
           </Link>
         </p>
