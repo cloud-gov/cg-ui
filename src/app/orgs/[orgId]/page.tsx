@@ -45,7 +45,7 @@ export default async function OrgLandingPage() {
                 />
                 Users
               </h2>
-              <p className="font-sans-md">
+              <p className="font-sans-md line-height-sans-4">
                 View the <strong>{usersText()}</strong> in your organization,
                 manage their permissions, and control their access to Spaces.
               </p>

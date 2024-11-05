@@ -44,7 +44,7 @@ export async function fetchXML(url: string): Promise<string> {
 export async function getBlogFeed(): Promise<BlogObj> {
   try {
     if (!process.env.NEXT_PUBLIC_BLOG_FEED_URL) {
-      throw new Error('blog feed url environment varisable is not set');
+      throw new Error('blog feed url environment variable is not set');
     }
     const xml = await fetchXML(process.env.NEXT_PUBLIC_BLOG_FEED_URL);
     const jsonString = convert.xml2json(xml, { compact: true });
