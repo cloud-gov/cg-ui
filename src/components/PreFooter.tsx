@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import Image from 'next/image';
+import Image from '@/components/Image';
 import helpIcon from '@/../public/img/uswds/usa-icons/help.svg';
 
 export function PreFooter() {

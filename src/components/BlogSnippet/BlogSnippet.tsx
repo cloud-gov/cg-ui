@@ -1,7 +1,7 @@
+import Link from 'next/link';
 import { getBlogFeed, BlogObj } from '@/api/blog/blog';
 import { formatDate } from '@/helpers/dates';
-import Link from 'next/link';
-import Image from 'next/image';
+import Image from '@/components/Image';
 
 export async function BlogSnippet() {
   try {
