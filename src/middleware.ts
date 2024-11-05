@@ -27,5 +27,11 @@ export const config = {
         { type: 'header', key: 'purpose', value: 'prefetch' },
       ],
     },
+    /*
+     * Match Root
+     */
+    {
+      source: '/',
+    },
   ],
 };
