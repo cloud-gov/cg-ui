@@ -58,9 +58,9 @@ You do not need to target an organization or space.
 
 ### Step 3: Run a local user accounts and authentication (UAA) server
 
-Users will need to authenticate through UAA in order to view the application. A real UAA flow can't be done locally, because UAA can't whitelist `localhost`. So in local development, we simulate this flow in two ways:
+Users will need to authenticate through UAA in order to view the application. A real UAA flow can't be done locally, because UAA can't whitelist `localhost`. So in local development, we simulate authentication in two ways:
 
-1) **By running a local UAA server** - This login flow provides fake `authsession` cookie data. This cookie is what allows you to visit authenticated pages when navigating the app.
+1) **By running a local UAA server** - This login flow provides fake `authsession` cookie data. The presence of this cookie is what allows you to visit authenticated pages when navigating the app.
 2) **By setting CloudFoundry data in our environment file** - Because local UAA returns fake data, we need to obtain real CF credentials through the CF CLI and keep them in `.env.local`. This allows you to get real CloudFoundry API data. (Handled in steps 4 and 5.)
 
 See the [uaa-docker README](uaa-docker/README.md) for set up instructions.
@@ -90,7 +90,7 @@ You do not need to change anything about this file for local development unless 
 CF_API_URL=https://api.fr.cloud.gov/v3
 ```
 
-For certain pages, you'll also need to set your `CF_USER_ID`. This is normally returned from UAA and placed in the `authsession` cookie, but when working locally, you'll need to obtain this from your CloudFoundry environment (like by running `cf curl '/v3/users'`).
+For certain pages, you'll also need to set your `CF_USER_ID`. This is normally returned from UAA and placed in the `authsession` cookie, but when working locally, you'll need to obtain this from your CloudFoundry environment (like by running `cf curl '/v3/users'` or by running `cf oauth-token` and decoding the returned JWT token).
 
 Note: the variable `CF_API_TOKEN` is not yet populated. That's okay! Continue to the next step to set it.
 
