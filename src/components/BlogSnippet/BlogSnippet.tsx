@@ -14,7 +14,7 @@ export async function BlogSnippet() {
 
     return (
       <div>
-        <h2 className="margin-top-0 text-normal">
+        <h2 className="margin-top-0 text-normal font-sans-md mobile-lg:font-sans-lg">
           Here’s the latest from <strong>the Cloud.gov&nbsp;blog</strong>:
         </h2>
         <div className="display-flex">
@@ -31,7 +31,7 @@ export async function BlogSnippet() {
             </Link>
           </h3>
         </div>
-        <p className="line-height-sans-4">
+        <p className="line-height-sans-4 font-sans-2xs mobile-lg:font-sans-xs">
           {pubDate} — {summary}{' '}
           <Link href={link} target="_blank" className="usa-link">
             Read more »

@@ -36,7 +36,7 @@ export default async function OrgLandingPage() {
             containerClassname="tablet-lg:grid-col-8"
           >
             <div>
-              <h2 className="margin-top-0">
+              <h2 className="margin-top-0 font-sans-md mobile-lg:font-sans-lg">
                 <Image
                   unoptimized
                   src={peopleIcon}
@@ -45,7 +45,7 @@ export default async function OrgLandingPage() {
                 />
                 Users
               </h2>
-              <p className="font-sans-md line-height-sans-4">
+              <p className="font-sans-2xs mobile-lg:font-sans-md line-height-sans-4">
                 View the <strong>{usersText()}</strong> in your organization,
                 manage their permissions, and control their access to Spaces.
               </p>
