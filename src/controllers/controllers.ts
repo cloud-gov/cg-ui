@@ -3,6 +3,7 @@
 // Library for translating UI actions to API requests and back
 /***/
 import { revalidatePath } from 'next/cache';
+import { cookies } from 'next/headers';
 import * as CF from '@/api/cf/cloudfoundry';
 import {
   OrgObj,
@@ -31,10 +32,41 @@ import {
 import { sortObjectsByParam } from '@/helpers/arrays';
 import { daysToExpiration } from '@/helpers/dates';
 import { getUserLogonInfo } from '@/api/aws/s3';
+import { getCurrentUserId } from '@/api/cf/cloudfoundry-helpers';
 
 /* ------------------- */
 //        READ         //
 /* ------------------- */
+
+export async function getOrgLandingpage(): Promise<ControllerResult> {
+  const orgsRes = await CF.getOrgs();
+  const orgs = (await orgsRes.json()).resources;
+  let currentOrgId;
+  const cookieStore = cookies();
+  const lastViewedOrgId = cookieStore.get('lastViewedOrgId')?.value;
+  if (lastViewedOrgId) {
+    currentOrgId = lastViewedOrgId;
+  } else {
+    currentOrgId = orgs[0]?.guid;
+  }
+  const userCounts = await countUsersPerOrg([currentOrgId]);
+  const userId = await getCurrentUserId();
+  const rolesResponse = await CF.getRoles({
+    userGuids: [userId],
+    organizationGuids: [currentOrgId],
+  });
+  const roles = (await rolesResponse.json()).resources;
+
+  return {
+    meta: { status: 'success' },
+    payload: {
+      currentOrgId: currentOrgId,
+      currentUserRoles: roles,
+      orgs: orgs,
+      userCounts: userCounts,
+    },
+  };
+}
 
 export async function getEditOrgRoles(
   orgGuid: string,
@@ -114,7 +146,9 @@ export async function getOrgsPage(): Promise<ControllerResult> {
   }
 }
 
-export async function getOrgPage(orgGuid: string): Promise<ControllerResult> {
+export async function getOrgUsersPage(
+  orgGuid: string
+): Promise<ControllerResult> {
   const [orgUserRolesRes, spacesRes, userLogonInfoRes] = await Promise.all([
     // use this request to roles to also obtain the organization details and list the org users
     CF.getRoles({

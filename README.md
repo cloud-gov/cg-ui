@@ -56,7 +56,26 @@ cf login -a api.fr.cloud.gov --sso
 
 You do not need to target an organization or space.
 
-### Step 3: Configure the application
+### Step 3: Run a local user accounts and authentication (UAA) server
+
+Users will need to authenticate through UAA in order to view the application. A real UAA flow can't be done locally, because UAA can't whitelist `localhost`. So in local development, we simulate authentication in two ways:
+
+1) **By running a local UAA server** - This login flow provides fake `authsession` cookie data. The presence of this cookie is what allows you to visit authenticated pages when navigating the app.
+2) **By setting CloudFoundry data in our environment file** - Because local UAA returns fake data, we need to obtain real CF credentials through the CF CLI and keep them in `.env.local`. This allows you to get real CloudFoundry API data. (Handled in steps 4 and 5.)
+
+See the [uaa-docker README](uaa-docker/README.md) for set up instructions.
+
+In another shell, start the UAA container:
+
+```bash
+cd uaa-docker
+# follow instructions to build before running up
+docker compose up
+```
+
+Use credentials found in `uaa-docker/uaa.yml` to log in.
+
+### Step 4: Configure the application
 
 Copy the example `.env.example.local` file. Do not check `.env.local` into source control.
 
@@ -64,16 +83,18 @@ Copy the example `.env.example.local` file. Do not check `.env.local` into sourc
 cp .env.example.local .env.local
 ```
 
-You do not need to change anything about this file for local development unless if you logged into your production cloud.gov account during the previous step.
+You do not need to change anything about this file for local development unless you logged into your production cloud.gov account during the previous step.
 
 ```bash
 # change this line if you are using production
 CF_API_URL=https://api.fr.cloud.gov/v3
 ```
 
+For certain pages, you'll also need to set your `CF_USER_ID`. This is normally returned from UAA and placed in the `authsession` cookie, but when working locally, you'll need to obtain this from your CloudFoundry environment (like by running `cf curl '/v3/users'` or by running `cf oauth-token` and decoding the returned JWT token).
+
 Note: the variable `CF_API_TOKEN` is not yet populated. That's okay! Continue to the next step to set it.
 
-### Step 4: Run the app!
+### Step 5: Run the app!
 
 Start the app with the `dev-cf` command:
 
@@ -91,7 +112,7 @@ Due to developing locally against a "real" environment, we have to play by the r
 
 If you start getting 401 errors, restart your application to get a new token. If you haven't logged into the CF CLI on a given day, make sure to reauthenticate following Step 2 above.
 
-### Step 5: Optional stretch goals
+### Step 6: Optional stretch goals
 
 The above steps are enough to get most people up and running, but our app has more bells and whistles! Consider yourself good to go unless if you plan to do any of the following:
 
@@ -147,24 +168,8 @@ docker compose build
 docker compose up
 ```
 
-#### Local user accounts and authentication (UAA)
 
-Our local version of the app uses a CF token to access the CF API. However, the deployed version of the application authenticates with the CF User Accounts and Authentication (UAA) service. We have a local version of UAA available if you wish to test or develop around the user experience of logging in.
-
-See the [uaa-docker README](uaa-docker/README.md) for set up instructions.
-
-Start the container:
-
-```bash
-cd uaa-docker
-# follow instructions to build before running up
-docker compose up
-```
-
-In order to try out UAA, you will need to comment out your CF_API_TOKEN and then use credentials found in the `uaa-docker/uaa.yml` file.
-
-
-### Step 6: Testing
+### Step 7: Testing
 
 To run the entire unit test suite, you will need to start the docker database container:
 
@@ -199,7 +204,7 @@ Then, if you have not already, set up a [s3 service key](#s3-user-information). 
 npm run test:integration
 ```
 
-### Step 7: Committing
+### Step 8: Committing
 
 #### Preparing your code
 
@@ -235,7 +240,7 @@ Cloud.gov requires any commits to this repo to be signed with a GPG key. [You wi
 
 Cloud.gov requires that contributors have the [caulking tool](https://github.com/cloud-gov/caulking) installed and running on their machines. Follow the instructions to install caulking and confirm that `make audit` passes all checks.
 
-## Step 8: Deploying
+## Step 9: Deploying
 
 This application is deployed to the cloud.gov development environment automatically when changes are merged into the main branch. Deployment is managed via Concourse CI (see the `ci` directory).
 
@@ -255,7 +260,7 @@ We prioritize named imports, TypeScript, and Pascal Case component names through
 
 ### Application structure
 
-Next.js has few opinions about how to structure applications. We have chosen to use an MVC (Model View Controller)-like pattern. 
+Next.js has few opinions about how to structure applications. We have chosen to use an MVC (Model View Controller)-like pattern.
 
 See our [architecture](docs/dev-practices/architecture.md) documentation for information about each of the layers and how we are using them.
 

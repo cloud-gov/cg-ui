@@ -64,7 +64,7 @@ export async function OrganizationsListCard({
           </p>
           <ul className="usa-list usa-list--unstyled">
             <li>
-              <Link href={`/orgs/${org.guid}`} className="usa-link">
+              <Link href={`/orgs/${org.guid}/users`} className="usa-link">
                 {formatInt(userCount || 0)}&nbsp;users
               </Link>
             </li>

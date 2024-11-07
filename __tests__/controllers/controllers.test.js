@@ -1,13 +1,15 @@
 import nock from 'nock';
+import { cookies } from 'next/headers';
 import { describe, it, expect, beforeEach, afterEach } from '@jest/globals';
 import {
   getEditOrgRoles,
-  getOrgPage,
+  getOrgUsersPage,
   getOrgsPage,
   getOrgAppsPage,
   getOrgUsagePage,
   getUser,
   removeUserFromOrg,
+  getOrgLandingpage,
 } from '@/controllers/controllers';
 import { pollForJobCompletion } from '@/controllers/controller-helpers';
 import { mockApps } from '../api/mocks/apps';
@@ -16,6 +18,7 @@ import {
   mockUsersByOrganization,
   mockUsersBySpace,
 } from '../api/mocks/roles';
+import { mockOrgs } from '../api/mocks/organizations';
 import { getUserLogonInfo } from '@/api/aws/s3';
 
 /* global jest */
@@ -36,6 +39,9 @@ jest.mock('@/controllers/controller-helpers', () => ({
 jest.mock('@/api/aws/s3', () => ({
   getUserLogonInfo: jest.fn(),
 }));
+jest.mock('next/headers', () => ({
+  cookies: jest.fn(),
+}));
 /* eslint no-undef: "error" */
 
 beforeEach(() => {
@@ -54,7 +60,7 @@ afterEach(() => {
 });
 
 describe('controllers tests', () => {
-  describe('getOrgPage', () => {
+  describe('getOrgUsersPage', () => {
     describe('if any of the first CF requests fail', () => {
       it('throws an error', async () => {
         // setup
@@ -70,7 +76,7 @@ describe('controllers tests', () => {
 
         // assert
         expect(async () => {
-          await getOrgPage(orgGuid);
+          await getOrgUsersPage(orgGuid);
         }).rejects.toThrow(new Error('something went wrong with the request'));
       });
     });
@@ -107,7 +113,7 @@ describe('controllers tests', () => {
           return undefined;
         });
 
-        const res = await getOrgPage(orgGuid);
+        const res = await getOrgUsersPage(orgGuid);
 
         // assert
         expect(res.payload.userLogonInfo).toBeUndefined();
@@ -158,7 +164,7 @@ describe('controllers tests', () => {
           };
         });
 
-        const result = await getOrgPage(orgGuid);
+        const result = await getOrgUsersPage(orgGuid);
         const firstUserRoles =
           result.payload.roles['73193f8c-e03b-43c8-aeee-8670908899d2'];
         const firstUser = result.payload.users[0];
@@ -283,7 +289,7 @@ describe('controllers tests', () => {
           .reply(200, mockServiceBindings);
 
         // act
-        const result = await getOrgPage(orgGuid);
+        const result = await getOrgUsersPage(orgGuid);
 
         // assert
         expect(result).toHaveProperty('meta');
@@ -577,6 +583,78 @@ describe('controllers tests', () => {
       expect(result.payload.roles['orgId2']).toEqual([
         'organization_billing_manager',
       ]);
+    });
+  });
+
+  describe('getHomepage', () => {
+    it('sets correct orgs, roles, and user counts', async () => {
+      // setup
+      nock(process.env.CF_API_URL)
+        .get(/organizations/)
+        .reply(200, mockOrgs);
+
+      nock(process.env.CF_API_URL)
+        .get(/roles/)
+        .reply(200, mockRolesFilteredByOrgAndUser);
+
+      cookies.mockImplementation(() => ({
+        get: () => ({ value: '{"lastViewedOrgId": null}' }),
+      }));
+      // act
+      const result = await getOrgLandingpage();
+      // assert orgs
+      expect(result.payload.orgs.length).toEqual(3);
+      expect(result.payload.orgs[0].name).toEqual('Org1');
+      // assert roles
+      expect(result.payload.currentUserRoles.length).toEqual(2);
+      // assert user counts
+      expect(result.payload.userCounts['orgId2']).toEqual(1); // see mock implementation at top of file
+    });
+
+    describe('when a last viewed org id cookie is present', () => {
+      it('sets current org id to that cookie', async () => {
+        // setup
+        nock(process.env.CF_API_URL)
+          .get(/organizations/)
+          .reply(200, mockOrgs);
+
+        nock(process.env.CF_API_URL)
+          .get(/roles/)
+          .reply(200, mockRolesFilteredByOrgAndUser);
+
+        cookies.mockImplementation(() => ({
+          get: () => ({ value: 'f114757b-568a-4291-a389-6b97e6b47c47' }),
+        })); // guid from mockOrgs
+        // act
+        const result = await getOrgLandingpage();
+        // assert
+        expect(result.payload.currentOrgId).toEqual(
+          'f114757b-568a-4291-a389-6b97e6b47c47'
+        );
+      });
+    });
+
+    describe('when no last viewed org id cookie', () => {
+      it('sets current org id to first returned org from orgs list', async () => {
+        // setup
+        nock(process.env.CF_API_URL)
+          .get(/organizations/)
+          .reply(200, mockOrgs);
+
+        nock(process.env.CF_API_URL)
+          .get(/roles/)
+          .reply(200, mockRolesFilteredByOrgAndUser);
+
+        cookies.mockImplementation(() => ({
+          get: () => ({ value: null }),
+        })); // guid from mockOrgs
+        // act
+        const result = await getOrgLandingpage();
+        // assert
+        expect(result.payload.currentOrgId).toEqual(
+          'b4b52bd5-4940-456a-9432-90c168af6cf8'
+        );
+      });
     });
   });
 });

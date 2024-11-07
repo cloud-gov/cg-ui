@@ -8,7 +8,7 @@ export const withCSP: MiddlewareFactory = (next: NextMiddleware) => {
       const nonce = request.headers.get('x-nonce') as string;
       const cspHeader = `
         default-src 'self';
-        connect-src 'self' *.us-gov-west-1.aws-us-gov.cloud.gov;
+        connect-src 'self' *.us-gov-west-1.aws-us-gov.cloud.gov ${process.env.NEXT_PUBLIC_BLOG_FEED_URL};
         script-src 'self' 'nonce-${nonce}' 'strict-dynamic' https: http: ${process.env.NODE_ENV === 'production' ? '' : `'unsafe-eval'`};
         style-src 'self' 'nonce-${nonce}';
         img-src 'self' blob: data:;

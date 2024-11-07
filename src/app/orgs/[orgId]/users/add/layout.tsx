@@ -13,7 +13,7 @@ export default function AddUserLayout({
   return (
     <>
       <div className="desktop:display-flex border-bottom border-accent-warm-light padding-bottom-105 margin-bottom-4">
-        <Link href={`/orgs/${params.orgId}`} className="usa-link">
+        <Link href={`/orgs/${params.orgId}/users`} className="usa-link">
           Manage users
         </Link>{' '}
         &nbsp; &gt; Add a user

@@ -1,6 +1,6 @@
 import Link from 'next/link';
 
-export default function Home() {
+export default async function Home() {
   return (
     <>
       <h1>Welcome to the cloud.gov dashboard prototype</h1>

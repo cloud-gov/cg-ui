@@ -14,7 +14,7 @@ export default function AddUserPage({
           <h4>Add a user</h4>
           <OrgActionsAddUser
             orgId={params.orgId}
-            onCancelPath={`/orgs/${params.orgId}`}
+            onCancelPath={`/orgs/${params.orgId}/users`}
           />
         </div>
       </div>
