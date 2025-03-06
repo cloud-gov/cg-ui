@@ -10,6 +10,7 @@ flowchart TB
   %% Component Defintions
 
   %% Users
+  user_privleged["👤  <br/> Privileged User <br/> *cloud.gov Operator"]:::userStyle
   user_unprivleged["👤  <br/> Unprivileged User <br/> *cloud.gov Customer"]:::userStyle
 
   %% SaaS
@@ -28,8 +29,8 @@ flowchart TB
   auth_provider -- All Users <br/> HTTPS Port 443 --> dashboard_app
 
   user_unprivleged -- Request Content <br/> HTTPS Port 443 --> auth_provider
+  user_privleged -- Request Content <br/> HTTPS Port 443 --> auth_provider
   user_unprivleged -- Reports Usage <br/> HTTPS Port 443 --> dap
-
 
   dashboard_app -- Read/Write Application Data <br /> Authenticated TLS Port 5432  --> database
   dashboard_app -- Read/Write UAA Bot Storage <br /> Authenticated TLS Port 443  --> s3_bucket
