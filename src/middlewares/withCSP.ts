@@ -11,6 +11,7 @@ export const withCSP: MiddlewareFactory = (next: NextMiddleware) => {
         connect-src 'self' *.us-gov-west-1.aws-us-gov.cloud.gov ${process.env.NEXT_PUBLIC_BLOG_FEED_URL};
         script-src 'self' 'nonce-${nonce}' 'strict-dynamic' https: http: ${process.env.NODE_ENV === 'production' ? '' : `'unsafe-eval'`};
         style-src 'self' 'nonce-${nonce}';
+        worker-src 'self';
         img-src 'self' blob: data:;
         font-src 'self';
         object-src 'none';
