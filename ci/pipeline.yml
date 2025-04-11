@@ -6,7 +6,7 @@ jobs:
       - set_pipeline: self
         file: cg-ui/ci/pipeline.yml
 
-  - name: test-and-deploy-app
+  - name: test-and-deploy-development
     plan:
       - in_parallel:
           - get: cg-ui
@@ -81,6 +81,83 @@ jobs:
         channel: '#18f-cloud-web-ui'
         username: ((slack-username))
         icon_url: ((slack-icon-url))
+
+  - name: test-and-deploy-staging
+    plan:
+      - in_parallel:
+          - get: cg-ui
+            passed: [set-self]
+            trigger: true
+          - get: node
+          - get: postgres
+
+      - task: install-deps
+        file: cg-ui/ci/partials/install.yml
+        image: node
+
+      - in_parallel:
+          - task: lint-app
+            file: cg-ui/ci/partials/lint.yml
+            image: node
+
+          - task: test-app
+            privileged: true
+            file: cg-ui/ci/partials/test.yml
+
+      - put: create-db
+        resource: cf-cli-staging
+        params:
+          command: create-service
+          update_service: true
+          # Note, the RDS broker doesn't return the correct status while provisioning:
+          # https://github.com/18F/aws-broker/issues/59
+          # If a new deployment, manually re-trigger the build once the RDS is up.
+          wait_for_service: true
+          timeout: 1200 # RDS take a long time to provision
+          service_instance: cg-ui-datastore
+          service: aws-rds
+          plan: micro-psql
+
+      - put: create-s3
+        resource: cf-cli-staging
+        params:
+          command: create-service
+          update_service: true
+          service_instance: cg-ui-storage
+          service: s3
+          plan: basic
+
+      - put: cloud-gov-staging
+        params:
+          manifest: cg-ui/manifest.yml
+          path: cg-ui
+          vars:
+            domain: fr-stage.cloud.gov
+          environment_variables:
+            CF_API_URL: ((staging-cf-api-url))/v3
+            OAUTH_CLIENT_SECRET: ((uaa-client-secret))
+            ROOT_URL: ((staging-app-root-url))
+            UAA_ROOT_URL: ((staging-uaa-root-url))
+
+    on_failure:
+      put: slack
+      params:
+        text: |
+          :x: FAILED to deploy cg-ui in staging
+          <$ATC_EXTERNAL_URL/teams/$BUILD_TEAM_NAME/pipelines/$BUILD_PIPELINE_NAME/jobs/$BUILD_JOB_NAME/builds/$BUILD_NAME|View build details>
+        channel: '#18f-cloud-web-ui'
+        username: ((slack-username))
+        icon_url: ((slack-icon-url))
+    on_success:
+      put: slack
+      params:
+        text: |
+          :white_check_mark: Successfully deployed cg-ui in staging
+          <$ATC_EXTERNAL_URL/teams/$BUILD_TEAM_NAME/pipelines/$BUILD_PIPELINE_NAME/jobs/$BUILD_JOB_NAME/builds/$BUILD_NAME|View build details>
+        channel: '#18f-cloud-web-ui'
+        username: ((slack-username))
+        icon_url: ((slack-icon-url))
+             
 resources:
   - name: cg-ui
     type: git
@@ -120,12 +197,31 @@ resources:
       space: cg-ui
       skip_cert_check: false
 
+  - name: cloud-gov-staging
+    type: cf
+    source:
+      api: ((cf-api-url-staging))
+      username: ((cf-deploy-username-staging))
+      password: ((cf-deploy-password-staging))
+      organization: cloud-gov
+      space: cg-ui
+      skip_cert_check: false
+
   - name: cf-cli-dev
     type: cf-cli-resource
     source:
       api: ((dev-cf-api-url))
       username: ((dev-cf-username))
       password: ((dev-cf-password))
+      org: cloud-gov
+      space: cg-ui
+
+  - name: cf-cli-staging
+    type: cf-cli-resource
+    source:
+      api: ((cf-api-url-staging))
+      username: ((cf-deploy-username-staging))
+      password: ((cf-deploy-password-staging))
       org: cloud-gov
       space: cg-ui
 
