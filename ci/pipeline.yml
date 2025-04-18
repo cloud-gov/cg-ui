@@ -9,8 +9,7 @@ jobs:
   - name: test-and-deploy-development
     plan:
       - in_parallel:
-          - get: cg-ui
-            passed: [set-self]
+          - get: cg-ui-dev
             trigger: true
           - get: node
           - get: postgres
@@ -59,7 +58,7 @@ jobs:
             domain: dev.us-gov-west-1.aws-us-gov.cloud.gov
           environment_variables:
             CF_API_URL: ((dev-cf-api-url))/v3
-            OAUTH_CLIENT_SECRET: ((uaa-client-secret))
+            OAUTH_CLIENT_SECRET: ((dev-uaa-client-secret))
             ROOT_URL: ((dev-app-root-url))
             UAA_ROOT_URL: ((dev-uaa-root-url))
 
@@ -69,7 +68,7 @@ jobs:
         text: |
           :x: FAILED to deploy cg-ui in development
           <$ATC_EXTERNAL_URL/teams/$BUILD_TEAM_NAME/pipelines/$BUILD_PIPELINE_NAME/jobs/$BUILD_JOB_NAME/builds/$BUILD_NAME|View build details>
-        channel: '#18f-cloud-web-ui'
+        channel: '#cg-ui'
         username: ((slack-username))
         icon_url: ((slack-icon-url))
     on_success:
@@ -78,7 +77,7 @@ jobs:
         text: |
           :white_check_mark: Successfully deployed cg-ui in development
           <$ATC_EXTERNAL_URL/teams/$BUILD_TEAM_NAME/pipelines/$BUILD_PIPELINE_NAME/jobs/$BUILD_JOB_NAME/builds/$BUILD_NAME|View build details>
-        channel: '#18f-cloud-web-ui'
+        channel: '#cg-ui'
         username: ((slack-username))
         icon_url: ((slack-icon-url))
 
@@ -135,7 +134,7 @@ jobs:
             domain: fr-stage.cloud.gov
           environment_variables:
             CF_API_URL: ((staging-cf-api-url))/v3
-            OAUTH_CLIENT_SECRET: ((uaa-client-secret))
+            OAUTH_CLIENT_SECRET: ((staging-uaa-client-secret))
             ROOT_URL: ((staging-app-root-url))
             UAA_ROOT_URL: ((staging-uaa-root-url))
 
@@ -145,7 +144,7 @@ jobs:
         text: |
           :x: FAILED to deploy cg-ui in staging
           <$ATC_EXTERNAL_URL/teams/$BUILD_TEAM_NAME/pipelines/$BUILD_PIPELINE_NAME/jobs/$BUILD_JOB_NAME/builds/$BUILD_NAME|View build details>
-        channel: '#18f-cloud-web-ui'
+        channel: '#cg-ui'
         username: ((slack-username))
         icon_url: ((slack-icon-url))
     on_success:
@@ -154,11 +153,19 @@ jobs:
         text: |
           :white_check_mark: Successfully deployed cg-ui in staging
           <$ATC_EXTERNAL_URL/teams/$BUILD_TEAM_NAME/pipelines/$BUILD_PIPELINE_NAME/jobs/$BUILD_JOB_NAME/builds/$BUILD_NAME|View build details>
-        channel: '#18f-cloud-web-ui'
+        channel: '#cg-ui'
         username: ((slack-username))
         icon_url: ((slack-icon-url))
-             
+
 resources:
+  - name: cg-ui-dev
+    type: git
+    source:
+      commit_verification_keys: ((cloud-gov-pgp-keys))
+      uri: git@github.com:cloud-gov/cg-ui.git
+      branch: develop
+      private_key: ((cg-ci-bot-sshkey.private_key))
+
   - name: cg-ui
     type: git
     source:
@@ -200,9 +207,9 @@ resources:
   - name: cloud-gov-staging
     type: cf
     source:
-      api: ((cf-api-url-staging))
-      username: ((cf-deploy-username-staging))
-      password: ((cf-deploy-password-staging))
+      api: ((staging-cf-api-url))
+      username: ((staging-cf-username))
+      password: ((staging-cf-password))
       organization: cloud-gov
       space: cg-ui
       skip_cert_check: false
@@ -219,9 +226,9 @@ resources:
   - name: cf-cli-staging
     type: cf-cli-resource
     source:
-      api: ((cf-api-url-staging))
-      username: ((cf-deploy-username-staging))
-      password: ((cf-deploy-password-staging))
+      api: ((staging-cf-api-url))
+      username: ((staging-cf-username))
+      password: ((staging-cf-password))
       org: cloud-gov
       space: cg-ui
 
