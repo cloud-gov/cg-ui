@@ -30,6 +30,7 @@ yarn-error.log*
 .env.production.local
 .env.cloud.yml
 script.env
+.token-refresh.pid
 
 # vscode stuff
 .vscode/
