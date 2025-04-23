@@ -110,7 +110,7 @@ Visit `localhost:3000` to check it out!
 
 Due to developing locally against a "real" environment, we have to play by the rules of the CF CLI. This means that our token expires every 15 minutes or so, and we also need to reauthenticate every 24 hours.
 
-If you start getting 401 errors, restart your application to get a new token. If you haven't logged into the CF CLI on a given day, make sure to reauthenticate following Step 2 above.
+The `dev-cf` command runs a token refresh every 14 and a half minutes, provided you're still authenticated. If you start getting 401 errors, reauthenticate with CF CLI and GSA PreProd as described in step 2, then restart your application to get a new token. 
 
 ### Step 6: Optional stretch goals
 
