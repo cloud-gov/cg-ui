@@ -10,14 +10,19 @@ export interface BlogEntryObj {
   title: {
     _text: string;
   };
-  published: {
+  updated: {
     _text: string;
   };
   id: {
     _text: string;
   };
-  summary: {
-    _cdata: string;
+  link: {
+    _attributes: {
+      _text: string;
+    };
+  };
+  content: {
+    _text: string;
   };
 }
 
