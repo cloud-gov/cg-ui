@@ -2,14 +2,18 @@ import Link from 'next/link';
 import { getBlogFeed, BlogObj } from '@/api/blog/blog';
 import { formatDate } from '@/helpers/dates';
 import Image from '@/components/Image';
+import sanitizeHtml from 'sanitize-html';
 
 export async function BlogSnippet() {
   const stripHtmlAndTruncate = (
     htmlContent: string,
     maxLength = 200
   ): string => {
-    const strippedText = htmlContent.replace(/<[^>]*>/g, '');
-    const trimmedText = strippedText.trim();
+    const sanitizedText = sanitizeHtml(htmlContent, {
+      allowedTags: [],
+      allowedAttributes: {},
+    });
+    const trimmedText = sanitizedText.trim();
     return trimmedText.length > maxLength
       ? `${trimmedText.slice(0, maxLength)}...`
       : trimmedText;
