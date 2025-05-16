@@ -2,16 +2,30 @@ import Link from 'next/link';
 import { getBlogFeed, BlogObj } from '@/api/blog/blog';
 import { formatDate } from '@/helpers/dates';
 import Image from '@/components/Image';
+import sanitizeHtml from 'sanitize-html';
 
 export async function BlogSnippet() {
+  const stripHtmlAndTruncate = (
+    htmlContent: string,
+    maxLength = 200
+  ): string => {
+    const sanitizedText = sanitizeHtml(htmlContent, {
+      allowedTags: [],
+      allowedAttributes: {},
+    });
+    const trimmedText = sanitizedText.trim();
+    return trimmedText.length > maxLength
+      ? `${trimmedText.slice(0, maxLength)}...`
+      : trimmedText;
+  };
+
   try {
     const blog = (await getBlogFeed()) as BlogObj;
     const post = blog.feed.entry[0];
     const title = post.title._text;
-    const pubDate = formatDate(post.published._text).toUpperCase();
-    const link = post.id._text;
-    const summary = post.summary._cdata;
-
+    const pubDate = formatDate(post.updated._text).toUpperCase();
+    const link = post.link._attributes._text || post.id._text;
+    const contentHTML = post.content._text;
     return (
       <div>
         <h2 className="margin-top-0 text-normal font-sans-md mobile-lg:font-sans-lg">
@@ -32,7 +46,7 @@ export async function BlogSnippet() {
           </h3>
         </div>
         <p className="line-height-sans-4 font-sans-2xs mobile-lg:font-sans-xs">
-          {pubDate} — {summary}{' '}
+          {pubDate} — {stripHtmlAndTruncate(contentHTML, 100)}{' '}
           <Link href={link} target="_blank" className="usa-link">
             Read more »
           </Link>

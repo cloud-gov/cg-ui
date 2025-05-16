@@ -56,14 +56,18 @@ describe('getBlogFeed', () => {
       // assert
       const post = blog.feed.entry[0];
       const title = post.title._text;
-      const pubDate = post.published._text;
-      const link = post.id._text;
-      const summary = post.summary._cdata;
-      expect(title).toEqual('August 8th Cloud.gov Release Notes');
-      expect(pubDate).toEqual('2024-08-08T00:00:00+00:00');
-      expect(link).toEqual('https://cloud.gov/2024/08/08/release-notes');
-      expect(summary).toEqual(
-        'The Cloud.gov team is working on providing release notes so everyone can see new features and updates.'
+      const pubDate = post.updated._text;
+      const link = post.link._attributes._text || post.id._text;
+      const contentHTML = post.content._text;
+      expect(title).toEqual(
+        'Audit events now available in Cloud.gov logging system'
+      );
+      expect(pubDate).toEqual('2025-05-08T00:00:00Z');
+      expect(link).toEqual(
+        'https://cloud.gov/2025/05/08/audit-events-opensearch/'
+      );
+      expect(contentHTML).toEqual(
+        '<p>This may have HTML <a href="https://cloud.gov/docs" target="_blank" class="usa-link--external" rel="noopener noreferrer">including inline links</a> and other formatting.</p>'
       );
     });
   });
