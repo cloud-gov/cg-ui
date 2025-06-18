@@ -103,6 +103,39 @@ describe('UsersList', () => {
     expect(list[3]).toHaveTextContent(/c username 1/);
   });
 
+  it('shows the Remove buttons if allowChanges is true', () => {
+    // act
+    render(
+      <UsersList
+        users={mockUsers}
+        roles={mockRoles}
+        serviceAccounts={{}}
+        spaces={mockSpaces}
+        userLoginInfo={mockUserLogonTime}
+        allowChanges={true}
+      />
+    );
+    // query
+    const removeButtons = screen.getAllByRole('button', { name: 'Remove' });
+    expect(removeButtons).toHaveLength(mockUsers.length);
+  });
+
+  it('does not show the Remove buttons if allowChanges is false or not provided', () => {
+    // act
+    render(
+      <UsersList
+        users={mockUsers}
+        roles={mockRoles}
+        serviceAccounts={{}}
+        spaces={mockSpaces}
+        userLoginInfo={mockUserLogonTime}
+      />
+    );
+    // query
+    const removeButtons = screen.queryAllByRole('button', { name: 'Remove' });
+    expect(removeButtons).toHaveLength(0);
+  });
+
   describe('filtering users', () => {
     it('filters the expected users when search term is submitted', async () => {
       // setup

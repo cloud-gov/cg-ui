@@ -104,6 +104,11 @@ describe('controllers tests', () => {
           )
           .reply(200, mockUsersByOrganization);
         nock(process.env.CF_API_URL)
+          .get(
+            `/roles?user_guids=placeholder&organization_guids=${orgGuid}&per_page=5000`
+          )
+          .reply(200, mockUsersByOrganization);
+        nock(process.env.CF_API_URL)
           .get(`/spaces?organization_guids=${orgGuid}`)
           .reply(200, testSpaceGuids);
         nock(process.env.CF_API_URL)
@@ -141,6 +146,11 @@ describe('controllers tests', () => {
         nock(process.env.CF_API_URL)
           .get(
             `/roles?organization_guids=${orgGuid}&per_page=5000&include=organization,user`
+          )
+          .reply(200, mockUsersByOrganization);
+        nock(process.env.CF_API_URL)
+          .get(
+            `/roles?user_guids=placeholder&organization_guids=${orgGuid}&per_page=5000`
           )
           .reply(200, mockUsersByOrganization);
         nock(process.env.CF_API_URL)
@@ -274,6 +284,11 @@ describe('controllers tests', () => {
         nock(process.env.CF_API_URL)
           .get(
             `/roles?organization_guids=${orgGuid}&per_page=5000&include=organization,user`
+          )
+          .reply(200, mockUsersByOrganization);
+        nock(process.env.CF_API_URL)
+          .get(
+            `/roles?user_guids=placeholder&organization_guids=${orgGuid}&per_page=5000`
           )
           .reply(200, mockUsersByOrganization);
         nock(process.env.CF_API_URL)

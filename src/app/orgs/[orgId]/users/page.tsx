@@ -5,11 +5,12 @@
 */
 export const dynamic = 'force-dynamic';
 export const revalidate = 0;
-
+import { RoleObj } from '@/api/cf/cloudfoundry-types';
 import { UsersList } from '@/components/UsersList/UsersList';
 import { getOrgUsersPage } from '@/controllers/controllers';
 import { PageHeader } from '@/components/PageHeader';
 import { AddUserButton } from '@/components/UsersList/AddUserButton';
+import { Alert } from '@/components/uswds/Alert';
 
 export default async function OrgUsersPage({
   params,
@@ -17,7 +18,10 @@ export default async function OrgUsersPage({
   params: { orgId: string };
 }) {
   const { payload } = await getOrgUsersPage(params.orgId);
-  const { roles, serviceAccounts, spaces, users } = payload;
+  const { roles, serviceAccounts, spaces, users, currentUserRoles } = payload;
+  const allowManageUsers = currentUserRoles.find(
+    (role: RoleObj) => role.type === 'organization_manager'
+  );
 
   return (
     <>
@@ -30,16 +34,25 @@ export default async function OrgUsersPage({
             </p>
           </div>
           <div className="flex-align-self-end">
-            <AddUserButton orgId={params.orgId} />
+            {allowManageUsers && <AddUserButton orgId={params.orgId} />}
           </div>
         </div>
       </PageHeader>
+      {!allowManageUsers && (
+        <div className="tablet-lg:grid-col-8 margin-bottom-4">
+          <Alert type="warning" isVisible={true}>
+            You must be a manager of the current organization to make changes to
+            these details.
+          </Alert>
+        </div>
+      )}{' '}
       <UsersList
         users={users}
         roles={roles}
         serviceAccounts={serviceAccounts}
         spaces={spaces}
         orgGuid={params.orgId}
+        allowChanges={allowManageUsers}
       />
     </>
   );
