@@ -38,12 +38,14 @@ export function UsersList({
   serviceAccounts,
   spaces,
   orgGuid,
+  allowChanges = false,
 }: {
   users: Array<UserOrgPage>;
   roles: RolesByUser;
   serviceAccounts: { [id: string]: ServiceCredentialBindingObj };
   spaces: SpacesBySpaceId;
   orgGuid: string;
+  allowChanges: boolean;
 }) {
   // State
   const [removedUserGuids, setRemovedUserGuids] = useState([] as string[]);
@@ -328,14 +330,16 @@ export function UsersList({
                 <UserAccountLastLogin lastLogonTime={user.lastLogonTime} />
               </TableCell>
 
-              <TableCell className="text-center mobile-lg:text-right">
-                <UsersActionsRemoveFromOrg
-                  user={user}
-                  roles={roles[user.guid]}
-                  removeUserCallback={removeUserCallback}
-                  closeOnSuccess={true}
-                />
-              </TableCell>
+              {allowChanges && (
+                <TableCell className="text-center mobile-lg:text-right">
+                  <UsersActionsRemoveFromOrg
+                    user={user}
+                    roles={roles[user.guid]}
+                    removeUserCallback={removeUserCallback}
+                    closeOnSuccess={true}
+                  />
+                </TableCell>
+              )}
             </TableRow>
           ))}
         </TableBody>

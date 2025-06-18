@@ -6,6 +6,7 @@ import { Card } from '@/components/Card/Card';
 import { RoleObj } from '@/api/cf/cloudfoundry-types';
 import { BlogSnippet } from '@/components/BlogSnippet/BlogSnippet';
 import peopleIcon from '@/../public/img/uswds/usa-icons/people.svg';
+import { Alert } from '@/components/uswds/Alert';
 
 export default async function OrgLandingPage() {
   const { payload } = await getOrgLandingpage();
@@ -30,7 +31,7 @@ export default async function OrgLandingPage() {
         Welcome to the Dashboard. Let’s get started.
       </h1>
       <CardRow>
-        {showManageUsers && (
+        {showManageUsers ? (
           <Card
             className="display-flex flex-column flex-justify"
             containerClassname="tablet-lg:grid-col-8"
@@ -56,6 +57,13 @@ export default async function OrgLandingPage() {
               </Link>
             </div>
           </Card>
+        ) : (
+          <div className="tablet-lg:grid-col-8">
+            <Alert type="error" isVisible={true}>
+              You must be a manager of the current organization to see these
+              details.
+            </Alert>
+          </div>
         )}
         <li className="tablet:grid-col-6 tablet-lg:grid-col-4 margin-bottom-3">
           <BlogSnippet />

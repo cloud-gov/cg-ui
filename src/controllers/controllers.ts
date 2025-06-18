@@ -218,6 +218,13 @@ export async function getOrgUsersPage(
     svcAccounts = resourceKeyedById(svcCreds);
   }
 
+  const userId = await getCurrentUserId();
+  const rolesResponse = await CF.getRoles({
+    userGuids: [userId],
+    organizationGuids: [orgGuid],
+  });
+  const currentUserRoles = (await rolesResponse.json()).resources;
+
   // collect rollup numbers for table sorting
   users = users.map((user: UserObj) => ({
     ...user,
@@ -235,6 +242,7 @@ export async function getOrgUsersPage(
   return {
     meta: { status: 'success' },
     payload: {
+      currentUserRoles: currentUserRoles,
       org: orgUserRolesPayload.included.organizations[0],
       roles: rolesByUser,
       serviceAccounts: svcAccounts,

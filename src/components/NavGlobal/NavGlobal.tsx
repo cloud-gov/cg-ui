@@ -1,9 +1,9 @@
-import Image from '@/components/Image';
+// import Image from '@/components/Image';
 
 import CloudGovLogo from '@/components/svgs/CloudGovLogo';
-import cloudPagesIcon from '@/../public/img/logos/cloud-pages-icon.svg';
-import dashboardIcon from '@/../public/img/logos/dashboard-icon.svg';
-import { NavGlobalLinkProduct } from '@/components/NavGlobal/NavGlobalLinkProduct';
+// import cloudPagesIcon from '@/../public/img/logos/cloud-pages-icon.svg';
+// import dashboardIcon from '@/../public/img/logos/dashboard-icon.svg';
+// import { NavGlobalLinkProduct } from '@/components/NavGlobal/NavGlobalLinkProduct';
 import { NavGlobalLinkLogo } from '@/components/NavGlobal/NavGlobalLinkLogo';
 
 import { Auth } from '@/components/auth/Auth';
@@ -21,18 +21,18 @@ const sharedLinkClasses = [
 export function NavGlobal() {
   return (
     <div id="nav-global" className="font-body-xs">
-      <div className="display-flex flex-align-center margin-x-auto maxw-desktop-lg padding-x-2 desktop:padding-x-2 padding-y-2px">
+      <div className="display-flex flex-align-center margin-x-auto maxw-desktop-lg padding-x-2 desktop:padding-x-2 padding-y-2px height-8">
         <NavGlobalLinkLogo href="/" sharedClasses={sharedLinkClasses}>
           <CloudGovLogo />
         </NavGlobalLinkLogo>
-        <NavGlobalLinkProduct href="/" sharedClasses={sharedLinkClasses} active>
+        {/* <NavGlobalLinkProduct href="/" sharedClasses={sharedLinkClasses} active>
           <Image unoptimized src={dashboardIcon} alt="" />
           <span>Dashboard</span>
         </NavGlobalLinkProduct>
         <NavGlobalLinkProduct href="/" sharedClasses={sharedLinkClasses}>
           <Image unoptimized src={cloudPagesIcon} alt="" />
           <span>Pages</span>
-        </NavGlobalLinkProduct>
+        </NavGlobalLinkProduct> */}
         <span className="border-bottom-05 border-transparent margin-left-auto">
           <Auth />
         </span>
