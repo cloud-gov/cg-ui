@@ -3,6 +3,7 @@ applications:
   - name: cg-ui
     command: npm run build; npm start
     timeout: 180
+    memory: 2G
     services:
       - cg-ui-datastore
       - cg-ui-storage
