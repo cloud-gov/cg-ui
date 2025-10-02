@@ -26,7 +26,7 @@ export const Checkbox = ({
   tile,
   ...inputProps
   // eslint-disable-next-line no-undef
-}: CheckboxProps & JSX.IntrinsicElements['input']): React.ReactElement => {
+}: CheckboxProps & React.JSX.IntrinsicElements['input']): React.ReactElement => {
   const classes = classnames('usa-checkbox', className);
   const checkboxClasses = classnames('usa-checkbox__input', {
     'usa-checkbox__input--tile': tile,
