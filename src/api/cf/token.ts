@@ -1,11 +1,12 @@
 import { cookies } from 'next/headers';
 
-export function getToken(): string {
-  return getLocalToken() || getCFToken();
+export async function getToken(): Promise<string> {
+  return getLocalToken() || (await getCFToken());
 }
 
-function getCFToken(): string {
-  const authSession = cookies().get('authsession');
+async function getCFToken(): Promise<string> {
+  const cookieStore = await cookies();
+  const authSession = cookieStore.get('authsession');
   if (authSession === undefined)
     throw new Error('please confirm you are logged in');
   try {
@@ -19,26 +20,27 @@ function getLocalToken(): string | undefined {
   return process.env.CF_API_TOKEN;
 }
 
-export function isLoggedIn(): boolean {
+export async function isLoggedIn(): Promise<boolean> {
   try {
     // Note: this only checks the auth cookie, not the CF_API_TOKEN when working locally
-    const token = getCFToken();
+    const token = await getCFToken();
     return !!token;
   } catch {
     return false;
   }
 }
 
-export function getUserId() {
-  return getLocalUserId() || getCFUserId();
+export async function getUserId() {
+  return getLocalUserId() || (await getCFUserId());
 }
 
 export function getLocalUserId() {
   return process.env.CF_USER_ID;
 }
 
-export function getCFUserId() {
-  const authSession = cookies().get('authsession');
+export async function getCFUserId() {
+  const cookieStore = await cookies();
+  const authSession = cookieStore.get('authsession');
   if (authSession === undefined)
     throw new Error('please confirm you are logged in');
   try {

@@ -3,7 +3,7 @@ import { cookies } from 'next/headers';
 import { getOrg } from '@/api/cf/cloudfoundry';
 
 export async function LastViewedOrgLink() {
-  const cookieStore = cookies();
+  const cookieStore = await cookies();
   const orgId = cookieStore.get('lastViewedOrgId')?.value;
   if (!orgId) {
     return null;
