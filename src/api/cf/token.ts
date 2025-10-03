@@ -11,7 +11,7 @@ function getCFToken(): string {
   try {
     return JSON.parse(authSession.value).accessToken;
   } catch (error: any) {
-    throw new Error('unable to parse accessToken');
+    throw new Error(`unable to parse accessToken: ${error}`);
   }
 }
 
@@ -24,7 +24,7 @@ export function isLoggedIn(): boolean {
     // Note: this only checks the auth cookie, not the CF_API_TOKEN when working locally
     const token = getCFToken();
     return !!token;
-  } catch (error: any) {
+  } catch {
     return false;
   }
 }
@@ -44,6 +44,6 @@ export function getCFUserId() {
   try {
     return JSON.parse(authSession.value).user_id;
   } catch (error: any) {
-    throw new Error('unable to parse authsession user_id');
+    throw new Error(`unable to parse authsession user_id: ${error}`);
   }
 }

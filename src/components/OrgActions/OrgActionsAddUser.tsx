@@ -49,7 +49,7 @@ export function OrgActionsAddUser({
             setActionStatus('success' as ActionStatus);
           }
         });
-    } catch (e: any) {
+    } catch {
       setActionStatus('error' as ActionStatus);
       setActionErrors([
         'Something went wrong with the request. Please try again.',
