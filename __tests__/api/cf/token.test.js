@@ -38,14 +38,12 @@ describe('cloudfoundry token tests', () => {
     });
     describe('when auth cookie is not set', () => {
       beforeEach(() => {
-        cookies.mockImplementation(() => ({
+        cookies.mockImplementation(async () => ({
           get: () => undefined,
         }));
       });
       it('getToken() throws an error when no cookie is set', async () => {
-        expect(async () => await getToken()).toThrow(
-          'please confirm you are logged in'
-        );
+        expect(await getToken()).toThrow('please confirm you are logged in');
       });
       it('isLoggedIn() returns false', async () => {
         expect(await isLoggedIn()).toBeFalsy();
@@ -57,10 +55,8 @@ describe('cloudfoundry token tests', () => {
           get: () => 'unexpected format',
         }));
       });
-      it('getToken() throws an error', () => {
-        expect(async () => await getToken()).toThrow(
-          'unable to parse accessToken'
-        );
+      it('getToken() throws an error', async () => {
+        expect(await getToken()).toThrow('unable to parse accessToken');
       });
       it('isLoggedIn() returns falsee', async () => {
         expect(await isLoggedIn()).toBeFalsy();
@@ -99,10 +95,8 @@ describe('cloudfoundry user id tests', () => {
           get: () => undefined,
         }));
       });
-      it('getToken() throws an error when no cookie is set', () => {
-        expect(async () => await getUserId()).toThrow(
-          'please confirm you are logged in'
-        );
+      it.only('getToken() throws an error when no cookie is set', async () => {
+        expect(await getUserId()).toThrow('please confirm you are logged in');
       });
     });
     describe('when auth cookie is not in an expected format', () => {
@@ -111,8 +105,8 @@ describe('cloudfoundry user id tests', () => {
           get: () => 'unexpected format',
         }));
       });
-      it('getToken() throws an error', () => {
-        expect(async () => await getUserId()).toThrow(
+      it('getToken() throws an error', async () => {
+        expect(await getUserId()).toThrow(
           'unable to parse authsession user_id'
         );
       });
