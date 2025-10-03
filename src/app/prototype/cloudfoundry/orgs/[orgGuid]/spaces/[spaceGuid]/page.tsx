@@ -9,14 +9,10 @@ import {
 import { UserAction } from './form';
 import { SpaceMembersList } from '@/components/CloudFoundry/SpaceMembersList';
 
-export default async function SpacePage({
-  params,
-}: {
-  params: {
-    orgGuid: string;
-    spaceGuid: string;
-  };
-}) {
+type Params = Promise<{ orgGuid: string; spaceGuid: string }>;
+
+export default async function SpacePage(props: { params: Params }) {
+  const params = await props.params;
   try {
     const spaceRes = await getSpace(params.spaceGuid);
     const users = await getSpaceUsers(params.spaceGuid);

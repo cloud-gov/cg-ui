@@ -1,15 +1,14 @@
 import React from 'react';
 import Link from 'next/link';
 
-export default function AddUserLayout({
-  children,
-  params,
-}: {
+type Params = Promise<{ orgId: string }>;
+
+export default async function AddUserLayout(props: {
   children: React.ReactNode;
-  params: {
-    orgId: string;
-  };
+  params: Params;
 }) {
+  const params = await props.params;
+  const children = await props.children;
   return (
     <>
       <div className="desktop:display-flex border-bottom border-accent-warm-light padding-bottom-105 margin-bottom-4">

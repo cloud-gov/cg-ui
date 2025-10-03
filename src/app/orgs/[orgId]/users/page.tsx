@@ -12,11 +12,10 @@ import { PageHeader } from '@/components/PageHeader';
 import { AddUserButton } from '@/components/UsersList/AddUserButton';
 import { Alert } from '@/components/uswds/Alert';
 
-export default async function OrgUsersPage({
-  params,
-}: {
-  params: { orgId: string };
-}) {
+type Params = Promise<{ orgId: string }>;
+
+export default async function OrgUsersPage(props: { params: Params }) {
+  const params = await props.params;
   const { payload } = await getOrgUsersPage(params.orgId);
   const { roles, serviceAccounts, spaces, users, currentUserRoles } = payload;
   const allowManageUsers = currentUserRoles.find(

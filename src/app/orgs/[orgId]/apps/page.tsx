@@ -2,11 +2,10 @@ import { PageHeader } from '@/components/PageHeader';
 import { getOrgAppsPage } from '@/controllers/controllers';
 import { AppsList } from '@/components/AppsList/AppsList';
 
-export default async function OrgAppsPage({
-  params,
-}: {
-  params: { orgId: string };
-}) {
+type Params = Promise<{ orgId: string }>;
+
+export default async function OrgAppsPage(props: { params: Params }) {
+  const params = await props.params;
   const { payload } = await getOrgAppsPage(params.orgId);
   const { apps, spaces } = payload;
 

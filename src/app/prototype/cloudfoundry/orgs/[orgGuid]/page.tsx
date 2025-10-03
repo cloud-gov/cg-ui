@@ -7,13 +7,10 @@ import { RoleType } from '@/api/cf/cloudfoundry-types';
 import { UserAction } from './form';
 import { OrgMembersList } from '@/components/CloudFoundry/OrgMembersList';
 
-export default async function OrgPage({
-  params,
-}: {
-  params: {
-    orgGuid: string;
-  };
-}) {
+type Params = Promise<{ orgGuid: string }>;
+
+export default async function OrgPage(props: { params: Params }) {
+  const params = await props.params;
   const controllerRes = (await getOrgPage(params.orgGuid)) as ControllerResult;
 
   const { org, users, spaces } = controllerRes.payload;

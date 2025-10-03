@@ -2,13 +2,15 @@ import React from 'react';
 import { OrgPicker } from '@/components/OrgPicker/OrgPicker';
 import { getOrgs } from '@/api/cf/cloudfoundry';
 
-export default async function OrgLayout({
-  children,
-  params,
-}: {
+type Params = Promise<{ orgId: string }>;
+
+export default async function OrgLayout(props: {
   children: React.ReactNode;
-  params: { orgId: string };
+  params: Params;
 }) {
+  const params = await props.params;
+  const children = await props.children;
+
   const orgsRes = await getOrgs();
   const orgResJson = await orgsRes.json();
   const orgs = orgResJson.resources;
