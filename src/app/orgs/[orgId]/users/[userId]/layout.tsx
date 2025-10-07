@@ -4,16 +4,18 @@ import Link from 'next/link';
 import { PageHeader } from '@/components/PageHeader';
 import { Username } from '@/components/UserAccount/Username';
 
-export default async function SpaceLayout({
-  children,
-  params,
-}: {
+type Params = Promise<{
+  orgId: string;
+  userId: string;
+}>;
+
+export default async function SpaceLayout(props: {
   children: React.ReactNode;
-  params: {
-    orgId: string;
-    userId: string;
-  };
+  params: Params;
 }) {
+  const params = await props.params;
+  const children = await props.children;
+
   const { payload } = await getUser(params.userId);
   const { user, serviceAccount } = payload;
   return (

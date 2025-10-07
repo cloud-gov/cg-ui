@@ -1,10 +1,12 @@
 import { UsersActionsOrgRoles } from '@/components/UsersActions/UsersActionsOrgRoles';
 
-export default function OrgUserOrgRolesPage({
-  params,
-}: {
-  params: { orgId: string; userId: string };
-}) {
+type Params = Promise<{
+  orgId: string;
+  userId: string;
+}>;
+
+export default async function OrgUserOrgRolesPage(props: { params: Params }) {
+  const params = await props.params;
   return (
     <div className="maxw-mobile-lg">
       <div className="usa-prose">

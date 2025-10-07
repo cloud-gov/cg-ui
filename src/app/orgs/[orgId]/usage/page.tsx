@@ -64,11 +64,10 @@ function Service({
   }
 }
 
-export default async function OrgUsagePage({
-  params,
-}: {
-  params: { orgId: string };
-}) {
+type Params = Promise<{ orgId: string }>;
+
+export default async function OrgUsagePage(props: { params: Params }) {
+  const params = await props.params;
   const { payload } = await getOrgUsagePage(params.orgId);
   const quota = payload.quota;
   const usage = payload.usage.usage_summary;

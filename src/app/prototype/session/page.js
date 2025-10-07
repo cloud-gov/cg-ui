@@ -13,7 +13,7 @@ export default function Page() {
       try {
         const res = await getData('/api/session');
         setSessionData(res['rows']);
-      } catch (error) {
+      } catch {
         // placeholder so the page still displays until we
         // implement better error handling logic
         setSessionData([]);

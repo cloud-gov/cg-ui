@@ -43,7 +43,7 @@ export async function cfRequestOptions(
   const options: ApiRequestOptions = {
     method: method,
     headers: {
-      Authorization: `bearer ${getToken()}`,
+      Authorization: `bearer ${await getToken()}`,
     },
   };
   if (data && method.toLowerCase() !== 'get') {

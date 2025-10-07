@@ -30,7 +30,7 @@ export function Button({
   unstyled,
   ...defaultProps
   // eslint-disable-next-line no-undef
-}: ButtonProps & JSX.IntrinsicElements['button']): React.ReactElement {
+}: ButtonProps & React.JSX.IntrinsicElements['button']): React.ReactElement {
   const classes = classnames(
     'usa-button',
     {

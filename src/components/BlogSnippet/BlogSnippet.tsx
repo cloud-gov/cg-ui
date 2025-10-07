@@ -53,7 +53,7 @@ export async function BlogSnippet() {
         </p>
       </div>
     );
-  } catch (error: any) {
+  } catch {
     return <div>Blog not available</div>;
   }
 }

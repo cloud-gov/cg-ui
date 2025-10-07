@@ -1,12 +1,9 @@
 import { OrgActionsAddUser } from '@/components/OrgActions/OrgActionsAddUser';
 
-export default function AddUserPage({
-  params,
-}: {
-  params: {
-    orgId: string;
-  };
-}) {
+type Params = Promise<{ orgId: string }>;
+
+export default async function AddUserPage(props: { params: Params }) {
+  const params = await props.params;
   return (
     <>
       <div className="maxw-mobile-lg">

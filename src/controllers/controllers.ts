@@ -42,7 +42,7 @@ export async function getOrgLandingpage(): Promise<ControllerResult> {
   const orgsRes = await CF.getOrgs();
   const orgs = (await orgsRes.json()).resources;
   let currentOrgId;
-  const cookieStore = cookies();
+  const cookieStore = await cookies();
   const lastViewedOrgId = cookieStore.get('lastViewedOrgId')?.value;
   if (lastViewedOrgId) {
     currentOrgId = lastViewedOrgId;
