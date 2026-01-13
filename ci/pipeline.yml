@@ -222,6 +222,7 @@ resources:
       password: ((dev-cf-password))
       org: cloud-gov
       space: cg-ui
+      cf-cli-version: 8
 
   - name: cf-cli-staging
     type: cf-cli-resource
@@ -231,6 +232,7 @@ resources:
       password: ((staging-cf-password))
       org: cloud-gov
       space: cg-ui
+      cf-cli-version: 8
 
 resource_types:
   - name: registry-image
