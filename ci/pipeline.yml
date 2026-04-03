@@ -157,6 +157,82 @@ jobs:
         username: ((slack-username))
         icon_url: ((slack-icon-url))
 
+  - name: test-and-deploy-production
+    plan:
+      - in_parallel:
+          - get: cg-ui-prod-release
+            trigger: true
+          - get: node
+          - get: postgres
+
+      - task: install-deps
+        file: cg-ui-prod-release/ci/partials/install.yml
+        input_mapping: { cg-ui: cg-ui-prod-release }
+        image: node
+
+      - in_parallel:
+          - task: lint-app
+            file: cg-ui-prod-release/ci/partials/lint.yml
+            image: node
+
+          - task: test-app
+            privileged: true
+            file: cg-ui-prod-release/ci/partials/test.yml
+
+      - put: create-db
+        resource: cf-cli-production
+        params:
+          command: create-service
+          update_service: true
+          # Note, the RDS broker doesn't return the correct status while provisioning:
+          # https://github.com/18F/aws-broker/issues/59
+          # If a new deployment, manually re-trigger the build once the RDS is up.
+          wait_for_service: true
+          timeout: 1200 # RDS take a long time to provision
+          service_instance: cg-ui-datastore
+          service: aws-rds
+          plan: micro-psql
+
+      - put: create-s3
+        resource: cf-cli-production
+        params:
+          command: create-service
+          update_service: true
+          service_instance: cg-ui-storage
+          service: s3
+          plan: basic
+
+      - put: cloud-gov-production
+        params:
+          manifest: cg-ui-prod-release/manifest.yml
+          path: cg-ui
+          vars:
+            domain: fr.cloud.gov
+          environment_variables:
+            CF_API_URL: ((production-cf-api-url))/v3
+            OAUTH_CLIENT_SECRET: ((production-uaa-client-secret))
+            ROOT_URL: ((production-app-root-url))
+            UAA_ROOT_URL: ((production-uaa-root-url))
+
+    on_failure:
+      put: slack
+      params:
+        text: |
+          :x: FAILED to deploy cg-ui in production
+          <$ATC_EXTERNAL_URL/teams/$BUILD_TEAM_NAME/pipelines/$BUILD_PIPELINE_NAME/jobs/$BUILD_JOB_NAME/builds/$BUILD_NAME|View build details>
+        channel: '#cg-ui'
+        username: ((slack-username))
+        icon_url: ((slack-icon-url))
+    on_success:
+      put: slack
+      params:
+        text: |
+          :white_check_mark: Successfully deployed cg-ui in production
+          <$ATC_EXTERNAL_URL/teams/$BUILD_TEAM_NAME/pipelines/$BUILD_PIPELINE_NAME/jobs/$BUILD_JOB_NAME/builds/$BUILD_NAME|View build details>
+        channel: '#cg-ui'
+        username: ((slack-username))
+        icon_url: ((slack-icon-url))
+
 resources:
   - name: cg-ui-dev
     type: git
@@ -173,6 +249,15 @@ resources:
       uri: git@github.com:cloud-gov/cg-ui.git
       branch: main
       private_key: ((cg-ci-bot-sshkey.private_key))
+
+  - name: cg-ui-prod-release
+    type: git
+    source:
+      commit_verification_keys: ((cloud-gov-pgp-keys))
+      uri: git@github.com:cloud-gov/cg-ui.git
+      private_key: ((cg-ci-bot-sshkey.private_key))
+      tag_filter: "*.*.*"
+      fetch_tags: true
 
   - name: node
     type: registry-image
@@ -214,6 +299,15 @@ resources:
       space: cg-ui
       skip_cert_check: false
 
+  - name: cloud-gov-production
+    type: cf
+    source:
+      api: ((production-cf-api-url))
+      username: ((production-cf-username))
+      password: ((production-cf-password))
+      organization: cloud-gov
+      space: cg-ui
+
   - name: cf-cli-dev
     type: cf-cli-resource
     source:
@@ -229,6 +323,15 @@ resources:
       api: ((staging-cf-api-url))
       username: ((staging-cf-username))
       password: ((staging-cf-password))
+      org: cloud-gov
+      space: cg-ui
+
+  - name: cf-cli-production
+    type: cf-cli-resource
+    source:
+      api: ((production-cf-api-url))
+      username: ((production-cf-username))
+      password: ((production-cf-password))
       org: cloud-gov
       space: cg-ui
 
