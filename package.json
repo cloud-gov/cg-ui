@@ -18,7 +18,7 @@
     "@uswds/uswds": "3.9.0",
     "byte-size": "9.0.1",
     "classnames": "^2.5.1",
-    "indefinite": "^2.5.1",
+    "indefinite": "^2.5.2",
     "jose": "^5.9.6",
     "next": "~14.2.21",
     "pg": "^8.16.0",
